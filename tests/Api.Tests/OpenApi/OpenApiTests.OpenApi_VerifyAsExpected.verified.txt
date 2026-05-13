@@ -1,7 +1,7 @@
 ﻿{
   openapi: 3.0.4,
   info: {
-    title: Api,
+    title: Trade Gateway,
     version: v1
   },
   paths: {
@@ -24,12 +24,12 @@
           200: {
             description: OK,
             content: {
-              application/vnd.trade.v1+json: {
+              application/vnd.defra.unvtd.profile.intra.v1+json: {
                 schema: {
                   $ref: #/components/schemas/IntraCertificate
                 }
               },
-              application/vnd.trade.v2+json: {
+              application/vnd.defra.unvtd.profile.intra.v2+json: {
                 schema: {
                   $ref: #/components/schemas/IntraCertificateV2
                 }

@@ -63,6 +63,41 @@ Versioning the entire API as a unit compounds the URL versioning problems:
 
 ---
 
+## Versioning Semantics
+
+A vendor media type is a **compatibility contract**, not a frozen snapshot of a schema at a point in time.
+
+### Non-breaking changes — no new version required
+
+Additive, backwards-compatible changes are delivered under the existing media type. Clients receive them automatically without updating their `Accept` header or being aware a change happened. Examples:
+
+- Adding a new optional field
+- Adding a new optional nested object
+- Relaxing a validation constraint (e.g. making a required field optional)
+
+`application/vnd.trade.v1+json` means *"a v1-compatible representation, at the latest revision"*, not *"the exact schema as it was when v1 was first defined"*.
+
+### Breaking changes — new media type required
+
+A new vendor media type is minted only when a change cannot be made without breaking existing consumers. Examples:
+
+- Removing or renaming a field
+- Changing a field type
+- Making an optional field required
+- Restructuring the response shape
+
+The previous media type continues to be served until all consumers have migrated. Retiring an old version is an explicit, communicated decision — it does not happen automatically.
+
+### The Accept header is optional
+
+Sending an `Accept` header is never required. Clients that omit it receive the default version — the API owner decides what that default is (typically the latest, but could be the oldest compatible version for stability). This means:
+
+- **Simple consumers** need no knowledge of versioning at all. They call the endpoint and get a working response.
+- **Version-aware consumers** pin to a specific media type when they need a stable, known contract.
+- **There is no need for wildcard media types** such as `application/vnd.trade.*+json`. Omitting the header already expresses *"I accept whatever you give me"*, and it is valid HTTP. A custom wildcard pattern is non-standard and provides no additional capability.
+
+---
+
 ## Implementation
 
 - Vendor media types are declared on the model class using a `[MediaType(...)]` attribute, keeping the type and its media type co-located.
@@ -84,5 +119,4 @@ Versioning the entire API as a unit compounds the URL versioning problems:
 **Negative / Trade-offs**
 
 - Less familiar to consumers accustomed to URL versioning; requires documentation and examples.
-- The default version — whether latest or oldest compatible — is a deliberate policy choice per resource, not a constraint of the mechanism. Clients only need to set the `Accept` header when they require a representation that differs from the default.
 - Vendor media types are not validated by the framework; a typo in an `Accept` header silently returns the default version rather than a 406. This should be considered if strict version pinning becomes a requirement.
