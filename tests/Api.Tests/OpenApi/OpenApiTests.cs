@@ -1,6 +1,7 @@
 namespace Api.Tests.OpenApi;
 
-public class OpenApiTests(TradeGatewayWebApplicationFactory factory) : IClassFixture<TradeGatewayWebApplicationFactory>
+[Collection(IntegrationTestCollection.Name)]
+public class OpenApiTests(TradeGatewayWebApplicationFactory factory)
 {
     [Fact]
     public async Task OpenApi_VerifyAsExpected()

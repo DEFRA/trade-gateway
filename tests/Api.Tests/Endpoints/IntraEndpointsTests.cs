@@ -1,6 +1,7 @@
 namespace Api.Tests.Endpoints;
 
-public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory) : IClassFixture<TradeGatewayWebApplicationFactory>
+[Collection(IntegrationTestCollection.Name)]
+public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
     [Fact]
     public async Task OpenApi_VerifyAsExpected()

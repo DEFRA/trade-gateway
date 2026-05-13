@@ -1,7 +1,7 @@
 ﻿{
   openapi: 3.1.1,
   info: {
-    title: TradeGateway | v1,
+    title: Api | v1,
     version: v1
   },
   servers: [
@@ -10,7 +10,7 @@
     }
   ],
   paths: {
-    /intra/{name}: {
+    /intra/{id}: {
       get: {
         tags: [
           IntraEndpoints
@@ -18,7 +18,7 @@
         parameters: [
           {
             name: id,
-            in: query,
+            in: path,
             required: true,
             schema: {
               type: string
