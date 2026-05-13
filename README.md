@@ -77,7 +77,7 @@ dotnet test
 
 Run CDP-Deployments application:
 ```bash
-dotnet run --project TradeGateway --launch-profile Development
+dotnet run --project Api --launch-profile Development
 ```
 
 ### SonarCloud
