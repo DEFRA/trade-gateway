@@ -1,6 +1,7 @@
 using FluentValidation;
 using System.Diagnostics.CodeAnalysis;
 using Api.Config;
+using Microsoft.OpenApi;
 using MongoDB.Driver;
 using MongoDB.Driver.Authentication.AWS;
 using Serilog;
@@ -32,15 +33,11 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     // Load certificates into Trust Store - Note must happen before Mongo and Http client connections.
     builder.Services.AddCustomTrustStore();
     
-    const string apiVersion = "v1";
-    
-    builder.Services.AddOpenApi(apiVersion, options =>
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(options =>
     {
-        options.AddDocumentTransformer((document, _, _) =>
-        {
-            document.Info.Version = apiVersion;
-            return Task.CompletedTask;
-        });
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "Trade Gateway", Version = "v1" });
+        options.OperationFilter<ContentNegotiationOperationFilter>();
     });
 
     // Configure logging to use the CDP Platform standards.
@@ -77,21 +74,21 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
 [ExcludeFromCodeCoverage]
 static WebApplication SetupApplication(WebApplication app)
 {
-    app.UseHeaderPropagation();
-    app.UseRouting();
-    app.MapHealthChecks("/health");
-    
-    app.UseIntraEndpoints();
-
-    const string openApiPath = "/.well-known/open-api.json";
-    
-    app.MapOpenApi(openApiPath);
-    
+    app.UseSwagger(options =>
+    {
+        options.RouteTemplate = ".well-known/openapi/{documentName}/openapi.json";
+    });
     app.UseReDoc(options =>
     {
         options.RoutePrefix = "redoc";
-        options.SpecUrl(openApiPath);
+        options.ConfigObject.ExpandResponses = "200";
+        options.SpecUrl("/.well-known/openapi/v1/openapi.json");
     });
+
+    app.UseHeaderPropagation();
+    app.UseRouting();
+    app.MapHealthChecks("/health");
+    app.UseIntraEndpoints();
 
     return app;
 }

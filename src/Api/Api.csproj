@@ -17,7 +17,6 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.8" />
     <PackageReference Include="MongoDB.Driver" Version="3.8.1" />
     <PackageReference Include="MongoDB.Driver.Authentication.AWS" Version="3.8.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
@@ -25,6 +24,7 @@
     <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="10.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
     <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="10.1.7" />
   </ItemGroup>
 </Project>

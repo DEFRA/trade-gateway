@@ -1,0 +1,6 @@
+﻿{
+  Ref: GB123,
+  Consignment: {
+    package: Package 1
+  }
+}

@@ -1,14 +1,9 @@
 ﻿{
-  openapi: 3.1.1,
+  openapi: 3.0.4,
   info: {
-    title: Api | v1,
+    title: Api,
     version: v1
   },
-  servers: [
-    {
-      url: http://localhost/
-    }
-  ],
   paths: {
     /intra/{id}: {
       get: {
@@ -29,9 +24,14 @@
           200: {
             description: OK,
             content: {
-              application/json: {
+              application/vnd.trade.v1+json: {
                 schema: {
                   $ref: #/components/schemas/IntraCertificate
+                }
+              },
+              application/vnd.trade.v2+json: {
+                schema: {
+                  $ref: #/components/schemas/IntraCertificateV2
                 }
               }
             }
@@ -42,16 +42,47 @@
   },
   components: {
     schemas: {
+      Consignment: {
+        type: object,
+        properties: {
+          package: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       IntraCertificate: {
+        required: [
+          Ref
+        ],
+        type: object,
+        properties: {
+          Ref: {
+            type: string,
+            nullable: true
+          },
+          Consignment: {
+            $ref: #/components/schemas/Consignment
+          }
+        },
+        additionalProperties: false
+      },
+      IntraCertificateV2: {
         required: [
           id
         ],
         type: object,
         properties: {
           id: {
-            type: string
+            type: string,
+            nullable: true
+          },
+          consignment: {
+            $ref: #/components/schemas/Consignment
           }
-        }
+        },
+        additionalProperties: false
       }
     }
   },
