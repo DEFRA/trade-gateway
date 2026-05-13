@@ -1,11 +1,10 @@
-using System.Diagnostics.CodeAnalysis;
 using FluentValidation;
+using System.Diagnostics.CodeAnalysis;
+using Api.Config;
 using MongoDB.Driver;
 using MongoDB.Driver.Authentication.AWS;
 using Serilog;
-using Api.Config;
-using Api.Example.Endpoints;
-using Api.Example.Services;
+using Api.Endpoints;
 using Api.Utils;
 using Api.Utils.Http;
 using Api.Utils.Logging;
@@ -32,6 +31,17 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
 
     // Load certificates into Trust Store - Note must happen before Mongo and Http client connections.
     builder.Services.AddCustomTrustStore();
+    
+    const string apiVersion = "v1";
+    
+    builder.Services.AddOpenApi(apiVersion, options =>
+    {
+        options.AddDocumentTransformer((document, _, _) =>
+        {
+            document.Info.Version = apiVersion;
+            return Task.CompletedTask;
+        });
+    });
 
     // Configure logging to use the CDP Platform standards.
     builder.Services.AddHttpContextAccessor();
@@ -62,9 +72,6 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     // Add healthcheck, this is required for the platform to know your service is alive.
     builder.Services.AddHealthChecks();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-
-    // Set up the endpoints and their dependencies
-    builder.Services.AddSingleton<IExamplePersistence, ExamplePersistence>();
 }
 
 [ExcludeFromCodeCoverage]
@@ -73,9 +80,18 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseHeaderPropagation();
     app.UseRouting();
     app.MapHealthChecks("/health");
+    
+    app.UseIntraEndpoints();
 
-    // Example module, remove before deploying!
-    app.UseExampleEndpoints();
+    const string openApiPath = "/.well-known/open-api.json";
+    
+    app.MapOpenApi(openApiPath);
+    
+    app.UseReDoc(options =>
+    {
+        options.RoutePrefix = "redoc";
+        options.SpecUrl(openApiPath);
+    });
 
     return app;
 }
