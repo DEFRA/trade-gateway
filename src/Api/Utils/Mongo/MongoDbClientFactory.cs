@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+using Api.Config;
 using Microsoft.Extensions.Options;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
-using Api.Config;
 
 namespace Api.Utils.Mongo;
 

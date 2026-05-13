@@ -19,11 +19,15 @@ public static class IntraEndpoints
 
         if (acceptedTypes.Any(h => h.MediaType == MediaTypeAttribute.For<IntraCertificate>()))
         {
-            return Results.Json(new IntraCertificate { Ref = id, Consignment = consignment },
-                contentType: MediaTypeAttribute.For<IntraCertificate>());
+            return Results.Json(
+                new IntraCertificate { Ref = id, Consignment = consignment },
+                contentType: MediaTypeAttribute.For<IntraCertificate>()
+            );
         }
 
-        return Results.Json(new IntraCertificateV2 { Id = id, Consignment = consignment },
-            contentType: MediaTypeAttribute.For<IntraCertificateV2>());
+        return Results.Json(
+            new IntraCertificateV2 { Id = id, Consignment = consignment },
+            contentType: MediaTypeAttribute.For<IntraCertificateV2>()
+        );
     }
 }

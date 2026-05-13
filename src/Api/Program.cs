@@ -1,15 +1,15 @@
-using FluentValidation;
 using System.Diagnostics.CodeAnalysis;
 using Api.Config;
-using Microsoft.OpenApi;
-using MongoDB.Driver;
-using MongoDB.Driver.Authentication.AWS;
-using Serilog;
 using Api.Endpoints;
 using Api.Utils;
 using Api.Utils.Http;
 using Api.Utils.Logging;
 using Api.Utils.Mongo;
+using FluentValidation;
+using Microsoft.OpenApi;
+using MongoDB.Driver;
+using MongoDB.Driver.Authentication.AWS;
+using Serilog;
 
 var app = CreateWebApplication(args);
 await app.RunAsync();
@@ -32,7 +32,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
 
     // Load certificates into Trust Store - Note must happen before Mongo and Http client connections.
     builder.Services.AddCustomTrustStore();
-    
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
     {
