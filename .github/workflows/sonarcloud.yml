@@ -2,17 +2,23 @@ name: Run SonarCloud coverage scan
 
 on:
   workflow_call:
+    secrets:
+      SONAR_TOKEN:
+        description: "SonarCloud token used for authentication"
+        required: true
 
 permissions:
-  id-token: write
   contents: read
-  pull-requests: write
+  packages: read
 
 jobs:
   build:
     if: github.run_number != 1
     name: CDP SonarCloud coverage scan
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      pull-requests: write
     steps:
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -23,11 +29,11 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Set up .NET 8.0
+      - name: Set up .NET 10.0
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: |
-            8.0
+            10.0
       - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
@@ -64,7 +70,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./.sonar/scanner/dotnet-sonarscanner begin /k:"DEFRA_cdp-dotnet-backend-template" /o:"defra" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          ./.sonar/scanner/dotnet-sonarscanner begin /k:"DEFRA_trade-gateway" /o:"defra" /d:sonar.token="$SONAR_TOKEN" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           dotnet build --no-incremental
-          ./.sonar/coverage/dotnet-coverage collect "dotnet test" -f xml -o "coverage.xml"
-          ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          ./.sonar/coverage/dotnet-coverage collect "dotnet test tests/Api.Tests" -f xml -o "coverage.xml"
+          ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="$SONAR_TOKEN"
