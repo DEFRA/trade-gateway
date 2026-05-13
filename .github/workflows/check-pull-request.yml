@@ -59,6 +59,11 @@ jobs:
             trade-gateway:latest
   sonarcloud-scan:
     name: CDP SonarCloud Scan
+    permissions:
+      id-token: write
+      pull-requests: write
+      contents: read
+      packages: read
     uses: ./.github/workflows/sonarcloud.yml
     needs: pr-validator
     secrets:
