@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Elastic.Serilog.Enrichers.Web;
 using Serilog;
 
 namespace Api.Utils.Logging;
@@ -8,11 +9,13 @@ public static class CdpLogging
     [ExcludeFromCodeCoverage]
     public static void Configuration(HostBuilderContext ctx, LoggerConfiguration config)
     {
+        var httpAccessor = ctx.Configuration.Get<HttpContextAccessor>();
         var traceIdHeader = ctx.Configuration.GetValue<string>("TraceHeader");
         var serviceVersion = Environment.GetEnvironmentVariable("SERVICE_VERSION") ?? "";
 
         config
             .ReadFrom.Configuration(ctx.Configuration)
+            .Enrich.WithEcsHttpContext(httpAccessor!)
             .Enrich.FromLogContext()
             .Enrich.WithProperty("service.version", serviceVersion);
 
