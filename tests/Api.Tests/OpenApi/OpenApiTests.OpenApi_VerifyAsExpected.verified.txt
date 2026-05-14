@@ -1,0 +1,94 @@
+﻿{
+  openapi: 3.0.4,
+  info: {
+    title: Trade Gateway,
+    version: v1
+  },
+  paths: {
+    /intra/{id}: {
+      get: {
+        tags: [
+          IntraEndpoints
+        ],
+        parameters: [
+          {
+            name: id,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.unvtd.profile.intra.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/IntraCertificate
+                }
+              },
+              application/vnd.defra.unvtd.profile.intra.v2+json: {
+                schema: {
+                  $ref: #/components/schemas/IntraCertificateV2
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  components: {
+    schemas: {
+      Consignment: {
+        type: object,
+        properties: {
+          package: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      IntraCertificate: {
+        required: [
+          Ref
+        ],
+        type: object,
+        properties: {
+          Ref: {
+            type: string,
+            nullable: true
+          },
+          Consignment: {
+            $ref: #/components/schemas/Consignment
+          }
+        },
+        additionalProperties: false
+      },
+      IntraCertificateV2: {
+        required: [
+          id
+        ],
+        type: object,
+        properties: {
+          id: {
+            type: string,
+            nullable: true
+          },
+          consignment: {
+            $ref: #/components/schemas/Consignment
+          }
+        },
+        additionalProperties: false
+      }
+    }
+  },
+  tags: [
+    {
+      name: IntraEndpoints
+    }
+  ]
+}

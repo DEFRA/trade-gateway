@@ -1,15 +1,15 @@
 using System.Diagnostics.CodeAnalysis;
-using FluentValidation;
-using MongoDB.Driver;
-using MongoDB.Driver.Authentication.AWS;
-using Serilog;
 using Api.Config;
-using Api.Example.Endpoints;
-using Api.Example.Services;
+using Api.Endpoints;
 using Api.Utils;
 using Api.Utils.Http;
 using Api.Utils.Logging;
 using Api.Utils.Mongo;
+using FluentValidation;
+using Microsoft.OpenApi;
+using MongoDB.Driver;
+using MongoDB.Driver.Authentication.AWS;
+using Serilog;
 
 var app = CreateWebApplication(args);
 await app.RunAsync();
@@ -32,6 +32,13 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
 
     // Load certificates into Trust Store - Note must happen before Mongo and Http client connections.
     builder.Services.AddCustomTrustStore();
+
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen(options =>
+    {
+        options.SwaggerDoc("v1", new OpenApiInfo { Title = "Trade Gateway", Version = "v1" });
+        options.OperationFilter<ContentNegotiationOperationFilter>();
+    });
 
     // Configure logging to use the CDP Platform standards.
     builder.Services.AddHttpContextAccessor();
@@ -62,20 +69,26 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     // Add healthcheck, this is required for the platform to know your service is alive.
     builder.Services.AddHealthChecks();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-
-    // Set up the endpoints and their dependencies
-    builder.Services.AddSingleton<IExamplePersistence, ExamplePersistence>();
 }
 
 [ExcludeFromCodeCoverage]
 static WebApplication SetupApplication(WebApplication app)
 {
+    app.UseSwagger(options =>
+    {
+        options.RouteTemplate = ".well-known/openapi/{documentName}/openapi.json";
+    });
+    app.UseReDoc(options =>
+    {
+        options.RoutePrefix = "redoc";
+        options.ConfigObject.ExpandResponses = "200";
+        options.SpecUrl("/.well-known/openapi/v1/openapi.json");
+    });
+
     app.UseHeaderPropagation();
     app.UseRouting();
     app.MapHealthChecks("/health");
-
-    // Example module, remove before deploying!
-    app.UseExampleEndpoints();
+    app.UseIntraEndpoints();
 
     return app;
 }

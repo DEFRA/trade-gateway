@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using Elastic.CommonSchema.Serilog;
 using Elastic.Serilog.Enrichers.Web;
 using Serilog;
 
