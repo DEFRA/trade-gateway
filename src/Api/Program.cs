@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Api.Config;
 using Api.Endpoints;
@@ -6,10 +7,13 @@ using Api.Utils.Http;
 using Api.Utils.Logging;
 using Api.Utils.Mongo;
 using FluentValidation;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using MongoDB.Driver;
 using MongoDB.Driver.Authentication.AWS;
 using Serilog;
+using TracesNT;
+using TracesNT.Extensions;
 
 var app = CreateWebApplication(args);
 await app.RunAsync();
@@ -60,6 +64,16 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
             options.Headers.Add(traceHeader);
         }
     });
+
+    // add the Traces NT clients
+    var tracesNtSection = builder.Configuration.GetRequiredSection("TracesNt");
+    builder.Services.AddOptions<TracesNtConfig>()
+        .Bind(tracesNtSection)
+        .ValidateDataAnnotations()
+        .ValidateOnStart();
+
+    var xApiKey = builder.Configuration.GetValue<string?>("XApiKey");
+    builder.Services.AddTracesNtClients(tracesNtSection.Get<TracesNtConfig>()!, xApiKey!);
 
     // Set up the MongoDB client. Config and credentials are injected automatically at runtime.
     MongoClientSettings.Extensions.AddAWSAuthentication();
