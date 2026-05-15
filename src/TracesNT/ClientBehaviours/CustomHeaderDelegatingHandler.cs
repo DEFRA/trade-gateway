@@ -4,7 +4,7 @@ public class CustomHeaderDelegatingHandler : DelegatingHandler
 {
     private readonly string? _xApiKey;
     
-    public CustomHeaderDelegatingHandler(HttpClientHandler handler, string? xApiKey)
+    public CustomHeaderDelegatingHandler(HttpMessageHandler handler, string? xApiKey)
     {
         InnerHandler = handler;
         _xApiKey = xApiKey;

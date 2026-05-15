@@ -25,7 +25,9 @@ COPY .csharpierignore .csharpierignore
 RUN dotnet tool restore
 
 COPY src/Api/Api.csproj src/Api/Api.csproj
+COPY src/TracesNT/TracesNT.csproj src/TracesNT/TracesNT.csproj
 COPY tests/Api.Tests/Api.Tests.csproj tests/Api.Tests/Api.Tests.csproj
+COPY tests/TracesNT.Tests/TracesNT.Tests.csproj tests/TracesNT.Tests/TracesNT.Tests.csproj
 
 COPY TradeGateway.sln TradeGateway.sln
 COPY Directory.Build.props Directory.Build.props
@@ -33,7 +35,9 @@ COPY Directory.Build.props Directory.Build.props
 RUN dotnet restore
 
 COPY src/Api src/Api
+COPY src/TracesNT src/TracesNT
 COPY tests/Api.Tests tests/Api.Tests
+COPY tests/TracesNT.Tests tests/TracesNT.Tests
 
 RUN dotnet test --no-restore --filter "Category!=IntegrationTests"
 

@@ -1,4 +1,5 @@
 using System.Net;
+using System.Runtime.Serialization.Json;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
@@ -91,15 +92,13 @@ public static class ServiceRegistrationExtensions
         where TClient : ClientBase<TChannel>, TChannel
         where TChannel : class
     {
-        services.AddSingleton<IChannelFactory<TChannel>>(new ChannelFactory<TChannel>(binding, endpoint));
-
         services.AddTransient<TClient>((sp) =>
         {
             var config = sp.GetRequiredService<IOptions<TracesNtConfig>>();
             var logger = sp.GetRequiredService<ILogger<TClient>>();
-            var channelFactory = (IChannelFactory<TChannel>)sp.GetRequiredService(typeof(IChannelFactory<TChannel>));
-            var client = (TClient)channelFactory.CreateChannel(endpoint);
-            
+
+            var client = (TClient)Activator.CreateInstance(typeof(TClient), binding, endpoint)!;
+
             // Logging runs before WS-Security so credentials are never captured in logs.
             // BeforeSendRequest fires in registration order; WS-Security adds its header last.
             client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(logger));

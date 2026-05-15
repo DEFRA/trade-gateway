@@ -80,7 +80,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));
     builder.Services.AddSingleton<IMongoDbClientFactory, MongoDbClientFactory>();
 
-    // Add healthcheck, this is required for the platform to know your service is alive.
+    // Add health check, this is required for the platform to know your service is alive.
     builder.Services.AddHealthChecks();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 }
