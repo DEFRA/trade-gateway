@@ -2,6 +2,7 @@ using Api.Models;
 using Microsoft.Extensions.Options;
 using System.ServiceModel;
 using TracesNT;
+using TracesNT.Services;
 using TracesNT.WebServices;
 
 namespace Api.Endpoints;
@@ -16,64 +17,46 @@ public static class IntraEndpoints
     }
 
     private static async Task<IResult> Get(string id, 
-        HttpRequest request, 
-        EuIntraCertificatePortClient euIntraCertificatePort,
-        IOptions<TracesNtConfig> tracesOptions)
+        HttpRequest request,
+        IEuIntraCertificateService euIntraCertificateService)
     {
-        try
+        var certificate = await euIntraCertificateService.GetEuIntraCertificate(id);
+
+        if (certificate?.SPSCertificate == null)
         {
-            var certificateResponse = await euIntraCertificatePort.getEuIntraCertificateAsync(
-                new SecurityHeaderType(),
-                tracesOptions.Value.WebServiceClientId,
-                ISO2AlphaLanguageCodeContentType.EN,
-                [],
-                new GetEuIntraCertificateRequestType { ID = id });
+            return Results.NotFound($"Not found {id}");
+        }
 
-            if (certificateResponse?.GetEuIntraCertificateResponse1?.SPSCertificate == null)
-            {
-                return Results.NotFound($"Not found {id}");
-            }
+        var consignment = new Consignment
+        {
+            Package = certificate
+                ?.SPSCertificate
+                ?.SPSConsignment
+                ?.IncludedSPSConsignmentItem
+                ?.FirstOrDefault()
+                ?.NatureIdentificationSPSCargo
+                ?.FirstOrDefault()
+                ?.TypeCode
+                ?.name
+        };
 
-            var consignment = new Consignment
-            {
-                Package = certificateResponse
-                    .GetEuIntraCertificateResponse1
-                    .SPSCertificate
-                    ?.SPSConsignment
-                    ?.IncludedSPSConsignmentItem
-                    ?.FirstOrDefault()
-                    ?.NatureIdentificationSPSCargo
-                    ?.FirstOrDefault()
-                    ?.TypeCode
-                    ?.name
-            };
+        var acceptedTypes = request.GetTypedHeaders().Accept;
 
-            var acceptedTypes = request.GetTypedHeaders().Accept;
-
-            if (acceptedTypes.Any(h => h.MediaType == MediaTypeAttribute.For<IntraCertificate>()))
-            {
-                return Results.Json(
-                    new IntraCertificate
-                    {
-                        Ref = id, 
-                        Consignment = consignment
-                    },
-                    contentType: MediaTypeAttribute.For<IntraCertificate>()
-                );
-            }
-
+        if (acceptedTypes.Any(h => h.MediaType == MediaTypeAttribute.For<IntraCertificate>()))
+        {
             return Results.Json(
-                new IntraCertificateV2 { Id = id, Consignment = consignment },
-                contentType: MediaTypeAttribute.For<IntraCertificateV2>()
+                new IntraCertificate
+                {
+                    Ref = id, 
+                    Consignment = consignment
+                },
+                contentType: MediaTypeAttribute.For<IntraCertificate>()
             );
         }
-        catch (FaultException<EuIntraCertificateNotFoundExceptionType> ex)
-        {
-            return Results.NotFound($"Not found {ex.Detail.CertificateIdentifier}");
-        }
-        finally
-        {
-            await ClientUtilities.CloseClient(euIntraCertificatePort);
-        }
+
+        return Results.Json(
+            new IntraCertificateV2 { Id = id, Consignment = consignment },
+            contentType: MediaTypeAttribute.For<IntraCertificateV2>()
+        );
     }
 }

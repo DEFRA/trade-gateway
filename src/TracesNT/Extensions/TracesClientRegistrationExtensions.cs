@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using TracesNT.Services;
 using TracesNT.WebServices;
 
 namespace TracesNT.Extensions
@@ -15,6 +16,8 @@ namespace TracesNT.Extensions
                 tracesNtConfig.GetServiceUrl("EuIntraCertificateServiceV1"),
                 xApiKey
             );
+
+            services.AddTransient<IEuIntraCertificateService, EuIntraCertificateService>();
 
             return services;
         }
