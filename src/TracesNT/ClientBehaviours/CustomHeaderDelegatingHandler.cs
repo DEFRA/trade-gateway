@@ -1,4 +1,4 @@
-namespace TracesNT;
+namespace TracesNT.ClientBehaviours;
 
 public class CustomHeaderDelegatingHandler : DelegatingHandler
 {

@@ -1,4 +1,5 @@
 using System.Net;
+using TracesNT.ClientBehaviours;
 
 namespace TracesNT.Tests.ClientBehaviours;
 

@@ -32,8 +32,6 @@ static WebApplication CreateWebApplication(string[] args)
 [ExcludeFromCodeCoverage]
 static void ConfigureBuilder(WebApplicationBuilder builder)
 {
-    builder.Configuration.AddEnvironmentVariables();
-
     // Load certificates into Trust Store - Note must happen before Mongo and Http client connections.
     builder.Services.AddCustomTrustStore();
 
@@ -73,7 +71,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
         .ValidateOnStart();
 
     var xApiKey = builder.Configuration.GetValue<string?>("XApiKey");
-    builder.Services.AddTracesNtClients(tracesNtSection.Get<TracesNtConfig>()!, xApiKey!);
+    builder.Services.AddTracesNtClients(xApiKey!);
 
     // Set up the MongoDB client. Config and credentials are injected automatically at runtime.
     MongoClientSettings.Extensions.AddAWSAuthentication();

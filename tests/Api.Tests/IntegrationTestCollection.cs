@@ -1,3 +1,5 @@
+using WireMock.Server;
+
 namespace Api.Tests;
 
 [CollectionDefinition(Name)]

@@ -1,9 +1,5 @@
 using Api.Models;
-using Microsoft.Extensions.Options;
-using System.ServiceModel;
-using TracesNT;
 using TracesNT.Services;
-using TracesNT.WebServices;
 
 namespace Api.Endpoints;
 
