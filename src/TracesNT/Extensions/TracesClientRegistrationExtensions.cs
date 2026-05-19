@@ -1,9 +1,11 @@
 using Microsoft.Extensions.DependencyInjection;
+using System.Diagnostics.CodeAnalysis;
 using TracesNT.Services;
 using TracesNT.WebServices;
 
 namespace TracesNT.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class TracesClientRegistrationExtensions
     {
         public static IServiceCollection AddTracesNtClients(

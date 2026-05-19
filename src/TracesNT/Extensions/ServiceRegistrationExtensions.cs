@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -9,6 +10,7 @@ using TracesNT.ClientBehaviours;
 
 namespace TracesNT.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceRegistrationExtensions
 {
     internal static IServiceCollection AddTracesNtClient<TClient, TChannel>(
