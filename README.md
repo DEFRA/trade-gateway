@@ -25,16 +25,7 @@ A local environment with:
 docker compose up --build -d
 ```
 
-Note: running docker locally requires the following  environment variables:
-
-```env
-TRACESNT__BASEURL=traces-webservice-baseUrl
-TRACESNT__USERNAME=your-traces-username
-TRACESNT__AUTHENTICATIONKEY=your-traces-authentication-key
-TRACESNT__WEBSERVICECLIENTID=your-traces-client-id
-XAPIKEY=
-```
-
+Note: running docker locally requires the environment variables referenced in /compose/localdev.env to be set
 
 A more extensive setup is available in [github.com/DEFRA/cdp-local-environment](https://github.com/DEFRA/cdp-local-environment)
 

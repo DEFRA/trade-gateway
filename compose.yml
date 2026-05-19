@@ -42,17 +42,13 @@ services:
         condition: service_started
     env_file:
       - 'compose/aws.env'
+      - 'compose/localdev.env'
     environment:
       PORT: 8080
       
       LOCALSTACK_ENDPOINT: http://localstack:4566
       MONGO_URI: mongodb://mongodb:27017/
-      Mongo__DatabaseUri: mongodb://mongodb:27017
-      Mongo__DatabaseName: trade-gateway
-      TracesNt__BaseUrl: ${TRACESNT__BASEURL}
-      TracesNt__Username: ${TRACESNT__USERNAME}
-      TracesNt__AuthenticationKey: ${TRACESNT__AUTHENTICATIONKEY}
-      TracesNt__WebServiceClientId: ${TRACESNT__WEBSERVICECLIENTID}
+
 
 volumes:
   mongodb-data:
