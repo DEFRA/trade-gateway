@@ -26,7 +26,7 @@ public static class IntraEndpoints
         var consignment = new Consignment
         {
             Package = certificate
-                ?.SPSCertificate
+                .SPSCertificate
                 ?.SPSConsignment
                 ?.IncludedSPSConsignmentItem
                 ?.FirstOrDefault()

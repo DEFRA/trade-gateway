@@ -45,7 +45,7 @@ public class LoggingMessageInspectorTests
     [Fact]
     public void AfterReceiveReply_WhenReplyIsFault_LogsFaultAndPreservesReply()
     {
-        var logger = new TestLogger(LogLevel.Error);
+        var logger = new TestLogger(LogLevel.Trace);
         var sut = new LoggingMessageInspector(logger);
         var request = Message.CreateMessage(MessageVersion.Soap11, "urn:test-action");
         var correlationState = sut.BeforeSendRequest(ref request, _channel);
@@ -56,6 +56,8 @@ public class LoggingMessageInspectorTests
             "urn:test-reply"
         );
 
+        reply.IsFault.Should().BeTrue();
+
         sut.AfterReceiveReply(ref reply, correlationState!);
 
         logger.Entries.Should().Contain(entry =>
@@ -64,6 +66,7 @@ public class LoggingMessageInspectorTests
             entry.Message.Contains("Code=Client") &&
             entry.Message.Contains("Reason=Boom")
         );
+        logger.Entries.Should().NotContain(entry => entry.Level == LogLevel.Information);
 
         var fault = MessageFault.CreateFault(reply, int.MaxValue);
         fault.Code.Name.Should().Be("Client");

@@ -38,11 +38,12 @@ public class LoggingMessageInspector(ILogger logger) : IClientMessageInspector
         }
         else
         {
-            logger.LogInformation(
-                "Service Response: Action={Action}, Duration={Duration}ms",
-                action,
-                stopwatch.ElapsedMilliseconds
-            );
+            if (logger.IsEnabled(LogLevel.Information))
+                logger.LogInformation(
+                    "Service Response: Action={Action}, Duration={Duration}ms",
+                    action,
+                    stopwatch.ElapsedMilliseconds
+                );
         }
     }
 }

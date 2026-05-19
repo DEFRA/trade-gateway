@@ -53,7 +53,6 @@ services:
       TracesNt__Username: ${TRACESNT__USERNAME}
       TracesNt__AuthenticationKey: ${TRACESNT__AUTHENTICATIONKEY}
       TracesNt__WebServiceClientId: ${TRACESNT__WEBSERVICECLIENTID}
-      XApiKey: ${XAPIKEY:-}
 
 volumes:
   mongodb-data:
