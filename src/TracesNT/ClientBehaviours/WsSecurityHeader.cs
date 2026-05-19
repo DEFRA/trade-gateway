@@ -92,6 +92,6 @@ public class WsSecurityHeader(string username, string authenticationKey) : Messa
             .. Encoding.UTF8.GetBytes(created),
             .. Encoding.UTF8.GetBytes(authKey),
         ];
-        return Convert.ToBase64String(SHA1.HashData(combined));
+        return Convert.ToBase64String(SHA1.HashData(combined)); //NOSONAR - use of SHA1 is required by WS-Security spec - header is always sent over HTTPS
     }
 }
