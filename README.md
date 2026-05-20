@@ -25,6 +25,8 @@ A local environment with:
 docker compose up --build -d
 ```
 
+Note: running docker locally requires the environment variables referenced in /compose/localdev.env to be set
+
 A more extensive setup is available in [github.com/DEFRA/cdp-local-environment](https://github.com/DEFRA/cdp-local-environment)
 
 ### MongoDB

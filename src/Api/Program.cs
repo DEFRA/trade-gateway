@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Api.Config;
 using Api.Endpoints;
@@ -6,10 +7,13 @@ using Api.Utils.Http;
 using Api.Utils.Logging;
 using Api.Utils.Mongo;
 using FluentValidation;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using MongoDB.Driver;
 using MongoDB.Driver.Authentication.AWS;
 using Serilog;
+using TracesNT;
+using TracesNT.Extensions;
 
 var app = CreateWebApplication(args);
 await app.RunAsync();
@@ -28,8 +32,6 @@ static WebApplication CreateWebApplication(string[] args)
 [ExcludeFromCodeCoverage]
 static void ConfigureBuilder(WebApplicationBuilder builder)
 {
-    builder.Configuration.AddEnvironmentVariables();
-
     // Load certificates into Trust Store - Note must happen before Mongo and Http client connections.
     builder.Services.AddCustomTrustStore();
 
@@ -61,12 +63,22 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
         }
     });
 
+    // add the Traces NT clients
+    var tracesNtSection = builder.Configuration.GetRequiredSection("TracesNt");
+    builder.Services.AddOptions<TracesNtConfig>()
+        .Bind(tracesNtSection)
+        .ValidateDataAnnotations()
+        .ValidateOnStart();
+
+    var xApiKey = builder.Configuration.GetValue<string?>("XApiKey");
+    builder.Services.AddTracesNtClients(xApiKey!);
+
     // Set up the MongoDB client. Config and credentials are injected automatically at runtime.
     MongoClientSettings.Extensions.AddAWSAuthentication();
     builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));
     builder.Services.AddSingleton<IMongoDbClientFactory, MongoDbClientFactory>();
 
-    // Add healthcheck, this is required for the platform to know your service is alive.
+    // Add health check, this is required for the platform to know your service is alive.
     builder.Services.AddHealthChecks();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 }
