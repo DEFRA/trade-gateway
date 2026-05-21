@@ -1,0 +1,6 @@
+--schema
+./schema
+--output
+./../../src/Api.Contract
+--namespace
+Trade.Gateway.Api.Contract
