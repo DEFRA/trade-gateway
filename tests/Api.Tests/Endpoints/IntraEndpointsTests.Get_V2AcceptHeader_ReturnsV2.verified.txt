@@ -1,6 +1,0 @@
-{
-  id: GB123,
-  consignment: {
-    package: General cargo (Commodities)
-  }
-}

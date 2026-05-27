@@ -1,0 +1,246 @@
+﻿{
+  $model: defra/certificate-internal/1,
+  $type: intra,
+  exchangedDocument: {
+    name: 2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’),
+    identifier: INTRA.EU.FR.2026.0000041,
+    documentTypeCode: 856,
+    documentStatusCode: 1,
+    issueDateTime: DateTimeOffset_1,
+    includedNote: [
+      {
+        type: Note,
+        identifier: null,
+        name: null,
+        subject: LAST_UPDATE_DATETIME,
+        creationDateTime: null,
+        noteSubjectCode: null,
+        content: [
+          DateTimeOffset_2
+        ],
+        contentCode: null
+      },
+      {
+        type: Note,
+        identifier: null,
+        name: null,
+        subject: JOURNEY_LOG,
+        creationDateTime: null,
+        noteSubjectCode: null,
+        content: [
+          null
+        ],
+        contentCode: [
+          {
+            value: NO,
+            listId: boolean,
+            listName: null,
+            name: null,
+            listAgencyId: null,
+            listAgencyName: null,
+            listVersionId: null
+          }
+        ]
+      }
+    ],
+    referenceDocument: [
+      {
+        typeCode: 856,
+        relationshipTypeCode: CAW,
+        identifier: INTRA.EU.FR.2026.0000041,
+        attachmentBinaryObject: null,
+        information: null
+      },
+      {
+        typeCode: 784,
+        relationshipTypeCode: ZZZ,
+        identifier: wer,
+        attachmentBinaryObject: null,
+        information: null
+      }
+    ],
+    firstSignatoryAuthentication: {
+      typeCode: 4,
+      actualDateTime: DateTimeOffset_3,
+      governmentActionTypeCode: Inspection (Identification of Applicant),
+      providerParty: {
+        identifier: XI0000,
+        name: Department of Agriculture, Environment and Rural Affairs (DAERA),
+        partyRoleCode: VJ,
+        partyTypeCode: AUTHORITY,
+        postalAddress: {
+          postcodeCode: BT1,
+          lineOne: DAERA main office,
+          lineTwo: null,
+          cityName: Belfast,
+          countryId: XI,
+          countryName: United Kingdom (Northern Ireland),
+          countrySubDivisionName: County Antrim
+        },
+        definedContact: [
+          {
+            personName: Daniel Klemm
+          }
+        ]
+      },
+      includedClause: [
+        {
+          identifier: PURPOSE,
+          content: For transit through Member State(s)
+        },
+        {
+          identifier: CERTIFIED_AS_OR_FOR,
+          content: Further keeping
+        },
+        {
+          identifier: SIGNATORY_PERSON_EMAIL,
+          content: dklemm@equalexperts.com
+        }
+      ]
+    },
+    secondSignatoryAuthentication: null,
+    thirdSignatoryAuthentication: null,
+    fourthSignatoryAuthentication: null
+  },
+  specifiedConsignment: [
+    {
+      availabilityDueDateTime: null,
+      exportExitDateTime: DateTimeOffset_4,
+      consignorParty: {
+        identifier: 899361,
+        name: DK Test,
+        partyRoleCode: CZ,
+        partyTypeCode: IMPORTER,
+        postalAddress: {
+          postcodeCode: BT9,
+          lineOne: Test Street 876,
+          lineTwo: null,
+          cityName: Belfast,
+          countryId: XI,
+          countryName: United Kingdom (Northern Ireland),
+          countrySubDivisionName: County Antrim
+        },
+        definedContact: null
+      },
+      consigneeParty: {
+        identifier: 899361,
+        name: DK Test,
+        partyRoleCode: CN,
+        partyTypeCode: IMPORTER,
+        postalAddress: {
+          postcodeCode: BT9,
+          lineOne: Test Street 876,
+          lineTwo: null,
+          cityName: Belfast,
+          countryId: XI,
+          countryName: United Kingdom (Northern Ireland),
+          countrySubDivisionName: County Antrim
+        },
+        definedContact: null
+      },
+      despatchParty: {
+        identifier: TEST-01-01,
+        name: Test Quarantaine,
+        partyRoleCode: PW,
+        partyTypeCode: QUARANTINE,
+        postalAddress: {
+          postcodeCode: 01000,
+          lineOne: zdafazartaretaretrtatrrart,
+          lineTwo: null,
+          cityName: Bourg-en-Bresse,
+          countryId: FR,
+          countryName: France,
+          countrySubDivisionName: Ain.
+        },
+        definedContact: null
+      },
+      customsTransitAgentParty: null,
+      exportCountry: {
+        id: null,
+        name: null
+      },
+      importCountry: {
+        id: XI,
+        name: United Kingdom (Northern Ireland)
+      },
+      reExportCountry: null,
+      transitCountry: [
+        {
+          id: AT,
+          name: Austria
+        }
+      ],
+      unloadingBaseportLocation: null,
+      includedConsignmentItem: [
+        {
+          natureIdCargo: [
+            {
+              typeCode: 12
+            }
+          ],
+          includedTradeLineItem: [
+            {
+              sequenceNumeric: 0,
+              description: [
+                Consignment totals and summary
+              ],
+              scientificName: null,
+              netWeight: {
+                content: 0,
+                value: null,
+                unitCode: null,
+                unitCodeListVersionId: null
+              },
+              grossWeight: {
+                content: 1,
+                value: null,
+                unitCode: null,
+                unitCodeListVersionId: null
+              },
+              applicableProductClassification: null,
+              physicalReferencedLogisticsPackage: [
+                {
+                  levelCode: 4,
+                  typeCode: NA,
+                  itemQuantity: 0
+                }
+              ]
+            },
+            {
+              sequenceNumeric: 1,
+              description: [
+                null
+              ],
+              scientificName: [
+                Equus asinus
+              ],
+              netWeight: null,
+              grossWeight: null,
+              applicableProductClassification: [
+                {
+                  systemId: CN,
+                  systemName: CN Code (Combined Nomenclature),
+                  classCode: 0101,
+                  className: [
+                    LIVE ANIMALS,
+                    Live horses, asses, mules and hinnies
+                  ]
+                },
+                {
+                  systemId: IDENTIFICATION_SYSTEM,
+                  systemName: Identification system,
+                  classCode: TATTOO,
+                  className: [
+                    Tattoo
+                  ]
+                }
+              ],
+              physicalReferencedLogisticsPackage: null
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  laboratoryObservationResult: null
+}

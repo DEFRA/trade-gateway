@@ -1,6 +1,0 @@
-{
-  Ref: GB123,
-  Consignment: {
-    package: General cargo (Commodities)
-  }
-}

@@ -4,7 +4,7 @@
   "title": "Defra UNVTD INTRA profile",
   "allOf": [
     {
-      "$ref": "defra-unvtd-canonical-core-v1.schema.json"
+      "$ref": "defra-unvtd-canonical-core-v1.schema.json#/$defs/CertificatePayload"
     },
     {
       "type": "object",
@@ -14,8 +14,25 @@
         },
         "$type": {
           "const": "intra"
+        },
+        "exchangedDocument": {
+          "type": "object",
+          "properties": {
+            "documentTypeCode": {
+              "enum": [
+                "666",
+                "856"
+              ]
+            }
+          }
         }
-      }
+      },
+      "required": [
+        "$model",
+        "$type",
+        "exchangedDocument",
+        "specifiedConsignment"
+      ]
     }
   ]
 }

@@ -2,8 +2,37 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "defra-unvtd-canonical-core-v1.schema.json",
   "title": "Defra UNVTD canonical core",
-  "description": "Canonical component schema for Defra internal models using UN/CEFACT/UNVTD building blocks. Property names and value kinds follow the UN/CEFACT D23B JSON-LD vocabulary (https://vocabulary.uncefact.org/unece-context-D23B.jsonld): xsd:string-typed terms are JSON strings; @vocab-typed terms are JSON strings; @id-typed terms are JSON objects or strings per JSON-LD. That file defines the RDF types ExchangedDocument and Consignment (PascalCase keys) and many association properties, but it does not currently declare the BSP assembly property keys exchangedDocument or specifiedConsignment (camelCase) used on the JSON root alongside UN JSON Schemas (e.g. UNECE-BSPMaster D23B). defra-unvtd-bsp-document.context.jsonld adds only those two missing keys as Defra profile aliases (not unece terms), so we avoid minting unofficial vocabulary entries while preserving a stable JSON-LD expansion for TRACES-oriented payload shape. If UN later publishes exchangedDocument/specifiedConsignment in the official context, remove the Defra aliases and use the official mapping directly.",
+  "description": "Canonical component schema for Defra internal models using UN/CEFACT/UNVTD building blocks. Property names and value kinds follow the UN/CEFACT D23B JSON-LD vocabulary (https://vocabulary.uncefact.org/unece-context-D23B.jsonld): xsd:string-typed terms are JSON strings; @vocab-typed terms are JSON strings; @id-typed terms are JSON objects or strings per JSON-LD. That file defines the RDF types ExchangedDocument and Consignment (PascalCase keys) and many association properties, but it does not currently declare the BSP assembly property keys exchangedDocument or specifiedConsignment (camelCase) used on the JSON root alongside UN JSON Schemas (e.g. UNECE-BSPMaster D23B). defra-unvtd-core-v1.context.jsonld adds only those two missing keys as Defra profile aliases (not unece terms), so we avoid minting unofficial vocabulary entries while preserving a stable JSON-LD expansion for TRACES-oriented payload shape. If UN later publishes exchangedDocument/specifiedConsignment in the official context, remove the Defra aliases and use the official mapping directly.",
   "$defs": {
+    "UneceCodeType": {
+      "type": "object",
+      "required": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string"
+        },
+        "listId": {
+          "type": "string"
+        },
+        "listName": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "listAgencyId": {
+          "type": "string"
+        },
+        "listAgencyName": {
+          "type": "string"
+        },
+        "listVersionId": {
+          "type": "string"
+        }
+      }
+    },
     "UneceMeasureType": {
       "type": "object",
       "anyOf": [
@@ -28,7 +57,45 @@
           "pattern": "^[+-]?(0|[1-9][0-9]*)(\\.\\d+)?$"
         },
         "unitCode": {
+          "type": "string",
+          "description": "Measurement unit code token."
+        },
+        "unitCodeListVersionId": {
           "type": "string"
+        }
+      }
+    },
+    "UneceWeightMeasureType": {
+      "type": "object",
+      "anyOf": [
+        {
+          "required": [
+            "content"
+          ]
+        },
+        {
+          "required": [
+            "value"
+          ]
+        }
+      ],
+      "properties": {
+        "content": {
+          "type": "string",
+          "pattern": "^[+-]?(0|[1-9][0-9]*)(\\.\\d+)?$"
+        },
+        "value": {
+          "type": "string",
+          "pattern": "^[+-]?(0|[1-9][0-9]*)(\\.\\d+)?$"
+        },
+        "unitCode": {
+          "type": "string",
+          "description": "Weight unit code (subset of UN/CEFACT Rec 20/21 used by this profile).",
+          "enum": [
+            "KGM",
+            "GRM",
+            "TNE"
+          ]
         },
         "unitCodeListVersionId": {
           "type": "string"
@@ -147,23 +214,45 @@
     },
     "IncludedNote": {
       "type": "object",
-      "description": "UNECE Note (https://vocabulary.uncefact.org/Note): unece:content, unece:contentCode, and unece:noteSubjectCode are xsd:string in unece-context-D23B.jsonld — use a single string per property, not single-element arrays.",
+      "description": "UNECE Note (https://vocabulary.uncefact.org/Note): supported properties are aligned to the Note vocabulary term set. unece:identifier, unece:name, unece:subject, unece:creationDateTime, unece:noteSubjectCode, unece:content, and unece:contentCode are xsd:string in unece-context-D23B.jsonld.",
       "properties": {
         "type": {
           "const": "Note",
           "description": "JSON-LD @type for unece:Note when using unece-context-D23B.jsonld (type aliases to @type)."
+        },
+        "identifier": {
+          "type": "string",
+          "description": "unece:identifier — xsd:string in unece-context-D23B.jsonld."
+        },
+        "name": {
+          "type": "string",
+          "description": "unece:name — xsd:string in unece-context-D23B.jsonld."
+        },
+        "subject": {
+          "type": "string",
+          "description": "unece:subject — xsd:string in unece-context-D23B.jsonld."
+        },
+        "creationDateTime": {
+          "type": "string",
+          "description": "unece:creationDateTime — xsd:string in unece-context-D23B.jsonld."
         },
         "noteSubjectCode": {
           "type": "string",
           "description": "unece:noteSubjectCode — xsd:string in unece-context-D23B.jsonld."
         },
         "content": {
-          "type": "string",
-          "description": "unece:content — xsd:string in unece-context-D23B.jsonld."
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "unece:content profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of strings."
         },
         "contentCode": {
-          "type": "string",
-          "description": "unece:contentCode — xsd:string in unece-context-D23B.jsonld."
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/UneceCodeType"
+          },
+          "description": "unece:contentCode profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of UneceCodeType objects (value + optional list metadata such as listId/listName/name)."
         }
       }
     },
@@ -182,12 +271,200 @@
           "type": "string"
         },
         "attachmentBinaryObject": {
-          "type": "object"
+          "$ref": "#/$defs/AttachmentBinaryObject"
         },
         "information": {
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "AttachmentBinaryObject": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string"
+        },
+        "mimeCode": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        }
+      }
+    },
+    "LogisticsLocation": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "typeCode": {
+          "type": "string",
+          "description": "unece:typeCode is xsd:string in unece-context-D23B.jsonld."
+        }
+      }
+    },
+    "TradeCountry": {
+      "type": "object",
+      "description": "SPSCountryType mapping for route countries. Operational TRACES mapping uses the country ID and Name fields.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Country identifier/code value (ISO 3166-1 alpha-2 style lexical token).",
+          "pattern": "^([A-Z]{2})?$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Country name."
+        }
+      }
+    },
+    "CargoNature": {
+      "type": "object",
+      "properties": {
+        "typeCode": {
+          "type": "string",
+          "description": "unece:typeCode is xsd:string in unece-context-D23B.jsonld."
+        }
+      }
+    },
+    "LogisticsPackage": {
+      "type": "object",
+      "properties": {
+        "levelCode": {
+          "type": "integer"
+        },
+        "typeCode": {
+          "type": "string",
+          "description": "unece:typeCode is xsd:string in unece-context-D23B.jsonld."
+        },
+        "itemQuantity": {
+          "type": "integer"
+        }
+      }
+    },
+    "ProductClassification": {
+      "type": "object",
+      "properties": {
+        "systemId": {
+          "type": "string"
+        },
+        "systemName": {
+          "type": "string"
+        },
+        "classCode": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        },
+        "className": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "TradeLineItem": {
+      "type": "object",
+      "properties": {
+        "sequenceNumeric": {
+          "type": "integer"
+        },
+        "description": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scientificName": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "netWeight": {
+          "$ref": "#/$defs/UneceWeightMeasureType"
+        },
+        "grossWeight": {
+          "$ref": "#/$defs/UneceWeightMeasureType"
+        },
+        "applicableProductClassification": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProductClassification"
+          }
+        },
+        "physicalReferencedLogisticsPackage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/LogisticsPackage"
+          }
+        }
+      }
+    },
+    "ConsignmentItem": {
+      "type": "object",
+      "properties": {
+        "natureIdCargo": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CargoNature"
+          }
+        },
+        "includedTradeLineItem": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TradeLineItem"
+          }
+        }
+      }
+    },
+    "LaboratoryObservationResult": {
+      "type": "object",
+      "properties": {
+        "natureIdCargo": {
+          "$ref": "#/$defs/CargoNature"
+        },
+        "productLaboratoryTest": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProductLaboratoryTest"
+          }
+        }
+      }
+    },
+    "ProductLaboratoryTest": {
+      "type": "object",
+      "properties": {
+        "applicableProductClassification": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/ProductClassification"
+            },
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ProductClassification"
+              }
+            }
+          ]
+        },
+        "laboratoryTest": {
+          "type": "array",
+          "items": {
+            "type": "object"
           }
         }
       }
@@ -267,16 +544,38 @@
         "customsTransitAgentParty": {
           "$ref": "#/$defs/TradeParty"
         },
+        "exportCountry": {
+          "$ref": "#/$defs/TradeCountry",
+          "description": "Consignment route origin country (TRACES ExportSPSCountry)."
+        },
+        "importCountry": {
+          "$ref": "#/$defs/TradeCountry",
+          "description": "Consignment route destination/import country (TRACES ImportSPSCountry)."
+        },
+        "reExportCountry": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TradeCountry"
+          },
+          "description": "Re-export countries on the consignment route (TRACES ReExportSPSCountry[])."
+        },
+        "transitCountry": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TradeCountry"
+          },
+          "description": "Transit countries on the consignment route (TRACES TransitSPSCountry[])."
+        },
         "unloadingBaseportLocation": {
           "type": "array",
           "items": {
-            "type": "object"
+            "$ref": "#/$defs/LogisticsLocation"
           }
         },
         "includedConsignmentItem": {
           "type": "array",
           "items": {
-            "type": "object"
+            "$ref": "#/$defs/ConsignmentItem"
           }
         }
       }
@@ -308,7 +607,10 @@
         },
         "laboratoryObservationResult": {
           "type": "array",
-          "description": "UN vocabulary-aligned laboratory observations/results collection."
+          "description": "UN vocabulary-aligned laboratory observations/results collection.",
+          "items": {
+            "$ref": "#/$defs/LaboratoryObservationResult"
+          }
         }
       }
     }

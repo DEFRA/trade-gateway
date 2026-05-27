@@ -9,14 +9,18 @@ namespace TracesNT.Services
 {
     public class EuIntraCertificateService(EuIntraCertificatePortClient euIntraCertificatePort, ILogger<EuIntraCertificateService> logger, IOptions<TracesNtConfig> tracesOptions) : IEuIntraCertificateService
     {
-        public async Task<EuIntraCertificateType?> GetEuIntraCertificate(string id)
+        public async Task<EuIntraCertificateType?> GetEuIntraCertificate(string id, string languageCode)
         {
+            var language = Enum.TryParse<ISO2AlphaLanguageCodeContentType>(languageCode, out var parsed)
+                ? parsed
+                : ISO2AlphaLanguageCodeContentType.en;
+
             try
             {
                 var certificateResponse = await euIntraCertificatePort.getEuIntraCertificateAsync(
                     new SecurityHeaderType(),
                     tracesOptions.Value.WebServiceClientId,
-                    ISO2AlphaLanguageCodeContentType.EN,
+                    language,
                     [],
                     new GetEuIntraCertificateRequestType { ID = id });
 

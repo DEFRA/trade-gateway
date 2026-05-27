@@ -1,4 +1,4 @@
-namespace Api.Models;
+namespace Api.Contract;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class MediaTypeAttribute(string mediaType) : Attribute

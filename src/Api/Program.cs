@@ -40,6 +40,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     {
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "Trade Gateway", Version = "v1" });
         options.OperationFilter<ContentNegotiationOperationFilter>();
+        options.SchemaFilter<ConstValueSchemaFilter>();
     });
 
     // Configure logging to use the CDP Platform standards.

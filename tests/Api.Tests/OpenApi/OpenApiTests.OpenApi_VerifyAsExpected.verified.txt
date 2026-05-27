@@ -18,20 +18,22 @@
             schema: {
               type: string
             }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
           }
         ],
         responses: {
           200: {
             description: OK,
             content: {
-              application/vnd.defra.unvtd.profile.intra.v1+json: {
+              application/json: {
                 schema: {
-                  $ref: #/components/schemas/IntraCertificate
-                }
-              },
-              application/vnd.defra.unvtd.profile.intra.v2+json: {
-                schema: {
-                  $ref: #/components/schemas/IntraCertificateV2
+                  $ref: #/components/schemas/DefraUNVTDINTRAProfile
                 }
               }
             }
@@ -42,44 +44,638 @@
   },
   components: {
     schemas: {
-      Consignment: {
+      AttachmentBinaryObject: {
         type: object,
         properties: {
-          package: {
-            type: string,
-            nullable: true
-          }
-        },
-        additionalProperties: false
-      },
-      IntraCertificate: {
-        required: [
-          Ref
-        ],
-        type: object,
-        properties: {
-          Ref: {
+          format: {
             type: string,
             nullable: true
           },
-          Consignment: {
-            $ref: #/components/schemas/Consignment
+          mimeCode: {
+            type: string,
+            nullable: true
+          },
+          uri: {
+            type: string,
+            nullable: true
           }
         },
         additionalProperties: false
       },
-      IntraCertificateV2: {
+      Authentication: {
+        type: object,
+        properties: {
+          typeCode: {
+            type: string,
+            description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          actualDateTime: {
+            type: string,
+            nullable: true
+          },
+          governmentActionTypeCode: {
+            type: string,
+            description: unece:governmentActionTypeCode is @vocab in unece-context-D23B.jsonld; use a string code or vocabulary token.,
+            nullable: true
+          },
+          providerParty: {
+            $ref: #/components/schemas/TradeParty
+          },
+          includedClause: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/Clause
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      CargoNature: {
+        type: object,
+        properties: {
+          typeCode: {
+            type: string,
+            description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      Clause: {
+        type: object,
+        properties: {
+          identifier: {
+            type: string,
+            nullable: true
+          },
+          content: {
+            type: string,
+            description: unece:content is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      Consignment: {
+        type: object,
+        properties: {
+          availabilityDueDateTime: {
+            type: string,
+            nullable: true
+          },
+          exportExitDateTime: {
+            type: string,
+            nullable: true
+          },
+          consignorParty: {
+            $ref: #/components/schemas/TradeParty
+          },
+          consigneeParty: {
+            $ref: #/components/schemas/TradeParty
+          },
+          despatchParty: {
+            $ref: #/components/schemas/TradeParty
+          },
+          customsTransitAgentParty: {
+            $ref: #/components/schemas/TradeParty
+          },
+          exportCountry: {
+            $ref: #/components/schemas/TradeCountry
+          },
+          importCountry: {
+            $ref: #/components/schemas/TradeCountry
+          },
+          reExportCountry: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/TradeCountry
+            },
+            description: Re-export countries on the consignment route (TRACES ReExportSPSCountry[]).,
+            nullable: true
+          },
+          transitCountry: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/TradeCountry
+            },
+            description: Transit countries on the consignment route (TRACES TransitSPSCountry[]).,
+            nullable: true
+          },
+          unloadingBaseportLocation: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LogisticsLocation
+            },
+            nullable: true
+          },
+          includedConsignmentItem: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ConsignmentItem
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ConsignmentItem: {
+        type: object,
+        properties: {
+          natureIdCargo: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/CargoNature
+            },
+            nullable: true
+          },
+          includedTradeLineItem: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/TradeLineItem
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDINTRAProfile: {
         required: [
-          id
+          exchangedDocument,
+          specifiedConsignment
         ],
+        type: object,
+        properties: {
+          $model: {
+            enum: [
+              defra/certificate-internal/1
+            ],
+            type: string,
+            nullable: true
+          },
+          $type: {
+            enum: [
+              intra
+            ],
+            type: string,
+            nullable: true
+          },
+          exchangedDocument: {
+            $ref: #/components/schemas/ExchangedDocument
+          },
+          specifiedConsignment: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/Consignment
+            },
+            nullable: true
+          },
+          laboratoryObservationResult: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LaboratoryObservationResult
+            },
+            description: UN vocabulary-aligned laboratory observations/results collection.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ExchangedDocument: {
+        required: [
+          documentTypeCode,
+          identifier
+        ],
+        type: object,
+        properties: {
+          name: {
+            type: string,
+            description: unece:name is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          identifier: {
+            type: string,
+            nullable: true
+          },
+          documentTypeCode: {
+            type: string,
+            description: Document type: unece:typeCode is xsd:string in unece-context-D23B.jsonld (use lexical string for numeric codes).,
+            nullable: true
+          },
+          documentStatusCode: {
+            type: string,
+            description: Status code as string per UN vocabulary typing for coded strings.,
+            nullable: true
+          },
+          issueDateTime: {
+            type: string,
+            nullable: true
+          },
+          includedNote: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/IncludedNote
+            },
+            nullable: true
+          },
+          referenceDocument: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ReferencedDocument
+            },
+            nullable: true
+          },
+          firstSignatoryAuthentication: {
+            $ref: #/components/schemas/Authentication
+          },
+          secondSignatoryAuthentication: {
+            $ref: #/components/schemas/Authentication
+          },
+          thirdSignatoryAuthentication: {
+            $ref: #/components/schemas/Authentication
+          },
+          fourthSignatoryAuthentication: {
+            $ref: #/components/schemas/Authentication
+          }
+        },
+        additionalProperties: false
+      },
+      IncludedNote: {
+        type: object,
+        properties: {
+          type: {
+            enum: [
+              Note
+            ],
+            type: string,
+            description: JSON-LD @type for unece:Note when using unece-context-D23B.jsonld (type aliases to @type).,
+            nullable: true
+          },
+          identifier: {
+            type: string,
+            description: unece:identifier — xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          name: {
+            type: string,
+            description: unece:name — xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          subject: {
+            type: string,
+            description: unece:subject — xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          creationDateTime: {
+            type: string,
+            description: unece:creationDateTime — xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          noteSubjectCode: {
+            type: string,
+            description: unece:noteSubjectCode — xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          content: {
+            type: array,
+            items: {
+              type: string
+            },
+            description: unece:content profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of strings.,
+            nullable: true
+          },
+          contentCode: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/UneceCode
+            },
+            description: unece:contentCode profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of UneceCodeType objects (value + optional list metadata such as listId/listName/name).,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      LaboratoryObservationResult: {
+        type: object,
+        properties: {
+          natureIdCargo: {
+            $ref: #/components/schemas/CargoNature
+          },
+          productLaboratoryTest: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ProductLaboratoryTest
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      LogisticsLocation: {
+        type: object,
+        properties: {
+          identifier: {
+            type: string,
+            nullable: true
+          },
+          name: {
+            type: string,
+            nullable: true
+          },
+          typeCode: {
+            type: string,
+            description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      LogisticsPackage: {
+        type: object,
+        properties: {
+          levelCode: {
+            type: integer,
+            format: int32,
+            nullable: true
+          },
+          typeCode: {
+            type: string,
+            description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          itemQuantity: {
+            type: integer,
+            format: int32,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ProductClassification: {
+        type: object,
+        properties: {
+          systemId: {
+            type: string,
+            nullable: true
+          },
+          systemName: {
+            type: string,
+            nullable: true
+          },
+          classCode: {
+            type: string,
+            nullable: true
+          },
+          className: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ProductLaboratoryTest: {
+        type: object,
+        properties: {
+          applicableProductClassification: {
+            $ref: #/components/schemas/ProductClassification
+          },
+          laboratoryTest: {
+            type: array,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ReferencedDocument: {
+        type: object,
+        properties: {
+          typeCode: {
+            type: string,
+            description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          relationshipTypeCode: {
+            type: string,
+            description: unece:relationshipTypeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          identifier: {
+            type: string,
+            nullable: true
+          },
+          attachmentBinaryObject: {
+            $ref: #/components/schemas/AttachmentBinaryObject
+          },
+          information: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      TradeAddress: {
+        type: object,
+        properties: {
+          postcodeCode: {
+            type: string,
+            description: unece:postcodeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          lineOne: {
+            type: string,
+            nullable: true
+          },
+          lineTwo: {
+            type: string,
+            nullable: true
+          },
+          cityName: {
+            type: string,
+            nullable: true
+          },
+          countryId: {
+            type: string,
+            description: unece:countryId is @vocab in unece-context-D23B.jsonld (e.g. ISO 3166-1 alpha-2 as a vocabulary-relative token).,
+            nullable: true
+          },
+          countryName: {
+            type: string,
+            nullable: true
+          },
+          countrySubDivisionName: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      TradeCountry: {
         type: object,
         properties: {
           id: {
             type: string,
+            description: Country identifier/code value (ISO 3166-1 alpha-2 style lexical token).,
             nullable: true
           },
-          consignment: {
-            $ref: #/components/schemas/Consignment
+          name: {
+            type: string,
+            description: Country name.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      TradeLineItem: {
+        type: object,
+        properties: {
+          sequenceNumeric: {
+            type: integer,
+            format: int32,
+            nullable: true
+          },
+          description: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          scientificName: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          netWeight: {
+            $ref: #/components/schemas/UneceWeightMeasure
+          },
+          grossWeight: {
+            $ref: #/components/schemas/UneceWeightMeasure
+          },
+          applicableProductClassification: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ProductClassification
+            },
+            nullable: true
+          },
+          physicalReferencedLogisticsPackage: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LogisticsPackage
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      TradeParty: {
+        type: object,
+        properties: {
+          identifier: {
+            type: string,
+            nullable: true
+          },
+          name: {
+            type: string,
+            description: unece:name is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          partyRoleCode: {
+            type: string,
+            description: unece:partyRoleCode is @vocab in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          partyTypeCode: {
+            nullable: true
+          },
+          postalAddress: {
+            $ref: #/components/schemas/TradeAddress
+          },
+          definedContact: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/TradePartyDefinedContactItem
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      TradePartyDefinedContactItem: {
+        type: object,
+        properties: {
+          personName: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      UneceCode: {
+        required: [
+          value
+        ],
+        type: object,
+        properties: {
+          value: {
+            type: string,
+            nullable: true
+          },
+          listId: {
+            type: string,
+            nullable: true
+          },
+          listName: {
+            type: string,
+            nullable: true
+          },
+          name: {
+            type: string,
+            nullable: true
+          },
+          listAgencyId: {
+            type: string,
+            nullable: true
+          },
+          listAgencyName: {
+            type: string,
+            nullable: true
+          },
+          listVersionId: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      UneceWeightMeasure: {
+        type: object,
+        properties: {
+          content: {
+            type: string,
+            nullable: true
+          },
+          value: {
+            type: string,
+            nullable: true
+          },
+          unitCode: {
+            type: string,
+            description: Weight unit code (subset of UN/CEFACT Rec 20/21 used by this profile).,
+            nullable: true
+          },
+          unitCodeListVersionId: {
+            type: string,
+            nullable: true
           }
         },
         additionalProperties: false
