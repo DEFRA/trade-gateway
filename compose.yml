@@ -42,6 +42,7 @@ services:
         condition: service_started
     env_file:
       - 'compose/aws.env'
+      - 'compose/localdev.env'
     environment:
       PORT: 8080
       
@@ -54,6 +55,7 @@ services:
       TracesNt__AuthenticationKey: ${TRACESNT__AUTHENTICATIONKEY}
       TracesNt__WebServiceClientId: ${TRACESNT__WEBSERVICECLIENTID}
       XApiKey: ${XAPIKEY:-}
+
 
 volumes:
   mongodb-data:

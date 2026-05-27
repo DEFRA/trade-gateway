@@ -268,3 +268,6 @@ __pycache__/
 library.db
 .envrc
 .env
+
+.orig
+.lscache

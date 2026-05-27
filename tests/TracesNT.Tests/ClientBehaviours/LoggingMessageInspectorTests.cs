@@ -56,6 +56,8 @@ public class LoggingMessageInspectorTests
             "urn:test-reply"
         );
 
+        reply.IsFault.Should().BeTrue();
+
         sut.AfterReceiveReply(ref reply, correlationState!);
 
         logger.Entries.Should().Contain(entry =>
@@ -64,6 +66,7 @@ public class LoggingMessageInspectorTests
             entry.Message.Contains("Code=Client") &&
             entry.Message.Contains("Reason=Boom")
         );
+        logger.Entries.Should().NotContain(entry => entry.Level == LogLevel.Information);
 
         var fault = MessageFault.CreateFault(reply, int.MaxValue);
         fault.Code.Name.Should().Be("Client");

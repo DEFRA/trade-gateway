@@ -31,11 +31,13 @@ public class WsSecurityMessageInspectorTests
             .And.Contain("alice");
     }
 
-    [Fact]
-    public void BeforeSendRequest_WithoutCredentials_LeavesHeadersUntouched()
+    [Theory]
+    [InlineData("username", "")]
+    [InlineData("", "secret")]
+    public void BeforeSendRequest_WithoutCredentials_LeavesHeadersUntouched(string userName, string secret)
     {
         var sut = new WsSecurityMessageInspector(
-            new TracesNtConfig { Username = "", AuthenticationKey = "secret" }
+            new TracesNtConfig { Username = userName, AuthenticationKey = secret }
         );
         var request = Message.CreateMessage(MessageVersion.Soap11, "urn:test-action");
         request.Headers.Add(MessageHeader.CreateHeader("Security", WsseNamespace, string.Empty));

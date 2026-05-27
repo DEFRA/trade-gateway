@@ -1,7 +1,6 @@
-using System.Net;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
-using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -9,6 +8,7 @@ using TracesNT.ClientBehaviours;
 
 namespace TracesNT.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceRegistrationExtensions
 {
     internal static IServiceCollection AddTracesNtClient<TClient, TChannel>(
@@ -22,22 +22,6 @@ public static class ServiceRegistrationExtensions
         return services.RegisterClient<TClient, TChannel>(
             config => config.GetServiceUrl(servicePath),
             CreateBasicBinding,
-            xApiKey
-        );
-    }
-
-    // SOAP 1.2 without MTOM — binary content sent as inline base64 rather than XOP MIME parts.
-    internal static IServiceCollection AddTracesNtClientSoap12<TClient, TChannel>(
-        this IServiceCollection services,
-        string servicePath,
-        string? xApiKey
-    )
-        where TClient : ClientBase<TChannel>, TChannel
-        where TChannel : class
-    {
-        return services.RegisterClient<TClient, TChannel>(
-            config => config.GetServiceUrl(servicePath),
-            CreateSoap12Binding,
             xApiKey
         );
     }
@@ -96,33 +80,5 @@ public static class ServiceRegistrationExtensions
             MaxReceivedMessageSize = int.MaxValue,
             MaxBufferPoolSize = int.MaxValue,
         };
-    }
-
-    private static Binding CreateSoap12Binding(Uri endpointUrl)
-    {
-        var proxyUrl = Environment.GetEnvironmentVariable("HTTP_PROXY");
-        var version = MessageVersion.CreateVersion(EnvelopeVersion.Soap12, AddressingVersion.None);
-        var encoding = new TextMessageEncodingBindingElement(version, Encoding.UTF8);
-        var transport = endpointUrl.Scheme == Uri.UriSchemeHttps
-            ? new HttpsTransportBindingElement
-            {
-                MaxReceivedMessageSize = int.MaxValue,
-                MaxBufferPoolSize = int.MaxValue,
-                AuthenticationScheme = AuthenticationSchemes.Anonymous,
-            }
-            : new HttpTransportBindingElement
-            {
-                MaxReceivedMessageSize = int.MaxValue,
-                MaxBufferPoolSize = int.MaxValue,
-                AuthenticationScheme = AuthenticationSchemes.Anonymous,
-            };
-
-        if (!string.IsNullOrEmpty(proxyUrl))
-        {
-            transport.UseDefaultWebProxy = false;
-            transport.ProxyAddress = new Uri(proxyUrl);
-        }
-
-        return new CustomBinding(encoding, transport);
     }
 }

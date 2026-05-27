@@ -39,7 +39,7 @@ namespace TracesNT.Services
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException("An error occured calling the Traces web service", ex);
+                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
             }
         }
     }

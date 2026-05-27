@@ -14,27 +14,27 @@ cleanup() {
 
 trap cleanup EXIT
 
-if [ ! -f "$SCRIPT_DIR/FileSplitter.csx" ]; then
+if [[ ! -f "$SCRIPT_DIR/FileSplitter.csx" ]]; then
     echo "Required file not found: $SCRIPT_DIR/FileSplitter.csx" >&2
     exit 1
 fi
 
-if [ ! -f "$SCRIPT_DIR/master.wsdl" ]; then
+if [[ ! -f "$SCRIPT_DIR/master.wsdl" ]]; then
     echo "Required file not found: $SCRIPT_DIR/master.wsdl" >&2
     exit 1
 fi
 
-if [ ! -f "$SCRIPT_DIR/dotnet-svcutil.params.json" ]; then
+if [[ ! -f "$SCRIPT_DIR/dotnet-svcutil.params.json" ]]; then
     echo "Required file not found: $SCRIPT_DIR/dotnet-svcutil.params.json" >&2
     exit 1
 fi
 
-if [ ! -f "$PROJECT_FILE" ]; then
+if [[ ! -f "$PROJECT_FILE" ]]; then
     echo "Required file not found: $PROJECT_FILE" >&2
     exit 1
 fi
 
-if [ ! -d "$WEBSERVICES_DIR" ]; then
+if [[ ! -d "$WEBSERVICES_DIR" ]]; then
     echo "Required directory not found: $WEBSERVICES_DIR" >&2
     exit 1
 fi
@@ -47,16 +47,16 @@ SVCUTIL_OUTPUT="$(
 SVCUTIL_EXIT=$?
 set -e
 
-if [ -n "$SVCUTIL_OUTPUT" ]; then
+if [[ -n "$SVCUTIL_OUTPUT" ]]; then
     printf '%s\n' "$SVCUTIL_OUTPUT"
 fi
 
-if [ "$SVCUTIL_EXIT" -ne 0 ] && [ ! -f "$GENERATED_FILE" ]; then
+if [[ "$SVCUTIL_EXIT" -ne 0 && ! -f "$GENERATED_FILE" ]]; then
     echo "dotnet-svcutil failed before producing $GENERATED_FILE" >&2
     exit "$SVCUTIL_EXIT"
 fi
 
-if [ ! -f "$GENERATED_FILE" ]; then
+if [[ ! -f "$GENERATED_FILE" ]]; then
     echo "Expected generated file not found: $GENERATED_FILE" >&2
     exit 1
 fi
@@ -65,7 +65,7 @@ echo "Splitting $GENERATED_FILE into staged files..."
 dotnet tool run dotnet-script "$SCRIPT_DIR/FileSplitter.csx" -- \
     "$GENERATED_FILE" "$STAGING_DIR"
 
-if [ -z "$(find "$STAGING_DIR" -name "*.g.cs" -print -quit)" ]; then
+if [[ -z "$(find "$STAGING_DIR" -name "*.g.cs" -print -quit)" ]]; then
     echo "FileSplitter did not produce any generated files in $STAGING_DIR" >&2
     exit 1
 fi
