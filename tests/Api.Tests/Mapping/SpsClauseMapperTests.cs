@@ -12,7 +12,22 @@ public class SpsClauseMapperTests
     public void Map_NullSource_ReturnsNull() => SpsClauseMapper.Map(null, Context).Should().BeNull();
 
     [Fact]
-    public void Map_PrefersContextLanguageContent()
+    public void Map_NullLanguageId_TakesPriorityOverContextLanguage()
+    {
+        var source = new SPSClauseType
+        {
+            Content =
+            [
+                new TextType { languageID = "en", Value = "English" },
+                new TextType { Value = "Language-neutral" },
+            ],
+        };
+
+        SpsClauseMapper.Map(source, Context)!.Content.Should().Be("Language-neutral");
+    }
+
+    [Fact]
+    public void Map_NoNullLanguageId_UsesContextLanguage()
     {
         var source = new SPSClauseType
         {
@@ -31,22 +46,14 @@ public class SpsClauseMapperTests
     }
 
     [Fact]
-    public void Map_NoContextLanguageContent_FallsBackToNullLanguageId()
+    public void Map_NoNullOrContextLanguage_FallsBackToAny()
     {
         var source = new SPSClauseType
         {
-            Content = [new TextType { languageID = "de", Value = "Inhalt" }, new TextType { Value = "Fallback" }],
+            Content = [new TextType { languageID = "de", Value = "Inhalt" }],
         };
 
-        SpsClauseMapper.Map(source, Context)!.Content.Should().Be("Fallback");
-    }
-
-    [Fact]
-    public void Map_NoMatchingLanguage_FallsBackToFirst()
-    {
-        var source = new SPSClauseType { Content = [new TextType { languageID = "de", Value = "Inhalt" }] };
-
-        SpsClauseMapper.Map(source, Context)!.Content.Should().BeNull();
+        SpsClauseMapper.Map(source, Context)!.Content.Should().Be("Inhalt");
     }
 
     [Fact]

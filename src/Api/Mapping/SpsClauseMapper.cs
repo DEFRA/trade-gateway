@@ -10,6 +10,10 @@ internal static class SpsClauseMapper
         if (source is null)
             return null;
 
-        return new Clause { Identifier = source.ID?.Value, Content = source.Content.ForLanguage(context.LanguageCode) };
+        return new Clause
+        {
+            Identifier = source.ID?.Value,
+            Content = source.Content.ForNeutralOrLanguage(context.LanguageCode)
+        };
     }
 }

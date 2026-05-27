@@ -24,7 +24,7 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `name` | `Name[0].Value` | first text entry |
+| `name` | `Name[].Value` | [language-preferred](#language-selection) |
 | `identifier` | `ID.Value` | required |
 | `documentTypeCode` | `TypeCode.Value` | e.g. `"856"` |
 | `documentStatusCode` | `StatusCode.Value` | e.g. `"1"` |
@@ -44,13 +44,13 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `availabilityDueDateTime` | `AvailabilityDueDateTime.Item` | ISO 8601 |
 | `exportExitDateTime` | `ExportExitDateTime.Item` | ISO 8601 |
 | `consignorParty` | `ConsignorSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
-| `consigneeParty` | `ConsigneeSPSParty` | |
-| `despatchParty` | `DespatchSPSParty` | |
-| `customsTransitAgentParty` | `CustomsTransitAgentSPSParty` | |
+| `consigneeParty` | `ConsigneeSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
+| `despatchParty` | `DespatchSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
+| `customsTransitAgentParty` | `CustomsTransitAgentSPSParty` |  see [TradeParty](#tradeparty--spspartytype) |
 | `exportCountry` | `ExportSPSCountry` | see [TradeCountry](#tradecountry--spscountrytype) |
-| `importCountry` | `ImportSPSCountry` | |
-| `reExportCountry` | `ReExportSPSCountry[]` | list; omitted if empty |
-| `transitCountry` | `TransitSPSCountry[]` | list; omitted if empty |
+| `importCountry` | `ImportSPSCountry` | see [TradeCountry](#tradecountry--spscountrytype) |
+| `reExportCountry` | `ReExportSPSCountry[]` | list; omitted if empty, see [TradeCountry](#tradecountry--spscountrytype) |
+| `transitCountry` | `TransitSPSCountry[]` | list; omitted if empty, see [TradeCountry](#tradecountry--spscountrytype) |
 | `unloadingBaseportLocation` | `null` | not mapped in v1 |
 | `includedConsignmentItem` | `IncludedSPSConsignmentItem[]` | see [ConsignmentItem](#consignmentitem--spsconsignmentitemtype); omitted if empty |
 
@@ -88,7 +88,7 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | Target field | Source path | Notes |
 |---|---|---|
 | `id` | `ID.Value` | ISO 3166-1 alpha-2 code e.g. `"GB"` |
-| `name` | `Name[0].Value` | first text entry |
+| `name` | `Name[].Value` | [language-preferred](#language-selection) |
 
 ---
 
@@ -109,7 +109,7 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | Target field | Source path | Notes |
 |---|---|---|
 | `identifier` | `ID.Value` | |
-| `content` | `Content[lang=en].Value` | English-first; falls back to `Content[0].Value` |
+| `content` | `Content[].Value` | [neutral-preferred](#language-selection): `null` languageID → context language → first entry |
 
 ---
 
@@ -156,7 +156,8 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | Target field | Source path | Notes |
 |---|---|---|
 | `sequenceNumeric` | `SequenceNumeric.Value` | |
-| `description` | `Description[languageID=en]` | English entries only; omitted if none present |
+| `description` | `Description[].Value` | [language-preferred list](#language-selection); omitted if none match |
+| `scientificName` | `ScientificName[lang=la].Value` | Latin entries only; omitted if none present |
 | `netWeight` | `NetWeightMeasure` | see [UneceWeightMeasure](#uneceweightmeasure--measuretype) |
 | `grossWeight` | `GrossWeightMeasure` | |
 | `applicableProductClassification` | `ApplicableSPSClassification[]` | see [ProductClassification](#productclassification--spsclassificationtype); omitted if empty |
@@ -177,9 +178,9 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | Target field | Source path | Notes |
 |---|---|---|
 | `systemId` | `SystemID.Value` | classification system identifier e.g. `"CN"` |
-| `systemName` | `SystemName[0].Value` | first text entry |
+| `systemName` | `SystemName[].Value` | [language-preferred](#language-selection) |
 | `classCode` | `ClassCode.Value` | e.g. `"0201"` |
-| `className` | `ClassName[].Value` | all entries mapped; omitted if empty |
+| `className` | `ClassName[].Value` | [language-preferred list](#language-selection); omitted if empty |
 
 ---
 
@@ -200,6 +201,27 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `content` | `Value` | decimal value expressed as string |
 | `unitCode` | `unitCode` | UN/CEFACT Rec 20 unit e.g. `"KGM"` |
 | `unitCodeListVersionId` | `unitCodeListVersionID` | e.g. `"rec20"` |
+
+---
+
+## Language Selection
+
+The language used for text fields is driven by the `Accept-Language` request header. The primary language tag is extracted (e.g. `en` from `en-GB,en;q=0.9`) and passed as a `MappingContext` through the mapper chain. It also controls the `ISO2AlphaLanguageCode` sent to the TracesNT SOAP service, so the service itself returns text in the requested language where possible.
+
+Most `TextType[]` fields use one of two strategies:
+
+| Strategy | Behaviour | Used by |
+|---|---|---|
+| **language-preferred** | Context language first; falls back to entries with no `languageID` (`null`); returns `null` if neither found | `name`, `systemName`, `description` list, `className` list |
+| **neutral-preferred** | Entries with no `languageID` first (canonical codes); then context language; then first available | `content` on `Clause` |
+
+Some fields use a fixed language regardless of context:
+
+| Field | Fixed language | Reason |
+|---|---|---|
+| `scientificName` | `la` (Latin) | Scientific names are always Latin |
+
+Fields not backed by `TextType[]` (e.g. addresses, codes, identifiers) are unaffected by language selection.
 
 ---
 

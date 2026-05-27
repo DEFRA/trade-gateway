@@ -86,11 +86,11 @@
       includedClause: [
         {
           identifier: PURPOSE,
-          content: For transit through Member State(s)
+          content: FOR_TRANSIT_THROUGH_MEMBER_STATE
         },
         {
           identifier: CERTIFIED_AS_OR_FOR,
-          content: Further keeping
+          content: FURTHER_KEEPING
         },
         {
           identifier: SIGNATORY_PERSON_EMAIL,
