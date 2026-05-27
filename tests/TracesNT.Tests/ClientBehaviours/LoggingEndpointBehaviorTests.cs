@@ -13,7 +13,10 @@ public class LoggingEndpointBehaviorTests
 
         sut.ApplyClientBehavior(WcfTestHelpers.CreateEndpoint(), clientRuntime);
 
-        clientRuntime.ClientMessageInspectors.Should().ContainSingle()
-            .Which.Should().BeOfType<LoggingMessageInspector>();
+        clientRuntime
+            .ClientMessageInspectors.Should()
+            .ContainSingle()
+            .Which.Should()
+            .BeOfType<LoggingMessageInspector>();
     }
 }

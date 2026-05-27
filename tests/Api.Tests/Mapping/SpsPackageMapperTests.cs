@@ -13,7 +13,7 @@ public class SpsPackageMapperTests
         {
             LevelCode = new CodeType { Value = "2" },
             TypeCode = new PackageTypeCodeType { Value = PackageTypeCodeContentType.Item43 },
-            ItemQuantity = new QuantityType { Value = 10m }
+            ItemQuantity = new QuantityType { Value = 10m },
         };
 
         var result = SpsPackageMapper.Map(source);
@@ -42,10 +42,8 @@ public class SpsPackageMapperTests
     }
 
     [Fact]
-    public void MapList_NullSource_ReturnsNull() =>
-        SpsPackageMapper.MapList(null).Should().BeNull();
+    public void MapList_NullSource_ReturnsNull() => SpsPackageMapper.MapList(null).Should().BeNull();
 
     [Fact]
-    public void MapList_EmptyArray_ReturnsNull() =>
-        SpsPackageMapper.MapList([]).Should().BeNull();
+    public void MapList_EmptyArray_ReturnsNull() => SpsPackageMapper.MapList([]).Should().BeNull();
 }

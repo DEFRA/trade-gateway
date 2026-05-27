@@ -8,10 +8,12 @@ public class WsSecurityEndpointBehavior(TracesNtConfig config, string? xApiKey) 
 {
     public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime) =>
         clientRuntime.ClientMessageInspectors.Add(new WsSecurityMessageInspector(config));
-    
+
     public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
     {
-        bindingParameters.Add(new Func<HttpClientHandler, HttpMessageHandler>(x => new CustomHeaderDelegatingHandler(x, xApiKey)));
+        bindingParameters.Add(
+            new Func<HttpClientHandler, HttpMessageHandler>(x => new CustomHeaderDelegatingHandler(x, xApiKey))
+        );
     }
 
     public void ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher) { }

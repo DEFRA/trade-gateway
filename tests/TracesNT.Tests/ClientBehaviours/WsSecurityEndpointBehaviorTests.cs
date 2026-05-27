@@ -14,8 +14,11 @@ public class WsSecurityEndpointBehaviorTests
 
         sut.ApplyClientBehavior(WcfTestHelpers.CreateEndpoint(), clientRuntime);
 
-        clientRuntime.ClientMessageInspectors.Should().ContainSingle()
-            .Which.Should().BeOfType<WsSecurityMessageInspector>();
+        clientRuntime
+            .ClientMessageInspectors.Should()
+            .ContainSingle()
+            .Which.Should()
+            .BeOfType<WsSecurityMessageInspector>();
     }
 
     [Fact]

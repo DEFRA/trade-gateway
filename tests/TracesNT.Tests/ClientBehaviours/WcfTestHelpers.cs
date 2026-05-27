@@ -1,8 +1,8 @@
+using System.Reflection;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
-using System.Reflection;
 
 namespace TracesNT.Tests.ClientBehaviours;
 

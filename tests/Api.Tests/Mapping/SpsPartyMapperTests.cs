@@ -1,6 +1,6 @@
+using System.Text.Json;
 using Api.Mapping;
 using AwesomeAssertions;
-using System.Text.Json;
 using TracesNT.WebServices;
 
 namespace Api.Tests.Mapping;
@@ -8,8 +8,7 @@ namespace Api.Tests.Mapping;
 public class SpsPartyMapperTests
 {
     [Fact]
-    public void Map_NullSource_ReturnsNull() =>
-        SpsPartyMapper.Map(null).Should().BeNull();
+    public void Map_NullSource_ReturnsNull() => SpsPartyMapper.Map(null).Should().BeNull();
 
     [Fact]
     public void Map_BasicFields_MapCorrectly()
@@ -17,7 +16,7 @@ public class SpsPartyMapperTests
         var source = new SPSPartyType
         {
             ID = new IDType { Value = "XI0000" },
-            Name = new TextType { Value = "DAERA" }
+            Name = new TextType { Value = "DAERA" },
         };
 
         var result = SpsPartyMapper.Map(source)!;
@@ -31,16 +30,12 @@ public class SpsPartyMapperTests
     {
         var source = new SPSPartyType
         {
-            SpecifiedSPSPerson = new SPSPersonType
-            {
-                Name = new TextType { Value = "Daniel Klemm" }
-            }
+            SpecifiedSPSPerson = new SPSPersonType { Name = new TextType { Value = "Daniel Klemm" } },
         };
 
         var result = SpsPartyMapper.Map(source)!;
 
-        result.DefinedContact.Should().ContainSingle()
-            .Which.PersonName.Should().Be("Daniel Klemm");
+        result.DefinedContact.Should().ContainSingle().Which.PersonName.Should().Be("Daniel Klemm");
     }
 
     [Fact]
@@ -54,10 +49,7 @@ public class SpsPartyMapperTests
     [Fact]
     public void Map_FirstTypeCode_SerializedAsJsonElement()
     {
-        var source = new SPSPartyType
-        {
-            TypeCode = [new CodeType { Value = "AUTHORITY" }]
-        };
+        var source = new SPSPartyType { TypeCode = [new CodeType { Value = "AUTHORITY" }] };
 
         var result = SpsPartyMapper.Map(source)!;
 
@@ -78,10 +70,7 @@ public class SpsPartyMapperTests
     {
         var source = new SPSPartyType
         {
-            SpecifiedSPSAddress = new SPSAddressType
-            {
-                CountryID = new IDType { Value = "GB" }
-            }
+            SpecifiedSPSAddress = new SPSAddressType { CountryID = new IDType { Value = "GB" } },
         };
 
         var result = SpsPartyMapper.Map(source)!;

@@ -7,8 +7,7 @@ namespace Api.Tests.Mapping;
 public class SpsAddressMapperTests
 {
     [Fact]
-    public void Map_NullSource_ReturnsNull() =>
-        SpsAddressMapper.Map(null).Should().BeNull();
+    public void Map_NullSource_ReturnsNull() => SpsAddressMapper.Map(null).Should().BeNull();
 
     [Fact]
     public void Map_AllFields_MapCorrectly()
@@ -21,7 +20,7 @@ public class SpsAddressMapperTests
             CityName = new TextType { Value = "Belfast" },
             CountryID = new IDType { Value = "XI" },
             CountryName = new TextType { Value = "United Kingdom (Northern Ireland)" },
-            CountrySubDivisionName = new TextType { Value = "County Antrim" }
+            CountrySubDivisionName = new TextType { Value = "County Antrim" },
         };
 
         var result = SpsAddressMapper.Map(source)!;

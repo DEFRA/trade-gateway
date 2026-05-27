@@ -12,7 +12,7 @@ public class SpsNoteMapperTests
         var source = new SPSNoteType
         {
             SubjectCode = new CodeType { Value = "REFUSAL_REASON" },
-            Content = []
+            Content = [],
         };
 
         SpsNoteMapper.Map(source).Subject.Should().Be("REFUSAL_REASON");
@@ -34,8 +34,8 @@ public class SpsNoteMapperTests
             Content =
             [
                 new TextType { languageID = "en", Value = "English value" },
-                new TextType { languageID = "fr", Value = "Valeur française" }
-            ]
+                new TextType { languageID = "fr", Value = "Valeur française" },
+            ],
         };
 
         SpsNoteMapper.Map(source).Content.Should().Equal("English value", "Valeur française");
@@ -58,8 +58,8 @@ public class SpsNoteMapperTests
             ContentCode =
             [
                 new CodeType { listID = "refusal_reason", Value = "NON_APPROVED_ESTABLISHMENT" },
-                new CodeType { listID = "refusal_reason_extent", Value = "PACKAGES" }
-            ]
+                new CodeType { listID = "refusal_reason_extent", Value = "PACKAGES" },
+            ],
         };
 
         var result = SpsNoteMapper.Map(source).ContentCode;
@@ -93,7 +93,7 @@ public class SpsNoteMapperTests
         var source = new SPSNoteType
         {
             Content = [new TextType { languageID = "en", Value = "test establishment" }],
-            ContentCode = [new CodeType { listID = "refusal_reason", Value = "NON_APPROVED_ESTABLISHMENT" }]
+            ContentCode = [new CodeType { listID = "refusal_reason", Value = "NON_APPROVED_ESTABLISHMENT" }],
         };
 
         var result = SpsNoteMapper.Map(source);

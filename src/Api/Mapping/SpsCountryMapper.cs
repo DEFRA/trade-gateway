@@ -1,5 +1,5 @@
-using Trade.Gateway.Api.Contract;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract;
 
 namespace Api.Mapping;
 
@@ -7,13 +7,10 @@ internal static class SpsCountryMapper
 {
     internal static TradeCountry? Map(SPSCountryType? source, MappingContext context)
     {
-        if (source is null) return null;
+        if (source is null)
+            return null;
 
-        return new TradeCountry
-        {
-            Id = source.ID?.Value,
-            Name = source.Name.ForLanguage(context.LanguageCode)
-        };
+        return new TradeCountry { Id = source.ID?.Value, Name = source.Name.ForLanguage(context.LanguageCode) };
     }
 
     internal static List<TradeCountry>? MapList(SPSCountryType[]? source, MappingContext context) =>

@@ -9,6 +9,6 @@ internal static class SpsDateTimeMapper
         {
             DateTime dt => dt.ToString("O"),
             DateTimeTypeDateTimeString s => s.Value,
-            _ => null
+            _ => null,
         };
 }

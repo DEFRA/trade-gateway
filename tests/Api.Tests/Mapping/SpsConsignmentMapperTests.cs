@@ -16,7 +16,7 @@ public class SpsConsignmentMapperTests
             ConsignorSPSParty = new SPSPartyType { ID = new IDType { Value = "CONSIGNOR" } },
             ConsigneeSPSParty = new SPSPartyType { ID = new IDType { Value = "CONSIGNEE" } },
             DespatchSPSParty = new SPSPartyType { ID = new IDType { Value = "DESPATCH" } },
-            CustomsTransitAgentSPSParty = new SPSPartyType { ID = new IDType { Value = "CUSTOMS" } }
+            CustomsTransitAgentSPSParty = new SPSPartyType { ID = new IDType { Value = "CUSTOMS" } },
         };
 
         var result = SpsConsignmentMapper.Map(source, Context);
@@ -53,7 +53,7 @@ public class SpsConsignmentMapperTests
         var source = new SPSConsignmentType
         {
             ExportSPSCountry = new SPSCountryType { ID = new IDType { Value = "GB" } },
-            ImportSPSCountry = new SPSCountryType { ID = new IDType { Value = "FR" } }
+            ImportSPSCountry = new SPSCountryType { ID = new IDType { Value = "FR" } },
         };
 
         var result = SpsConsignmentMapper.Map(source, Context);
@@ -68,7 +68,11 @@ public class SpsConsignmentMapperTests
         var source = new SPSConsignmentType
         {
             ReExportSPSCountry = [new SPSCountryType { ID = new IDType { Value = "DE" } }],
-            TransitSPSCountry = [new SPSCountryType { ID = new IDType { Value = "BE" } }, new SPSCountryType { ID = new IDType { Value = "NL" } }]
+            TransitSPSCountry =
+            [
+                new SPSCountryType { ID = new IDType { Value = "BE" } },
+                new SPSCountryType { ID = new IDType { Value = "NL" } },
+            ],
         };
 
         var result = SpsConsignmentMapper.Map(source, Context);

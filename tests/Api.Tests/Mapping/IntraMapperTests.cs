@@ -45,16 +45,17 @@ public class IntraMapperTests
         IntraMapper.Map(cert, Context).Should().BeEquivalentTo(cert.ToDefraUNVTDINTRAProfile(Context));
     }
 
-    private static EuIntraCertificateType MinimalCertificate() => new()
-    {
-        SPSCertificate = new SPSCertificateType
+    private static EuIntraCertificateType MinimalCertificate() =>
+        new()
         {
-            SPSExchangedDocument = new SPSExchangedDocumentType
+            SPSCertificate = new SPSCertificateType
             {
-                ID = new IDType { Value = "DOC-1" },
-                TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 }
+                SPSExchangedDocument = new SPSExchangedDocumentType
+                {
+                    ID = new IDType { Value = "DOC-1" },
+                    TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 },
+                },
+                SPSConsignment = new SPSConsignmentType(),
             },
-            SPSConsignment = new SPSConsignmentType()
-        }
-    };
+        };
 }

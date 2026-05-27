@@ -33,7 +33,7 @@ public class SpsExchangedDocumentMapperTests
         source.Name =
         [
             new TextType { languageID = "fr", Value = "Nom" },
-            new TextType { languageID = "en", Value = "Certificate Name" }
+            new TextType { languageID = "en", Value = "Certificate Name" },
         ];
 
         SpsExchangedDocumentMapper.Map(source, Context).Name.Should().Be("Certificate Name");
@@ -43,11 +43,7 @@ public class SpsExchangedDocumentMapperTests
     public void Map_Name_FallsBackToNullLanguageId()
     {
         var source = MinimalDocument();
-        source.Name =
-        [
-            new TextType { Value = "Certificate Name" },
-            new TextType { Value = "Other" }
-        ];
+        source.Name = [new TextType { Value = "Certificate Name" }, new TextType { Value = "Other" }];
 
         SpsExchangedDocumentMapper.Map(source, Context).Name.Should().Be("Certificate Name");
     }
@@ -58,9 +54,30 @@ public class SpsExchangedDocumentMapperTests
         var source = MinimalDocument();
         source.SignatorySPSAuthentication =
         [
-            new SPSAuthenticationType { TypeCode = new GovernmentActionCodeType { Value = GovernmentActionCodeContentType.Item4, name = "First" } },
-            new SPSAuthenticationType { TypeCode = new GovernmentActionCodeType { Value = GovernmentActionCodeContentType.Item1, name = "Second" } },
-            new SPSAuthenticationType { TypeCode = new GovernmentActionCodeType { Value = GovernmentActionCodeContentType.Item8, name = "Third" } }
+            new SPSAuthenticationType
+            {
+                TypeCode = new GovernmentActionCodeType
+                {
+                    Value = GovernmentActionCodeContentType.Item4,
+                    name = "First",
+                },
+            },
+            new SPSAuthenticationType
+            {
+                TypeCode = new GovernmentActionCodeType
+                {
+                    Value = GovernmentActionCodeContentType.Item1,
+                    name = "Second",
+                },
+            },
+            new SPSAuthenticationType
+            {
+                TypeCode = new GovernmentActionCodeType
+                {
+                    Value = GovernmentActionCodeContentType.Item8,
+                    name = "Third",
+                },
+            },
         ];
 
         var result = SpsExchangedDocumentMapper.Map(source, Context);
@@ -76,7 +93,14 @@ public class SpsExchangedDocumentMapperTests
         var source = MinimalDocument();
         source.SignatorySPSAuthentication =
         [
-            new SPSAuthenticationType { TypeCode = new GovernmentActionCodeType { Value = GovernmentActionCodeContentType.Item4, name = "First" } }
+            new SPSAuthenticationType
+            {
+                TypeCode = new GovernmentActionCodeType
+                {
+                    Value = GovernmentActionCodeContentType.Item4,
+                    name = "First",
+                },
+            },
         ];
 
         var result = SpsExchangedDocumentMapper.Map(source, Context);
@@ -101,9 +125,10 @@ public class SpsExchangedDocumentMapperTests
         SpsExchangedDocumentMapper.Map(source, Context).IncludedNote.Should().BeNull();
     }
 
-    private static SPSExchangedDocumentType MinimalDocument() => new()
-    {
-        ID = new IDType { Value = "DOC-1" },
-        TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 }
-    };
+    private static SPSExchangedDocumentType MinimalDocument() =>
+        new()
+        {
+            ID = new IDType { Value = "DOC-1" },
+            TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 },
+        };
 }

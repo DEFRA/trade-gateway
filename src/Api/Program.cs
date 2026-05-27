@@ -66,10 +66,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
 
     // add the Traces NT clients
     var tracesNtSection = builder.Configuration.GetRequiredSection("TracesNt");
-    builder.Services.AddOptions<TracesNtConfig>()
-        .Bind(tracesNtSection)
-        .ValidateDataAnnotations()
-        .ValidateOnStart();
+    builder.Services.AddOptions<TracesNtConfig>().Bind(tracesNtSection).ValidateDataAnnotations().ValidateOnStart();
 
     var xApiKey = builder.Configuration.GetValue<string?>("XApiKey");
     builder.Services.AddTracesNtClients(xApiKey!);

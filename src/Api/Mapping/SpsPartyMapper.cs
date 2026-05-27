@@ -1,14 +1,15 @@
 using System.Text.Json;
-using Trade.Gateway.Api.Contract;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract;
 
 namespace Api.Mapping;
 
 internal static class SpsPartyMapper
 {
-    internal static TradeParty? Map(SPSPartyType? source) 
+    internal static TradeParty? Map(SPSPartyType? source)
     {
-        if (source is null) return null;
+        if (source is null)
+            return null;
 
         return new TradeParty
         {
@@ -21,7 +22,7 @@ internal static class SpsPartyMapper
             PostalAddress = SpsAddressMapper.Map(source.SpecifiedSPSAddress),
             DefinedContact = source.SpecifiedSPSPerson?.Name?.Value is { } name
                 ? [new TradePartyDefinedContactItem { PersonName = name }]
-                : null
+                : null,
         };
     }
 }

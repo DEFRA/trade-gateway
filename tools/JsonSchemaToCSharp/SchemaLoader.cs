@@ -67,9 +67,7 @@ public class SchemaLoader
     private string NormalizePath(string path)
     {
         var candidate = path.Replace('/', Path.DirectorySeparatorChar);
-        return Path.GetFullPath(Path.IsPathRooted(candidate)
-            ? candidate
-            : Path.Combine(_basePath, candidate));
+        return Path.GetFullPath(Path.IsPathRooted(candidate) ? candidate : Path.Combine(_basePath, candidate));
     }
 
     private static JsonSchema ResolvePointer(JsonSchema schema, string pointer)
@@ -87,7 +85,8 @@ public class SchemaLoader
                 case "$defs":
                 {
                     var key = segments[i++].Replace("~1", "/").Replace("~0", "~");
-                    var defs = current.GetKeyword<DefsKeyword>()?.Definitions
+                    var defs =
+                        current.GetKeyword<DefsKeyword>()?.Definitions
                         ?? throw new InvalidOperationException($"Schema has no $defs (pointer: '{pointer}')");
                     if (!defs.TryGetValue(key, out var def))
                         throw new InvalidOperationException($"$defs has no key '{key}' (pointer: '{pointer}')");
@@ -97,7 +96,8 @@ public class SchemaLoader
                 case "properties":
                 {
                     var key = segments[i++].Replace("~1", "/").Replace("~0", "~");
-                    var props = current.GetKeyword<PropertiesKeyword>()?.Properties
+                    var props =
+                        current.GetKeyword<PropertiesKeyword>()?.Properties
                         ?? throw new InvalidOperationException($"Schema has no properties (pointer: '{pointer}')");
                     if (!props.TryGetValue(key, out var prop))
                         throw new InvalidOperationException($"properties has no key '{key}' (pointer: '{pointer}')");
@@ -107,7 +107,8 @@ public class SchemaLoader
                 case "allOf":
                 {
                     var idx = int.Parse(segments[i++]);
-                    var schemas = current.GetKeyword<AllOfKeyword>()?.Schemas
+                    var schemas =
+                        current.GetKeyword<AllOfKeyword>()?.Schemas
                         ?? throw new InvalidOperationException($"Schema has no allOf (pointer: '{pointer}')");
                     current = schemas[idx];
                     break;
@@ -115,7 +116,8 @@ public class SchemaLoader
                 case "oneOf":
                 {
                     var idx = int.Parse(segments[i++]);
-                    var schemas = current.GetKeyword<OneOfKeyword>()?.Schemas
+                    var schemas =
+                        current.GetKeyword<OneOfKeyword>()?.Schemas
                         ?? throw new InvalidOperationException($"Schema has no oneOf (pointer: '{pointer}')");
                     current = schemas[idx];
                     break;
@@ -123,20 +125,23 @@ public class SchemaLoader
                 case "anyOf":
                 {
                     var idx = int.Parse(segments[i++]);
-                    var schemas = current.GetKeyword<AnyOfKeyword>()?.Schemas
+                    var schemas =
+                        current.GetKeyword<AnyOfKeyword>()?.Schemas
                         ?? throw new InvalidOperationException($"Schema has no anyOf (pointer: '{pointer}')");
                     current = schemas[idx];
                     break;
                 }
                 case "items":
                 {
-                    current = current.GetKeyword<ItemsKeyword>()?.SingleSchema
+                    current =
+                        current.GetKeyword<ItemsKeyword>()?.SingleSchema
                         ?? throw new InvalidOperationException($"Schema has no items (pointer: '{pointer}')");
                     break;
                 }
                 default:
                     throw new InvalidOperationException(
-                        $"Cannot resolve JSON pointer segment '{segment}' in '{pointer}'");
+                        $"Cannot resolve JSON pointer segment '{segment}' in '{pointer}'"
+                    );
             }
         }
 

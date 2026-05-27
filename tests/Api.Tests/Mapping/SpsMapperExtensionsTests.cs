@@ -34,7 +34,7 @@ public class SpsMapperExtensionsTests
         var source = new[]
         {
             new TextType { languageID = "fr", Value = "Boeuf" },
-            new TextType { languageID = "en", Value = "Beef" }
+            new TextType { languageID = "en", Value = "Beef" },
         };
 
         source.ForLanguage("en").Should().Be("Beef");
@@ -46,7 +46,7 @@ public class SpsMapperExtensionsTests
         var source = new[]
         {
             new TextType { languageID = "fr", Value = "Boeuf" },
-            new TextType { Value = "Fallback" }
+            new TextType { Value = "Fallback" },
         };
 
         source.ForLanguage("en").Should().Be("Fallback");
@@ -55,14 +55,16 @@ public class SpsMapperExtensionsTests
     [Fact]
     public void ForLanguage_NoMatchAndNoNull_ReturnsNull()
     {
-        var source = new[] { new TextType { languageID = "fr", Value = "Boeuf" } };
+        var source = new[]
+        {
+            new TextType { languageID = "fr", Value = "Boeuf" },
+        };
 
         source.ForLanguage("en").Should().BeNull();
     }
 
     [Fact]
-    public void ForLanguage_NullSource_ReturnsNull() =>
-        ((TextType[]?)null).ForLanguage("en").Should().BeNull();
+    public void ForLanguage_NullSource_ReturnsNull() => ((TextType[]?)null).ForLanguage("en").Should().BeNull();
 
     [Fact]
     public void ForLanguageList_ReturnsEntriesForMatchingLanguageId()
@@ -71,7 +73,7 @@ public class SpsMapperExtensionsTests
         {
             new TextType { languageID = "fr", Value = "Boeuf" },
             new TextType { languageID = "en", Value = "Beef" },
-            new TextType { languageID = "en", Value = "Beef (trimmed)" }
+            new TextType { languageID = "en", Value = "Beef (trimmed)" },
         };
 
         source.ForLanguageList("en").Should().BeEquivalentTo("Beef", "Beef (trimmed)");
@@ -84,7 +86,7 @@ public class SpsMapperExtensionsTests
         {
             new TextType { languageID = "fr", Value = "Boeuf" },
             new TextType { Value = "Fallback A" },
-            new TextType { Value = "Fallback B" }
+            new TextType { Value = "Fallback B" },
         };
 
         source.ForLanguageList("en").Should().BeEquivalentTo("Fallback A", "Fallback B");
@@ -93,14 +95,19 @@ public class SpsMapperExtensionsTests
     [Fact]
     public void ForLanguageList_NoMatchAndNoNull_ReturnsNull()
     {
-        var source = new[] { new TextType { languageID = "fr", Value = "Boeuf" } };
+        var source = new[]
+        {
+            new TextType { languageID = "fr", Value = "Boeuf" },
+        };
 
         source.ForLanguageList("en").Should().BeNull();
     }
 
     [Fact]
-    public void ForLanguageList_NullSource_ReturnsNull() =>
-        ((TextType[]?)null).ForLanguageList("en").Should().BeNull();
+    public void ForLanguageList_NullSource_ReturnsNull() => ((TextType[]?)null).ForLanguageList("en").Should().BeNull();
 
-    private enum PlainCodeType { SomeValue }
+    private enum PlainCodeType
+    {
+        SomeValue,
+    }
 }

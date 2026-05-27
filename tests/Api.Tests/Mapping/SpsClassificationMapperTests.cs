@@ -16,7 +16,7 @@ public class SpsClassificationMapperTests
             SystemID = new IDType { Value = "CN" },
             SystemName = [new TextType { Value = "Combined Nomenclature" }],
             ClassCode = new CodeType { Value = "0201" },
-            ClassName = [new TextType { Value = "Beef" }, new TextType { Value = "Boeuf" }]
+            ClassName = [new TextType { Value = "Beef" }, new TextType { Value = "Boeuf" }],
         };
 
         var result = SpsClassificationMapper.Map(source, Context);
@@ -35,8 +35,8 @@ public class SpsClassificationMapperTests
             SystemName =
             [
                 new TextType { languageID = "fr", Value = "Nomenclature combinée" },
-                new TextType { languageID = "en", Value = "Combined Nomenclature" }
-            ]
+                new TextType { languageID = "en", Value = "Combined Nomenclature" },
+            ],
         };
 
         SpsClassificationMapper.Map(source, Context).SystemName.Should().Be("Combined Nomenclature");
@@ -50,8 +50,8 @@ public class SpsClassificationMapperTests
             ClassName =
             [
                 new TextType { languageID = "fr", Value = "Boeuf" },
-                new TextType { languageID = "en", Value = "Beef" }
-            ]
+                new TextType { languageID = "en", Value = "Beef" },
+            ],
         };
 
         SpsClassificationMapper.Map(source, Context).ClassName.Should().ContainSingle().Which.Should().Be("Beef");
@@ -69,10 +69,8 @@ public class SpsClassificationMapperTests
     }
 
     [Fact]
-    public void MapList_NullSource_ReturnsNull() =>
-        SpsClassificationMapper.MapList(null, Context).Should().BeNull();
+    public void MapList_NullSource_ReturnsNull() => SpsClassificationMapper.MapList(null, Context).Should().BeNull();
 
     [Fact]
-    public void MapList_EmptyArray_ReturnsNull() =>
-        SpsClassificationMapper.MapList([], Context).Should().BeNull();
+    public void MapList_EmptyArray_ReturnsNull() => SpsClassificationMapper.MapList([], Context).Should().BeNull();
 }

@@ -15,11 +15,22 @@ public class SpsConsignmentItemMapperTests
         {
             NatureIdentificationSPSCargo =
             [
-                new SPSCargoType { TypeCode = new CargoTypeClassificationCodeType { Value = CargoTypeClassificationCodeContentType.Item1 } }
-            ]
+                new SPSCargoType
+                {
+                    TypeCode = new CargoTypeClassificationCodeType
+                    {
+                        Value = CargoTypeClassificationCodeContentType.Item1,
+                    },
+                },
+            ],
         };
 
-        SpsConsignmentItemMapper.Map(source, Context).NatureIdCargo.Should().ContainSingle().Which.TypeCode.Should().Be("1");
+        SpsConsignmentItemMapper
+            .Map(source, Context)
+            .NatureIdCargo.Should()
+            .ContainSingle()
+            .Which.TypeCode.Should()
+            .Be("1");
     }
 
     [Fact]
@@ -30,8 +41,8 @@ public class SpsConsignmentItemMapperTests
             IncludedSPSTradeLineItem =
             [
                 new SPSTradeLineItemType { SequenceNumeric = new NumericType { Value = 1m } },
-                new SPSTradeLineItemType { SequenceNumeric = new NumericType { Value = 2m } }
-            ]
+                new SPSTradeLineItemType { SequenceNumeric = new NumericType { Value = 2m } },
+            ],
         };
 
         var result = SpsConsignmentItemMapper.Map(source, Context);
@@ -51,10 +62,8 @@ public class SpsConsignmentItemMapperTests
     }
 
     [Fact]
-    public void MapList_NullSource_ReturnsNull() =>
-        SpsConsignmentItemMapper.MapList(null, Context).Should().BeNull();
+    public void MapList_NullSource_ReturnsNull() => SpsConsignmentItemMapper.MapList(null, Context).Should().BeNull();
 
     [Fact]
-    public void MapList_EmptyArray_ReturnsNull() =>
-        SpsConsignmentItemMapper.MapList([], Context).Should().BeNull();
+    public void MapList_EmptyArray_ReturnsNull() => SpsConsignmentItemMapper.MapList([], Context).Should().BeNull();
 }

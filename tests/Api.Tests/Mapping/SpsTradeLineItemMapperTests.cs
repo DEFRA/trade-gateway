@@ -24,8 +24,8 @@ public class SpsTradeLineItemMapperTests
             Description =
             [
                 new TextType { languageID = "fr", Value = "Boeuf" },
-                new TextType { languageID = "en", Value = "Beef" }
-            ]
+                new TextType { languageID = "en", Value = "Beef" },
+            ],
         };
 
         SpsTradeLineItemMapper.Map(source, Context).Description.Should().ContainSingle().Which.Should().Be("Beef");
@@ -34,10 +34,7 @@ public class SpsTradeLineItemMapperTests
     [Fact]
     public void Map_Description_NoContextLanguageEntry_ReturnsNull()
     {
-        var source = new SPSTradeLineItemType
-        {
-            Description = [new TextType { languageID = "fr", Value = "Boeuf" }]
-        };
+        var source = new SPSTradeLineItemType { Description = [new TextType { languageID = "fr", Value = "Boeuf" }] };
 
         SpsTradeLineItemMapper.Map(source, Context).Description.Should().BeNull();
     }
@@ -50,11 +47,16 @@ public class SpsTradeLineItemMapperTests
             ScientificName =
             [
                 new TextType { languageID = "en", Value = "Donkey" },
-                new TextType { languageID = "la", Value = "Equus asinus" }
-            ]
+                new TextType { languageID = "la", Value = "Equus asinus" },
+            ],
         };
 
-        SpsTradeLineItemMapper.Map(source, Context).ScientificName.Should().ContainSingle().Which.Should().Be("Equus asinus");
+        SpsTradeLineItemMapper
+            .Map(source, Context)
+            .ScientificName.Should()
+            .ContainSingle()
+            .Which.Should()
+            .Be("Equus asinus");
     }
 
     [Fact]
@@ -62,7 +64,7 @@ public class SpsTradeLineItemMapperTests
     {
         var source = new SPSTradeLineItemType
         {
-            ScientificName = [new TextType { languageID = "en", Value = "Donkey" }]
+            ScientificName = [new TextType { languageID = "en", Value = "Donkey" }],
         };
 
         SpsTradeLineItemMapper.Map(source, Context).ScientificName.Should().BeNull();
@@ -74,7 +76,7 @@ public class SpsTradeLineItemMapperTests
         var source = new SPSTradeLineItemType
         {
             NetWeightMeasure = new MeasureType { Value = 100m, unitCode = "KGM" },
-            GrossWeightMeasure = new MeasureType { Value = 110m, unitCode = "KGM" }
+            GrossWeightMeasure = new MeasureType { Value = 110m, unitCode = "KGM" },
         };
 
         var result = SpsTradeLineItemMapper.Map(source, Context);
@@ -98,10 +100,8 @@ public class SpsTradeLineItemMapperTests
     }
 
     [Fact]
-    public void MapList_NullSource_ReturnsNull() =>
-        SpsTradeLineItemMapper.MapList(null, Context).Should().BeNull();
+    public void MapList_NullSource_ReturnsNull() => SpsTradeLineItemMapper.MapList(null, Context).Should().BeNull();
 
     [Fact]
-    public void MapList_EmptyArray_ReturnsNull() =>
-        SpsTradeLineItemMapper.MapList([], Context).Should().BeNull();
+    public void MapList_EmptyArray_ReturnsNull() => SpsTradeLineItemMapper.MapList([], Context).Should().BeNull();
 }

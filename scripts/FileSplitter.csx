@@ -60,9 +60,7 @@ foreach (var member in nsDecl.Members)
     var targetDir = Path.Combine(outputDir, subdir);
     Directory.CreateDirectory(targetDir);
 
-    var cleanMember = member
-        .WithLeadingTrivia(SyntaxFactory.LineFeed)
-        .WithTrailingTrivia(SyntaxFactory.LineFeed);
+    var cleanMember = member.WithLeadingTrivia(SyntaxFactory.LineFeed).WithTrailingTrivia(SyntaxFactory.LineFeed);
 
     var newNs = SyntaxFactory
         .NamespaceDeclaration(SyntaxFactory.ParseName(namespaceName))

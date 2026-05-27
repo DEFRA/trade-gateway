@@ -11,7 +11,7 @@ public class SpsCargoMapperTests
     {
         var source = new SPSCargoType
         {
-            TypeCode = new CargoTypeClassificationCodeType { Value = CargoTypeClassificationCodeContentType.Item1 }
+            TypeCode = new CargoTypeClassificationCodeType { Value = CargoTypeClassificationCodeContentType.Item1 },
         };
 
         SpsCargoMapper.Map(source).TypeCode.Should().Be("1");
@@ -24,20 +24,24 @@ public class SpsCargoMapperTests
     }
 
     [Fact]
-    public void MapList_NullSource_ReturnsNull() =>
-        SpsCargoMapper.MapList(null).Should().BeNull();
+    public void MapList_NullSource_ReturnsNull() => SpsCargoMapper.MapList(null).Should().BeNull();
 
     [Fact]
-    public void MapList_EmptyArray_ReturnsNull() =>
-        SpsCargoMapper.MapList([]).Should().BeNull();
+    public void MapList_EmptyArray_ReturnsNull() => SpsCargoMapper.MapList([]).Should().BeNull();
 
     [Fact]
     public void MapList_MultipleEntries_MapsAll()
     {
         var source = new[]
         {
-            new SPSCargoType { TypeCode = new CargoTypeClassificationCodeType { Value = CargoTypeClassificationCodeContentType.Item1 } },
-            new SPSCargoType { TypeCode = new CargoTypeClassificationCodeType { Value = CargoTypeClassificationCodeContentType.Item2 } }
+            new SPSCargoType
+            {
+                TypeCode = new CargoTypeClassificationCodeType { Value = CargoTypeClassificationCodeContentType.Item1 },
+            },
+            new SPSCargoType
+            {
+                TypeCode = new CargoTypeClassificationCodeType { Value = CargoTypeClassificationCodeContentType.Item2 },
+            },
         };
 
         var result = SpsCargoMapper.MapList(source)!;

@@ -12,7 +12,7 @@ public class SpsReferencedDocumentMapperTests
         var source = new SPSReferencedDocumentType
         {
             TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 },
-            ID = new IDType { Value = "REF-001" }
+            ID = new IDType { Value = "REF-001" },
         };
 
         var result = SpsReferencedDocumentMapper.Map(source);
@@ -24,10 +24,7 @@ public class SpsReferencedDocumentMapperTests
     [Fact]
     public void Map_SingleInformation_WrapsInList()
     {
-        var source = new SPSReferencedDocumentType
-        {
-            Information = new TextType { Value = "Some info" }
-        };
+        var source = new SPSReferencedDocumentType { Information = new TextType { Value = "Some info" } };
 
         var result = SpsReferencedDocumentMapper.Map(source);
 
@@ -47,7 +44,7 @@ public class SpsReferencedDocumentMapperTests
     {
         var source = new SPSReferencedDocumentType
         {
-            AttachmentBinaryObject = [new BinaryObjectType { Value = [1, 2, 3] }]
+            AttachmentBinaryObject = [new BinaryObjectType { Value = [1, 2, 3] }],
         };
 
         SpsReferencedDocumentMapper.Map(source).AttachmentBinaryObject.Should().BeNull();

@@ -1,6 +1,6 @@
-using Json.Schema;
 using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
+using Json.Schema;
 
 namespace JsonSchemaToCSharp;
 
@@ -32,12 +32,18 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
         if (typeKeyword != null)
         {
             var type = typeKeyword.Type;
-            if (type == SchemaValueType.Array) return ResolveArrayTypeName(property, sourceFile);
-            if (type == SchemaValueType.Object) return ResolveObjectTypeName(property);
-            if (type == SchemaValueType.String) return DotNetTypes.String;
-            if (type == SchemaValueType.Integer) return DotNetTypes.Int;
-            if (type == SchemaValueType.Number) return DotNetTypes.Decimal;
-            if (type == SchemaValueType.Boolean) return DotNetTypes.Bool;
+            if (type == SchemaValueType.Array)
+                return ResolveArrayTypeName(property, sourceFile);
+            if (type == SchemaValueType.Object)
+                return ResolveObjectTypeName(property);
+            if (type == SchemaValueType.String)
+                return DotNetTypes.String;
+            if (type == SchemaValueType.Integer)
+                return DotNetTypes.Int;
+            if (type == SchemaValueType.Number)
+                return DotNetTypes.Decimal;
+            if (type == SchemaValueType.Boolean)
+                return DotNetTypes.Bool;
             return DotNetTypes.JsonElement;
         }
 
@@ -93,11 +99,16 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
         if (typeKeyword != null)
         {
             var type = typeKeyword.Type;
-            if (type == SchemaValueType.String) return DotNetTypes.String;
-            if (type == SchemaValueType.Integer) return DotNetTypes.Int;
-            if (type == SchemaValueType.Number) return DotNetTypes.Decimal;
-            if (type == SchemaValueType.Boolean) return DotNetTypes.Bool;
-            if (type == SchemaValueType.Object) return ExtractTypeNameFromRef(refPath) ?? DotNetTypes.Object;
+            if (type == SchemaValueType.String)
+                return DotNetTypes.String;
+            if (type == SchemaValueType.Integer)
+                return DotNetTypes.Int;
+            if (type == SchemaValueType.Number)
+                return DotNetTypes.Decimal;
+            if (type == SchemaValueType.Boolean)
+                return DotNetTypes.Bool;
+            if (type == SchemaValueType.Object)
+                return ExtractTypeNameFromRef(refPath) ?? DotNetTypes.Object;
             return DotNetTypes.JsonElement;
         }
 
@@ -152,8 +163,11 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
         var hasPrimitive = options.Any(o =>
         {
             var t = o.GetKeyword<TypeKeyword>()?.Type;
-            return t is SchemaValueType.String or SchemaValueType.Integer
-                or SchemaValueType.Number or SchemaValueType.Boolean;
+            return t
+                is SchemaValueType.String
+                    or SchemaValueType.Integer
+                    or SchemaValueType.Number
+                    or SchemaValueType.Boolean;
         });
 
         var hasRef = options.Any(o => o.GetKeyword<RefKeyword>() != null);
@@ -218,10 +232,7 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
 
     private static string ResolveEnumTypeName(IReadOnlyList<JsonNode?> values)
     {
-        var types = values
-            .Select(NodeType)
-            .Distinct()
-            .ToList();
+        var types = values.Select(NodeType).Distinct().ToList();
 
         if (types.Count == 1)
         {
@@ -252,16 +263,17 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
 
     // GetSchemaValueType() from JsonSchema.Net uses GetValue<object>() which throws on .NET 10.
     // This helper uses TryGetValue<T>() instead, which is safe on all runtimes.
-    private static SchemaValueType NodeType(JsonNode? node) => node switch
-    {
-        null => SchemaValueType.Null,
-        JsonObject => SchemaValueType.Object,
-        JsonArray => SchemaValueType.Array,
-        JsonValue v when v.TryGetValue<bool>(out _) => SchemaValueType.Boolean,
-        JsonValue v when v.TryGetValue<string>(out _) => SchemaValueType.String,
-        JsonValue _ => SchemaValueType.Number,
-        _ => SchemaValueType.Null,
-    };
+    private static SchemaValueType NodeType(JsonNode? node) =>
+        node switch
+        {
+            null => SchemaValueType.Null,
+            JsonObject => SchemaValueType.Object,
+            JsonArray => SchemaValueType.Array,
+            JsonValue v when v.TryGetValue<bool>(out _) => SchemaValueType.Boolean,
+            JsonValue v when v.TryGetValue<string>(out _) => SchemaValueType.String,
+            JsonValue _ => SchemaValueType.Number,
+            _ => SchemaValueType.Null,
+        };
 
     private static string? ExtractTypeNameFromRef(string refPath)
     {
@@ -329,7 +341,8 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
 
     private static string ToPascalSegment(string s)
     {
-        if (s.Length == 0) return string.Empty;
+        if (s.Length == 0)
+            return string.Empty;
         var tail = s.Length > 1 ? s[1..] : string.Empty;
         return char.ToUpperInvariant(s[0]) + tail;
     }

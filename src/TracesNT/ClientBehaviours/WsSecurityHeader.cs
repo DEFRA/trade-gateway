@@ -19,10 +19,7 @@ public class WsSecurityHeader(string username, string authenticationKey) : Messa
     public override string Name => "Security";
     public override string Namespace => WsseNamespace;
 
-    protected override void OnWriteHeaderContents(
-        XmlDictionaryWriter writer,
-        MessageVersion messageVersion
-    )
+    protected override void OnWriteHeaderContents(XmlDictionaryWriter writer, MessageVersion messageVersion)
     {
         var now = DateTime.UtcNow;
         var created = now.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
@@ -34,20 +31,10 @@ public class WsSecurityHeader(string username, string authenticationKey) : Messa
         WriteTimestamp(writer, created, expires);
     }
 
-    private void WriteUsernameToken(
-        XmlDictionaryWriter writer,
-        string created,
-        byte[] nonce,
-        string passwordDigest
-    )
+    private void WriteUsernameToken(XmlDictionaryWriter writer, string created, byte[] nonce, string passwordDigest)
     {
         writer.WriteStartElement("wsse", "UsernameToken", WsseNamespace);
-        writer.WriteAttributeString(
-            "wsu",
-            "Id",
-            WsuNamespace,
-            Guid.NewGuid().ToString("N").ToUpperInvariant()
-        );
+        writer.WriteAttributeString("wsu", "Id", WsuNamespace, Guid.NewGuid().ToString("N").ToUpperInvariant());
 
         writer.WriteElementString("wsse", "Username", WsseNamespace, username);
 
@@ -69,12 +56,7 @@ public class WsSecurityHeader(string username, string authenticationKey) : Messa
     private static void WriteTimestamp(XmlDictionaryWriter writer, string created, string expires)
     {
         writer.WriteStartElement("wsu", "Timestamp", WsuNamespace);
-        writer.WriteAttributeString(
-            "wsu",
-            "Id",
-            WsuNamespace,
-            $"TS-{Guid.NewGuid().ToString("N").ToUpperInvariant()}"
-        );
+        writer.WriteAttributeString("wsu", "Id", WsuNamespace, $"TS-{Guid.NewGuid().ToString("N").ToUpperInvariant()}");
         writer.WriteElementString("wsu", "Created", WsuNamespace, created);
         writer.WriteElementString("wsu", "Expires", WsuNamespace, expires);
         writer.WriteEndElement();
@@ -86,12 +68,7 @@ public class WsSecurityHeader(string username, string authenticationKey) : Messa
     /// </summary>
     private static string ComputePasswordDigest(byte[] nonce, string created, string authKey)
     {
-        byte[] combined =
-        [
-            .. nonce,
-            .. Encoding.UTF8.GetBytes(created),
-            .. Encoding.UTF8.GetBytes(authKey),
-        ];
+        byte[] combined = [.. nonce, .. Encoding.UTF8.GetBytes(created), .. Encoding.UTF8.GetBytes(authKey)];
         return Convert.ToBase64String(SHA1.HashData(combined)); //NOSONAR - use of SHA1 is required by WS-Security spec - header is always sent over HTTPS
     }
 }

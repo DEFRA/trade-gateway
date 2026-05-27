@@ -66,7 +66,9 @@ public class RoundTripTests
     public void Deserialize_UnvtdIntraExample_MapsConsignment()
     {
         var json = File.ReadAllText("unvtd-intra.json");
-        var consignment = JsonSerializer.Deserialize<CertificatePayload>(json, SerializerOptions)!.SpecifiedConsignment[0];
+        var consignment = JsonSerializer.Deserialize<CertificatePayload>(json, SerializerOptions)!.SpecifiedConsignment[
+            0
+        ];
 
         Assert.Equal("2021-02-20T16:07:00.000+01:00", consignment.AvailabilityDueDateTime);
 
@@ -76,10 +78,14 @@ public class RoundTripTests
 
         // Unknown schema fields are preserved in ExtensionData
         Assert.NotNull(consignment.ExtensionData);
-        Assert.True(consignment.ExtensionData!.ContainsKey("mainCarriageLogisticsTransportMovement"),
-            "mainCarriageLogisticsTransportMovement should be captured in ExtensionData (missing from schema)");
-        Assert.True(consignment.ExtensionData.ContainsKey("utilizedLogisticsTransportEquipment"),
-            "utilizedLogisticsTransportEquipment should be captured in ExtensionData (missing from schema)");
+        Assert.True(
+            consignment.ExtensionData!.ContainsKey("mainCarriageLogisticsTransportMovement"),
+            "mainCarriageLogisticsTransportMovement should be captured in ExtensionData (missing from schema)"
+        );
+        Assert.True(
+            consignment.ExtensionData.ContainsKey("utilizedLogisticsTransportEquipment"),
+            "utilizedLogisticsTransportEquipment should be captured in ExtensionData (missing from schema)"
+        );
     }
 
     [Fact]
@@ -105,12 +111,14 @@ public class RoundTripTests
 
         Assert.True(
             JsonElementDeepEquals(originalDoc.RootElement, reserializedDoc.RootElement),
-            $"Round-trip mismatch.\nOriginal: {originalJson}\n\nReserialized: {reserializedJson}");
+            $"Round-trip mismatch.\nOriginal: {originalJson}\n\nReserialized: {reserializedJson}"
+        );
     }
 
     private static bool JsonElementDeepEquals(JsonElement a, JsonElement b)
     {
-        if (a.ValueKind != b.ValueKind) return false;
+        if (a.ValueKind != b.ValueKind)
+            return false;
 
         return a.ValueKind switch
         {
@@ -129,12 +137,15 @@ public class RoundTripTests
         var aProps = a.EnumerateObject().ToDictionary(p => p.Name, p => p.Value);
         var bProps = b.EnumerateObject().ToDictionary(p => p.Name, p => p.Value);
 
-        if (aProps.Count != bProps.Count) return false;
+        if (aProps.Count != bProps.Count)
+            return false;
 
         foreach (var (key, aValue) in aProps)
         {
-            if (!bProps.TryGetValue(key, out var bValue)) return false;
-            if (!JsonElementDeepEquals(aValue, bValue)) return false;
+            if (!bProps.TryGetValue(key, out var bValue))
+                return false;
+            if (!JsonElementDeepEquals(aValue, bValue))
+                return false;
         }
 
         return true;
@@ -144,7 +155,8 @@ public class RoundTripTests
     {
         var aArr = a.EnumerateArray().ToList();
         var bArr = b.EnumerateArray().ToList();
-        if (aArr.Count != bArr.Count) return false;
+        if (aArr.Count != bArr.Count)
+            return false;
         return aArr.Zip(bArr).All(pair => JsonElementDeepEquals(pair.First, pair.Second));
     }
 }

@@ -30,7 +30,8 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
             mergedProperties,
             required,
             inlineTypeNames,
-            additionalTypes);
+            additionalTypes
+        );
 
         if (mainRecord is null)
             return null;
@@ -42,7 +43,8 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         IReadOnlyList<JsonSchema> allOf,
         string sourceFile,
         Dictionary<string, (JsonSchema Value, string SourceFile)> properties,
-        HashSet<string> required)
+        HashSet<string> required
+    )
     {
         foreach (var item in allOf)
         {
@@ -56,9 +58,11 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
                 // Follow root-level $ref chains (e.g. a schema file whose root is just
                 // $ref: "#/$defs/SomeType" rather than defining properties directly)
                 var rootRef = target.GetKeyword<RefKeyword>();
-                while (rootRef != null
-                       && target.GetKeyword<PropertiesKeyword>() == null
-                       && target.GetKeyword<AllOfKeyword>() == null)
+                while (
+                    rootRef != null
+                    && target.GetKeyword<PropertiesKeyword>() == null
+                    && target.GetKeyword<AllOfKeyword>() == null
+                )
                 {
                     var chained = loader.Resolve(rootRef.Reference.OriginalString, targetFile);
                     target = chained.Schema;
@@ -118,7 +122,8 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
 
     private SyntaxNode BuildCompilationUnit(
         RecordDeclarationSyntax mainRecord,
-        List<MemberDeclarationSyntax> additionalTypes)
+        List<MemberDeclarationSyntax> additionalTypes
+    )
     {
         var namespaceDeclaration = FileScopedNamespaceDeclaration(ParseName(outputNamespace));
         var compilation = CompilationUnit()
@@ -126,7 +131,8 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
                 CreateUsing("System.Text.Json"),
                 CreateUsing("System.Text.Json.Serialization"),
                 CreateUsing("System.ComponentModel"),
-                CreateUsing("System.Collections.Generic"))
+                CreateUsing("System.Collections.Generic")
+            )
             .WithLeadingTrivia(Trivia(NullableDirectiveTrivia(Token(SyntaxKind.EnableKeyword), true)))
             .AddMembers(namespaceDeclaration)
             .AddMembers(mainRecord);
@@ -142,7 +148,8 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         Dictionary<string, (JsonSchema Value, string SourceFile)> properties,
         HashSet<string> required,
         HashSet<string> inlineTypeNames,
-        List<MemberDeclarationSyntax> additionalTypes)
+        List<MemberDeclarationSyntax> additionalTypes
+    )
     {
         var memberList = new List<MemberDeclarationSyntax>();
 
@@ -151,7 +158,14 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
             if (ReferenceEquals(propSchema, JsonSchema.False))
                 continue;
 
-            var csharpType = ResolvePropertyTypeName(propSchema, propSourceFile, typeName, propName, inlineTypeNames, additionalTypes);
+            var csharpType = ResolvePropertyTypeName(
+                propSchema,
+                propSourceFile,
+                typeName,
+                propName,
+                inlineTypeNames,
+                additionalTypes
+            );
             if (string.IsNullOrEmpty(csharpType))
                 continue;
 
@@ -159,7 +173,13 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
             if (csharpPropName == typeName)
                 csharpPropName += "Value";
 
-            var propertyDecl = CreateProperty(propName, csharpPropName, csharpType, required.Contains(propName), propSchema);
+            var propertyDecl = CreateProperty(
+                propName,
+                csharpPropName,
+                csharpType,
+                required.Contains(propName),
+                propSchema
+            );
             memberList.Add(propertyDecl);
         }
 
@@ -177,7 +197,8 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         JsonSchema schema,
         string sourceFile,
         HashSet<string> inlineTypeNames,
-        List<MemberDeclarationSyntax> additionalTypes)
+        List<MemberDeclarationSyntax> additionalTypes
+    )
     {
         var required = schema.GetKeyword<RequiredKeyword>()?.Properties?.ToHashSet() ?? [];
 
@@ -187,7 +208,8 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
 
         var properties = propertiesKeyword.Properties.ToDictionary(
             kvp => kvp.Key,
-            kvp => (kvp.Value, SourceFile: sourceFile));
+            kvp => (kvp.Value, SourceFile: sourceFile)
+        );
 
         return CreateRecordDeclarationFromProperties(typeName, properties, required, inlineTypeNames, additionalTypes);
     }
@@ -198,23 +220,45 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         string parentTypeName,
         string propertyName,
         HashSet<string> inlineTypeNames,
-        List<MemberDeclarationSyntax> additionalTypes)
+        List<MemberDeclarationSyntax> additionalTypes
+    )
     {
         if (ReferenceEquals(schema, JsonSchema.False))
             return string.Empty;
 
         if (IsInlineObjectSchema(schema))
-            return GenerateInlineObjectType(parentTypeName, propertyName, schema, sourceFile, inlineTypeNames, additionalTypes);
+            return GenerateInlineObjectType(
+                parentTypeName,
+                propertyName,
+                schema,
+                sourceFile,
+                inlineTypeNames,
+                additionalTypes
+            );
 
         var typeKeyword = schema.GetKeyword<TypeKeyword>();
         if (typeKeyword?.Type == SchemaValueType.Array)
-            return ResolveArrayTypeName(schema, sourceFile, parentTypeName, propertyName, inlineTypeNames, additionalTypes);
+            return ResolveArrayTypeName(
+                schema,
+                sourceFile,
+                parentTypeName,
+                propertyName,
+                inlineTypeNames,
+                additionalTypes
+            );
 
         var resolver = new TypeNameResolver(loader, sourceFile);
         var resolved = resolver.ResolvePropertyTypeName(schema);
 
         if (resolved == DotNetTypes.Object && IsInlineObjectSchema(schema, allowAllOf: true))
-            return GenerateInlineObjectType(parentTypeName, propertyName, schema, sourceFile, inlineTypeNames, additionalTypes);
+            return GenerateInlineObjectType(
+                parentTypeName,
+                propertyName,
+                schema,
+                sourceFile,
+                inlineTypeNames,
+                additionalTypes
+            );
 
         return resolved;
     }
@@ -225,13 +269,21 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         string parentTypeName,
         string propertyName,
         HashSet<string> inlineTypeNames,
-        List<MemberDeclarationSyntax> additionalTypes)
+        List<MemberDeclarationSyntax> additionalTypes
+    )
     {
         var items = schema.GetKeyword<ItemsKeyword>()?.SingleSchema;
         if (items == null)
             return $"List<{DotNetTypes.Object}>";
 
-        var itemType = ResolvePropertyTypeName(items, sourceFile, parentTypeName, propertyName + "Item", inlineTypeNames, additionalTypes);
+        var itemType = ResolvePropertyTypeName(
+            items,
+            sourceFile,
+            parentTypeName,
+            propertyName + "Item",
+            inlineTypeNames,
+            additionalTypes
+        );
         return $"List<{itemType}>";
     }
 
@@ -241,8 +293,7 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         if (typeKeyword == null)
             return false;
 
-        var isObject = typeKeyword.Type == SchemaValueType.Object
-            || typeKeyword.Type.HasFlag(SchemaValueType.Object);
+        var isObject = typeKeyword.Type == SchemaValueType.Object || typeKeyword.Type.HasFlag(SchemaValueType.Object);
 
         if (!isObject)
             return false;
@@ -262,7 +313,8 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         JsonSchema schema,
         string sourceFile,
         HashSet<string> inlineTypeNames,
-        List<MemberDeclarationSyntax> additionalTypes)
+        List<MemberDeclarationSyntax> additionalTypes
+    )
     {
         var inlineName = GetInlineTypeName(parentTypeName, propertyName, inlineTypeNames);
         var inlineRecord = CreateRecordDeclaration(inlineName, schema, sourceFile, inlineTypeNames, additionalTypes);
@@ -293,11 +345,12 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         string csharpPropertyName,
         string csharpType,
         bool isRequired,
-        JsonSchema schema)
+        JsonSchema schema
+    )
     {
         var constKeyword = schema.GetKeyword<ConstKeyword>();
-        var constStringValue = constKeyword?.Value is System.Text.Json.Nodes.JsonValue v
-            && v.TryGetValue<string>(out var s) ? s : null;
+        var constStringValue =
+            constKeyword?.Value is System.Text.Json.Nodes.JsonValue v && v.TryGetValue<string>(out var s) ? s : null;
 
         var typeSyntax = ParseTypeName(csharpType);
         var modifiers = new List<SyntaxToken> { Token(SyntaxKind.PublicKeyword) };
@@ -315,10 +368,7 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
             typeSyntax = NullableType(typeSyntax);
         }
 
-        var attributes = new List<AttributeListSyntax>
-        {
-            CreateSimpleAttributeList("JsonPropertyName", jsonName)
-        };
+        var attributes = new List<AttributeListSyntax> { CreateSimpleAttributeList("JsonPropertyName", jsonName) };
 
         var description = schema.GetKeyword<DescriptionKeyword>()?.Value;
         if (!string.IsNullOrEmpty(description))
@@ -340,8 +390,9 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         if (constStringValue != null)
         {
             property = property
-                .WithInitializer(EqualsValueClause(
-                    LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(constStringValue))))
+                .WithInitializer(
+                    EqualsValueClause(LiteralExpression(SyntaxKind.StringLiteralExpression, Literal(constStringValue)))
+                )
                 .WithSemicolonToken(Token(SyntaxKind.SemicolonToken));
         }
 
@@ -353,26 +404,24 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
             .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.PartialKeyword));
 
     private static PropertyDeclarationSyntax CreateExtensionDataProperty() =>
-        PropertyDeclaration(
-            NullableType(ParseTypeName("Dictionary<string, JsonElement>")),
-            "ExtensionData")
-        .AddModifiers(Token(SyntaxKind.PublicKeyword))
-        .AddAttributeLists(AttributeList(SingletonSeparatedList(
-            Attribute(ParseName("JsonExtensionData")))))
-        .AddAccessorListAccessors(
-            AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
-                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-            AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
-                .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)));
+        PropertyDeclaration(NullableType(ParseTypeName("Dictionary<string, JsonElement>")), "ExtensionData")
+            .AddModifiers(Token(SyntaxKind.PublicKeyword))
+            .AddAttributeLists(AttributeList(SingletonSeparatedList(Attribute(ParseName("JsonExtensionData")))))
+            .AddAccessorListAccessors(
+                AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
+                AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
+                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
+            );
 
     private static UsingDirectiveSyntax CreateUsing(string fqn) => UsingDirective(ParseName(fqn));
 
     private static AttributeListSyntax CreateSimpleAttributeList(string type, string arg1) =>
-        AttributeList(SingletonSeparatedList(
-            Attribute(ParseName(type))
-                .WithArgumentList(ParseAttributeArgumentList($"(\"{EscapeString(arg1)}\")"))
-        ));
+        AttributeList(
+            SingletonSeparatedList(
+                Attribute(ParseName(type)).WithArgumentList(ParseAttributeArgumentList($"(\"{EscapeString(arg1)}\")"))
+            )
+        );
 
-    private static string EscapeString(string s) =>
-        s.Replace("\\", "\\\\").Replace("\"", "\\\"");
+    private static string EscapeString(string s) => s.Replace("\\", "\\\\").Replace("\"", "\\\"");
 }

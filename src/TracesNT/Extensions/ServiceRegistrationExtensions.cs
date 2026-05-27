@@ -35,23 +35,25 @@ public static class ServiceRegistrationExtensions
         where TClient : ClientBase<TChannel>, TChannel
         where TChannel : class
     {
-        services.AddTransient<TClient>((sp) =>
-        {
-            var config = sp.GetRequiredService<IOptions<TracesNtConfig>>().Value;
-            var logger = sp.GetRequiredService<ILogger<TClient>>();
-            var endpoint = new EndpointAddress(endpointFactory(config));
-            var binding = bindingFactory(endpoint.Uri);
+        services.AddTransient<TClient>(
+            (sp) =>
+            {
+                var config = sp.GetRequiredService<IOptions<TracesNtConfig>>().Value;
+                var logger = sp.GetRequiredService<ILogger<TClient>>();
+                var endpoint = new EndpointAddress(endpointFactory(config));
+                var binding = bindingFactory(endpoint.Uri);
 
-            var client = (TClient)Activator.CreateInstance(typeof(TClient), binding, endpoint)!;
+                var client = (TClient)Activator.CreateInstance(typeof(TClient), binding, endpoint)!;
 
-            // Logging runs before WS-Security so credentials are never captured in logs.
-            // BeforeSendRequest fires in registration order; WS-Security adds its header last.
-            client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(logger));
-            client.Endpoint.EndpointBehaviors.Add(new WsSecurityEndpointBehavior(config, xApiKey));
+                // Logging runs before WS-Security so credentials are never captured in logs.
+                // BeforeSendRequest fires in registration order; WS-Security adds its header last.
+                client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(logger));
+                client.Endpoint.EndpointBehaviors.Add(new WsSecurityEndpointBehavior(config, xApiKey));
 
-            return client;
-        });
-  
+                return client;
+            }
+        );
+
         return services;
     }
 

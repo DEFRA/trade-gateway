@@ -9,8 +9,7 @@ public class SpsCountryMapperTests
     private static readonly MappingContext Context = new("en");
 
     [Fact]
-    public void Map_NullSource_ReturnsNull() =>
-        SpsCountryMapper.Map(null, Context).Should().BeNull();
+    public void Map_NullSource_ReturnsNull() => SpsCountryMapper.Map(null, Context).Should().BeNull();
 
     [Fact]
     public void Map_AllFields_MapCorrectly()
@@ -18,7 +17,7 @@ public class SpsCountryMapperTests
         var source = new SPSCountryType
         {
             ID = new IDType { Value = "GB" },
-            Name = [new TextType { Value = "United Kingdom" }]
+            Name = [new TextType { Value = "United Kingdom" }],
         };
 
         var result = SpsCountryMapper.Map(source, Context)!;
@@ -35,8 +34,8 @@ public class SpsCountryMapperTests
             Name =
             [
                 new TextType { languageID = "fr", Value = "Royaume-Uni" },
-                new TextType { languageID = "en", Value = "United Kingdom" }
-            ]
+                new TextType { languageID = "en", Value = "United Kingdom" },
+            ],
         };
 
         SpsCountryMapper.Map(source, Context)!.Name.Should().Be("United Kingdom");
@@ -45,10 +44,7 @@ public class SpsCountryMapperTests
     [Fact]
     public void Map_Name_FallsBackToNullLanguageId()
     {
-        var source = new SPSCountryType
-        {
-            Name = [new TextType { Value = "United Kingdom" }]
-        };
+        var source = new SPSCountryType { Name = [new TextType { Value = "United Kingdom" }] };
 
         SpsCountryMapper.Map(source, Context)!.Name.Should().Be("United Kingdom");
     }
@@ -63,20 +59,26 @@ public class SpsCountryMapperTests
     }
 
     [Fact]
-    public void MapList_NullSource_ReturnsNull() =>
-        SpsCountryMapper.MapList(null, Context).Should().BeNull();
+    public void MapList_NullSource_ReturnsNull() => SpsCountryMapper.MapList(null, Context).Should().BeNull();
 
     [Fact]
-    public void MapList_EmptyArray_ReturnsNull() =>
-        SpsCountryMapper.MapList([], Context).Should().BeNull();
+    public void MapList_EmptyArray_ReturnsNull() => SpsCountryMapper.MapList([], Context).Should().BeNull();
 
     [Fact]
     public void MapList_MultipleEntries_MapsAll()
     {
         var source = new[]
         {
-            new SPSCountryType { ID = new IDType { Value = "GB" }, Name = [new TextType { Value = "United Kingdom" }] },
-            new SPSCountryType { ID = new IDType { Value = "FR" }, Name = [new TextType { Value = "France" }] }
+            new SPSCountryType
+            {
+                ID = new IDType { Value = "GB" },
+                Name = [new TextType { Value = "United Kingdom" }],
+            },
+            new SPSCountryType
+            {
+                ID = new IDType { Value = "FR" },
+                Name = [new TextType { Value = "France" }],
+            },
         };
 
         var result = SpsCountryMapper.MapList(source, Context)!;

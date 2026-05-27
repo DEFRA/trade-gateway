@@ -1,7 +1,7 @@
 using Json.Schema;
+using JsonSchemaToCSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using JsonSchemaToCSharp;
 
 var solutionRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "../../.."));
 
@@ -79,7 +79,8 @@ foreach (var schemaFile in schemaFiles.OrderBy(f => f))
 
                     var outputFile = Path.Combine(resolvedOutputPath, $"{typeName}.g.cs");
                     await using var writer = new StreamWriter(outputFile, false);
-                    syntax.NormalizeWhitespace()
+                    syntax
+                        .NormalizeWhitespace()
                         .WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)
                         .WriteTo(writer);
                     totalGenerated++;
@@ -106,7 +107,8 @@ foreach (var schemaFile in schemaFiles.OrderBy(f => f))
             {
                 var outputFile = Path.Combine(resolvedOutputPath, $"{rootTypeName}.g.cs");
                 await using var writer = new StreamWriter(outputFile, false);
-                syntax.NormalizeWhitespace()
+                syntax
+                    .NormalizeWhitespace()
                     .WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)
                     .WriteTo(writer);
                 totalGenerated++;

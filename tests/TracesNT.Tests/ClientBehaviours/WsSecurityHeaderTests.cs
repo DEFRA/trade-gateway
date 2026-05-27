@@ -1,5 +1,5 @@
-using System.ServiceModel.Channels;
 using System.Globalization;
+using System.ServiceModel.Channels;
 using System.Xml.Linq;
 using TracesNT.ClientBehaviours;
 
@@ -17,7 +17,9 @@ public class WsSecurityHeaderTests
     {
         var message = Message.CreateMessage(MessageVersion.Soap11, "urn:test-action");
         message.Headers.Add(new WsSecurityHeader("alice", "super-secret"));
-        var security = XDocument.Parse(WcfTestHelpers.ReadHeaderXml(message, "Security", WsseNamespace.NamespaceName)).Root!;
+        var security = XDocument
+            .Parse(WcfTestHelpers.ReadHeaderXml(message, "Security", WsseNamespace.NamespaceName))
+            .Root!;
 
         security.Name.Should().Be(WsseNamespace + "Security");
 
@@ -28,17 +30,19 @@ public class WsSecurityHeaderTests
 
         var password = usernameToken.Element(WsseNamespace + "Password");
         password.Should().NotBeNull();
-        password!.Attribute("Type")!.Value.Should().Be(
-            "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest"
-        );
+        password!
+            .Attribute("Type")!
+            .Value.Should()
+            .Be("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest");
         password.Value.Should().NotBeNullOrWhiteSpace();
         password.Value.Should().NotBe("super-secret");
 
         var nonce = usernameToken.Element(WsseNamespace + "Nonce");
         nonce.Should().NotBeNull();
-        nonce!.Attribute("EncodingType")!.Value.Should().Be(
-            "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary"
-        );
+        nonce!
+            .Attribute("EncodingType")!
+            .Value.Should()
+            .Be("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary");
         Convert.FromBase64String(nonce.Value).Should().HaveCount(16);
 
         var tokenCreated = DateTimeOffset.ParseExact(
