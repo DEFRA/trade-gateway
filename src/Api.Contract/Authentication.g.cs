@@ -12,7 +12,7 @@ public partial record Authentication
     public string? TypeCode { get; init; }
 
     [JsonPropertyName("actualDateTime")]
-    public string? ActualDateTime { get; init; }
+    public DateTimeOffset? ActualDateTime { get; init; }
 
     [JsonPropertyName("governmentActionTypeCode")]
     [Description("unece:governmentActionTypeCode is @vocab in unece-context-D23B.jsonld; use a string code or vocabulary token.")]

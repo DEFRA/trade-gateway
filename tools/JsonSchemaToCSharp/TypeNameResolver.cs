@@ -37,7 +37,7 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
             if (type == SchemaValueType.Object)
                 return ResolveObjectTypeName(property);
             if (type == SchemaValueType.String)
-                return DotNetTypes.String;
+                return ResolveStringTypeName(property);
             if (type == SchemaValueType.Integer)
                 return DotNetTypes.Int;
             if (type == SchemaValueType.Number)
@@ -100,7 +100,7 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
         {
             var type = typeKeyword.Type;
             if (type == SchemaValueType.String)
-                return DotNetTypes.String;
+                return ResolveStringTypeName(target);
             if (type == SchemaValueType.Integer)
                 return DotNetTypes.Int;
             if (type == SchemaValueType.Number)
@@ -228,6 +228,17 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
         }
 
         return DotNetTypes.Object;
+    }
+
+    private static string ResolveStringTypeName(JsonSchema schema)
+    {
+        var format = schema.GetKeyword<FormatKeyword>()?.Value.Key;
+        return format switch
+        {
+            "date-time" => DotNetTypes.DateTimeOffset,
+            "date" => DotNetTypes.DateOnly,
+            _ => DotNetTypes.String,
+        };
     }
 
     private static string ResolveEnumTypeName(IReadOnlyList<JsonNode?> values)

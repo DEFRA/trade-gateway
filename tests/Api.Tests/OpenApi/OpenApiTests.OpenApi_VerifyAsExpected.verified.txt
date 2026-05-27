@@ -72,6 +72,7 @@
           },
           actualDateTime: {
             type: string,
+            format: date-time,
             nullable: true
           },
           governmentActionTypeCode: {
@@ -123,10 +124,12 @@
         properties: {
           availabilityDueDateTime: {
             type: string,
+            format: date-time,
             nullable: true
           },
           exportExitDateTime: {
             type: string,
+            format: date-time,
             nullable: true
           },
           consignorParty: {
@@ -270,6 +273,7 @@
           },
           issueDateTime: {
             type: string,
+            format: date-time,
             nullable: true
           },
           includedNote: {

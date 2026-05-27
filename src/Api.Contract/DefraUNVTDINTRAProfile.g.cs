@@ -25,3 +25,9 @@ public partial record DefraUNVTDINTRAProfile
     [Description("UN vocabulary-aligned laboratory observations/results collection.")]
     public List<LaboratoryObservationResult>? LaboratoryObservationResult { get; init; }
 }
+
+public partial record DefraUNVTDINTRAProfileExchangedDocument
+{
+    [JsonPropertyName("documentTypeCode")]
+    public string? DocumentTypeCode { get; init; }
+}

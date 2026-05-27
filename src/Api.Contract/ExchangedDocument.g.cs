@@ -23,7 +23,7 @@ public partial record ExchangedDocument
     public string? DocumentStatusCode { get; init; }
 
     [JsonPropertyName("issueDateTime")]
-    public string? IssueDateTime { get; init; }
+    public DateTimeOffset? IssueDateTime { get; init; }
 
     [JsonPropertyName("includedNote")]
     public List<IncludedNote>? IncludedNote { get; init; }

@@ -8,10 +8,10 @@ namespace Trade.Gateway.Api.Contract;
 public partial record Consignment
 {
     [JsonPropertyName("availabilityDueDateTime")]
-    public string? AvailabilityDueDateTime { get; init; }
+    public DateTimeOffset? AvailabilityDueDateTime { get; init; }
 
     [JsonPropertyName("exportExitDateTime")]
-    public string? ExportExitDateTime { get; init; }
+    public DateTimeOffset? ExportExitDateTime { get; init; }
 
     [JsonPropertyName("consignorParty")]
     public TradeParty? ConsignorParty { get; init; }
