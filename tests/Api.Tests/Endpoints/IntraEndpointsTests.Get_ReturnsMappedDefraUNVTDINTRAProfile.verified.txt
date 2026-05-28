@@ -102,145 +102,143 @@
     thirdSignatoryAuthentication: null,
     fourthSignatoryAuthentication: null
   },
-  specifiedConsignment: [
-    {
-      availabilityDueDateTime: null,
-      exportExitDateTime: DateTimeOffset_4,
-      consignorParty: {
-        identifier: 899361,
-        name: DK Test,
-        partyRoleCode: CZ,
-        partyTypeCode: IMPORTER,
-        postalAddress: {
-          postcodeCode: BT9,
-          lineOne: Test Street 876,
-          lineTwo: null,
-          cityName: Belfast,
-          countryId: XI,
-          countryName: United Kingdom (Northern Ireland),
-          countrySubDivisionName: County Antrim
-        },
-        definedContact: null
+  specifiedConsignment: {
+    availabilityDueDateTime: null,
+    exportExitDateTime: DateTimeOffset_4,
+    consignorParty: {
+      identifier: 899361,
+      name: DK Test,
+      partyRoleCode: CZ,
+      partyTypeCode: IMPORTER,
+      postalAddress: {
+        postcodeCode: BT9,
+        lineOne: Test Street 876,
+        lineTwo: null,
+        cityName: Belfast,
+        countryId: XI,
+        countryName: United Kingdom (Northern Ireland),
+        countrySubDivisionName: County Antrim
       },
-      consigneeParty: {
-        identifier: 899361,
-        name: DK Test,
-        partyRoleCode: CN,
-        partyTypeCode: IMPORTER,
-        postalAddress: {
-          postcodeCode: BT9,
-          lineOne: Test Street 876,
-          lineTwo: null,
-          cityName: Belfast,
-          countryId: XI,
-          countryName: United Kingdom (Northern Ireland),
-          countrySubDivisionName: County Antrim
-        },
-        definedContact: null
+      definedContact: null
+    },
+    consigneeParty: {
+      identifier: 899361,
+      name: DK Test,
+      partyRoleCode: CN,
+      partyTypeCode: IMPORTER,
+      postalAddress: {
+        postcodeCode: BT9,
+        lineOne: Test Street 876,
+        lineTwo: null,
+        cityName: Belfast,
+        countryId: XI,
+        countryName: United Kingdom (Northern Ireland),
+        countrySubDivisionName: County Antrim
       },
-      despatchParty: {
-        identifier: TEST-01-01,
-        name: Test Quarantaine,
-        partyRoleCode: PW,
-        partyTypeCode: QUARANTINE,
-        postalAddress: {
-          postcodeCode: 01000,
-          lineOne: zdafazartaretaretrtatrrart,
-          lineTwo: null,
-          cityName: Bourg-en-Bresse,
-          countryId: FR,
-          countryName: France,
-          countrySubDivisionName: Ain.
-        },
-        definedContact: null
+      definedContact: null
+    },
+    despatchParty: {
+      identifier: TEST-01-01,
+      name: Test Quarantaine,
+      partyRoleCode: PW,
+      partyTypeCode: QUARANTINE,
+      postalAddress: {
+        postcodeCode: 01000,
+        lineOne: zdafazartaretaretrtatrrart,
+        lineTwo: null,
+        cityName: Bourg-en-Bresse,
+        countryId: FR,
+        countryName: France,
+        countrySubDivisionName: Ain.
       },
-      customsTransitAgentParty: null,
-      exportCountry: {
-        id: null,
-        name: null
-      },
-      importCountry: {
-        id: XI,
-        name: United Kingdom (Northern Ireland)
-      },
-      reExportCountry: null,
-      transitCountry: [
-        {
-          id: AT,
-          name: Austria
-        }
-      ],
-      unloadingBaseportLocation: null,
-      includedConsignmentItem: [
-        {
-          natureIdCargo: [
-            {
-              typeCode: 12
-            }
-          ],
-          includedTradeLineItem: [
-            {
-              sequenceNumeric: 0,
-              description: [
-                Consignment totals and summary
-              ],
-              scientificName: null,
-              netWeight: {
-                content: 0,
-                value: null,
-                unitCode: null,
-                unitCodeListVersionId: null
-              },
-              grossWeight: {
-                content: 1,
-                value: null,
-                unitCode: null,
-                unitCodeListVersionId: null
-              },
-              applicableProductClassification: null,
-              physicalReferencedLogisticsPackage: [
-                {
-                  levelCode: 4,
-                  typeCode: NA,
-                  itemQuantity: 0
-                }
-              ]
+      definedContact: null
+    },
+    customsTransitAgentParty: null,
+    exportCountry: {
+      id: null,
+      name: null
+    },
+    importCountry: {
+      id: XI,
+      name: United Kingdom (Northern Ireland)
+    },
+    reExportCountry: null,
+    transitCountry: [
+      {
+        id: AT,
+        name: Austria
+      }
+    ],
+    unloadingBaseportLocation: null,
+    includedConsignmentItem: [
+      {
+        natureIdCargo: [
+          {
+            typeCode: 12
+          }
+        ],
+        includedTradeLineItem: [
+          {
+            sequenceNumeric: 0,
+            description: [
+              Consignment totals and summary
+            ],
+            scientificName: null,
+            netWeight: {
+              content: 0,
+              value: null,
+              unitCode: null,
+              unitCodeListVersionId: null
             },
-            {
-              sequenceNumeric: 1,
-              description: [
-                null
-              ],
-              scientificName: [
-                Equus asinus
-              ],
-              netWeight: null,
-              grossWeight: null,
-              applicableProductClassification: [
-                {
-                  systemId: CN,
-                  systemName: CN Code (Combined Nomenclature),
-                  classCode: 0101,
-                  className: [
-                    LIVE ANIMALS,
-                    Live horses, asses, mules and hinnies
-                  ]
-                },
-                {
-                  systemId: IDENTIFICATION_SYSTEM,
-                  systemName: Identification system,
-                  classCode: TATTOO,
-                  className: [
-                    Tattoo
-                  ]
-                }
-              ],
-              physicalReferencedLogisticsPackage: null
-            }
-          ]
-        }
-      ]
-    }
-  ],
+            grossWeight: {
+              content: 1,
+              value: null,
+              unitCode: null,
+              unitCodeListVersionId: null
+            },
+            applicableProductClassification: null,
+            physicalReferencedLogisticsPackage: [
+              {
+                levelCode: 4,
+                typeCode: NA,
+                itemQuantity: 0
+              }
+            ]
+          },
+          {
+            sequenceNumeric: 1,
+            description: [
+              null
+            ],
+            scientificName: [
+              Equus asinus
+            ],
+            netWeight: null,
+            grossWeight: null,
+            applicableProductClassification: [
+              {
+                systemId: CN,
+                systemName: CN Code (Combined Nomenclature),
+                classCode: 0101,
+                className: [
+                  LIVE ANIMALS,
+                  Live horses, asses, mules and hinnies
+                ]
+              },
+              {
+                systemId: IDENTIFICATION_SYSTEM,
+                systemName: Identification system,
+                classCode: TATTOO,
+                className: [
+                  Tattoo
+                ]
+              }
+            ],
+            physicalReferencedLogisticsPackage: null
+          }
+        ]
+      }
+    ]
+  },
   laboratoryObservationResult: null
 }

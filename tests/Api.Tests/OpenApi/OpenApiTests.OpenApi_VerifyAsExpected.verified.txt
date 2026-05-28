@@ -228,11 +228,7 @@
             $ref: #/components/schemas/ExchangedDocument
           },
           specifiedConsignment: {
-            type: array,
-            items: {
-              $ref: #/components/schemas/Consignment
-            },
-            nullable: true
+            $ref: #/components/schemas/Consignment
           },
           laboratoryObservationResult: {
             type: array,
