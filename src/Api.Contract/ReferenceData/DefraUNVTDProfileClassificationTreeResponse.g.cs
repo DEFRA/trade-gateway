@@ -1,0 +1,21 @@
+#nullable enable
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.ComponentModel;
+using System.Collections.Generic;
+
+namespace Defra.TradeGateway.Api.Contract.ReferenceData;
+public partial record DefraUNVTDProfileClassificationTreeResponse
+{
+    [JsonPropertyName("source")]
+    public string? Source { get; init; }
+
+    [JsonPropertyName("treeId")]
+    public string? TreeId { get; init; }
+
+    [JsonPropertyName("root")]
+    public ClassificationTreeNode? Root { get; init; }
+
+    [JsonPropertyName("retrievedAt")]
+    public DateTimeOffset? RetrievedAt { get; init; }
+}

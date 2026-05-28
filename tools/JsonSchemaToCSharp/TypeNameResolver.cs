@@ -72,7 +72,7 @@ public class TypeNameResolver(SchemaLoader loader, string currentFile)
         return $"List<{itemType}>";
     }
 
-    private string ResolveObjectTypeName(JsonSchema property)
+    private static string ResolveObjectTypeName(JsonSchema property)
     {
         var refKeyword = property.GetKeyword<RefKeyword>();
         if (refKeyword != null)
