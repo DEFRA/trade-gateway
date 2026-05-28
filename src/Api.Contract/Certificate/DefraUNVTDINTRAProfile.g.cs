@@ -4,20 +4,22 @@ using System.Text.Json.Serialization;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace Trade.Gateway.Api.Contract;
-public partial record CertificatePayload
+namespace Trade.Gateway.Api.Contract.Certificate;
+public partial record DefraUNVTDINTRAProfile
 {
     [JsonPropertyName("$model")]
-    public required string Model { get; init; }
+    [ConstValue("defra/certificate-internal/1")]
+    public string Model { get; init; } = "defra/certificate-internal/1";
 
     [JsonPropertyName("$type")]
-    public required string Type { get; init; }
+    [ConstValue("intra")]
+    public string Type { get; init; } = "intra";
 
     [JsonPropertyName("exchangedDocument")]
     public required ExchangedDocument ExchangedDocument { get; init; }
 
     [JsonPropertyName("specifiedConsignment")]
-    public required List<Consignment> SpecifiedConsignment { get; init; }
+    public required Consignment SpecifiedConsignment { get; init; }
 
     [JsonPropertyName("laboratoryObservationResult")]
     [Description("UN vocabulary-aligned laboratory observations/results collection.")]

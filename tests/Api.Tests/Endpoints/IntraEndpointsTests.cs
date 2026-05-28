@@ -1,6 +1,6 @@
 using System.Net;
 using Api.Contract;
-using Trade.Gateway.Api.Contract;
+using Trade.Gateway.Api.Contract.Certificate;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 

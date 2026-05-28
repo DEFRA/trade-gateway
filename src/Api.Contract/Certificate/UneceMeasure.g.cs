@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace Trade.Gateway.Api.Contract;
+namespace Trade.Gateway.Api.Contract.Certificate;
 public partial record UneceMeasure
 {
     [JsonPropertyName("content")]
