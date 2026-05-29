@@ -34,5 +34,4 @@
     <None Remove="Samples\**\*.xml" />
     <EmbeddedResource Include="Samples\**\*.xml" />
   </ItemGroup>
-
 </Project>

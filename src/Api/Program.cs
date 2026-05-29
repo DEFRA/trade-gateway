@@ -40,6 +40,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     {
         options.SwaggerDoc("v1", new OpenApiInfo { Title = "Trade Gateway", Version = "v1" });
         options.OperationFilter<ContentNegotiationOperationFilter>();
+        options.SchemaFilter<ConstValueSchemaFilter>();
     });
 
     // Configure logging to use the CDP Platform standards.
@@ -65,10 +66,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
 
     // add the Traces NT clients
     var tracesNtSection = builder.Configuration.GetRequiredSection("TracesNt");
-    builder.Services.AddOptions<TracesNtConfig>()
-        .Bind(tracesNtSection)
-        .ValidateDataAnnotations()
-        .ValidateOnStart();
+    builder.Services.AddOptions<TracesNtConfig>().Bind(tracesNtSection).ValidateDataAnnotations().ValidateOnStart();
 
     var xApiKey = builder.Configuration.GetValue<string?>("XApiKey");
     builder.Services.AddTracesNtClients(xApiKey!);

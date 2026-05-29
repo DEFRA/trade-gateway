@@ -25,7 +25,8 @@ public class WsSecurityMessageInspectorTests
 
         result.Should().BeNull();
         WcfTestHelpers.CountHeaders(request, "Security", WsseNamespace).Should().Be(1);
-        WcfTestHelpers.ReadHeaderXml(request, "Security", WsseNamespace)
+        WcfTestHelpers
+            .ReadHeaderXml(request, "Security", WsseNamespace)
             .Should()
             .Contain("UsernameToken")
             .And.Contain("alice");

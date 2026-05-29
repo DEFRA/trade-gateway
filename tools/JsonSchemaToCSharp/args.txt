@@ -1,0 +1,6 @@
+--schema
+./schema/certificate
+--output
+./../../src/Api.Contract/Certificate
+--namespace
+Trade.Gateway.Api.Contract.Certificate

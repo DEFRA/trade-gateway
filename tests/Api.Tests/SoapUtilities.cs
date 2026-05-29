@@ -16,12 +16,17 @@ namespace Api.Tests
 
         public static Task<string> GetEmbeddedResource(string resourceName)
         {
-            using var stream = s_assembly.GetManifestResourceStream(resourceName) ?? throw new FileNotFoundException("Resource not found", resourceName);
+            using var stream =
+                s_assembly.GetManifestResourceStream(resourceName)
+                ?? throw new FileNotFoundException("Resource not found", resourceName);
             using var reader = new StreamReader(stream);
             return Task.FromResult(reader.ReadToEnd());
         }
 
-        public static async Task<ResponseMessage> CreateResponseFromResource(HttpStatusCode statusCode, string resourceName)
+        public static async Task<ResponseMessage> CreateResponseFromResource(
+            HttpStatusCode statusCode,
+            string resourceName
+        )
         {
             var resourceContent = await GetEmbeddedResource(resourceName);
             return StubResponseMessage(statusCode, resourceContent);
@@ -36,11 +41,7 @@ namespace Api.Tests
                 {
                     ["Content-Type"] = ["text/xml; charset=utf-8"],
                 },
-                BodyData = new BodyData
-                {
-                    BodyAsString = resourceContent,
-                    DetectedBodyType = BodyType.String,
-                },
+                BodyData = new BodyData { BodyAsString = resourceContent, DetectedBodyType = BodyType.String },
             };
         }
 
@@ -52,6 +53,5 @@ namespace Api.Tests
                 .WithBody(new XPathMatcher(BodyXPath + bodyXpathSuffix))
                 .UsingPost();
         }
-
     }
 }

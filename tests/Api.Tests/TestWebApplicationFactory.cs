@@ -16,17 +16,21 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
 
         var tracesBaseUrl = $"http://localhost:{server.Port}";
 
-        builder.ConfigureAppConfiguration((_, config) =>
-        {
-            config.AddInMemoryCollection(new Dictionary<string, string?>
+        builder.ConfigureAppConfiguration(
+            (_, config) =>
             {
-                ["TracesNt:BaseUrl"] = tracesBaseUrl,
-                ["TracesNt:Username"] = "test-user",
-                ["TracesNt:AuthenticationKey"] = "test-auth-key",
-                ["TracesNt:WebServiceClientId"] = "test-client-id",
-                ["XApiKey"] = "test-x-api-key"
-            });
-        });
+                config.AddInMemoryCollection(
+                    new Dictionary<string, string?>
+                    {
+                        ["TracesNt:BaseUrl"] = tracesBaseUrl,
+                        ["TracesNt:Username"] = "test-user",
+                        ["TracesNt:AuthenticationKey"] = "test-auth-key",
+                        ["TracesNt:WebServiceClientId"] = "test-client-id",
+                        ["XApiKey"] = "test-x-api-key",
+                    }
+                );
+            }
+        );
 
         builder.ConfigureServices(services =>
         {

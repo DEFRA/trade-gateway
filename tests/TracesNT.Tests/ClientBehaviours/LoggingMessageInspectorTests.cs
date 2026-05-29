@@ -19,10 +19,11 @@ public class LoggingMessageInspectorTests
         var correlationState = sut.BeforeSendRequest(ref request, _channel);
 
         correlationState.Should().NotBeNull();
-        logger.Entries.Should().ContainSingle(entry =>
-            entry.Level == LogLevel.Debug &&
-            entry.Message.Contains("SOAP Request: Action=urn:test-action")
-        );
+        logger
+            .Entries.Should()
+            .ContainSingle(entry =>
+                entry.Level == LogLevel.Debug && entry.Message.Contains("SOAP Request: Action=urn:test-action")
+            );
     }
 
     [Fact]
@@ -36,36 +37,35 @@ public class LoggingMessageInspectorTests
 
         sut.AfterReceiveReply(ref reply, correlationState!);
 
-        logger.Entries.Should().Contain(entry =>
-            entry.Level == LogLevel.Information &&
-            entry.Message.Contains("Service Response: Action=urn:test-action")
-        );
+        logger
+            .Entries.Should()
+            .Contain(entry =>
+                entry.Level == LogLevel.Information
+                && entry.Message.Contains("Service Response: Action=urn:test-action")
+            );
     }
 
     [Fact]
     public void AfterReceiveReply_WhenReplyIsFault_LogsFaultAndPreservesReply()
     {
-        var logger = new TestLogger(LogLevel.Trace);
+        var logger = new TestLogger(LogLevel.Error);
         var sut = new LoggingMessageInspector(logger);
         var request = Message.CreateMessage(MessageVersion.Soap11, "urn:test-action");
         var correlationState = sut.BeforeSendRequest(ref request, _channel);
-        var reply = Message.CreateMessage(
-            MessageVersion.Soap11,
-            new FaultCode("Sender"),
-            "Boom",
-            "urn:test-reply"
-        );
+        var reply = Message.CreateMessage(MessageVersion.Soap11, new FaultCode("Sender"), "Boom", "urn:test-reply");
 
         reply.IsFault.Should().BeTrue();
 
         sut.AfterReceiveReply(ref reply, correlationState!);
 
-        logger.Entries.Should().Contain(entry =>
-            entry.Level == LogLevel.Error &&
-            entry.Message.Contains("Service Fault: Action=urn:test-action") &&
-            entry.Message.Contains("Code=Client") &&
-            entry.Message.Contains("Reason=Boom")
-        );
+        logger
+            .Entries.Should()
+            .Contain(entry =>
+                entry.Level == LogLevel.Error
+                && entry.Message.Contains("Service Fault: Action=urn:test-action")
+                && entry.Message.Contains("Code=Client")
+                && entry.Message.Contains("Reason=Boom")
+            );
         logger.Entries.Should().NotContain(entry => entry.Level == LogLevel.Information);
 
         var fault = MessageFault.CreateFault(reply, int.MaxValue);
