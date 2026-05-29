@@ -35,6 +35,11 @@ namespace TracesNT.Services
                 logger.LogWarning(ex, "Certificate not found {Id}", id);
                 return null;
             }
+            catch (FaultException<EuIntraCertificatePermissionDeniedExceptionType> ex)
+            {
+                logger.LogWarning(ex, "Permission denied for certificate {Id}", id);
+                throw new PermissionDeniedException(id, ex);
+            }
             catch (FaultException ex)
                 when (ex.Code.IsSenderFault
                     && ex.Message.Contains("SAXException", StringComparison.InvariantCultureIgnoreCase)

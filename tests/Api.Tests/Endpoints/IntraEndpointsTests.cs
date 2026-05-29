@@ -33,7 +33,7 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = factory.CreateClient();
-        var response = await client.GetAsync("/intra/GB123", TestContext.Current.CancellationToken);
+        var response = await client.GetAsync("/intras/GB123", TestContext.Current.CancellationToken);
 
         Assert.Equal(MediaTypeAttribute.For<DefraUNVTDINTRAProfile>(), response.Content.Headers.ContentType?.MediaType);
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
@@ -71,13 +71,14 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = factory.CreateClient();
-        var response = await client.GetAsync("/intra/BADSOAP", TestContext.Current.CancellationToken);
+        var response = await client.GetAsync("/intras/BADSOAP", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
     [Fact]
-    public async Task Get_WhenTracesCommunicationFails_ReturnsInternalServerError()
+    public async Task Get_WhenTracesCommunicationFails_ReturnsBadGateway()
     {
         factory
             .WireMockServer.Given(
@@ -95,9 +96,10 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = factory.CreateClient();
-        var response = await client.GetAsync("/intra/COMMFAIL", TestContext.Current.CancellationToken);
+        var response = await client.GetAsync("/intras/COMMFAIL", TestContext.Current.CancellationToken);
 
-        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
     [Fact]
@@ -137,10 +139,53 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = factory.CreateClient();
-        var response = await client.GetAsync("/intra/MISSING", TestContext.Current.CancellationToken);
+        var response = await client.GetAsync("/intras/MISSING", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        Assert.Equal("application/json; charset=utf-8", response.Content.Headers.ContentType?.ToString());
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task Get_WhenTracesReturnsPermissionDeniedFault_ReturnsForbidden()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    GetEuIntraCertificateSoapAction,
+                    "/*[local-name() = 'GetEuIntraCertificateRequest']/*[local-name() = 'ID' and text() = 'FORBIDDEN']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(_ =>
+                        SoapUtilities.StubResponseMessage(
+                            HttpStatusCode.InternalServerError,
+                            """
+                            <?xml version="1.0" encoding="utf-8"?>
+                            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                              <s:Body>
+                                <s:Fault>
+                                  <faultcode>s:Client</faultcode>
+                                  <faultstring>Permission denied</faultstring>
+                                  <detail>
+                                    <EuIntraCertificatePermissionDeniedException xmlns="http://ec.europa.eu/tracesnt/certificate/euintra/v1">
+                                      <CertificateIdentifier>FORBIDDEN</CertificateIdentifier>
+                                    </EuIntraCertificatePermissionDeniedException>
+                                  </detail>
+                                </s:Fault>
+                              </s:Body>
+                            </s:Envelope>
+                            """
+                        )
+                    )
+            );
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync("/intras/FORBIDDEN", TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 }
