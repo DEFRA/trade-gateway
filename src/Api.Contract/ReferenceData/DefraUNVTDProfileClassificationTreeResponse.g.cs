@@ -13,8 +13,8 @@ public partial record DefraUNVTDProfileClassificationTreeResponse
     [JsonPropertyName("treeId")]
     public string? TreeId { get; init; }
 
-    [JsonPropertyName("root")]
-    public ClassificationTreeNode? Root { get; init; }
+    [JsonPropertyName("nodes")]
+    public List<ClassificationTreeNode>? Nodes { get; init; }
 
     [JsonPropertyName("retrievedAt")]
     public DateTimeOffset? RetrievedAt { get; init; }

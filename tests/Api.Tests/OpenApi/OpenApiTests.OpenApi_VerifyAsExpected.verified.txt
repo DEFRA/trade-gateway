@@ -40,6 +40,162 @@
           }
         }
       }
+    },
+    /classificationSections: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        parameters: [
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileClassificationSectionListResponse
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    /classificationTrees/{classificationTreeId}: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        parameters: [
+          {
+            name: classificationTreeId,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeResponse
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    /classificationTrees/{classificationTreeId}/nodedetail: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        parameters: [
+          {
+            name: classificationTreeId,
+            in: path,
+            description: The Classification Tree Id, i.e. cheda.,
+            required: true,
+            schema: {
+              type: string,
+              description: The Classification Tree Id, i.e. cheda.
+            }
+          },
+          {
+            name: cnCode,
+            in: query,
+            description: The CN code.,
+            schema: {
+              type: string,
+              description: The CN code.
+            }
+          },
+          {
+            name: path,
+            in: query,
+            description: The classification tree node path.,
+            schema: {
+              type: string,
+              description: The classification tree node path.
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeNodeDetailResponse
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    /metaDatas/{metadataType}: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        parameters: [
+          {
+            name: metadataType,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileMetadataListResponse
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   components: {
@@ -99,6 +255,82 @@
           typeCode: {
             type: string,
             description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ClassificationSection: {
+        required: [
+          classCode,
+          description,
+          lms,
+          scopes
+        ],
+        type: object,
+        properties: {
+          classCode: {
+            type: string,
+            nullable: true
+          },
+          chapter: {
+            type: string,
+            nullable: true
+          },
+          lms: {
+            type: boolean
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          active: {
+            type: boolean,
+            nullable: true
+          },
+          scopes: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ClassificationTreeNode: {
+        required: [
+          label,
+          nodeType,
+          path,
+          selectable
+        ],
+        type: object,
+        properties: {
+          path: {
+            type: string,
+            nullable: true
+          },
+          label: {
+            type: string,
+            nullable: true
+          },
+          nodeType: {
+            type: string,
+            nullable: true
+          },
+          selectable: {
+            type: boolean
+          },
+          cnCode: {
+            type: string,
+            nullable: true
+          },
+          children: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationTreeNode
+            },
             nullable: true
           }
         },
@@ -240,6 +472,185 @@
               $ref: #/components/schemas/LaboratoryObservationResult
             },
             description: UN vocabulary-aligned laboratory observations/results collection.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileClassificationSectionListResponse: {
+        type: object,
+        properties: {
+          source: {
+            type: string,
+            nullable: true
+          },
+          service: {
+            type: string,
+            description: Optional service discriminator for classification-section responses when multiple TRACES services expose similarly named operations.,
+            nullable: true
+          },
+          treeId: {
+            type: string,
+            nullable: true
+          },
+          sections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
+          },
+          retrievedAt: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileClassificationTreeNodeDetailResponse: {
+        type: object,
+        properties: {
+          source: {
+            type: string,
+            nullable: true
+          },
+          treeId: {
+            type: string,
+            nullable: true
+          },
+          nodePath: {
+            type: string,
+            nullable: true
+          },
+          node: {
+            $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeNodeDetailResponseNode
+          },
+          attributes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/NodeAttribute
+            },
+            nullable: true
+          },
+          classificationSections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
+          },
+          taxons: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/Taxon
+            },
+            nullable: true
+          },
+          resolvedProductClassification: {
+            $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeNodeDetailResponseResolvedProductClassification
+          },
+          retrievedAt: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileClassificationTreeNodeDetailResponseNode: {
+        required: [
+          selectable
+        ],
+        type: object,
+        properties: {
+          cnCode: {
+            type: string,
+            nullable: true
+          },
+          modelId: {
+            type: string,
+            description: Source model identifier for node-detail payloads that do not carry a CN code (for example lower-level ITACHS certificate models).,
+            nullable: true
+          },
+          selectable: {
+            type: boolean
+          },
+          nodeType: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileClassificationTreeNodeDetailResponseResolvedProductClassification: {
+        type: object,
+        properties: {
+          systemId: {
+            type: string,
+            nullable: true
+          },
+          classCode: {
+            type: string,
+            nullable: true
+          },
+          className: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileClassificationTreeResponse: {
+        type: object,
+        properties: {
+          source: {
+            type: string,
+            nullable: true
+          },
+          treeId: {
+            type: string,
+            nullable: true
+          },
+          nodes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationTreeNode
+            },
+            nullable: true
+          },
+          retrievedAt: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileMetadataListResponse: {
+        type: object,
+        properties: {
+          source: {
+            type: string,
+            nullable: true
+          },
+          metadataType: {
+            type: string,
+            nullable: true
+          },
+          items: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/MetadataCode
+            },
+            nullable: true
+          },
+          retrievedAt: {
+            type: string,
+            format: date-time,
             nullable: true
           }
         },
@@ -416,6 +827,54 @@
         },
         additionalProperties: false
       },
+      MetadataCode: {
+        required: [
+          value
+        ],
+        type: object,
+        properties: {
+          value: {
+            type: string,
+            nullable: true
+          },
+          mappedValue: {
+            type: string,
+            nullable: true
+          },
+          active: {
+            type: boolean,
+            nullable: true
+          },
+          displayNames: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      NodeAttribute: {
+        required: [
+          key
+        ],
+        type: object,
+        properties: {
+          key: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          value: {
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       ProductClassification: {
         type: object,
         properties: {
@@ -479,6 +938,36 @@
             items: {
               type: string
             },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      Taxon: {
+        required: [
+          name,
+          taxonId
+        ],
+        type: object,
+        properties: {
+          taxonId: {
+            type: integer,
+            format: int32
+          },
+          eppoCode: {
+            type: string,
+            nullable: true
+          },
+          faoCode: {
+            type: string,
+            nullable: true
+          },
+          name: {
+            type: string,
+            nullable: true
+          },
+          languageId: {
+            type: string,
             nullable: true
           }
         },
@@ -689,6 +1178,9 @@
   tags: [
     {
       name: IntraEndpoints
+    },
+    {
+      name: ReferenceDataEndpoints
     }
   ]
 }

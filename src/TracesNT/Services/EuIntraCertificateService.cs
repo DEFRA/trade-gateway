@@ -2,6 +2,7 @@ using System.ServiceModel;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TracesNT.Exceptions;
+using TracesNT.Extensions;
 using TracesNT.WebServices;
 
 namespace TracesNT.Services
@@ -14,16 +15,12 @@ namespace TracesNT.Services
     {
         public async Task<EuIntraCertificateType?> GetEuIntraCertificate(string id, string languageCode)
         {
-            var language = Enum.TryParse<ISO2AlphaLanguageCodeContentType>(languageCode, out var parsed)
-                ? parsed
-                : ISO2AlphaLanguageCodeContentType.en;
-
             try
             {
                 var certificateResponse = await euIntraCertificatePort.getEuIntraCertificateAsync(
                     new SecurityHeaderType(),
                     tracesOptions.Value.WebServiceClientId,
-                    language,
+                    languageCode.ToIso2AlphaLanguageCodeContentType(),
                     [],
                     new GetEuIntraCertificateRequestType { ID = id }
                 );

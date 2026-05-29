@@ -16,6 +16,9 @@ public partial record Taxon
     [JsonPropertyName("faoCode")]
     public string? FaoCode { get; init; }
 
-    [JsonPropertyName("names")]
-    public required List<string> Names { get; init; }
+    [JsonPropertyName("name")]
+    public required string Name { get; init; }
+
+    [JsonPropertyName("languageId")]
+    public string? LanguageId { get; init; }
 }

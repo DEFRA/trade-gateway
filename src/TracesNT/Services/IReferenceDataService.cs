@@ -4,12 +4,12 @@ namespace TracesNT.Services;
 
 public interface IReferenceDataService
 {
-    Task<GetClassificationSectionsResponse> GetClassificationSections();
-    
-    Task<GetClassificationTreesResponse> GetClassificationTrees();
+    Task<ClassificationSectionType[]?> GetClassificationSections(string languageCode);
 
-    Task<GetClassificationTreeResponse> GetClassificationTree(string treeId);
+    Task<ClassificationTreeNode[]?> GetClassificationTree(string treeId, string languageCode);
 
-    Task<GetClassificationTreeNodeDetailResponse> GetClassificationTreeNodeDetail(string treeId, string? path,
-        string? cnCode);
+    Task<ClassificationTreeNodeDetail?> GetClassificationTreeNodeDetail(string treeId, string? path,
+        string? cnCode, string languageCode);
+
+    Task<MetadataCodeType[]?> GetMetadatas(string metaDataType, string languageCode);
 }

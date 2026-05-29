@@ -99,6 +99,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseRouting();
     app.MapHealthChecks("/health");
     app.UseIntraEndpoints();
+    app.UseReferenceDataEndpoints();
 
     return app;
 }

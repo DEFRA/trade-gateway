@@ -1,5 +1,6 @@
 using Api.Contract;
 using Api.Mapping;
+using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
 using Trade.Gateway.Api.Contract;
@@ -20,7 +21,7 @@ public static class IntraEndpoints
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
-        var languageCode = acceptLanguage?.Split(',')[0].Split(';')[0].Split('-')[0].Trim() ?? "en";
+        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
         var context = new MappingContext(languageCode);
 
         var certificate = await euIntraCertificateService.GetEuIntraCertificate(id, languageCode);

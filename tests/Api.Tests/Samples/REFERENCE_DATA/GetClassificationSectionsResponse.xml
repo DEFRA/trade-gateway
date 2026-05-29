@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header>
+    <Message xmlns="http://ec.europa.eu/sanco/tracesnt/message/v1" severity="debugging">
+      <ID>WS_REQUEST_ID</ID>
+      <Message>sample-classification-sections-response</Message>
+    </Message>
+  </S:Header>
+  <S:Body>
+    <ns13:GetClassificationSectionsResponse xmlns:ns8="http://ec.europa.eu/tracesnt/referencedata/classificationsection/v1" xmlns:ns13="http://ec.europa.eu/tracesnt/referencedata/v1">
+      <ns13:ClassificationSection code="0101" lms="true">
+        <ns8:Description languageID="en">Live horses</ns8:Description>
+        <ns8:ClassificationSectionChapter>01</ns8:ClassificationSectionChapter>
+        <ns8:MetaCountryGroupScope>GB</ns8:MetaCountryGroupScope>
+        <ns8:MetaCountryGroupScope>XI</ns8:MetaCountryGroupScope>
+      </ns13:ClassificationSection>
+    </ns13:GetClassificationSectionsResponse>
+  </S:Body>
+</S:Envelope>
