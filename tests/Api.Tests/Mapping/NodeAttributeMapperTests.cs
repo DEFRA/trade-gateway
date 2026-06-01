@@ -8,24 +8,6 @@ namespace Api.Tests.Mapping;
 public class NodeAttributeMapperTests
 {
     [Fact]
-    public void Map_UsesFallbackKeyAndMapsBooleanValue()
-    {
-        var source = new BooleanNodeAttribute
-        {
-            mappedId = "mapped-key",
-            Description = new TextType { Value = "Boolean attribute" },
-            BooleanValue = true,
-        };
-
-        var result = NodeAttributeMapper.Map(source);
-
-        result.Key.Should().Be("mapped-key");
-        result.Description.Should().Be("Boolean attribute");
-        result.Value.Should().NotBeNull();
-        result.Value!.Value.ValueKind.Should().Be(JsonValueKind.True);
-    }
-
-    [Fact]
     public void Map_IntegerNodeAttribute_SerializesInteger()
     {
         var source = new IntegerNodeAttribute

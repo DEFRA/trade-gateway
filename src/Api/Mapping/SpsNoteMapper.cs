@@ -1,5 +1,5 @@
 using TracesNT.WebServices;
-using Trade.Gateway.Api.Contract;
+using Trade.Gateway.Api.Contract.Certificate;
 
 namespace Api.Mapping;
 

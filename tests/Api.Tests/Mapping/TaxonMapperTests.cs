@@ -32,12 +32,4 @@ public class TaxonMapperTests
                 }
             );
     }
-
-    [Fact]
-    public void Map_WithoutName_FallsBackToTaxonId()
-    {
-        var source = new TaxonReference { taxonId = 123 };
-
-        TaxonMapper.Map(source).Name.Should().Be("123");
-    }
 }

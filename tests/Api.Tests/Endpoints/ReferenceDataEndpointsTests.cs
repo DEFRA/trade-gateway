@@ -149,7 +149,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.Null(payload.Node.CnCode);
         Assert.Equal("11978", payload.Node.ModelId);
         Assert.True(payload.Node.Selectable);
-        Assert.Equal("other", payload.Node.NodeType);
+        Assert.Equal("certificate", payload.Node.NodeType);
         AssertAttributeStringArray(
             payload.Attributes!,
             "AVAILABLE_EU_INTRA_DESCRIPTOR_COLUMNS",

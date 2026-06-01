@@ -35,6 +35,11 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     // Load certificates into Trust Store - Note must happen before Mongo and Http client connections.
     builder.Services.AddCustomTrustStore();
 
+    builder.Services.AddProblemDetails(options =>
+        options.CustomizeProblemDetails = ctx => ctx.ProblemDetails.Extensions.Remove("traceId")
+    );
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
     {
@@ -95,6 +100,7 @@ static WebApplication SetupApplication(WebApplication app)
         options.SpecUrl("/.well-known/openapi/v1/openapi.json");
     });
 
+    app.UseExceptionHandler();
     app.UseHeaderPropagation();
     app.UseRouting();
     app.MapHealthChecks("/health");
