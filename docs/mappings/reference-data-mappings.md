@@ -53,10 +53,8 @@ This document describes how SOAP types from the TracesNT reference-data service 
 | `node` | `GetClassificationTreeNodeDetailResponse1.Node` | see [Node Detail](#node-detail--classificationtreenodedetail) |
 | `attributes` | `GetClassificationTreeNodeDetailResponse1.Node.Attribute[]` | see [NodeAttribute](#nodeattribute--abstractnodeattribute) |
 | `classificationSections` | `Node.Attribute[]` filtered to `ClassificationSectionNodeAttribute`, then flattened from `ClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
+| `legislationAttributes` | `Node.Attribute[]` filtered to `LegislationNodeAttribute` | see [LegislationAttribute](#legislationattribute--legislationnodeattribute) |
 | `taxons` | `Node.Attribute[]` filtered to `TaxonNodeAttribute`, then flattened from `TaxonReference[]` | see [Taxon](#taxon--taxonreference) |
-| `resolvedProductClassification.systemId` | `Node.Item.listID` when `Node.Item is CodeType` | omitted for certificate-model nodes |
-| `resolvedProductClassification.classCode` | `Node.Item.Value` when `Node.Item is CodeType` | |
-| `resolvedProductClassification.className` | `[Node.Description.Value]` when non-empty and `Node.Item is CodeType` | single value wrapped in list |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
 **SOAP call**
@@ -72,8 +70,6 @@ This document describes how SOAP types from the TracesNT reference-data service 
 
 - **Either `path` or `cnCode` is required** — the endpoint returns `400 Bad Request` before calling Traces when both are missing.
 - **The SOAP request uses a polymorphic `Item` field** — `path` is sent as a raw string, while `cnCode` is sent as a `CodeType`.
-- **`resolvedProductClassification` is only populated for CN-code nodes** — certificate-model nodes expose `modelId` on `node` instead.
-
 ---
 
 ## Shared Types
@@ -124,6 +120,7 @@ This document describes how SOAP types from the TracesNT reference-data service 
 | `modelId` | `Item.modelId` when `Item is CertificateModelReference` | emitted as string |
 | `selectable` | `allowedForSelection` | |
 | `nodeType` | `type` | mapped by [Node Type Mapping](#node-type-mapping) |
+| `label` | `Description.Value` | |
 
 ---
 
@@ -134,6 +131,26 @@ This document describes how SOAP types from the TracesNT reference-data service 
 | `key` | `id ?? mappedId ?? CLR type name` | fallback order used by mapper |
 | `description` | `Description.Value` | |
 | `value` | attribute-type specific | see [Attribute Value Shapes](#attribute-value-shapes) |
+
+---
+
+### `LegislationAttribute` ← `LegislationNodeAttribute`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `key` | `id` | |
+| `description` | `Description.Value` | |
+| `legislation[].legislationId` | `LegislationReference.legislationId` | cast from `long` to `int` |
+| `legislation[].celexIdentifiers` | `LegislationReference.CelexIdentifier[].Value` | filtered to non-empty values |
+| `legislation[].certificateModels[].modelId` | `LegislationReference.CertificateModel[].modelId` | cast from `long` to `int` |
+| `legislation[].certificateModels[].shortTitle` | `LegislationReference.CertificateModel[].ShortTitle.Value` | |
+| `legislation[].certificateModels[].longTitle` | `LegislationReference.CertificateModel[].LongTitle.Value` | |
+| `legislation[].certificateModels[].createdOn` | `LegislationReference.CertificateModel[].createdOn` | |
+| `legislation[].certificateModels[].updatedOn` | `LegislationReference.CertificateModel[].updatedOn` when `updatedOnSpecified` | omitted otherwise |
+| `legislation[].originCountries` | `LegislationReference.OriginCountry[].Value` | filtered to non-empty values |
+| `legislation[].destinationCountries` | `LegislationReference.DestinationCountry[].Value` | filtered to non-empty values |
+| `legislation[].originClassificationSections` | `LegislationReference.OriginClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
+| `legislation[].destinationClassificationSections` | `LegislationReference.DestinationClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
 
 ---
 

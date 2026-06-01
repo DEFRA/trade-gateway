@@ -55,10 +55,6 @@ internal static class NodeAttributeMapper
                 taxonAttribute.TaxonReference,
                 TaxonMapper.GetName
             ),
-            LegislationNodeAttribute legislationAttribute => SerializeStringArray(
-                legislationAttribute.LegislationReference?.CelexIdentifier,
-                GetIdValue
-            ),
             SelectableDocumentLinkNodeAttribute linkAttribute => SerializeStringArray(
                 linkAttribute.DocumentTypeValue,
                 GetIdValue

@@ -10,7 +10,7 @@ public class ClassificationTreeNodeTypeMapperTests
     [InlineData(ClassificationTreeNodeType.nomenclature, "nomenclature")]
     [InlineData(ClassificationTreeNodeType.label, "label")]
     [InlineData(ClassificationTreeNodeType.taxon, "group")]
-    [InlineData(ClassificationTreeNodeType.certificate_model, "other")]
+    [InlineData(ClassificationTreeNodeType.certificate_model, "certificate")]
     [InlineData(ClassificationTreeNodeType.no_commodity, "other")]
     public void Map_ReturnsExpectedNodeType(ClassificationTreeNodeType source, string expected)
     {

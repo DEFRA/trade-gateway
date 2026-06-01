@@ -1,27 +1,12 @@
 using Api.Constants;
 using Defra.TradeGateway.Api.Contract.ReferenceData;
+using SoapCertificateModelReference = TracesNT.WebServices.CertificateModelReference;
 using TracesNT.WebServices;
 
 namespace Api.Mapping;
 
 internal static class ClassificationTreeNodeDetailMapper
 {
-    internal static DefraUNVTDProfileClassificationTreeNodeDetailResponseResolvedProductClassification? MapResolvedProductClassification(
-        ClassificationTreeNodeDetail? source
-    )
-    {
-        if (source?.Item is not CodeType codeType)
-            return null;
-
-        return new DefraUNVTDProfileClassificationTreeNodeDetailResponseResolvedProductClassification
-        {
-            SystemId = codeType.listID,
-            ClassCode = codeType.Value,
-            ClassName = !string.IsNullOrWhiteSpace(source.Description.Value)
-                ? [source.Description.Value]
-                : null,
-        };
-    }
     internal static DefraUNVTDProfileClassificationTreeNodeDetailResponseNode? Map(
         ClassificationTreeNodeDetail? source
     )
@@ -32,9 +17,10 @@ internal static class ClassificationTreeNodeDetailMapper
         return new DefraUNVTDProfileClassificationTreeNodeDetailResponseNode
         {
             CnCode = (source.Item as CodeType)?.Value,
-            ModelId = (source.Item as CertificateModelReference)?.modelId.ToString(),
+            ModelId = (source.Item as SoapCertificateModelReference)?.modelId.ToString(),
             Selectable = source.allowedForSelection,
             NodeType = ClassificationTreeNodeTypeMapper.Map(source.type),
+            Label = source.Description.Value
         };
     }
 
@@ -49,11 +35,20 @@ internal static class ClassificationTreeNodeDetailMapper
             TreeId = treeId,
             NodePath = source.path,
             Node = Map(source),
-            Attributes = source.Attribute?.Select(NodeAttributeMapper.Map).ToList().NullIfEmpty(),
+            Attributes = source.Attribute
+                ?.Where(attribute => attribute is not LegislationNodeAttribute)
+                .Select(NodeAttributeMapper.Map)
+                .ToList()
+                .NullIfEmpty(),
             ClassificationSections = source.Attribute
                 ?.OfType<ClassificationSectionNodeAttribute>()
                 .SelectMany(attribute => attribute.ClassificationSection ?? [])
                 .Select(ClassificationSectionMapper.Map)
+                .ToList()
+                .NullIfEmpty(),
+            LegislationAttributes = source.Attribute
+                ?.OfType<LegislationNodeAttribute>()
+                .Select(LegislationAttributeMapper.Map)
                 .ToList()
                 .NullIfEmpty(),
             Taxons = source.Attribute
@@ -62,7 +57,6 @@ internal static class ClassificationTreeNodeDetailMapper
                 .Select(TaxonMapper.Map)
                 .ToList()
                 .NullIfEmpty(),
-            ResolvedProductClassification = MapResolvedProductClassification(source),
             RetrievedAt = DateTimeOffset.UtcNow,
         };
     }

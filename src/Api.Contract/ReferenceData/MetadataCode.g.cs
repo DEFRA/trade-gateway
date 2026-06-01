@@ -16,6 +16,6 @@ public partial record MetadataCode
     [JsonPropertyName("active")]
     public bool? Active { get; init; }
 
-    [JsonPropertyName("displayNames")]
-    public List<string>? DisplayNames { get; init; }
+    [JsonPropertyName("displayName")]
+    public string? DisplayName { get; init; }
 }

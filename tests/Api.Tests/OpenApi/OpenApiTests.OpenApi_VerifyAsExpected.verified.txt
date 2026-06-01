@@ -260,6 +260,37 @@
         },
         additionalProperties: false
       },
+      CertificateModelReference: {
+        required: [
+          modelId
+        ],
+        type: object,
+        properties: {
+          modelId: {
+            type: integer,
+            format: int32
+          },
+          shortTitle: {
+            type: string,
+            nullable: true
+          },
+          longTitle: {
+            type: string,
+            nullable: true
+          },
+          createdOn: {
+            type: string,
+            format: date-time,
+            nullable: true
+          },
+          updatedOn: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       ClassificationSection: {
         required: [
           classCode,
@@ -540,15 +571,19 @@
             },
             nullable: true
           },
+          legislationAttributes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LegislationAttribute
+            },
+            nullable: true
+          },
           taxons: {
             type: array,
             items: {
               $ref: #/components/schemas/Taxon
             },
             nullable: true
-          },
-          resolvedProductClassification: {
-            $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeNodeDetailResponseResolvedProductClassification
           },
           retrievedAt: {
             type: string,
@@ -579,26 +614,9 @@
           nodeType: {
             type: string,
             nullable: true
-          }
-        },
-        additionalProperties: false
-      },
-      DefraUNVTDProfileClassificationTreeNodeDetailResponseResolvedProductClassification: {
-        type: object,
-        properties: {
-          systemId: {
-            type: string,
-            nullable: true
           },
-          classCode: {
+          label: {
             type: string,
-            nullable: true
-          },
-          className: {
-            type: array,
-            items: {
-              type: string
-            },
             nullable: true
           }
         },
@@ -787,6 +805,86 @@
         },
         additionalProperties: false
       },
+      LegislationAttribute: {
+        required: [
+          key,
+          legislation
+        ],
+        type: object,
+        properties: {
+          key: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          legislation: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LegislationReference
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      LegislationReference: {
+        required: [
+          legislationId
+        ],
+        type: object,
+        properties: {
+          legislationId: {
+            type: integer,
+            format: int32
+          },
+          celexIdentifiers: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          certificateModels: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/CertificateModelReference
+            },
+            nullable: true
+          },
+          originCountries: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          destinationCountries: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          originClassificationSections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
+          },
+          destinationClassificationSections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       LogisticsLocation: {
         type: object,
         properties: {
@@ -845,11 +943,8 @@
             type: boolean,
             nullable: true
           },
-          displayNames: {
-            type: array,
-            items: {
-              type: string
-            },
+          displayName: {
+            type: string,
             nullable: true
           }
         },

@@ -10,7 +10,7 @@ internal static class ClassificationTreeNodeTypeMapper
             ClassificationTreeNodeType.nomenclature => "nomenclature",
             ClassificationTreeNodeType.label => "label",
             ClassificationTreeNodeType.taxon => "group",
-            ClassificationTreeNodeType.certificate_model => "other",
+            ClassificationTreeNodeType.certificate_model => "certificate",
             ClassificationTreeNodeType.no_commodity => "other",
             _ => "other",
         };

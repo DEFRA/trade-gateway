@@ -73,10 +73,10 @@ namespace TracesNT.Services
                 var getClassificationsTreesRequest = new GetClassificationTreeNodeDetailRequestType
                 {
                     TreeID = treeId,
-                    Item = (path as object) ?? new CodeType
+                    Item = string.IsNullOrWhiteSpace(path) ? new CodeType
                     {
                         Value = cnCode
-                    }
+                    } : path
                 };
 
                 var response = await referenceDataPortClient.getClassificationTreeNodeDetailAsync(

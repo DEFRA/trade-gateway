@@ -25,11 +25,11 @@ public partial record DefraUNVTDProfileClassificationTreeNodeDetailResponse
     [JsonPropertyName("classificationSections")]
     public List<ClassificationSection>? ClassificationSections { get; init; }
 
+    [JsonPropertyName("legislationAttributes")]
+    public List<LegislationAttribute>? LegislationAttributes { get; init; }
+
     [JsonPropertyName("taxons")]
     public List<Taxon>? Taxons { get; init; }
-
-    [JsonPropertyName("resolvedProductClassification")]
-    public DefraUNVTDProfileClassificationTreeNodeDetailResponseResolvedProductClassification? ResolvedProductClassification { get; init; }
 
     [JsonPropertyName("retrievedAt")]
     public DateTimeOffset? RetrievedAt { get; init; }
@@ -49,16 +49,7 @@ public partial record DefraUNVTDProfileClassificationTreeNodeDetailResponseNode
 
     [JsonPropertyName("nodeType")]
     public string? NodeType { get; init; }
-}
 
-public partial record DefraUNVTDProfileClassificationTreeNodeDetailResponseResolvedProductClassification
-{
-    [JsonPropertyName("systemId")]
-    public string? SystemId { get; init; }
-
-    [JsonPropertyName("classCode")]
-    public string? ClassCode { get; init; }
-
-    [JsonPropertyName("className")]
-    public List<string>? ClassName { get; init; }
+    [JsonPropertyName("label")]
+    public string? Label { get; init; }
 }

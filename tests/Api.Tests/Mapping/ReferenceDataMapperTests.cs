@@ -175,15 +175,6 @@ public class ReferenceDataMapperTests
                     LanguageId = (string?)null,
                 }
             );
-        result.ResolvedProductClassification.Should()
-            .BeEquivalentTo(
-                new
-                {
-                    SystemId = "CN",
-                    ClassCode = "0101",
-                    ClassName = new[] { "Live horses" },
-                }
-            );
     }
 
     [Fact]
@@ -198,7 +189,7 @@ public class ReferenceDataMapperTests
                     path = "R/N-10000/C-11978",
                     allowedForSelection = true,
                     type = ClassificationTreeNodeType.certificate_model,
-                    Description = new TextType { Value = "Model" },
+                    Description = new TextType { Value = "Model Description" },
                     Item = new CertificateModelReference { modelId = 11978 },
                 },
             }
@@ -209,7 +200,7 @@ public class ReferenceDataMapperTests
         result.Node.Should().NotBeNull();
         result.Node!.CnCode.Should().BeNull();
         result.Node.ModelId.Should().Be("11978");
-        result.Node.NodeType.Should().Be("other");
-        result.ResolvedProductClassification.Should().BeNull();
+        result.Node.NodeType.Should().Be("certificate");
+        result.Node.Label.Should().Be("Model Description");
     }
 }
