@@ -2,74 +2,100 @@
 
 This document describes how SOAP types from the TracesNT reference-data service are mapped to the Defra reference-data contract types exposed by `ReferenceDataEndpoints`.
 
+It reflects the current implementation in:
+
+- `src\Api\Endpoints\ReferenceDataEndpoints.cs`
+- `src\Api\Mapping\*.cs`
+- `src\Api.Contract\ReferenceData\*.g.cs`
+
 ---
 
 ## Endpoints
 
-### `GET /classificationSections` — `GetClassificationSectionsResponse` → `DefraUNVTDProfileClassificationSectionListResponse`
+### `GET /classificationSections` — `ClassificationSectionType[]` → `DefraUNVTDProfileClassificationSectionListResponse`
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `source` | `"traces"` | const default |
-| `service` | `"ReferenceDataServiceV1"` | const default |
-| `treeId` | `"intra_trade"` | const default |
-| `sections` | `GetClassificationSectionsResponse1[]` | see [ClassificationSection](#classificationsection--classificationsectiontype) |
+| `source` | not populated | contract field exists, mapper does not currently set it |
+| `service` | not populated | contract field exists, mapper does not currently set it |
+| `treeId` | not populated | contract field exists, mapper does not currently set it |
+| `sections` | `ClassificationSectionType[]` | see [ClassificationSection](#classificationsection--classificationsectiontype) |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
 **SOAP call**
 
 | Input | SOAP request path | Notes |
 |---|---|---|
-| `Accept-Language` | `languageCode` header → `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `LanguageCode` argument | primary tag only; defaults to `"en"` |
+| `Accept-Language` | `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `languageCode` argument | primary tag only; defaults to `"en"` |
 | none | `ReferenceDataPort.getClassificationSectionsAsync(..., GetClassificationSectionsRequestType)` | request body is empty |
 
 ---
 
-### `GET /classificationTrees/{classificationTreeId}` — `GetClassificationTreeResponse` → `DefraUNVTDProfileClassificationTreeResponse`
+### `GET /classificationTrees/{classificationTreeId}` — `ClassificationTreeNode[]` → `DefraUNVTDProfileClassificationTreeResponse`
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `source` | `"traces"` | const default |
+| `source` | not populated | contract field exists, mapper does not currently set it |
 | `treeId` | route value `classificationTreeId` | echoed from request, not derived from SOAP payload |
-| `root` | `GetClassificationTreeResponse1[0]` | first returned root node; see [ClassificationTreeNode](#classificationtreenode--classificationtreenode) |
+| `nodes` | `ClassificationTreeNode[]` | each node mapped recursively; see [ClassificationTreeNode](#classificationtreenode--classificationtreenode) |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
 **SOAP call**
 
 | Input | SOAP request path | Notes |
 |---|---|---|
-| `Accept-Language` | `languageCode` header → `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `LanguageCode` argument | primary tag only; defaults to `"en"` |
+| `Accept-Language` | `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `languageCode` argument | primary tag only; defaults to `"en"` |
 | `classificationTreeId` | `GetClassificationTreeRequestType.TreeID` | passed directly from route |
 
 ---
 
-### `GET /classificationTrees/{classificationTreeId}/nodedetail` — `GetClassificationTreeNodeDetailResponse` → `DefraUNVTDProfileClassificationTreeNodeDetailResponse`
+### `GET /classificationTrees/{classificationTreeId}/nodedetail` — `ClassificationTreeNodeDetail` → `DefraUNVTDProfileClassificationTreeNodeDetailResponse`
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `source` | `"traces"` | const default |
+| `source` | `"traces"` | set by mapper |
 | `treeId` | route value `classificationTreeId` | echoed from request |
-| `nodePath` | `GetClassificationTreeNodeDetailResponse1.Node.path` | |
-| `node` | `GetClassificationTreeNodeDetailResponse1.Node` | see [Node Detail](#node-detail--classificationtreenodedetail) |
-| `attributes` | `GetClassificationTreeNodeDetailResponse1.Node.Attribute[]` | see [NodeAttribute](#nodeattribute--abstractnodeattribute) |
-| `classificationSections` | `Node.Attribute[]` filtered to `ClassificationSectionNodeAttribute`, then flattened from `ClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
-| `legislationAttributes` | `Node.Attribute[]` filtered to `LegislationNodeAttribute` | see [LegislationAttribute](#legislationattribute--legislationnodeattribute) |
-| `taxons` | `Node.Attribute[]` filtered to `TaxonNodeAttribute`, then flattened from `TaxonReference[]` | see [Taxon](#taxon--taxonreference) |
+| `nodePath` | `ClassificationTreeNodeDetail.path` | |
+| `node` | `ClassificationTreeNodeDetail` | see [Node Detail](#node-detail--classificationtreenodedetail) |
+| `attributes` | `ClassificationTreeNodeDetail.Attribute[]` excluding `LegislationNodeAttribute` | see [NodeAttribute](#nodeattribute--abstractnodeattribute) |
+| `classificationSections` | `Attribute[]` filtered to `ClassificationSectionNodeAttribute`, then flattened from `ClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
+| `legislationAttributes` | `Attribute[]` filtered to `LegislationNodeAttribute` | see [LegislationAttribute](#legislationattribute--legislationnodeattribute) |
+| `taxons` | `Attribute[]` filtered to `TaxonNodeAttribute`, then flattened from `TaxonReference[]` | see [Taxon](#taxon--taxonreference) |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
 **SOAP call**
 
 | Input | SOAP request path | Notes |
 |---|---|---|
-| `Accept-Language` | `languageCode` header → `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `LanguageCode` argument | primary tag only; defaults to `"en"` |
+| `Accept-Language` | `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `languageCode` argument | primary tag only; defaults to `"en"` |
 | `classificationTreeId` | `GetClassificationTreeNodeDetailRequestType.TreeID` | passed directly from route |
 | `path` | `GetClassificationTreeNodeDetailRequestType.Item` as `string` | used when `path` query string is supplied |
-| `cnCode` | `GetClassificationTreeNodeDetailRequestType.Item.Value` in a `CodeType` | used when `cnCode` query string is supplied |
+| `cnCode` | `GetClassificationTreeNodeDetailRequestType.Item` as `CodeType { Value = cnCode }` | used when `path` is blank and `cnCode` is supplied |
 
-**Behaviours to be aware of:**
+**Behaviours to be aware of**
 
-- **Either `path` or `cnCode` is required** — the endpoint returns `400 Bad Request` before calling Traces when both are missing.
-- **The SOAP request uses a polymorphic `Item` field** — `path` is sent as a raw string, while `cnCode` is sent as a `CodeType`.
+- Either `path` or `cnCode` is required; the endpoint returns `400 Bad Request` if both are blank.
+- The SOAP request uses a polymorphic `Item` field: `path` is sent as a raw string, while `cnCode` is sent as a `CodeType`.
+- Legislation attributes are **not** duplicated in generic `attributes`; they are emitted only through `legislationAttributes`.
+
+---
+
+### `GET /metaDatas/{metadataType}` — `MetadataCodeType[]` → `DefraUNVTDProfileMetadataListResponse`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `source` | `"traces"` | set by mapper |
+| `metadataType` | route value `metadataType` | echoed from request |
+| `items` | `MetadataCodeType[]` | see [MetadataCode](#metadatacode--metadatacodetype) |
+| `retrievedAt` | `DateTime.UtcNow` | assigned in mapper; serialized as `DateTimeOffset?` by the contract |
+
+**SOAP call**
+
+| Input | SOAP request path | Notes |
+|---|---|---|
+| `Accept-Language` | `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `languageCode` argument | primary tag only; defaults to `"en"` |
+| `metadataType` | `GetMetadatasRequestType.MetadataType` | passed directly from route |
+
 ---
 
 ## Shared Types
@@ -78,9 +104,9 @@ This document describes how SOAP types from the TracesNT reference-data service 
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `classCode` | `code` | required attribute |
-| `chapter` | `ClassificationSectionChapter.Value` | omitted if missing |
-| `lms` | `lms` | |
+| `classCode` | `code` | required |
+| `chapter` | `ClassificationSectionChapter?.Value` | omitted if missing |
+| `lms` | `lms` | required |
 | `description` | `Description.Value` | required |
 | `active` | `active` | |
 | `scopes` | `MetaCountryGroupScope[].Value` | filtered to non-empty values; empty list if none |
@@ -91,10 +117,11 @@ This document describes how SOAP types from the TracesNT reference-data service 
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `classCode` | `code` | required attribute |
+| `classCode` | `code` | required |
 | `chapter` | `chapter` | |
-| `lms` | `lms` | |
+| `lms` | `lms` | required |
 | `description` | `Description.Value` | required |
+| `active` | not populated | contract field exists, reference mapper does not currently set it |
 | `scopes` | `Scope[].Value` | filtered to non-empty values; empty list if none |
 
 ---
@@ -103,10 +130,10 @@ This document describes how SOAP types from the TracesNT reference-data service 
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `path` | `path` | required attribute |
+| `path` | `path` | required |
 | `label` | `Description.Value` | required |
 | `nodeType` | `type` | mapped by [Node Type Mapping](#node-type-mapping) |
-| `selectable` | `allowedForSelection` | |
+| `selectable` | `allowedForSelection` | required |
 | `cnCode` | `Item.Value` when `Item is CodeType` | omitted for non-CN nodes |
 | `children` | `Node[]` | recursively mapped; omitted if empty |
 
@@ -118,9 +145,9 @@ This document describes how SOAP types from the TracesNT reference-data service 
 |---|---|---|
 | `cnCode` | `Item.Value` when `Item is CodeType` | |
 | `modelId` | `Item.modelId` when `Item is CertificateModelReference` | emitted as string |
-| `selectable` | `allowedForSelection` | |
+| `selectable` | `allowedForSelection` | required |
 | `nodeType` | `type` | mapped by [Node Type Mapping](#node-type-mapping) |
-| `label` | `Description.Value` | |
+| `label` | `Description.Value` | used for both nomenclature and non-CN nodes |
 
 ---
 
@@ -128,7 +155,7 @@ This document describes how SOAP types from the TracesNT reference-data service 
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `key` | `id ?? mappedId ?? CLR type name` | fallback order used by mapper |
+| `key` | `id` | no fallback to `mappedId` or CLR type name in the current mapper |
 | `description` | `Description.Value` | |
 | `value` | attribute-type specific | see [Attribute Value Shapes](#attribute-value-shapes) |
 
@@ -140,11 +167,12 @@ This document describes how SOAP types from the TracesNT reference-data service 
 |---|---|---|
 | `key` | `id` | |
 | `description` | `Description.Value` | |
+| `legislation[]` | `LegislationReference` | current mapper emits a single-element list wrapping `source.LegislationReference` |
 | `legislation[].legislationId` | `LegislationReference.legislationId` | cast from `long` to `int` |
 | `legislation[].celexIdentifiers` | `LegislationReference.CelexIdentifier[].Value` | filtered to non-empty values |
 | `legislation[].certificateModels[].modelId` | `LegislationReference.CertificateModel[].modelId` | cast from `long` to `int` |
-| `legislation[].certificateModels[].shortTitle` | `LegislationReference.CertificateModel[].ShortTitle.Value` | |
-| `legislation[].certificateModels[].longTitle` | `LegislationReference.CertificateModel[].LongTitle.Value` | |
+| `legislation[].certificateModels[].shortTitle` | `LegislationReference.CertificateModel[].ShortTitle?.Value` | |
+| `legislation[].certificateModels[].longTitle` | `LegislationReference.CertificateModel[].LongTitle?.Value` | |
 | `legislation[].certificateModels[].createdOn` | `LegislationReference.CertificateModel[].createdOn` | |
 | `legislation[].certificateModels[].updatedOn` | `LegislationReference.CertificateModel[].updatedOn` when `updatedOnSpecified` | omitted otherwise |
 | `legislation[].originCountries` | `LegislationReference.OriginCountry[].Value` | filtered to non-empty values |
@@ -161,8 +189,19 @@ This document describes how SOAP types from the TracesNT reference-data service 
 | `taxonId` | `taxonId` | cast from `long` to `int` |
 | `eppoCode` | `eppoCode` | |
 | `faoCode` | `faoCode` | |
-| `name` | `Value` | falls back to `taxonId.ToString()` if empty |
+| `name` | `Value` | copied directly; no fallback to `taxonId` in the current mapper |
 | `languageId` | `languageID` | copied directly from TracesNT text metadata |
+
+---
+
+### `MetadataCode` ← `MetadataCodeType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `value` | `Value` | required |
+| `mappedValue` | `mappedValue` | |
+| `active` | `active` | |
+| `displayName` | not populated | contract field exists, current mapper does not set it |
 
 ---
 
@@ -184,11 +223,13 @@ The `NodeAttribute.value` field is serialized according to the concrete TracesNT
 | `AllowedNodeAttribute` | string | `AllowedValue.ToString()` |
 | `ClassificationSectionNodeAttribute` | string array | `ClassificationSection[].code` |
 | `TaxonNodeAttribute` | string array | `TaxonReference[].Value` |
-| `LegislationNodeAttribute` | string array | `LegislationReference.CelexIdentifier[].Value` |
 | `SelectableDocumentLinkNodeAttribute` | string array | `DocumentTypeValue[].Value` |
 | `DescriptorColumnNodeAttribute` | string array | `DescriptorColumnValue[].id` |
+| any other subtype | omitted | mapper returns `null` |
 
 All string arrays are filtered to remove null, empty, and whitespace-only values. If the resulting array is empty, `value` is omitted.
+
+Note that `LegislationNodeAttribute` is not mapped through generic `NodeAttribute.value` for node-detail responses; it is handled separately via `legislationAttributes`.
 
 ---
 
@@ -199,17 +240,17 @@ All string arrays are filtered to remove null, empty, and whitespace-only values
 | `nomenclature` | `nomenclature` |
 | `label` | `label` |
 | `taxon` | `group` |
-| `certificate_model` | `other` |
+| `certificate_model` | `certificate` |
 | `no_commodity` | `other` |
 
 ---
 
 ## Service Behaviour
 
-Reference-data endpoints now accept `Accept-Language`. The header is reduced to its primary language tag by `AcceptLanguageParser`:
+Reference-data endpoints accept `Accept-Language`. The header is reduced to its primary language tag by `AcceptLanguageParser`:
 
-- `en-GB,en;q=0.9` → `en`
-- `cy-GB,cy;q=0.9,en;q=0.8` → `cy`
-- missing or blank header → `en`
+- `en-GB,en;q=0.9` -> `en`
+- `cy-GB,cy;q=0.9,en;q=0.8` -> `cy`
+- missing or blank header -> `en`
 
 That primary language code is converted to TracesNT `ISO2AlphaLanguageCodeContentType` and sent to the SOAP reference-data service, so labels and descriptions are requested in the caller's preferred language where Traces provides them.
