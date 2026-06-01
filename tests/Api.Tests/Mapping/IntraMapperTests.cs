@@ -24,11 +24,11 @@ public class IntraMapperTests
     }
 
     [Fact]
-    public void Map_SpecifiedConsignment_IsSingleItemList()
+    public void Map_SpecifiedConsignment_IsNotNull()
     {
         var result = IntraMapper.Map(MinimalCertificate(), Context);
 
-        result.SpecifiedConsignment.Should().HaveCount(1);
+        result.SpecifiedConsignment.Should().NotBeNull();
     }
 
     [Fact]

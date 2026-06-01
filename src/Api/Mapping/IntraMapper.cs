@@ -1,5 +1,5 @@
 using TracesNT.WebServices;
-using Trade.Gateway.Api.Contract;
+using Trade.Gateway.Api.Contract.Certificate;
 
 namespace Api.Mapping;
 
@@ -9,7 +9,7 @@ internal static class IntraMapper
         new()
         {
             ExchangedDocument = SpsExchangedDocumentMapper.Map(source.SPSCertificate.SPSExchangedDocument, context),
-            SpecifiedConsignment = [SpsConsignmentMapper.Map(source.SPSCertificate.SPSConsignment, context)],
+            SpecifiedConsignment = SpsConsignmentMapper.Map(source.SPSCertificate.SPSConsignment, context),
             LaboratoryObservationResult = null,
         };
 }
