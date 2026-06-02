@@ -30,7 +30,7 @@ public class ClassificationTreeNodeDetailMapperTests
                 new
                 {
                     CnCode = "0101",
-                    ModelId = (string?)null,
+                    CertificateModel = (object?)null,
                     Selectable = true,
                     NodeType = "nomenclature",
                     Label = "Live horses",
@@ -43,7 +43,15 @@ public class ClassificationTreeNodeDetailMapperTests
     {
         var source = new ClassificationTreeNodeDetail
         {
-            Item = new CertificateModelReference { modelId = 11978 },
+            Item = new CertificateModelReference
+            {
+                modelId = 11978,
+                ShortTitle = new TextType { Value = "11978" },
+                LongTitle = new TextType { Value = "Certificate title" },
+                createdOn = new DateTime(2022, 12, 7, 19, 3, 10, DateTimeKind.Utc),
+                updatedOn = new DateTime(2022, 12, 7, 19, 3, 10, DateTimeKind.Utc),
+                updatedOnSpecified = true,
+            },
             Description = new TextType { Value = "Model title" },
             type = ClassificationTreeNodeType.certificate_model,
             allowedForSelection = false,
@@ -56,7 +64,12 @@ public class ClassificationTreeNodeDetailMapperTests
                 new
                 {
                     CnCode = (string?)null,
-                    ModelId = "11978",
+                    CertificateModel = new
+                    {
+                        ModelId = 11978,
+                        ShortTitle = "11978",
+                        LongTitle = "Certificate title",
+                    },
                     Selectable = false,
                     NodeType = "certificate",
                     Label = "Model title",
@@ -134,44 +147,41 @@ public class ClassificationTreeNodeDetailMapperTests
                 {
                     Key = "LEGISLATION",
                     Description = "Applicable legislation",
-                    Legislation = new[]
+                    Legislation = new
                     {
-                        new
+                        LegislationId = 123,
+                        CelexIdentifiers = new[] { "32020R0692" },
+                        OriginCountries = new[] { "GB" },
+                        DestinationCountries = new[] { "FR" },
+                        CertificateModels = new[]
                         {
-                            LegislationId = 123,
-                            CelexIdentifiers = new[] { "32020R0692" },
-                            OriginCountries = new[] { "GB" },
-                            DestinationCountries = new[] { "FR" },
-                            CertificateModels = new[]
+                            new
                             {
-                                new
-                                {
-                                    ModelId = 11822,
-                                    ShortTitle = "11822",
-                                    LongTitle = "Equine model",
-                                },
+                                ModelId = 11822,
+                                ShortTitle = "11822",
+                                LongTitle = "Equine model",
                             },
-                            OriginClassificationSections = new[]
+                        },
+                        OriginClassificationSections = new[]
+                        {
+                            new
                             {
-                                new
-                                {
-                                    ClassCode = "ORIG",
-                                    Chapter = "01",
-                                    Lms = false,
-                                    Description = "Origin section",
-                                    Scopes = new[] { "EU" },
-                                },
+                                ClassCode = "ORIG",
+                                Chapter = "01",
+                                Lms = false,
+                                Description = "Origin section",
+                                Scopes = new[] { "EU" },
                             },
-                            DestinationClassificationSections = new[]
+                        },
+                        DestinationClassificationSections = new[]
+                        {
+                            new
                             {
-                                new
-                                {
-                                    ClassCode = "DEST",
-                                    Chapter = "02",
-                                    Lms = true,
-                                    Description = "Destination section",
-                                    Scopes = new[] { "EU" },
-                                },
+                                ClassCode = "DEST",
+                                Chapter = "02",
+                                Lms = true,
+                                Description = "Destination section",
+                                Scopes = new[] { "EU" },
                             },
                         },
                     },

@@ -40,9 +40,9 @@ public partial record DefraUNVTDProfileClassificationTreeNodeDetailResponseNode
     [JsonPropertyName("cnCode")]
     public string? CnCode { get; init; }
 
-    [JsonPropertyName("modelId")]
-    [Description("Source model identifier for node-detail payloads that do not carry a CN code (for example lower-level ITACHS certificate models).")]
-    public string? ModelId { get; init; }
+    [JsonPropertyName("certificateModel")]
+    [Description("Certificate model if applicable (for example lower-level ITACHS certificate models).")]
+    public CertificateModelReference? CertificateModel { get; init; }
 
     [JsonPropertyName("selectable")]
     public required bool Selectable { get; init; }

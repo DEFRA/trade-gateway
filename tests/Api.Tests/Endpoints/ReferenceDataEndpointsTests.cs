@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
+using System.Runtime.Serialization;
 using System.Text.Json;
 using Api.Constants;
 using Api.Contract;
@@ -147,7 +149,27 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.Equal(nodePath, payload.NodePath);
         Assert.NotNull(payload.Node);
         Assert.Null(payload.Node.CnCode);
-        Assert.Equal("11978", payload.Node.ModelId);
+        Assert.NotNull(payload.Node.CertificateModel);
+        Assert.Equal(11978, payload.Node.CertificateModel.ModelId);
+        Assert.Equal("11978", payload.Node.CertificateModel.ShortTitle);
+        Assert.Equal("2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’)", payload.Node.CertificateModel.LongTitle);
+        Assert.Equal("2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’)", payload.Node.CertificateModel.LongTitle);
+        Assert.Equal(
+            DateTimeOffset.Parse(
+                "2022-12-07T18:04:10.000Z",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal
+            ),
+            payload.Node.CertificateModel.CreatedOn
+        );
+        Assert.Equal(
+            DateTimeOffset.Parse(
+                "2022-12-07T18:04:10.000Z",
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.AssumeUniversal
+            ),
+            payload.Node.CertificateModel.UpdatedOn
+        );
         Assert.True(payload.Node.Selectable);
         Assert.Equal("certificate", payload.Node.NodeType);
         AssertAttributeStringArray(

@@ -30,15 +30,12 @@ public class LegislationAttributeMapperTests
                 {
                     Key = "LEGISLATION",
                     Description = "Applicable legislation",
-                    Legislation = new[]
+                    Legislation = new
                     {
-                        new
-                        {
-                            LegislationId = 123,
-                            CelexIdentifiers = new[] { "32020R0692" },
-                            OriginCountries = new[] { "GB" },
-                            DestinationCountries = new[] { "FR" },
-                        },
+                        LegislationId = 123,
+                        CelexIdentifiers = new[] { "32020R0692" },
+                        OriginCountries = new[] { "GB" },
+                        DestinationCountries = new[] { "FR" },
                     },
                 }
             );

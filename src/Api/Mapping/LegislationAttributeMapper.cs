@@ -15,7 +15,7 @@ internal static class LegislationAttributeMapper
         {
             Key = source.id,
             Description = source.Description.Value,
-            Legislation = [Map(source.LegislationReference)],
+            Legislation = Map(source.LegislationReference),
         };
 
     private static ContractLegislationReference Map(SoapLegislationReference source) =>

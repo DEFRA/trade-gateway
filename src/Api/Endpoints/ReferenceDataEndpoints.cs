@@ -101,7 +101,7 @@ public static class ReferenceDataEndpoints
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
 
         var response = await referenceDataService.GetClassificationTreeNodeDetail(
-            request.TreeId!,
+            request.TreeId,
             request.Path,
             request.CnCode,
             languageCode
@@ -144,11 +144,11 @@ public static class ReferenceDataEndpoints
             contentType: MediaTypeAttribute.For<DefraUNVTDProfileMetadataListResponse>());
     }
 
-    internal sealed class ClassificationTreeNodeDetailRequest
+    internal sealed record ClassificationTreeNodeDetailRequest
     {
         [FromRoute(Name = "classificationTreeId")]
         [Description("The Classification Tree Id, i.e. cheda.")]
-        public string? TreeId { get; set; }
+        public required string TreeId { get; set; }
 
         [FromQuery(Name = "cnCode")]
         [Description("The CN code.")]

@@ -14,5 +14,5 @@ public partial record LegislationAttribute
     public string? Description { get; init; }
 
     [JsonPropertyName("legislation")]
-    public required List<LegislationReference> Legislation { get; init; }
+    public required LegislationReference Legislation { get; init; }
 }

@@ -17,7 +17,7 @@ internal static class ClassificationTreeNodeDetailMapper
         return new DefraUNVTDProfileClassificationTreeNodeDetailResponseNode
         {
             CnCode = (source.Item as CodeType)?.Value,
-            ModelId = (source.Item as SoapCertificateModelReference)?.modelId.ToString(),
+            CertificateModel = CertificateModelReferenceMapper.Map(source.Item as SoapCertificateModelReference),
             Selectable = source.allowedForSelection,
             NodeType = ClassificationTreeNodeTypeMapper.Map(source.type),
             Label = source.Description.Value

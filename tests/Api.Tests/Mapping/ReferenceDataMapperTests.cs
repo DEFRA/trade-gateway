@@ -155,7 +155,7 @@ public class ReferenceDataMapperTests
                 new
                 {
                     CnCode = "0101",
-                    ModelId = (string?)null,
+                    CertificateModel = (object?)null,
                     Selectable = true,
                     NodeType = "nomenclature",
                 }
@@ -190,7 +190,15 @@ public class ReferenceDataMapperTests
                     allowedForSelection = true,
                     type = ClassificationTreeNodeType.certificate_model,
                     Description = new TextType { Value = "Model Description" },
-                    Item = new CertificateModelReference { modelId = 11978 },
+                    Item = new CertificateModelReference
+                    {
+                        modelId = 11978,
+                        ShortTitle = new TextType { Value = "11978" },
+                        LongTitle = new TextType { Value = "Model Description" },
+                        createdOn = new DateTime(2022, 12, 7, 19, 3, 10, DateTimeKind.Utc),
+                        updatedOn = new DateTime(2022, 12, 7, 19, 3, 10, DateTimeKind.Utc),
+                        updatedOnSpecified = true,
+                    },
                 },
             }
         );
@@ -199,7 +207,6 @@ public class ReferenceDataMapperTests
 
         result.Node.Should().NotBeNull();
         result.Node!.CnCode.Should().BeNull();
-        result.Node.ModelId.Should().Be("11978");
         result.Node.NodeType.Should().Be("certificate");
         result.Node.Label.Should().Be("Model Description");
     }

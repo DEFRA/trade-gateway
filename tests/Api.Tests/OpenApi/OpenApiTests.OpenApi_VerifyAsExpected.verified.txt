@@ -1,4 +1,4 @@
-{
+﻿{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -635,10 +635,8 @@
             type: string,
             nullable: true
           },
-          modelId: {
-            type: string,
-            description: Source model identifier for node-detail payloads that do not carry a CN code (for example lower-level ITACHS certificate models).,
-            nullable: true
+          certificateModel: {
+            $ref: #/components/schemas/CertificateModelReference
           },
           selectable: {
             type: boolean
@@ -853,11 +851,7 @@
             nullable: true
           },
           legislation: {
-            type: array,
-            items: {
-              $ref: #/components/schemas/LegislationReference
-            },
-            nullable: true
+            $ref: #/components/schemas/LegislationReference
           }
         },
         additionalProperties: false
