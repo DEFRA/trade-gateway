@@ -16,9 +16,8 @@ It reflects the current implementation in:
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `source` | not populated | contract field exists, mapper does not currently set it |
-| `service` | not populated | contract field exists, mapper does not currently set it |
-| `treeId` | not populated | contract field exists, mapper does not currently set it |
+| `source` | `"traces"` | set by mapper (`ReferenceDataSource.Traces`) |
+| `service` | `"ReferenceDataServiceV1"` | set by mapper (`ReferenceDataService.ReferenceDataServiceV1`) |
 | `sections` | `ClassificationSectionType[]` | see [ClassificationSection](#classificationsection--classificationsectiontype) |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
@@ -35,7 +34,7 @@ It reflects the current implementation in:
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `source` | not populated | contract field exists, mapper does not currently set it |
+| `source` | `"traces"` | set by mapper (`ReferenceDataSource.Traces`) |
 | `treeId` | route value `classificationTreeId` | echoed from request, not derived from SOAP payload |
 | `nodes` | `ClassificationTreeNode[]` | each node mapped recursively; see [ClassificationTreeNode](#classificationtreenode--classificationtreenode) |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
@@ -143,8 +142,13 @@ It reflects the current implementation in:
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `cnCode` | `Item.Value` when `Item is CodeType` | |
-| `modelId` | `Item.modelId` when `Item is CertificateModelReference` | emitted as string |
+| `cnCode` | `(Item as CodeType)?.Value` | populated for CN/nomenclature nodes |
+| `certificateModel` | `Item` when `Item is CertificateModelReference` | mapped to a `CertificateModelReference` object; omitted otherwise |
+| `certificateModel.modelId` | `Item.modelId` | cast from `long` to `int` |
+| `certificateModel.shortTitle` | `Item.ShortTitle.Value` | |
+| `certificateModel.longTitle` | `Item.LongTitle.Value` | |
+| `certificateModel.createdOn` | `Item.createdOn` | converted to UTC |
+| `certificateModel.updatedOn` | `Item.updatedOn` when `updatedOnSpecified` | converted to UTC; omitted otherwise |
 | `selectable` | `allowedForSelection` | required |
 | `nodeType` | `type` | mapped by [Node Type Mapping](#node-type-mapping) |
 | `label` | `Description.Value` | used for both nomenclature and non-CN nodes |
@@ -167,18 +171,19 @@ It reflects the current implementation in:
 |---|---|---|
 | `key` | `id` | |
 | `description` | `Description.Value` | |
-| `legislation[]` | `LegislationReference` | current mapper emits a single-element list wrapping `source.LegislationReference` |
-| `legislation[].legislationId` | `LegislationReference.legislationId` | cast from `long` to `int` |
-| `legislation[].celexIdentifiers` | `LegislationReference.CelexIdentifier[].Value` | filtered to non-empty values |
-| `legislation[].certificateModels[].modelId` | `LegislationReference.CertificateModel[].modelId` | cast from `long` to `int` |
-| `legislation[].certificateModels[].shortTitle` | `LegislationReference.CertificateModel[].ShortTitle?.Value` | |
-| `legislation[].certificateModels[].longTitle` | `LegislationReference.CertificateModel[].LongTitle?.Value` | |
-| `legislation[].certificateModels[].createdOn` | `LegislationReference.CertificateModel[].createdOn` | |
-| `legislation[].certificateModels[].updatedOn` | `LegislationReference.CertificateModel[].updatedOn` when `updatedOnSpecified` | omitted otherwise |
-| `legislation[].originCountries` | `LegislationReference.OriginCountry[].Value` | filtered to non-empty values |
-| `legislation[].destinationCountries` | `LegislationReference.DestinationCountry[].Value` | filtered to non-empty values |
-| `legislation[].originClassificationSections` | `LegislationReference.OriginClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
-| `legislation[].destinationClassificationSections` | `LegislationReference.DestinationClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
+| `legislation` | `LegislationReference` | mapped as a single object (not a list) |
+| `legislation.legislationId` | `LegislationReference.legislationId` | cast from `long` to `int` |
+| `legislation.celexIdentifiers` | `LegislationReference.CelexIdentifier[].Value` | filtered to non-empty values |
+| `legislation.certificateModels[]` | `LegislationReference.CertificateModel[]` | omitted if empty |
+| `legislation.certificateModels[].modelId` | `LegislationReference.CertificateModel[].modelId` | cast from `long` to `int` |
+| `legislation.certificateModels[].shortTitle` | `LegislationReference.CertificateModel[].ShortTitle?.Value` | |
+| `legislation.certificateModels[].longTitle` | `LegislationReference.CertificateModel[].LongTitle?.Value` | |
+| `legislation.certificateModels[].createdOn` | `LegislationReference.CertificateModel[].createdOn` | converted to UTC |
+| `legislation.certificateModels[].updatedOn` | `LegislationReference.CertificateModel[].updatedOn` when `updatedOnSpecified` | converted to UTC; omitted otherwise |
+| `legislation.originCountries` | `LegislationReference.OriginCountry[].Value` | filtered to non-empty values |
+| `legislation.destinationCountries` | `LegislationReference.DestinationCountry[].Value` | filtered to non-empty values |
+| `legislation.originClassificationSections` | `LegislationReference.OriginClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
+| `legislation.destinationClassificationSections` | `LegislationReference.DestinationClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
 
 ---
 
