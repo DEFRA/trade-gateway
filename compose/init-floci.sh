@@ -11,6 +11,7 @@ DOCOM_TOPIC_NAME="trade_gateway_docom_updates"
 
 echo "Creating SNS FIFO topics..."
 
+# NOSONAR - LocalStack endpoint is local-only and does not require TLS
 INTRA_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
   --name "$INTRA_TOPIC_NAME" \
   --attributes FifoTopic=true,ContentBasedDeduplication=true \
@@ -18,8 +19,10 @@ INTRA_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
   --query 'TopicArn' \
   --output text)
 
+# NOSONAR - LocalStack endpoint is local-only and does not require TLS
 echo "Topic ARN: $INTRA_TOPIC_ARN"
 
+# NOSONAR - LocalStack endpoint is local-only and does not require TLS
 CHED_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
   --name "$CHED_TOPIC_NAME" \
   --attributes FifoTopic=true,ContentBasedDeduplication=true \
@@ -27,8 +30,10 @@ CHED_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
   --query 'TopicArn' \
   --output text)
 
+# NOSONAR - LocalStack endpoint is local-only and does not require TLS
 echo "Topic ARN: $CHED_TOPIC_ARN"
 
+# NOSONAR - LocalStack endpoint is local-only and does not require TLS
 DOCOM_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
   --name "$DOCOM_TOPIC_NAME" \
   --attributes FifoTopic=true,ContentBasedDeduplication=true \
@@ -36,6 +41,7 @@ DOCOM_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
   --query 'TopicArn' \
   --output text)
 
+# NOSONAR - LocalStack endpoint is local-only and does not require TLS
 echo "Topic ARN: $DOCOM_TOPIC_ARN"
 
 
