@@ -1,3 +1,4 @@
+using Api.Constants;
 using Defra.TradeGateway.Api.Contract.ReferenceData;
 using TracesNT.WebServices;
 
@@ -40,6 +41,8 @@ internal static class ClassificationSectionMapper
     ) =>
         new()
         {
+            Source = ReferenceDataSource.Traces,
+            Service = ReferenceDataService.ReferenceDataServiceV1,
             Sections = source.Select(Map)
                 .ToList()
                 .NullIfEmpty(),

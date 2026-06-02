@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using Api.Constants;
 using Api.Contract;
 using Defra.TradeGateway.Api.Contract.ReferenceData;
 using WireMock.ResponseBuilders;
@@ -46,8 +47,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
             response.Content.Headers.ContentType?.MediaType
         );
         Assert.NotNull(payload);
-        Assert.Null(payload.Service);
-        Assert.Null(payload.TreeId);
+        Assert.Equal(ReferenceDataService.ReferenceDataServiceV1, payload.Service);
         Assert.Contains(
             payload.Sections!,
             section =>

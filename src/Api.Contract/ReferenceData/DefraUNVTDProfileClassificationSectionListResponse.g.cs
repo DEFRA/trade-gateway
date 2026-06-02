@@ -14,9 +14,6 @@ public partial record DefraUNVTDProfileClassificationSectionListResponse
     [Description("Optional service discriminator for classification-section responses when multiple TRACES services expose similarly named operations.")]
     public string? Service { get; init; }
 
-    [JsonPropertyName("treeId")]
-    public string? TreeId { get; init; }
-
     [JsonPropertyName("sections")]
     public List<ClassificationSection>? Sections { get; init; }
 

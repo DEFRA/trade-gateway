@@ -52,7 +52,11 @@ public static class ReferenceDataEndpoints
 
         if (classificationSections == null)
         {
-            return Results.NotFound($"Classification sections for language '{languageCode}' not found.");
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Not Found",
+                detail: $"Classification sections for language '{languageCode}' not found."
+            );
         }
 
         return Results.Json(
@@ -72,7 +76,11 @@ public static class ReferenceDataEndpoints
 
         if (classificationTreeNodes == null)
         {
-            return Results.NotFound($"Classification tree with id '{classificationTreeId}' not found.");
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Not Found",
+                detail: $"Classification tree with id '{classificationTreeId}' not found."
+            );
         }
 
         return Results.Json(
@@ -100,8 +108,12 @@ public static class ReferenceDataEndpoints
         );
 
         if (response == null)
-        {                        
-            return Results.NotFound($"Classification tree node detail with id '{request.TreeId}' path '{request.Path}' cncode '{request.CnCode}' not found.");
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Not Found",
+                detail: $"Classification tree node detail with id '{request.TreeId}' path '{request.Path}' cnCode '{request.CnCode}' not found."
+            );
         }
 
         return Results.Json(ClassificationTreeNodeDetailMapper.Map(response, request.TreeId!),
@@ -119,8 +131,12 @@ public static class ReferenceDataEndpoints
         var metadatas = await referenceDataService.GetMetadatas(metadataType, languageCode);
 
         if (metadatas == null)
-        {            
-            return Results.NotFound($"Metadata of type '{metadataType}' not found.");
+        {
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                title: "Not Found",
+                detail: $"Metadata of type '{metadataType}' not found."
+            );
         }
 
         return Results.Json(

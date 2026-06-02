@@ -48,8 +48,8 @@ internal static class LegislationAttributeMapper
             ModelId = checked((int)source.modelId),
             ShortTitle = source.ShortTitle?.Value,
             LongTitle = source.LongTitle?.Value,
-            CreatedOn = source.createdOn,
-            UpdatedOn = source.updatedOnSpecified ? source.updatedOn : null,
+            CreatedOn = source.createdOn.ToUniversalTime(),
+            UpdatedOn = source.updatedOnSpecified ? source.updatedOn.ToUniversalTime() : null,
         };
 
     private static ClassificationSection Map(SoapClassificationSectionReference source) =>

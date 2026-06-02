@@ -556,10 +556,6 @@
             description: Optional service discriminator for classification-section responses when multiple TRACES services expose similarly named operations.,
             nullable: true
           },
-          treeId: {
-            type: string,
-            nullable: true
-          },
           sections: {
             type: array,
             items: {

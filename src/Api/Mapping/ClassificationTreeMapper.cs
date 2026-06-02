@@ -1,7 +1,11 @@
+using Api.Constants;
+
 using Defra.TradeGateway.Api.Contract.ReferenceData;
+
+using TracesNT.WebServices;
+
 using ContractClassificationTreeNode = Defra.TradeGateway.Api.Contract.ReferenceData.ClassificationTreeNode;
 using SoapClassificationTreeNode = TracesNT.WebServices.ClassificationTreeNode;
-using TracesNT.WebServices;
 
 namespace Api.Mapping;
 
@@ -14,6 +18,7 @@ internal static class ClassificationTreeMapper
     {
         return new DefraUNVTDProfileClassificationTreeResponse
         {
+            Source = ReferenceDataSource.Traces,
             TreeId = treeId,
             Nodes = source.Select(Map).ToList(),
             RetrievedAt = DateTimeOffset.UtcNow,
