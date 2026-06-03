@@ -24,11 +24,11 @@ namespace TracesNT.Services
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException("Traces SOAP bad request", ex);
+                throw new InvalidSoapException($"An invalid soap request was returned from getClassificationSections for languageCode '{languageCode}'", ex);
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
+                throw new TracesCommunicationException($"An error occurred calling the Traces web service getClassificationSections for languageCode '{languageCode}'", ex);
             }
         }
 
@@ -49,11 +49,11 @@ namespace TracesNT.Services
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException("Traces SOAP bad request", ex);
+                throw new InvalidSoapException($"An invalid soap request was returned from getClassificationTree for treeId '{treeId}' and languageCode '{languageCode}'", ex);
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
+                throw new TracesCommunicationException($"An error occurred calling the Traces web service getClassificationTree for treeId '{treeId}' and languageCode '{languageCode}'", ex);
             }
         }
 
@@ -86,11 +86,11 @@ namespace TracesNT.Services
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException("Traces SOAP bad request", ex);
+                throw new InvalidSoapException($"Traces SOAP bad request calling getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' and cnCode '{cnCode}' for languageCode '{languageCode}'", ex);
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
+                throw new TracesCommunicationException($"An error occurred calling the Traces web service getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' and cnCode '{cnCode}' for languageCode '{languageCode}'", ex);
             }
         }
 
@@ -112,11 +112,11 @@ namespace TracesNT.Services
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException("Traces SOAP bad request", ex);
+                throw new InvalidSoapException($"Traces SOAP bad request calling getMetadatas for metadata type '{metaDataType}' and languageCode '{languageCode}'", ex);
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
+                throw new TracesCommunicationException($"An error occurred calling the Traces web service getMetadatas for metadata type {metaDataType} and languageCode {languageCode}", ex);
             }
         }
     }

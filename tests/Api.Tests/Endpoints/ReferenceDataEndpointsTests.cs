@@ -502,6 +502,118 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
+    [Fact]
+    public async Task GetMetadatas_ReturnsMappedResponse()
+    {
+        const string metadataType = "ACCOMPANYING_DOCUMENT_TYPE";
+
+        factory.WireMockServer.Reset();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getMetadatas\"",
+                    $"/*[local-name() = 'GetMetadatasRequest']/*[local-name() = 'MetadataType' and text() = '{metadataType}']"
+                )
+            )
+            .RespondWith(
+                Response.Create().WithCallback(
+                    async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.REFERENCE_DATA.GetMetadatasResponse_ACCOMPANYING_DOCUMENT_TYPE.xml"
+                        )
+                )
+            );
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync($"/metaDatas/{metadataType}", TestContext.Current.CancellationToken);
+        var payload =
+            await response.Content.ReadFromJsonAsync<DefraUNVTDProfileMetadataListResponse>(
+                TestContext.Current.CancellationToken
+            );
+
+        Assert.Equal(
+            MediaTypeAttribute.For<DefraUNVTDProfileMetadataListResponse>(),
+            response.Content.Headers.ContentType?.MediaType
+        );
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.NotNull(payload);
+        Assert.Equal(ReferenceDataSource.Traces, payload.Source);
+        Assert.Equal(metadataType, payload.MetadataType);
+        Assert.NotNull(payload.Items);
+        Assert.Contains(
+            payload.Items!,
+            i => i.Value == "AIRWAY_BILL" && i.Active == true && i.MappedValue == null && i.DisplayName == null
+        );
+    }
+
+    [Fact]
+    public async Task GetMetadatas_TracesCommunicationFailure_ReturnsBadGatewayProblem()
+    {
+        const string metadataType = "ACCOMPANYING_DOCUMENT_TYPE";
+
+        factory.WireMockServer.Reset();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getMetadatas\"",
+                    $"/*[local-name() = 'GetMetadatasRequest']/*[local-name() = 'MetadataType' and text() = '{metadataType}']"
+                )
+            )
+            .RespondWith(Response.Create().WithStatusCode(500));
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync($"/metaDatas/{metadataType}", TestContext.Current.CancellationToken);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+        Assert.NotNull(problem);
+        Assert.Equal(502, problem.Status);
+        Assert.Equal("Bad Gateway", problem.Title);
+    }
+
+    [Fact]
+    public async Task GetMetadatas_SenderFault_ReturnsInternalServerErrorProblem()
+    {
+        const string metadataType = "ACCOMPANYING_DOCUMENT_TYPE";
+
+        const string senderFault = """
+            <?xml version='1.0' encoding='UTF-8'?>
+            <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+              <S:Body>
+                <S:Fault>
+                  <faultcode>S:Client</faultcode>
+                  <faultstring xml:lang="en">Bad request</faultstring>
+                </S:Fault>
+              </S:Body>
+            </S:Envelope>
+            """;
+
+        factory.WireMockServer.Reset();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getMetadatas\"",
+                    $"/*[local-name() = 'GetMetadatasRequest']/*[local-name() = 'MetadataType' and text() = '{metadataType}']"
+                )
+            )
+            .RespondWith(
+                Response.Create().WithCallback(
+                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, senderFault)
+                )
+            );
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync($"/metaDatas/{metadataType}", TestContext.Current.CancellationToken);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.NotNull(problem);
+        Assert.Equal(500, problem.Status);
+        Assert.Equal("Internal Server Error", problem.Title);
+        Assert.Equal("An internal error occurred.", problem.Detail);
+    }
+
     private static void AssertAttributeStringArray(
         IEnumerable<NodeAttribute> attributes,
         string key,
