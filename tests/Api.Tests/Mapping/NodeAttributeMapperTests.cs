@@ -51,5 +51,61 @@ public class NodeAttributeMapperTests
         NodeAttributeMapper.Map(source).Value.Should().BeNull();
     }
 
+    [Fact]
+    public void Map_SelectableDocumentLinkNodeAttribute_ThrowsNotSupported()
+    {
+        var source = new SelectableDocumentLinkNodeAttribute
+        {
+            id = "SELECTABLE_DOCUMENT_LINKS",
+            Description = new TextType { Value = "Selectable document links" },
+            DocumentTypeValue =
+            [
+                new SelectableDocumentLinkNodeAttributeValue { Value = "EU_INTRA", linkType = "ATTACHED_TO" },
+            ],
+        };
+
+        var ex = Assert.Throws<NotSupportedException>(() => NodeAttributeMapper.Map(source));
+        ex.Message.Should().Contain(nameof(DocumentNodeAttributeMapper));
+    }
+
+    [Fact]
+    public void Map_LegislationNodeAttribute_ThrowsNotSupported()
+    {
+        var source = new LegislationNodeAttribute
+        {
+            id = "LEGISLATION_POSSIBLE_VALUES",
+            Description = new TextType { Value = "Legislation" },
+        };
+
+        var ex = Assert.Throws<NotSupportedException>(() => NodeAttributeMapper.Map(source));
+        ex.Message.Should().Contain(nameof(LegislationAttributeMapper));
+    }
+
+    [Fact]
+    public void Map_ClassificationSectionNodeAttribute_ThrowsNotSupported()
+    {
+        var source = new ClassificationSectionNodeAttribute
+        {
+            id = "CONSIGNEE_CLASSIFICATION_SECTIONS",
+            Description = new TextType { Value = "Consignee sections" },
+        };
+
+        var ex = Assert.Throws<NotSupportedException>(() => NodeAttributeMapper.Map(source));
+        ex.Message.Should().Contain(nameof(ClassificationSectionGroupMapper));
+    }
+
+    [Fact]
+    public void Map_TaxonNodeAttribute_ThrowsNotSupported()
+    {
+        var source = new TaxonNodeAttribute
+        {
+            id = "TAXON_POSSIBLE_VALUES",
+            Description = new TextType { Value = "Taxons" },
+        };
+
+        var ex = Assert.Throws<NotSupportedException>(() => NodeAttributeMapper.Map(source));
+        ex.Message.Should().Contain(nameof(TaxonMapper));
+    }
+
     public class UnknownNodeAttribute : AbstractNodeAttribute;
 }

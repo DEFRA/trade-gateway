@@ -365,6 +365,39 @@
               type: string
             },
             nullable: true
+          },
+          operatorActivities: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ClassificationSectionGroup: {
+        required: [
+          description,
+          id,
+          sections
+        ],
+        type: object,
+        properties: {
+          id: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          sections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
           }
         },
         additionalProperties: false
@@ -596,10 +629,17 @@
             },
             nullable: true
           },
-          classificationSections: {
+          documentTypes: {
             type: array,
             items: {
-              $ref: #/components/schemas/ClassificationSection
+              $ref: #/components/schemas/DocumentNodeAttribute
+            },
+            nullable: true
+          },
+          classificationSectionGroups: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSectionGroup
             },
             nullable: true
           },
@@ -611,6 +651,13 @@
             nullable: true
           },
           taxons: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/Taxon
+            },
+            nullable: true
+          },
+          invasiveTaxons: {
             type: array,
             items: {
               $ref: #/components/schemas/Taxon
@@ -699,6 +746,48 @@
           retrievedAt: {
             type: string,
             format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DocumentNodeAttribute: {
+        required: [
+          key
+        ],
+        type: object,
+        properties: {
+          key: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          documentLinkTypes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/DocumentNodeAttributeValue
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DocumentNodeAttributeValue: {
+        required: [
+          documentType,
+          linkType
+        ],
+        type: object,
+        properties: {
+          documentType: {
+            type: string,
+            nullable: true
+          },
+          linkType: {
+            type: string,
             nullable: true
           }
         },

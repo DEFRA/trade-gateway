@@ -78,6 +78,74 @@ public class ClassificationTreeNodeDetailMapperTests
     }
 
     [Fact]
+    public void Map_DetailResponse_SplitsTaxonsAndInvasiveTaxons()
+    {
+        var source = new ClassificationTreeNodeDetail
+        {
+            path = "R/N-10000/N-10065",
+            Description = new TextType { Value = "Live horses" },
+            allowedForSelection = true,
+            type = ClassificationTreeNodeType.nomenclature,
+            Attribute =
+            [
+                new TaxonNodeAttribute
+                {
+                    id = "TAXON_POSSIBLE_VALUES",
+                    Description = new TextType { Value = "Taxons" },
+                    TaxonReference =
+                    [
+                        new TaxonReference
+                        {
+                            taxonId = 123,
+                            eppoCode = "EQCAB",
+                            faoCode = "HOR",
+                            Value = "Equus caballus",
+                        },
+                    ],
+                },
+                new TaxonNodeAttribute
+                {
+                    id = "INVASIVE_TAXON_POSSIBLE_VALUES",
+                    Description = new TextType { Value = "Invasive taxons" },
+                    TaxonReference =
+                    [
+                        new TaxonReference
+                        {
+                            taxonId = 456,
+                            eppoCode = "ABCDEF",
+                            faoCode = "INV",
+                            Value = "Invasivus exampleus",
+                        },
+                    ],
+                },
+                new TaxonNodeAttribute
+                {
+                    id = "TAXON_NEW_TYPE",
+                    Description = new TextType { Value = "Some future taxonomy" },
+                    TaxonReference =
+                    [
+                        new TaxonReference
+                        {
+                            taxonId = 999,
+                            eppoCode = "FUTURE",
+                            faoCode = "FUT",
+                            Value = "Should not be mapped",
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var result = ClassificationTreeNodeDetailMapper.Map(source, "cheda");
+
+        result.Taxons.Should().ContainSingle(t => t.TaxonId == 123);
+        result.InvasiveTaxons.Should().ContainSingle(t => t.TaxonId == 456);
+
+        (result.Taxons ?? []).Should().NotContain(t => t.TaxonId == 999);
+        (result.InvasiveTaxons ?? []).Should().NotContain(t => t.TaxonId == 999);
+    }
+
+    [Fact]
     public void Map_DetailResponse_MapsLegislationAttributes()
     {
         var source = new ClassificationTreeNodeDetail

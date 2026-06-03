@@ -22,9 +22,7 @@ namespace TracesNT.Services
 
                 return getClassificationSectionsResponse?.GetClassificationSectionsResponse1;
             }
-            catch (FaultException ex) when (ex.Code.IsSenderFault &&
-                                            ex.Message.Contains("SAXException",
-                                                StringComparison.InvariantCultureIgnoreCase))
+            catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
                 throw new InvalidSoapException("Traces SOAP bad request", ex);
             }
@@ -49,9 +47,7 @@ namespace TracesNT.Services
 
                 return getClassificationTreeResponse?.GetClassificationTreeResponse1;
             }
-            catch (FaultException ex) when (ex.Code.IsSenderFault &&
-                                            ex.Message.Contains("SAXException",
-                                                StringComparison.InvariantCultureIgnoreCase))
+            catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
                 throw new InvalidSoapException("Traces SOAP bad request", ex);
             }
@@ -88,9 +84,7 @@ namespace TracesNT.Services
 
                 return response?.GetClassificationTreeNodeDetailResponse1.Node;
             }
-            catch (FaultException ex) when (ex.Code.IsSenderFault &&
-                                            ex.Message.Contains("SAXException",
-                                                StringComparison.InvariantCultureIgnoreCase))
+            catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
                 throw new InvalidSoapException("Traces SOAP bad request", ex);
             }
@@ -116,9 +110,7 @@ namespace TracesNT.Services
 
                 return response?.GetMetadatasResponse1;
             }
-            catch (FaultException ex) when (ex.Code.IsSenderFault &&
-                                            ex.Message.Contains("SAXException",
-                                                StringComparison.InvariantCultureIgnoreCase))
+            catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
                 throw new InvalidSoapException("Traces SOAP bad request", ex);
             }

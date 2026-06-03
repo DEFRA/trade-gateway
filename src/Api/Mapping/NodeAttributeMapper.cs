@@ -49,20 +49,14 @@ internal static class NodeAttributeMapper
             AllowedNodeAttribute allowedAttribute => SerializeEnumValue(
                 allowedAttribute.AllowedValue
             ),
-            ClassificationSectionNodeAttribute classificationSectionAttribute =>
-                SerializeStringArray(classificationSectionAttribute.ClassificationSection, section => section.code),
-            TaxonNodeAttribute taxonAttribute => SerializeStringArray(
-                taxonAttribute.TaxonReference,
-                TaxonMapper.GetName
-            ),
-            SelectableDocumentLinkNodeAttribute linkAttribute => SerializeStringArray(
-                linkAttribute.DocumentTypeValue,
-                GetIdValue
-            ),
             DescriptorColumnNodeAttribute descriptorColumnAttribute => SerializeStringArray(
                 descriptorColumnAttribute.DescriptorColumnValue,
                 value => value.id
             ),
+            SelectableDocumentLinkNodeAttribute _ => throw new NotSupportedException($"Use {nameof(DocumentNodeAttributeMapper)}"),
+            LegislationNodeAttribute _ => throw new NotSupportedException($"Use {nameof(LegislationAttributeMapper)}"),
+            ClassificationSectionNodeAttribute _ => throw new NotSupportedException($"Use {nameof(ClassificationSectionGroupMapper)}"),
+            TaxonNodeAttribute _ => throw new NotSupportedException($"Use {nameof(TaxonMapper)}"),
             _ => null,
         };
 

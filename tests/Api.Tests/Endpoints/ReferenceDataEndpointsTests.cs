@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
-using System.Runtime.Serialization;
 using System.Text.Json;
 using Api.Constants;
 using Api.Contract;
@@ -184,6 +183,23 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 "AGE",
                 "QUANTITY",
             ]
+        );
+
+        Assert.NotNull(payload.DocumentTypes);
+        Assert.Contains(
+            payload.DocumentTypes!,
+            d =>
+                d.Key == "SELECTABLE_DOCUMENT_LINKS"
+                && d.DocumentLinkTypes is { Count: 4 }
+                && d.DocumentLinkTypes.Select(x => (x.DocumentType, x.LinkType)).SequenceEqual(
+                    new[]
+                    {
+                        ("EU_INTRA", "ATTACHED_TO"),
+                        ("ACCOMPANYING_DOCUMENT", "ATTACHED_TO"),
+                        ("JOURNEY_LOG", "ATTACHED_TO"),
+                        ("EU_EXPORT", "ATTACHED_TO"),
+                    }
+                )
         );
     }
 

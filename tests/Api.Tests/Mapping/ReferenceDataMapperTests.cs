@@ -127,7 +127,7 @@ public class ReferenceDataMapperTests
                         },
                         new TaxonNodeAttribute
                         {
-                            id = "taxons",
+                            id = "TAXON_POSSIBLE_VALUES",
                             Description = new TextType { Value = "Taxons" },
                             TaxonReference =
                             [
@@ -138,6 +138,33 @@ public class ReferenceDataMapperTests
                                     faoCode = "HOR",
                                     Value = "Equus caballus",
                                 },
+                            ],
+                        },
+                        new TaxonNodeAttribute
+                        {
+                            id = "INVASIVE_TAXON_POSSIBLE_VALUES",
+                            Description = new TextType { Value = "Invasive taxons" },
+                            TaxonReference =
+                            [
+                                new TaxonReference
+                                {
+                                    taxonId = 456,
+                                    eppoCode = "ABCDEF",
+                                    faoCode = "INV",
+                                    Value = "Invasivus exampleus",
+                                },
+                            ],
+                        },
+                        new SelectableDocumentLinkNodeAttribute
+                        {
+                            id = "SELECTABLE_DOCUMENT_LINKS",
+                            Description = new TextType { Value = "Selectable document links" },
+                            DocumentTypeValue =
+                            [
+                                new SelectableDocumentLinkNodeAttributeValue { Value = "EU_INTRA", linkType = "ATTACHED_TO" },
+                                new SelectableDocumentLinkNodeAttributeValue { Value = "ACCOMPANYING_DOCUMENT", linkType = "ATTACHED_TO" },
+                                new SelectableDocumentLinkNodeAttributeValue { Value = "JOURNEY_LOG", linkType = "ATTACHED_TO" },
+                                new SelectableDocumentLinkNodeAttributeValue { Value = "EU_EXPORT", linkType = "ATTACHED_TO" },
                             ],
                         },
                     ],
@@ -161,7 +188,7 @@ public class ReferenceDataMapperTests
                 }
             );
         result.Attributes.Should().ContainSingle(attribute => attribute.Key == "isActive");
-        result.ClassificationSections.Should().ContainSingle();
+        result.ClassificationSectionGroups.Should().ContainSingle();
         result.Taxons.Should()
             .ContainSingle()
             .Which.Should()
@@ -173,6 +200,37 @@ public class ReferenceDataMapperTests
                     FaoCode = "HOR",
                     Name = "Equus caballus",
                     LanguageId = (string?)null,
+                }
+            );
+
+        result.InvasiveTaxons.Should()
+            .ContainSingle()
+            .Which.Should()
+            .BeEquivalentTo(
+                new
+                {
+                    TaxonId = 456,
+                    EppoCode = "ABCDEF",
+                    FaoCode = "INV",
+                    Name = "Invasivus exampleus",
+                    LanguageId = (string?)null,
+                }
+            );
+
+        result.DocumentTypes.Should().ContainSingle();
+        result.DocumentTypes![0].Should()
+            .BeEquivalentTo(
+                new
+                {
+                    Key = "SELECTABLE_DOCUMENT_LINKS",
+                    Description = "Selectable document links",
+                    DocumentLinkTypes = new[]
+                    {
+                        new { DocumentType = "EU_INTRA", LinkType = "ATTACHED_TO" },
+                        new { DocumentType = "ACCOMPANYING_DOCUMENT", LinkType = "ATTACHED_TO" },
+                        new { DocumentType = "JOURNEY_LOG", LinkType = "ATTACHED_TO" },
+                        new { DocumentType = "EU_EXPORT", LinkType = "ATTACHED_TO" },
+                    }
                 }
             );
     }

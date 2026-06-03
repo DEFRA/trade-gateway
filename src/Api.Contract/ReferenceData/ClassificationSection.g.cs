@@ -24,4 +24,7 @@ public partial record ClassificationSection
 
     [JsonPropertyName("scopes")]
     public required List<string> Scopes { get; init; }
+
+    [JsonPropertyName("operatorActivities")]
+    public List<string>? OperatorActivities { get; init; }
 }

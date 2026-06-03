@@ -22,14 +22,20 @@ public partial record DefraUNVTDProfileClassificationTreeNodeDetailResponse
     [JsonPropertyName("attributes")]
     public List<NodeAttribute>? Attributes { get; init; }
 
-    [JsonPropertyName("classificationSections")]
-    public List<ClassificationSection>? ClassificationSections { get; init; }
+    [JsonPropertyName("documentTypes")]
+    public List<DocumentNodeAttribute>? DocumentTypes { get; init; }
+
+    [JsonPropertyName("classificationSectionGroups")]
+    public List<ClassificationSectionGroup>? ClassificationSectionGroups { get; init; }
 
     [JsonPropertyName("legislationAttributes")]
     public List<LegislationAttribute>? LegislationAttributes { get; init; }
 
     [JsonPropertyName("taxons")]
     public List<Taxon>? Taxons { get; init; }
+
+    [JsonPropertyName("invasiveTaxons")]
+    public List<Taxon>? InvasiveTaxons { get; init; }
 
     [JsonPropertyName("retrievedAt")]
     public DateTimeOffset? RetrievedAt { get; init; }

@@ -59,7 +59,8 @@ It reflects the current implementation in:
 | `attributes` | `ClassificationTreeNodeDetail.Attribute[]` excluding `LegislationNodeAttribute` | see [NodeAttribute](#nodeattribute--abstractnodeattribute) |
 | `classificationSections` | `Attribute[]` filtered to `ClassificationSectionNodeAttribute`, then flattened from `ClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
 | `legislationAttributes` | `Attribute[]` filtered to `LegislationNodeAttribute` | see [LegislationAttribute](#legislationattribute--legislationnodeattribute) |
-| `taxons` | `Attribute[]` filtered to `TaxonNodeAttribute`, then flattened from `TaxonReference[]` | see [Taxon](#taxon--taxonreference) |
+| `taxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `TAXON_POSSIBLE_VALUES` | mapped from `TaxonReference[]`; unknown taxonomy ids are ignored | 
+| `invasiveTaxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `INVASIVE_TAXON_POSSIBLE_VALUES` | kept separate to avoid data loss |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
 **SOAP call**

@@ -37,13 +37,20 @@ internal static class ClassificationTreeNodeDetailMapper
             Node = Map(source),
             Attributes = source.Attribute
                 ?.Where(attribute => attribute is not LegislationNodeAttribute)
+                .Where(attribute => attribute is not TaxonNodeAttribute)
+                .Where(attribute => attribute is not ClassificationSectionNodeAttribute)
+                .Where(attribute => attribute is not SelectableDocumentLinkNodeAttribute)
                 .Select(NodeAttributeMapper.Map)
                 .ToList()
                 .NullIfEmpty(),
-            ClassificationSections = source.Attribute
+            ClassificationSectionGroups = source.Attribute
                 ?.OfType<ClassificationSectionNodeAttribute>()
-                .SelectMany(attribute => attribute.ClassificationSection ?? [])
-                .Select(ClassificationSectionMapper.Map)
+                .Select(ClassificationSectionGroupMapper.Map)
+                .ToList()
+                .NullIfEmpty(),
+            DocumentTypes = source.Attribute
+                ?.OfType<SelectableDocumentLinkNodeAttribute>()
+                .Select(DocumentNodeAttributeMapper.Map)
                 .ToList()
                 .NullIfEmpty(),
             LegislationAttributes = source.Attribute
@@ -51,12 +58,8 @@ internal static class ClassificationTreeNodeDetailMapper
                 .Select(LegislationAttributeMapper.Map)
                 .ToList()
                 .NullIfEmpty(),
-            Taxons = source.Attribute
-                ?.OfType<TaxonNodeAttribute>()
-                .SelectMany(attribute => attribute.TaxonReference ?? [])
-                .Select(TaxonMapper.Map)
-                .ToList()
-                .NullIfEmpty(),
+            Taxons = TaxonMapper.MapByNodeId(source.Attribute, AttributeNodeId.TaxonPossibleValues),
+            InvasiveTaxons = TaxonMapper.MapByNodeId(source.Attribute, AttributeNodeId.InvasiveTaxonPossibleValues),
             RetrievedAt = DateTimeOffset.UtcNow,
         };
     }

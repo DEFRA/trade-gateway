@@ -11,9 +11,12 @@ internal static class TaxonMapper
             TaxonId = checked((int)source.taxonId),
             EppoCode = source.eppoCode,
             FaoCode = source.faoCode,
-            Name = GetName(source),
+            Name = source.Value,
             LanguageId = source.languageID,
         };
 
-    internal static string GetName(TaxonReference source) => source.Value;
+    internal static List<Taxon>? MapByNodeId(
+        IEnumerable<AbstractNodeAttribute>? source,
+        string nodeId
+    ) => source?.OfType<TaxonNodeAttribute>().FirstOrDefault(a => a.id == nodeId)?.TaxonReference?.Select(Map).ToList().NullIfEmpty();
 }
