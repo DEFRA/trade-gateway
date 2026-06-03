@@ -11,44 +11,38 @@ DOCOM_TOPIC_NAME="trade_gateway_docom_updates"
 
 echo "Creating SNS FIFO topics..."
 
-# NOSONAR - LocalStack endpoint is local-only and does not require TLS
-INTRA_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
+INTRA_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \  # NOSONAR
   --name "$INTRA_TOPIC_NAME" \
   --attributes FifoTopic=true,ContentBasedDeduplication=true \
   --region $REGION \
   --query 'TopicArn' \
   --output text)
 
-# NOSONAR - LocalStack endpoint is local-only and does not require TLS
-echo "Topic ARN: $INTRA_TOPIC_ARN"
+echo "Topic ARN: $INTRA_TOPIC_ARN"  # NOSONAR
 
-# NOSONAR - LocalStack endpoint is local-only and does not require TLS
-CHED_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
+CHED_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \  # NOSONAR
   --name "$CHED_TOPIC_NAME" \
   --attributes FifoTopic=true,ContentBasedDeduplication=true \
   --region $REGION \
   --query 'TopicArn' \
   --output text)
 
-# NOSONAR - LocalStack endpoint is local-only and does not require TLS
-echo "Topic ARN: $CHED_TOPIC_ARN"
+echo "Topic ARN: $CHED_TOPIC_ARN"  # NOSONAR
 
-# NOSONAR - LocalStack endpoint is local-only and does not require TLS
-DOCOM_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \
+DOCOM_TOPIC_ARN=$(aws --endpoint-url=$AWS_ENDPOINT sns create-topic \  # NOSONAR
   --name "$DOCOM_TOPIC_NAME" \
   --attributes FifoTopic=true,ContentBasedDeduplication=true \
   --region $REGION \
   --query 'TopicArn' \
   --output text)
 
-# NOSONAR - LocalStack endpoint is local-only and does not require TLS
-echo "Topic ARN: $DOCOM_TOPIC_ARN"
+echo "Topic ARN: $DOCOM_TOPIC_ARN"  # NOSONAR
 
 
 function is_ready() {
-    aws --endpoint-url=$AWS_ENDPOINT sns list-topics --query "Topics[?ends_with(TopicArn, ':${INTRA_TOPIC_NAME}')].TopicArn" || return 1
-    aws --endpoint-url=$AWS_ENDPOINT sns list-topics --query "Topics[?ends_with(TopicArn, ':${CHED_TOPIC_NAME}')].TopicArn" || return 1
-    aws --endpoint-url=$AWS_ENDPOINT sns list-topics --query "Topics[?ends_with(TopicArn, ':${DOCOM_TOPIC_NAME}')].TopicArn" || return 1
+    aws --endpoint-url=$AWS_ENDPOINT sns list-topics --query "Topics[?ends_with(TopicArn, ':${INTRA_TOPIC_NAME}')].TopicArn" || return 1  # NOSONAR
+    aws --endpoint-url=$AWS_ENDPOINT sns list-topics --query "Topics[?ends_with(TopicArn, ':${CHED_TOPIC_NAME}')].TopicArn" || return 1  # NOSONAR
+    aws --endpoint-url=$AWS_ENDPOINT sns list-topics --query "Topics[?ends_with(TopicArn, ':${DOCOM_TOPIC_NAME}')].TopicArn" || return 1  # NOSONAR
     return 0
 }
 
