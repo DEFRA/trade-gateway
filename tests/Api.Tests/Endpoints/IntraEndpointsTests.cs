@@ -9,6 +9,7 @@ namespace Api.Tests.Endpoints;
 public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string GetEuIntraCertificateSoapAction = "\"getEuIntraCertificate\"";
+    private const string FindEuIntraCertificateSoapAction = "\"findEuIntraCertificate\"";
 
     [Fact]
     public async Task Get_ReturnsMappedDefraUNVTDINTRAProfile()
@@ -200,6 +201,42 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task Find_WhenValidRequest_ReturnsOk()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    FindEuIntraCertificateSoapAction,
+                    "/*[local-name() = 'FindEuIntraCertificateRequest']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.INTRA.FindEuIntraCertificateResponse.xml"
+                        )
+                    )
+            );
+
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("Accept-Language", "en");
+        var response = await client.GetAsync(
+            "/intras?pageSize=5&offset=5&updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z",
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(
+            MediaTypeAttribute.For<DefraUNVTDINTRASummaryProfile>(),
+            response.Content.Headers.ContentType?.MediaType
+        );
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
 }

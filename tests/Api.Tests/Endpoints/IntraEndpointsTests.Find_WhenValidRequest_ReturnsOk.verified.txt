@@ -1,0 +1,37 @@
+﻿{
+  items: [
+    {
+      id: INTRA.EU.AT.2026.0000002,
+      orgin: ,
+      created: DateTimeOffset_1,
+      updated: DateTimeOffset_1
+    },
+    {
+      id: INTRA.EU.AT.2026.0000001,
+      orgin: ,
+      created: DateTimeOffset_2,
+      updated: DateTimeOffset_2
+    },
+    {
+      id: INTRA.EU.BE.2026.0000001,
+      orgin: BE,
+      created: DateTimeOffset_3,
+      updated: DateTimeOffset_3
+    },
+    {
+      id: INTRA.EU.GB.2025.0000001,
+      orgin: ,
+      created: DateTimeOffset_4,
+      updated: DateTimeOffset_5
+    },
+    {
+      id: INTRA.EU.IE.2025.0000002,
+      orgin: ,
+      created: DateTimeOffset_6,
+      updated: DateTimeOffset_7
+    }
+  ],
+  offset: 5,
+  pageSize: 5,
+  hasMore: true
+}
