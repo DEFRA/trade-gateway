@@ -52,5 +52,40 @@ namespace TracesNT.Services
                 throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
             }
         }
+
+        public async Task<FindEuIntraCertificateResponse> FindEuIntraCertificates(
+            DateTime after,
+            DateTime before,
+            int offset,
+            int pageSize,
+            string languageCode
+        )
+        {
+            var language = Enum.TryParse<ISO2AlphaLanguageCodeContentType>(languageCode, out var parsed)
+                ? parsed
+                : ISO2AlphaLanguageCodeContentType.en;
+
+            try
+            {
+                var response = await euIntraCertificatePort.findEuIntraCertificateAsync(
+                    new SecurityHeaderType(),
+                    tracesOptions.Value.WebServiceClientId,
+                    language,
+                    [],
+                    new FindEuIntraCertificateRequestType()
+                    {
+                        offset = offset,
+                        pageSize = pageSize,
+                        UpdateDateTimeRange = new DateTimeRange() { From = after, To = before },
+                    }
+                );
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
+            }
+        }
     }
 }

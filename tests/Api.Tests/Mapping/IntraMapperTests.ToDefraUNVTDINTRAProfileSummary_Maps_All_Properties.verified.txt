@@ -1,0 +1,13 @@
+﻿{
+  Items: [
+    {
+      Id: CERT123,
+      Origin: GB,
+      Created: DateTime_1,
+      Updated: DateTime_2
+    }
+  ],
+  Offset: 10,
+  PageSize: 2,
+  HasMore: false
+}

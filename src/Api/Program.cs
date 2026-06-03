@@ -84,6 +84,8 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     // Add health check, this is required for the platform to know your service is alive.
     builder.Services.AddHealthChecks();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+    builder.Services.AddValidation();
 }
 
 [ExcludeFromCodeCoverage]

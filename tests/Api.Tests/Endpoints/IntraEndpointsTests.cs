@@ -1,7 +1,6 @@
 using System.Net;
 using Api.Contract;
 using Trade.Gateway.Api.Contract.Certificate;
-using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
 
 namespace Api.Tests.Endpoints;
@@ -187,5 +186,20 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Find_WhenUpdatedFromIsMissing_ReturnsBadRequest()
+    {
+        var client = factory.CreateClient();
+        client.DefaultRequestHeaders.Add("Accept-Language", "en");
+        var response = await client.GetAsync(
+            "/intras?pageSize=5&offset=5&updatedFrom1=2002-10-28Z&updatedBefore=2026-10-28Z",
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
 }
