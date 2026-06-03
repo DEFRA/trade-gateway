@@ -161,10 +161,10 @@ public class ReferenceDataMapperTests
                             Description = new TextType { Value = "Selectable document links" },
                             DocumentTypeValue =
                             [
-                                new SelectableDocumentLinkNodeAttributeValue { Value = "EU_INTRA", linkType = "ATTACHED_TO" },
-                                new SelectableDocumentLinkNodeAttributeValue { Value = "ACCOMPANYING_DOCUMENT", linkType = "ATTACHED_TO" },
-                                new SelectableDocumentLinkNodeAttributeValue { Value = "JOURNEY_LOG", linkType = "ATTACHED_TO" },
-                                new SelectableDocumentLinkNodeAttributeValue { Value = "EU_EXPORT", linkType = "ATTACHED_TO" },
+                                new() { Value = "EU_INTRA", linkType = "ATTACHED_TO" },
+                                new() { Value = "ACCOMPANYING_DOCUMENT", linkType = "ATTACHED_TO" },
+                                new() { Value = "JOURNEY_LOG", linkType = "ATTACHED_TO" },
+                                new() { Value = "EU_EXPORT", linkType = "ATTACHED_TO" },
                             ],
                         },
                     ],

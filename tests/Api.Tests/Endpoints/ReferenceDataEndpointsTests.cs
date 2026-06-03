@@ -54,12 +54,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.Contains(
             payload.Sections!,
             section =>
-                section.ClassCode == "0101"
-                && section.Chapter == "01"
-                && section.Lms
-                && section.Description == "Live horses"
-                && section.Active == true
-                && section.Scopes.SequenceEqual(["GB", "XI"])
+                section is { ClassCode: "0101", Chapter: "01", Lms: true, Description: "Live horses", Active: true, Scopes: ["GB", "XI"] }
         );
     }
 
@@ -260,8 +255,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.Contains(
             payload.DocumentTypes!,
             d =>
-                d.Key == "SELECTABLE_DOCUMENT_LINKS"
-                && d.DocumentLinkTypes is { Count: 4 }
+                d is { Key: "SELECTABLE_DOCUMENT_LINKS", DocumentLinkTypes.Count: 4 }
                 && d.DocumentLinkTypes.Select(x => (x.DocumentType, x.LinkType)).SequenceEqual(
                     new[]
                     {
@@ -276,7 +270,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.NotNull(payload.Taxons);
         Assert.Contains(
             payload.Taxons!,
-            t => t.TaxonId == 142608 && t.EppoCode == "1EQUCB" && t.Name == "Equus cabalus" && t.LanguageId == "la"
+            t => t is { TaxonId: 142608, EppoCode: "1EQUCB", Name: "Equus cabalus", LanguageId: "la" }
         );
 
         Assert.Null(payload.InvasiveTaxons);
@@ -543,7 +537,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.NotNull(payload.Items);
         Assert.Contains(
             payload.Items!,
-            i => i.Value == "AIRWAY_BILL" && i.Active == true && i.MappedValue == null && i.DisplayName == null
+            i => i is { Value: "AIRWAY_BILL", Active: true, MappedValue: null, DisplayName: null }
         );
     }
 
@@ -624,8 +618,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
             attributes,
             attribute =>
                 attribute.Key == key
-                && attribute.Value is { } value
-                && value.ValueKind == JsonValueKind.Array
+                && attribute.Value is { ValueKind: JsonValueKind.Array } value
                 && value.EnumerateArray().Select(element => element.GetString()).SequenceEqual(expectedValues)
         );
     }

@@ -12,8 +12,8 @@ public class ReferenceDataContractMapperTests
     {
         ClassificationTreeDescription[] response =
             [
-                new ClassificationTreeDescription { treeID = "intra_trade", Value = "EU Intra-trade" },
-                new ClassificationTreeDescription { treeID = "cheda", Value = "CHED-A" },
+                new () { treeID = "intra_trade", Value = "EU Intra-trade" },
+                new() { treeID = "cheda", Value = "CHED-A" },
             ];
 
         var result = response.Select(ClassificationTreeSummaryMapper.Map).ToList();
@@ -39,8 +39,8 @@ public class ReferenceDataContractMapperTests
     {
         MetadataCodeType[] response =
             [
-                new MetadataCodeType { Value = "A", mappedValue = "mapped-a", active = true },
-                new MetadataCodeType { Value = "B", mappedValue = "mapped-b", active = false },
+                new() { Value = "A", mappedValue = "mapped-a", active = true },
+                new() { Value = "B", mappedValue = "mapped-b", active = false },
             ];
 
         var result = MetadataMapper.Map(response, "operatorActivityType");
