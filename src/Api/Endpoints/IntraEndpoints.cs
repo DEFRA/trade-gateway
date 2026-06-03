@@ -1,3 +1,4 @@
+using Api.Constants;
 using Api.Contract;
 using Api.Mapping;
 using Api.Utils.Http;
@@ -37,7 +38,7 @@ public static class IntraEndpoints
         if (certificate?.SPSCertificate == null)
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: "Not Found",
+                title: ResponseTitles.NotFound,
                 detail: $"Intra certificate '{id}' was not found."
             );
 

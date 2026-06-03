@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Api.Constants;
 using Api.Contract;
 using Api.Mapping;
 using Api.Utils.Http;
@@ -52,9 +53,10 @@ public static class ReferenceDataEndpoints
 
         if (classificationSections == null)
         {
+
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: "Not Found",
+                title: ResponseTitles.NotFound,
                 detail: $"Classification sections for language '{languageCode}' not found."
             );
         }
@@ -78,7 +80,7 @@ public static class ReferenceDataEndpoints
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: "Not Found",
+                title: ResponseTitles.NotFound,
                 detail: $"Classification tree with id '{classificationTreeId}' not found."
             );
         }
@@ -111,7 +113,7 @@ public static class ReferenceDataEndpoints
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: "Not Found",
+                title: ResponseTitles.NotFound,
                 detail: $"Classification tree node detail with id '{request.TreeId}' path '{request.Path}' cnCode '{request.CnCode}' not found."
             );
         }
@@ -134,7 +136,7 @@ public static class ReferenceDataEndpoints
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: "Not Found",
+                title: ResponseTitles.NotFound,
                 detail: $"Metadata of type '{metadataType}' not found."
             );
         }
