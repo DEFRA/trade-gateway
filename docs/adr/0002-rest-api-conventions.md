@@ -70,7 +70,7 @@ Error response bodies must not expose upstream implementation details. TRACES ex
 Per [ADR-0001](./0001-api-versioning-via-content-negotiation.md), representation versions are selected via the `Accept` header with vendor media types:
 
 ```
-Accept: application/vnd.trade.v1+json
+Accept: application/vnd.defra.trade.intra.v1+json
 ```
 
 Omitting the `Accept` header returns the latest version. Error responses always use `application/problem+json` regardless of the requested representation version.
