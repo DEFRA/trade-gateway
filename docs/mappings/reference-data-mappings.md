@@ -56,11 +56,12 @@ It reflects the current implementation in:
 | `treeId` | route value `classificationTreeId` | echoed from request |
 | `nodePath` | `ClassificationTreeNodeDetail.path` | |
 | `node` | `ClassificationTreeNodeDetail` | see [Node Detail](#node-detail--classificationtreenodedetail) |
-| `attributes` | `ClassificationTreeNodeDetail.Attribute[]` excluding `LegislationNodeAttribute` | see [NodeAttribute](#nodeattribute--abstractnodeattribute) |
-| `classificationSections` | `Attribute[]` filtered to `ClassificationSectionNodeAttribute`, then flattened from `ClassificationSection[]` | see [ClassificationSection](#classificationsection--classificationsectionreference) |
+| `attributes` | `ClassificationTreeNodeDetail.Attribute[]` excluding `LegislationNodeAttribute`, `TaxonNodeAttribute`, `ClassificationSectionNodeAttribute`, and `SelectableDocumentLinkNodeAttribute` | see [NodeAttribute](#nodeattribute--abstractnodeattribute) |
+| `documentTypes` | `Attribute[]` filtered to `SelectableDocumentLinkNodeAttribute` | see [DocumentNodeAttribute](#documentnodeattribute--selectabledocumentlinknodeattribute) |
+| `classificationSectionGroups` | `Attribute[]` filtered to `ClassificationSectionNodeAttribute` | see [ClassificationSectionGroup](#classificationsectiongroup--classificationsectionnodeattribute) |
 | `legislationAttributes` | `Attribute[]` filtered to `LegislationNodeAttribute` | see [LegislationAttribute](#legislationattribute--legislationnodeattribute) |
-| `taxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `TAXON_POSSIBLE_VALUES` | mapped from `TaxonReference[]`; unknown taxonomy ids are ignored | 
-| `invasiveTaxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `INVASIVE_TAXON_POSSIBLE_VALUES` | kept separate to avoid data loss |
+| `taxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `TAXON_POSSIBLE_VALUES` | exact id match; any other taxon attribute ids are ignored |
+| `invasiveTaxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `INVASIVE_TAXON_POSSIBLE_VALUES` | exact id match; kept separate to avoid data loss |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
 **SOAP call**
@@ -76,7 +77,11 @@ It reflects the current implementation in:
 
 - Either `path` or `cnCode` is required; the endpoint returns `400 Bad Request` if both are blank.
 - The SOAP request uses a polymorphic `Item` field: `path` is sent as a raw string, while `cnCode` is sent as a `CodeType`.
-- Legislation attributes are **not** duplicated in generic `attributes`; they are emitted only through `legislationAttributes`.
+- Some SOAP attribute subtypes are **not** duplicated in generic `attributes`; they are emitted through dedicated fields:
+  - `LegislationNodeAttribute` → `legislationAttributes`
+  - `TaxonNodeAttribute` (id `TAXON_POSSIBLE_VALUES` / `INVASIVE_TAXON_POSSIBLE_VALUES`) → `taxons` / `invasiveTaxons`
+  - `ClassificationSectionNodeAttribute` → `classificationSectionGroups`
+  - `SelectableDocumentLinkNodeAttribute` → `documentTypes`
 
 ---
 
@@ -164,6 +169,37 @@ It reflects the current implementation in:
 | `description` | `Description.Value` | |
 | `value` | attribute-type specific | see [Attribute Value Shapes](#attribute-value-shapes) |
 
+`LegislationNodeAttribute`, `TaxonNodeAttribute`, `ClassificationSectionNodeAttribute`, and `SelectableDocumentLinkNodeAttribute` are **not** mapped with this generic mapper (calling `NodeAttributeMapper` for these types throws); they are handled by dedicated mappers and surfaced via `legislationAttributes`, `taxons`/`invasiveTaxons`, `classificationSectionGroups`, and `documentTypes` respectively.
+
+---
+
+### `ClassificationSectionGroup` ← `ClassificationSectionNodeAttribute`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `id` | `id` | attribute id is used as the group id |
+| `description` | `Description.Value` | required |
+| `sections[]` | `ClassificationSection[]` | each item mapped; see [ClassificationSection](#classificationsection--classificationsectionreference) |
+
+---
+
+### `DocumentNodeAttribute` ← `SelectableDocumentLinkNodeAttribute`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `key` | `id` | |
+| `description` | `Description.Value` | |
+| `documentLinkTypes[]` | `DocumentTypeValue[]` | mapped to `DocumentNodeAttributeValue[]` |
+
+---
+
+### `DocumentNodeAttributeValue` ← `SelectableDocumentLinkNodeAttributeValue`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `documentType` | `Value` | |
+| `linkType` | `linkType` | |
+
 ---
 
 ### `LegislationAttribute` ← `LegislationNodeAttribute`
@@ -227,15 +263,12 @@ The `NodeAttribute.value` field is serialized according to the concrete TracesNT
 | `MandatoryNotApplicableNodeAttribute` | string | `MandatoryNotApplicableValue.ToString()` |
 | `CardinalityNodeAttribute` | string | `CardinalityValue.ToString()` |
 | `AllowedNodeAttribute` | string | `AllowedValue.ToString()` |
-| `ClassificationSectionNodeAttribute` | string array | `ClassificationSection[].code` |
-| `TaxonNodeAttribute` | string array | `TaxonReference[].Value` |
-| `SelectableDocumentLinkNodeAttribute` | string array | `DocumentTypeValue[].Value` |
 | `DescriptorColumnNodeAttribute` | string array | `DescriptorColumnValue[].id` |
 | any other subtype | omitted | mapper returns `null` |
 
 All string arrays are filtered to remove null, empty, and whitespace-only values. If the resulting array is empty, `value` is omitted.
 
-Note that `LegislationNodeAttribute` is not mapped through generic `NodeAttribute.value` for node-detail responses; it is handled separately via `legislationAttributes`.
+Note: `LegislationNodeAttribute`, `TaxonNodeAttribute`, `ClassificationSectionNodeAttribute`, and `SelectableDocumentLinkNodeAttribute` are not mapped through generic `NodeAttribute.value` in the node-detail response; they are handled separately via `legislationAttributes`, `taxons`/`invasiveTaxons`, `classificationSectionGroups`, and `documentTypes`.
 
 ---
 
