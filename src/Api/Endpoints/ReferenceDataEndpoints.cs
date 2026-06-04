@@ -17,13 +17,18 @@ public static class ReferenceDataEndpoints
             .Produces<DefraUNVTDProfileClassificationSectionListResponse>(
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileClassificationSectionListResponse>()
-            );
+            )
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet("classificationTrees/{classificationTreeId}", GetClassificationTree)
             .Produces<DefraUNVTDProfileClassificationTreeResponse>(
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeResponse>()
-            );
+            )
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet(
                 "classificationTrees/{classificationTreeId}/nodedetail",
@@ -32,7 +37,10 @@ public static class ReferenceDataEndpoints
             .Produces<DefraUNVTDProfileClassificationTreeNodeDetailResponse>(
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeNodeDetailResponse>()
-            );
+            )
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet(
                 "metaDatas/{metadataType}",
@@ -41,7 +49,10 @@ public static class ReferenceDataEndpoints
             .Produces<DefraUNVTDProfileMetadataListResponse>(
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileMetadataListResponse>()
-            );
+            )
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
     }
 
     private static async Task<IResult> GetClassificationSections(IReferenceDataService referenceDataService,

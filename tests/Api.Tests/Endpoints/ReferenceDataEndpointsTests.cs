@@ -13,6 +13,18 @@ namespace Api.Tests.Endpoints;
 [Collection(IntegrationTestCollection.Name)]
 public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
+    private const string SenderFault = """
+                               <?xml version='1.0' encoding='UTF-8'?>
+                               <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                                 <S:Body>
+                                   <S:Fault>
+                                     <faultcode>S:Client</faultcode>
+                                     <faultstring xml:lang="en">Bad request</faultstring>
+                                   </S:Fault>
+                                 </S:Body>
+                               </S:Envelope>
+                               """;
+
 
     [Fact]
     public async Task GetClassificationSections_ReturnsMappedResponse()
@@ -56,6 +68,57 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
             section =>
                 section is { ClassCode: "0101", Chapter: "01", Lms: true, Description: "Live horses", Active: true, Scopes: ["GB", "XI"] }
         );
+    }
+
+    [Fact]
+    public async Task GetClassificationSections_TracesCommunicationFailure_ReturnsBadGatewayProblem()
+    {
+        factory.WireMockServer.Reset();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getClassificationSections\"",
+                    "/*[local-name() = 'GetClassificationSectionsRequest']"
+                )
+            )
+            .RespondWith(Response.Create().WithStatusCode(500));
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync("/classificationSections", TestContext.Current.CancellationToken);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+        Assert.NotNull(problem);
+        Assert.Equal(502, problem.Status);
+        Assert.Equal("Bad Gateway", problem.Title);
+    }
+
+    [Fact]
+    public async Task GetClassificationSections_SenderFault_ReturnsInternalServerErrorProblem()
+    {
+        factory.WireMockServer.Reset();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getClassificationSections\"",
+                    "/*[local-name() = 'GetClassificationSectionsRequest']"
+                )
+            )
+            .RespondWith(
+                Response.Create().WithCallback(
+                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
+                )
+            );
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync("/classificationSections", TestContext.Current.CancellationToken);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.NotNull(problem);
+        Assert.Equal(500, problem.Status);
+        Assert.Equal("Internal Server Error", problem.Title);
+        Assert.Equal("An internal error occurred.", problem.Detail);
     }
 
     [Fact]
@@ -167,6 +230,36 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.NotNull(problem);
         Assert.Equal(502, problem.Status);
         Assert.Equal("Bad Gateway", problem.Title);
+    }
+
+    [Fact]
+    public async Task GetClassificationTree_SenderFault_ReturnsInternalServerErrorProblem()
+    {
+        const string treeId = "intra_trade";
+
+        factory.WireMockServer.Reset();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getClassificationTree\"",
+                    $"/*[local-name() = 'GetClassificationTreeRequest']/*[local-name() = 'TreeID' and text() = '{treeId}']"
+                )
+            )
+            .RespondWith(
+                Response.Create().WithCallback(
+                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
+                )
+            );
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync($"/classificationTrees/{treeId}", TestContext.Current.CancellationToken);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.NotNull(problem);
+        Assert.Equal(500, problem.Status);
+        Assert.Equal("Internal Server Error", problem.Title);
+        Assert.Equal("An internal error occurred.", problem.Detail);
     }
 
     [Fact]
@@ -497,6 +590,39 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
     }
 
     [Fact]
+    public async Task GetClassificationTreeNodeDetail_SenderFault_ReturnsInternalServerErrorProblem()
+    {
+        const string nodePath = "R/N-10000/N-10065/L-10121/L-10301/C-11978";
+
+        factory.WireMockServer.Reset();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getClassificationTreeNodeDetail\"",
+                    $"/*[local-name() = 'GetClassificationTreeNodeDetailRequest'][*[local-name() = 'TreeID' and text() = 'intra_trade'] and *[local-name() = 'Path' and text() = '{nodePath}']]"
+                )
+            )
+            .RespondWith(
+                Response.Create().WithCallback(
+                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
+                )
+            );
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync(
+            $"/classificationTrees/intra_trade/nodedetail?path={nodePath}",
+            TestContext.Current.CancellationToken
+        );
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
+        Assert.NotNull(problem);
+        Assert.Equal(500, problem.Status);
+        Assert.Equal("Internal Server Error", problem.Title);
+        Assert.Equal("An internal error occurred.", problem.Detail);
+    }
+
+    [Fact]
     public async Task GetMetadatas_ReturnsMappedResponse()
     {
         const string metadataType = "ACCOMPANYING_DOCUMENT_TYPE";
@@ -571,18 +697,6 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
     {
         const string metadataType = "ACCOMPANYING_DOCUMENT_TYPE";
 
-        const string senderFault = """
-            <?xml version='1.0' encoding='UTF-8'?>
-            <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
-              <S:Body>
-                <S:Fault>
-                  <faultcode>S:Client</faultcode>
-                  <faultstring xml:lang="en">Bad request</faultstring>
-                </S:Fault>
-              </S:Body>
-            </S:Envelope>
-            """;
-
         factory.WireMockServer.Reset();
         factory
             .WireMockServer.Given(
@@ -593,7 +707,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
             )
             .RespondWith(
                 Response.Create().WithCallback(
-                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, senderFault)
+                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
                 )
             );
 
