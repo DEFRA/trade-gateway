@@ -47,7 +47,6 @@ public class FindCertificatesRequestTests
     }
 
     [Theory]
-    [InlineData(0)]
     [InlineData(-1)]
     [InlineData(-100)]
     public void Should_Fail_When_Offset_Is_Less_Than_One(int offset)
@@ -64,7 +63,7 @@ public class FindCertificatesRequestTests
             .Should()
             .Contain(x =>
                 x.MemberNames.Contains(nameof(FindCertificatesRequest.Offset))
-                && x.ErrorMessage == "offset must be greater than 0"
+                && x.ErrorMessage == "offset must be equal to or greater than 0"
             );
     }
 
@@ -83,7 +82,7 @@ public class FindCertificatesRequestTests
             .Should()
             .Contain(x =>
                 x.MemberNames.Contains(nameof(FindCertificatesRequest.UpdatedFrom))
-                && x.ErrorMessage == "After date must be UTC."
+                && x.ErrorMessage == "UpdatedFrom date must be UTC."
             );
     }
 

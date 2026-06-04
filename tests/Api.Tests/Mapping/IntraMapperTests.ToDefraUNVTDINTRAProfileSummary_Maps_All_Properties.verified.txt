@@ -3,8 +3,8 @@
     {
       Id: CERT123,
       Origin: GB,
-      Created: DateTime_1,
-      Updated: DateTime_2
+      Created: DateTimeOffset_1,
+      Updated: DateTimeOffset_2
     }
   ],
   Offset: 10,

@@ -24,17 +24,16 @@ public record DefraUNVTDINTRASummaryProfile
 #pragma warning disable S101
 public record DefraUNVTDINTRASummaryProfileItem
 #pragma warning restore S101
-#pragma warning restore S101
 {
     [JsonPropertyName("id")]
     public required string Id { get; init; }
 
-    [JsonPropertyName("orgin")]
+    [JsonPropertyName("origin")]
     public required string Origin { get; init; }
 
     [JsonPropertyName("created")]
-    public required DateTime Created { get; init; }
+    public required DateTimeOffset Created { get; init; }
 
     [JsonPropertyName("updated")]
-    public required DateTime Updated { get; init; }
+    public required DateTimeOffset Updated { get; init; }
 }
