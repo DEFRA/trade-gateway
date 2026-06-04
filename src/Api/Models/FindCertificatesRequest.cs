@@ -7,12 +7,13 @@ public class FindCertificatesRequest : IValidatableObject
 {
     [FromQuery(Name = "pageSize")]
     [System.ComponentModel.Description("The number of records to return")]
+    [Range(10, 200, ErrorMessage = "pageSize must be between 10 and 200")]
     public int PageSize { get; set; } = 10;
 
     [FromQuery(Name = "offset")]
     [System.ComponentModel.Description("Number of records to offset")]
-    [Range(1, int.MaxValue, ErrorMessage = "offset must be greater than 0")]
-    public int Offset { get; set; } = 0;
+    [Range(0, int.MaxValue, ErrorMessage = "offset must be equal to or greater than 0")]
+    public int Offset { get; set; }
 
     [FromQuery(Name = "updatedFrom")]
     [System.ComponentModel.Description("Start of the range")]
@@ -33,7 +34,7 @@ public class FindCertificatesRequest : IValidatableObject
     {
         if (UpdatedFrom.GetValueOrDefault().Kind != DateTimeKind.Utc)
         {
-            yield return new ValidationResult("After date must be UTC.", [nameof(UpdatedFrom)]);
+            yield return new ValidationResult("UpdatedFrom date must be UTC.", [nameof(UpdatedFrom)]);
         }
 
         if (UpdatedBefore.GetValueOrDefault().Kind != DateTimeKind.Utc)
