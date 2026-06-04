@@ -172,7 +172,7 @@ public class ReferenceDataMapperTests
             }
         );
 
-        var result = ClassificationTreeNodeDetailMapper.Map(response, "intra_trade");
+        var result = ClassificationTreeNodeDetailMapper.Map(response.GetClassificationTreeNodeDetailResponse1.Node, "intra_trade");
 
         result.Source.Should().Be("traces");
         result.TreeId.Should().Be("intra_trade");
@@ -261,7 +261,7 @@ public class ReferenceDataMapperTests
             }
         );
 
-        var result = ClassificationTreeNodeDetailMapper.Map(response, "intra_trade");
+        var result = ClassificationTreeNodeDetailMapper.Map(response.GetClassificationTreeNodeDetailResponse1.Node, "intra_trade");
 
         result.Node.Should().NotBeNull();
         result.Node!.CnCode.Should().BeNull();

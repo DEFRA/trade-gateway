@@ -63,21 +63,4 @@ internal static class ClassificationTreeNodeDetailMapper
             RetrievedAt = DateTimeOffset.UtcNow,
         };
     }
-
-    internal static DefraUNVTDProfileClassificationTreeNodeDetailResponse Map(
-        GetClassificationTreeNodeDetailResponse source,
-        string treeId
-    )
-    {
-        var node = source.GetClassificationTreeNodeDetailResponse1?.Node;
-
-        return node is null
-            ? new DefraUNVTDProfileClassificationTreeNodeDetailResponse
-            {
-                Source = ReferenceDataSource.Traces,
-                TreeId = treeId,
-                RetrievedAt = DateTimeOffset.UtcNow,
-            }
-            : Map(node, treeId);
-    }
 }
