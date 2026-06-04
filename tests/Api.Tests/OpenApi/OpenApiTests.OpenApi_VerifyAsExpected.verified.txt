@@ -31,7 +31,7 @@
           200: {
             description: OK,
             content: {
-              application/vnd.trade.v1+json: {
+              application/vnd.defra.trade.intra.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDINTRAProfile
                 }

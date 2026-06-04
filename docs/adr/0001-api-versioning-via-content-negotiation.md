@@ -13,7 +13,7 @@ Three approaches were considered:
 
 1. **URL versioning** — embed version in the path (`/v1/intra/{id}`, `/v2/intra/{id}`)
 2. **Whole-API versioning** — version the entire API as a unit, deploying a new API version when any resource changes
-3. **HTTP content negotiation** — clients request a specific representation using the `Accept` header with vendor media types (`application/vnd.trade.v1+json`)
+3. **HTTP content negotiation** — clients request a specific representation using the `Accept` header with vendor media types (`application/vnd.defra.trade.intra.v1+json`)
 
 ---
 
@@ -24,8 +24,8 @@ We will use **HTTP content negotiation via vendor media types** to version indiv
 Each versioned representation of a resource is identified by a vendor media type:
 
 ```
-application/vnd.trade.v1+json
-application/vnd.trade.v2+json
+application/vnd.defra.trade.intra.v1+json
+application/vnd.defra.trade.intra.v2+json
 ```
 
 The endpoint URL (`/intra/{id}`) remains stable. Clients declare which representation they want in the `Accept` header. The latest stable version is returned when no `Accept` header is provided or when the header does not match a known vendor media type.
@@ -75,7 +75,7 @@ Additive, backwards-compatible changes are delivered under the existing media ty
 - Adding a new optional nested object
 - Relaxing a validation constraint (e.g. making a required field optional)
 
-`application/vnd.trade.v1+json` means *"a v1-compatible representation, at the latest revision"*, not *"the exact schema as it was when v1 was first defined"*.
+`application/vnd.defra.trade.intra.v1+json` means *"a v1-compatible representation, at the latest revision"*, not *"the exact schema as it was when v1 was first defined"*.
 
 ### Breaking changes — new media type required
 
@@ -94,7 +94,7 @@ Sending an `Accept` header is never required. Clients that omit it receive the d
 
 - **Simple consumers** need no knowledge of versioning at all. They call the endpoint and get a working response.
 - **Version-aware consumers** pin to a specific media type when they need a stable, known contract.
-- **There is no need for wildcard media types** such as `application/vnd.trade.*+json`. Omitting the header already expresses *"I accept whatever you give me"*, and it is valid HTTP. A custom wildcard pattern is non-standard and provides no additional capability.
+- **There is no need for wildcard media types** such as `application/vnd.defra.trade.*+json`. Omitting the header already expresses *"I accept whatever you give me"*, and it is valid HTTP. A custom wildcard pattern is non-standard and provides no additional capability.
 
 ---
 
