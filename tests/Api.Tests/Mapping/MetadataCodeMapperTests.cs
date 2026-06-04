@@ -1,5 +1,6 @@
 using Api.Mapping;
 using AwesomeAssertions;
+using Defra.TradeGateway.Api.Contract.ReferenceData;
 using TracesNT.WebServices;
 
 namespace Api.Tests.Mapping;
@@ -14,17 +15,19 @@ public class MetadataCodeMapperTests
             Value = "A",
             mappedValue = "mapped-a",
             active = false,
+            name = "Test Metadata Code",
         };
 
         var result = MetadataCodeMapper.Map(source);
 
         result.Should()
             .BeEquivalentTo(
-                new
+                new MetadataCode
                 {
                     Value = "A",
                     MappedValue = "mapped-a",
                     Active = false,
+                    DisplayName = "Test Metadata Code"
                 }
             );
     }

@@ -543,7 +543,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.NotNull(payload.Items);
         Assert.Contains(
             payload.Items!,
-            i => i is { Value: "AIRWAY_BILL", Active: true, MappedValue: null, DisplayName: null }
+            i => i is { Value: "AIRWAY_BILL", Active: true, MappedValue: null, DisplayName: "Air Waybill" }
         );
     }
 

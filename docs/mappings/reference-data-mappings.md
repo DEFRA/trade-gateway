@@ -243,7 +243,7 @@ It reflects the current implementation in:
 | `value` | `Value` | required |
 | `mappedValue` | `mappedValue` | |
 | `active` | `active` | |
-| `displayName` | not populated | contract field exists, current mapper does not set it |
+| `displayName` | `name` | |
 
 ---
 

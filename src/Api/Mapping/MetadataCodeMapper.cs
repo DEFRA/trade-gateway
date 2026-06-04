@@ -11,5 +11,6 @@ internal static class MetadataCodeMapper
             Value = source.Value,
             MappedValue = source.mappedValue,
             Active = source.active,
+            DisplayName = source.name
         };
 }
