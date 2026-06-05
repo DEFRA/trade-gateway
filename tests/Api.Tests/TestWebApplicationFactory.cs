@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +28,8 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                         ["TracesNt:AuthenticationKey"] = "test-auth-key",
                         ["TracesNt:WebServiceClientId"] = "test-client-id",
                         ["XApiKey"] = "test-x-api-key",
+                        ["Authentication:Authority"] = "https://test.example.com",
+                        ["Authentication:Scope"] = "test-resource-srv/access",
                     }
                 );
             }
@@ -35,6 +38,14 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(server);
+
+            services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = "Test";
+                    options.DefaultChallengeScheme = "Test";
+                })
+                .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>("Test", _ => { });
         });
     }
 }
