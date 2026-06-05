@@ -24,6 +24,7 @@ public static class AuthenticationRegistration
                 options.Authority = authConfig.Authority;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ValidIssuer = authConfig.Authority,
                     ValidateAudience = false, // Cognito M2M access tokens (client_credentials) have no aud claim
                 };
             });
