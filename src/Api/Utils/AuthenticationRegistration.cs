@@ -1,9 +1,10 @@
 using Api.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-
+using System.Diagnostics.CodeAnalysis;
 namespace Api.Utils;
 
+[ExcludeFromCodeCoverage]
 public static class AuthenticationRegistration
 {
     public static void AddApiAuthentication(this WebApplicationBuilder builder)
