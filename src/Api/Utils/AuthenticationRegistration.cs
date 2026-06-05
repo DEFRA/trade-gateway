@@ -1,4 +1,5 @@
 using Api.Config;
+using Api.Utils.Http;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.CodeAnalysis;
@@ -24,10 +25,14 @@ public static class AuthenticationRegistration
                 options.Authority = authConfig.Authority;
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidIssuer = authConfig.Authority,
+                    ValidIssuer      = authConfig.Authority,
                     ValidateAudience = false, // Cognito M2M access tokens (client_credentials) have no aud claim
                 };
             });
+
+        builder.Services
+            .AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+            .Configure<ProxyHttpMessageHandler>((options, proxy) => options.BackchannelHttpHandler = proxy);
 
         builder
             .Services.AddAuthorizationBuilder()
