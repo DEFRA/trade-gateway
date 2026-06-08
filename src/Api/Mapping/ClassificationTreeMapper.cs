@@ -1,5 +1,5 @@
 using Api.Constants;
-
+using Api.Extensions;
 using Defra.TradeGateway.Api.Contract.ReferenceData;
 
 using TracesNT.WebServices;
@@ -29,6 +29,7 @@ internal static class ClassificationTreeMapper
     {
         return new ContractClassificationTreeNode
         {
+            NodeId = source.path.ToNodeId(),
             Path = source.path,
             Label = source.Description.Value,
             NodeType = ClassificationTreeNodeTypeMapper.Map(source.type),

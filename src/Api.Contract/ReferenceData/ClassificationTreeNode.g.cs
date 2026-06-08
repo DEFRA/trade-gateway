@@ -7,6 +7,9 @@ using System.Collections.Generic;
 namespace Defra.TradeGateway.Api.Contract.ReferenceData;
 public partial record ClassificationTreeNode
 {
+    [JsonPropertyName("nodeId")]
+    public required string NodeId { get; init; }
+
     [JsonPropertyName("path")]
     public required string Path { get; init; }
 

@@ -16,6 +16,9 @@ public partial record DefraUNVTDProfileClassificationTreeNodeDetailResponse
     [JsonPropertyName("nodePath")]
     public string? NodePath { get; init; }
 
+    [JsonPropertyName("nodeId")]
+    public string? NodeId { get; init; }
+
     [JsonPropertyName("node")]
     public DefraUNVTDProfileClassificationTreeNodeDetailResponseNode? Node { get; init; }
 

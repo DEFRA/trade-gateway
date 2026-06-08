@@ -129,14 +129,14 @@
         }
       }
     },
-    /classificationTrees/{classificationTreeId}: {
+    /classificationTrees/{treeId}: {
       get: {
         tags: [
           ReferenceDataEndpoints
         ],
         parameters: [
           {
-            name: classificationTreeId,
+            name: treeId,
             in: path,
             required: true,
             schema: {
@@ -195,38 +195,26 @@
         }
       }
     },
-    /classificationTrees/{classificationTreeId}/nodedetail: {
+    /classificationTrees/{treeId}/nodes/{nodeId}: {
       get: {
         tags: [
           ReferenceDataEndpoints
         ],
         parameters: [
           {
-            name: classificationTreeId,
+            name: treeId,
             in: path,
-            description: The Classification Tree Id, i.e. cheda.,
             required: true,
             schema: {
-              type: string,
-              description: The Classification Tree Id, i.e. cheda.
+              type: string
             }
           },
           {
-            name: cnCode,
-            in: query,
-            description: The CN code.,
+            name: nodeId,
+            in: path,
+            required: true,
             schema: {
-              type: string,
-              description: The CN code.
-            }
-          },
-          {
-            name: path,
-            in: query,
-            description: The classification tree node path.,
-            schema: {
-              type: string,
-              description: The classification tree node path.
+              type: string
             }
           },
           {
@@ -515,12 +503,17 @@
       ClassificationTreeNode: {
         required: [
           label,
+          nodeId,
           nodeType,
           path,
           selectable
         ],
         type: object,
         properties: {
+          nodeId: {
+            type: string,
+            nullable: true
+          },
           path: {
             type: string,
             nullable: true
@@ -726,6 +719,10 @@
             nullable: true
           },
           nodePath: {
+            type: string,
+            nullable: true
+          },
+          nodeId: {
             type: string,
             nullable: true
           },

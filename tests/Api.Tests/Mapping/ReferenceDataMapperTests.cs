@@ -92,7 +92,7 @@ public class ReferenceDataMapperTests
             {
                 Node = new ClassificationTreeNodeDetail
                 {
-                    path = "intra_trade/0101",
+                    path = "R/N-10000/N-10065",
                     allowedForSelection = true,
                     type = ClassificationTreeNodeType.nomenclature,
                     Description = new TextType { Value = "Live horses" },
@@ -172,11 +172,12 @@ public class ReferenceDataMapperTests
             }
         );
 
-        var result = ClassificationTreeNodeDetailMapper.Map(response.GetClassificationTreeNodeDetailResponse1.Node, "intra_trade");
+        var result = ClassificationTreeNodeDetailMapper.Map(response.GetClassificationTreeNodeDetailResponse1.Node, "intra_trade", "R_N-10000_N-10065");
 
         result.Source.Should().Be("traces");
         result.TreeId.Should().Be("intra_trade");
-        result.NodePath.Should().Be("intra_trade/0101");
+        result.NodePath.Should().Be("R/N-10000/N-10065");
+        result.NodeId.Should().Be("R_N-10000_N-10065");
         result.Node.Should()
             .BeEquivalentTo(
                 new
@@ -261,7 +262,7 @@ public class ReferenceDataMapperTests
             }
         );
 
-        var result = ClassificationTreeNodeDetailMapper.Map(response.GetClassificationTreeNodeDetailResponse1.Node, "intra_trade");
+        var result = ClassificationTreeNodeDetailMapper.Map(response.GetClassificationTreeNodeDetailResponse1.Node, "intra_trade", "R_N-10000_N-10065");
 
         result.Node.Should().NotBeNull();
         result.Node!.CnCode.Should().BeNull();

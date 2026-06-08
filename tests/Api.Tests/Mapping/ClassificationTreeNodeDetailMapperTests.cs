@@ -136,7 +136,7 @@ public class ClassificationTreeNodeDetailMapperTests
             ],
         };
 
-        var result = ClassificationTreeNodeDetailMapper.Map(source, "cheda");
+        var result = ClassificationTreeNodeDetailMapper.Map(source, "cheda", "R_N-012345_N-023456");
 
         result.Taxons.Should().ContainSingle(t => t.TaxonId == 123);
         result.InvasiveTaxons.Should().ContainSingle(t => t.TaxonId == 456);
@@ -205,7 +205,7 @@ public class ClassificationTreeNodeDetailMapperTests
             ],
         };
 
-        var result = ClassificationTreeNodeDetailMapper.Map(source, "cheda");
+        var result = ClassificationTreeNodeDetailMapper.Map(source, "cheda", "R_N-10000_N-10065");
 
         result.Attributes.Should().BeNull();
         result.LegislationAttributes.Should().ContainSingle();

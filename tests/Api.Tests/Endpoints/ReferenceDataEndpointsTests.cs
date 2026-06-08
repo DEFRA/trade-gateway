@@ -238,6 +238,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
     public async Task GetClassificationTreeNodeDetail_ReturnsMappedResponse()
     {
         const string nodePath = "R/N-10000/N-10065/L-10121/L-10301/C-11978";
+        const string nodeId = "R_N-10000_N-10065_L-10121_L-10301_C-11978";
 
         factory.WireMockServer.Reset();
         factory
@@ -259,7 +260,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
 
         var client = factory.CreateClient();
         var response = await client.GetAsync(
-            $"/classificationTrees/intra_trade/nodedetail?path={nodePath}",
+            $"/classificationTrees/intra_trade/nodes/{nodeId}",
             TestContext.Current.CancellationToken
         );
         var payload =
@@ -351,73 +352,10 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
     }
 
     [Fact]
-    public async Task GetClassificationTreeNodeDetail_ByCnCode_ReturnsMappedResponse()
-    {
-        const string cnCode = "0101";
-
-        factory.WireMockServer.Reset();
-        factory
-            .WireMockServer.Given(
-                SoapUtilities.CreateSoapRequestInterceptor(
-                    "\"getClassificationTreeNodeDetail\"",
-                    $"/*[local-name() = 'GetClassificationTreeNodeDetailRequest'][*[local-name() = 'TreeID' and text() = 'intra_trade'] and *[local-name() = 'CNCode' and text() = '{cnCode}']]"
-                )
-            )
-            .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
-                        await SoapUtilities.CreateResponseFromResource(
-                            HttpStatusCode.OK,
-                            "Api.Tests.Samples.REFERENCE_DATA.GetClassificationTreeNodeDetailResponse_INTRA_TRADE.xml"
-                        )
-                )
-            );
-
-        var client = factory.CreateClient();
-        var response = await client.GetAsync(
-            $"/classificationTrees/intra_trade/nodedetail?cnCode={cnCode}",
-            TestContext.Current.CancellationToken
-        );
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
-
-    [Fact]
-    public async Task GetClassificationTreeNodeDetail_WhenBothPathAndCnCodeProvided_PathTakesPrecedence()
-    {
-        const string nodePath = "R/N-10000/N-10065/L-10121/L-10301/C-11978";
-
-        factory.WireMockServer.Reset();
-        factory
-            .WireMockServer.Given(
-                SoapUtilities.CreateSoapRequestInterceptor(
-                    "\"getClassificationTreeNodeDetail\"",
-                    $"/*[local-name() = 'GetClassificationTreeNodeDetailRequest'][*[local-name() = 'TreeID' and text() = 'intra_trade'] and *[local-name() = 'Path' and text() = '{nodePath}']]"
-                )
-            )
-            .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
-                        await SoapUtilities.CreateResponseFromResource(
-                            HttpStatusCode.OK,
-                            "Api.Tests.Samples.REFERENCE_DATA.GetClassificationTreeNodeDetailResponse_INTRA_TRADE.xml"
-                        )
-                )
-            );
-
-        var client = factory.CreateClient();
-        var response = await client.GetAsync(
-            $"/classificationTrees/intra_trade/nodedetail?path={nodePath}&cnCode=0101",
-            TestContext.Current.CancellationToken
-        );
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-    }
-
-    [Fact]
     public async Task GetClassificationTreeNodeDetail_NotFoundFromSoap_ReturnsNotFoundProblem()
     {
         const string nodePath = "R/N-10000/N-10065/L-10121/L-10301/C-11978";
+        const string nodeId = "R_N-10000_N-10065_L-10121_L-10301_C-11978";
 
         factory.WireMockServer.Reset();
         factory
@@ -446,7 +384,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
 
         var client = factory.CreateClient();
         var response = await client.GetAsync(
-            $"/classificationTrees/intra_trade/nodedetail?path={nodePath}",
+            $"/classificationTrees/intra_trade/nodes/{nodeId}",
             TestContext.Current.CancellationToken
         );
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
@@ -458,21 +396,10 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
     }
 
     [Fact]
-    public async Task GetClassificationTreeNodeDetail_WithoutPathOrCnCode_ReturnsBadRequest()
-    {
-        var client = factory.CreateClient();
-        var response = await client.GetAsync(
-            "/classificationTrees/intra_trade/nodedetail",
-            TestContext.Current.CancellationToken
-        );
-
-        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-    }
-
-    [Fact]
     public async Task GetClassificationTreeNodeDetail_SenderFault_ReturnsInternalServerErrorProblem()
     {
         const string nodePath = "R/N-10000/N-10065/L-10121/L-10301/C-11978";
+        const string nodeId = "R_N-10000_N-10065_L-10121_L-10301_C-11978";
 
         factory.WireMockServer.Reset();
         factory
@@ -490,7 +417,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
 
         var client = factory.CreateClient();
         var response = await client.GetAsync(
-            $"/classificationTrees/intra_trade/nodedetail?path={nodePath}",
+            $"/classificationTrees/intra_trade/nodes/{nodeId}",
             TestContext.Current.CancellationToken
         );
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);

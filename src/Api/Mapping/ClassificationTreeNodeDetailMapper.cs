@@ -26,13 +26,15 @@ internal static class ClassificationTreeNodeDetailMapper
 
     internal static DefraUNVTDProfileClassificationTreeNodeDetailResponse Map(
         ClassificationTreeNodeDetail source,
-        string treeId
+        string treeId,
+        string nodeId
     )
     {
         return new DefraUNVTDProfileClassificationTreeNodeDetailResponse
         {
             Source = ReferenceDataSource.Traces,
             TreeId = treeId,
+            NodeId = nodeId,
             NodePath = source.path,
             Node = Map(source),
             Attributes = source.Attribute

@@ -57,22 +57,14 @@ namespace TracesNT.Services
             }
         }
 
-        public async Task<ClassificationTreeNodeDetail?> GetClassificationTreeNodeDetail(string treeId, string? path, string? cnCode, string languageCode)
+        public async Task<ClassificationTreeNodeDetail?> GetClassificationTreeNodeDetail(string treeId, string path, string languageCode)
         {
-            if (string.IsNullOrWhiteSpace(path) && string.IsNullOrWhiteSpace(cnCode))
-            {
-                throw new ArgumentException($"Either {nameof(path)} or {nameof(cnCode)} is required");
-            }
-
             try
             {
                 var getClassificationsTreesRequest = new GetClassificationTreeNodeDetailRequestType
                 {
                     TreeID = treeId,
-                    Item = string.IsNullOrWhiteSpace(path) ? new CodeType
-                    {
-                        Value = cnCode
-                    } : path
+                    Item = path
                 };
 
                 var response = await referenceDataPortClient.getClassificationTreeNodeDetailAsync(
@@ -86,11 +78,11 @@ namespace TracesNT.Services
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException($"Traces SOAP bad request calling getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' and cnCode '{cnCode}' for languageCode '{languageCode}'", ex);
+                throw new InvalidSoapException($"Traces SOAP bad request calling getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' for languageCode '{languageCode}'", ex);
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException($"An error occurred calling the Traces web service getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' and cnCode '{cnCode}' for languageCode '{languageCode}'", ex);
+                throw new TracesCommunicationException($"An error occurred calling the Traces web service getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' for languageCode '{languageCode}'", ex);
             }
         }
 
