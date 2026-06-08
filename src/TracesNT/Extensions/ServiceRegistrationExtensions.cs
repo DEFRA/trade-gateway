@@ -12,45 +12,31 @@ public static class ServiceRegistrationExtensions
     internal static IServiceCollection AddTracesNtClient<TClient, TChannel>(
         this IServiceCollection services,
         string servicePath,
-        string? xApiKey
-    )
-        where TClient : ClientBase<TChannel>, TChannel
-        where TChannel : class
-    {
-        return services.RegisterClient<TClient, TChannel>(
-            config => config.GetServiceUrl(servicePath),
-            CreateBasicBinding,
-            xApiKey
-        );
-    }
-
-    private static IServiceCollection RegisterClient<TClient, TChannel>(
-        this IServiceCollection services,
-        Func<TracesNtConfig, Uri> endpointFactory,
-        Func<Uri, Binding> bindingFactory,
-        string? xApiKey
-    )
-        where TClient : ClientBase<TChannel>, TChannel
-        where TChannel : class
-    {
-        services.AddTransient<TClient>((sp) =>
+            string? xApiKey,
+            Func<Binding, EndpointAddress, TClient> clientFactory
+        )
+            where TClient : ClientBase<TChannel>, TChannel
+            where TChannel : class
         {
-            var config = sp.GetRequiredService<IOptions<TracesNtConfig>>().Value;
-            var logger = sp.GetRequiredService<ILogger<TClient>>();
-            var endpoint = new EndpointAddress(endpointFactory(config));
-            var binding = bindingFactory(endpoint.Uri);
+            services.AddScoped<TClient>(sp =>
+            {
+                var config = sp.GetRequiredService<IOptions<TracesNtConfig>>().Value;
+                var logger = sp.GetRequiredService<ILogger<TClient>>();
+                var endpoint = new EndpointAddress(config.GetServiceUrl(servicePath));
+                var binding = CreateBasicBinding(endpoint.Uri);
 
-            var client = (TClient)Activator.CreateInstance(typeof(TClient), binding, endpoint)!;
+                TClient client = clientFactory(binding, endpoint);
 
-            // Logging runs before WS-Security so credentials are never captured in logs.
-            // BeforeSendRequest fires in registration order; WS-Security adds its header last.
-            client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(logger));
-            client.Endpoint.EndpointBehaviors.Add(new WsSecurityEndpointBehavior(config, xApiKey));
+                // Logging runs before WS-Security so credentials are never captured in logs.
+                // BeforeSendRequest fires in registration order; WS-Security adds its header last.
+                client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(logger));
+                client.Endpoint.EndpointBehaviors.Add(new WsSecurityEndpointBehavior(config, xApiKey));
 
-            return client;
-        });
-  
-        return services;
+                return client;
+            });
+
+            return services;
+
     }
 
     private static Binding CreateBasicBinding(Uri endpointUrl)

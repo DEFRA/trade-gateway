@@ -13,12 +13,14 @@ namespace TracesNT.Extensions
         {
             services.AddTracesNtClient<EuIntraCertificatePortClient, EuIntraCertificatePort>(
                 "EuIntraCertificateServiceV1",
-                xApiKey
+                xApiKey,
+                (binding, endpoint) => new EuIntraCertificatePortClient(binding, endpoint)
             );
 
             services.AddTracesNtClient<ReferenceDataPortClient, ReferenceDataPort>(
                 "ReferenceDataServiceV1",
-                xApiKey
+                xApiKey,
+                (binding, endpoint) => new ReferenceDataPortClient(binding, endpoint)
             );
 
             services.AddTransient<IEuIntraCertificateService, EuIntraCertificateService>();
