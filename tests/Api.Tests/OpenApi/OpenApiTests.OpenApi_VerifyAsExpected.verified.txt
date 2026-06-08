@@ -99,7 +99,7 @@
           200: {
             description: OK,
             content: {
-              application/json: {
+              application/vnd.defra.trade.classificationsectionlist.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDProfileClassificationSectionListResponse
                 }
@@ -155,7 +155,7 @@
           200: {
             description: OK,
             content: {
-              application/json: {
+              application/vnd.defra.trade.classificationtree.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeResponse
                 }
@@ -229,7 +229,7 @@
           200: {
             description: OK,
             content: {
-              application/json: {
+              application/vnd.defra.trade.classificationtreenodedetail.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeNodeDetailResponse
                 }
@@ -295,7 +295,7 @@
           200: {
             description: OK,
             content: {
-              application/json: {
+              application/vnd.defra.trade.metadatalist.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDProfileMetadataListResponse
                 }

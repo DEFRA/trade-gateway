@@ -11,7 +11,7 @@ internal static class NodeAttributeMapper
         new()
         {
             Key = source.id,
-            Description = source.Description.Value,
+            Description = source.Description?.Value,
             Value = MapValue(source),
         };
 

@@ -13,7 +13,7 @@ internal static class MetadataMapper
             Source = ReferenceDataSource.Traces,
             MetadataType = metadataType,
             Items = source.Select(MetadataCodeMapper.Map).ToList(),
-            RetrievedAt = DateTime.UtcNow
+            RetrievedAt = DateTimeOffset.UtcNow
         };
     }
 }
