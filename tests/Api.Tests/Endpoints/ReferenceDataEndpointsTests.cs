@@ -94,6 +94,46 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
     }
 
     [Fact]
+    public async Task GetClassificationSections_NoSections_ReturnsNotFoundProblem()
+    {
+        factory.WireMockServer.Reset();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getClassificationSections\"",
+                    "/*[local-name() = 'GetClassificationSectionsRequest']"
+                )
+            )
+            .RespondWith(
+                Response.Create().WithCallback(
+                    async _ =>
+                        SoapUtilities.StubResponseMessage(
+                            HttpStatusCode.OK,
+                            $$"""
+                            <?xml version='1.0' encoding='UTF-8'?>
+                            <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                              <S:Body>
+                                <ns13:GetClassificationSectionsResponse xmlns:ns13="http://ec.europa.eu/tracesnt/referencedata/v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+                              </S:Body>
+                            </S:Envelope>
+                            """
+                        )
+                )
+            );
+
+        var client = factory.CreateClient();
+        var response = await client.GetAsync("/classificationSections", TestContext.Current.CancellationToken);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.NotNull(problem);
+        Assert.Equal(404, problem.Status);
+        Assert.Equal("Not Found", problem.Title);
+        Assert.Contains("Classification sections", problem.Detail ?? string.Empty);
+        Assert.Contains("en", problem.Detail ?? string.Empty);
+    }
+
+    [Fact]
     public async Task GetClassificationTree_ReturnsMappedResponse()
     {
         factory.WireMockServer.Reset();

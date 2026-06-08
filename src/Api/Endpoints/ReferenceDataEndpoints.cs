@@ -19,6 +19,7 @@ public static class ReferenceDataEndpoints
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileClassificationSectionListResponse>()
             )
+            .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
