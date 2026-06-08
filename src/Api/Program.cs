@@ -86,6 +86,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
     builder.Services.AddValidation();
+    builder.AddApiAuthentication();
 }
 
 [ExcludeFromCodeCoverage]
@@ -105,8 +106,11 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseExceptionHandler();
     app.UseHeaderPropagation();
     app.UseRouting();
+    app.UseAuthentication();
+    app.UseAuthorization();
     app.MapHealthChecks("/health");
     app.UseIntraEndpoints();
+    app.UseAuthTestEndpoints();
 
     return app;
 }
