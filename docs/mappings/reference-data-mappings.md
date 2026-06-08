@@ -48,13 +48,14 @@ It reflects the current implementation in:
 
 ---
 
-### `GET /classificationTrees/{classificationTreeId}/nodedetail` — `ClassificationTreeNodeDetail` → `DefraUNVTDProfileClassificationTreeNodeDetailResponse`
+### `GET /classificationTrees/{classificationTreeId}/nodes/{nodeId}` — `ClassificationTreeNodeDetail` → `DefraUNVTDProfileClassificationTreeNodeDetailResponse`
 
 | Target field | Source path | Notes |
 |---|---|---|
 | `source` | `"traces"` | set by mapper |
 | `treeId` | route value `classificationTreeId` | echoed from request |
-| `nodePath` | `ClassificationTreeNodeDetail.path` | |
+| `nodeId` | route value `nodeId` | route segment used to identify the node |
+| `nodePath` |  `ClassificationTreeNodeDetail.path` | Used to also generate nodeId |
 | `node` | `ClassificationTreeNodeDetail` | see [Node Detail](#node-detail--classificationtreenodedetail) |
 | `attributes` | `ClassificationTreeNodeDetail.Attribute[]` excluding `LegislationNodeAttribute`, `TaxonNodeAttribute`, `ClassificationSectionNodeAttribute`, and `SelectableDocumentLinkNodeAttribute` | see [NodeAttribute](#nodeattribute--abstractnodeattribute) |
 | `documentTypes` | `Attribute[]` filtered to `SelectableDocumentLinkNodeAttribute` | see [DocumentNodeAttribute](#documentnodeattribute--selectabledocumentlinknodeattribute) |
@@ -70,8 +71,8 @@ It reflects the current implementation in:
 |---|---|---|
 | `Accept-Language` | `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `languageCode` argument | primary tag only; defaults to `"en"` |
 | `classificationTreeId` | `GetClassificationTreeNodeDetailRequestType.TreeID` | passed directly from route |
-| `path` | `GetClassificationTreeNodeDetailRequestType.Item` as `string` | used when `path` query string is supplied |
-| `cnCode` | `GetClassificationTreeNodeDetailRequestType.Item` as `CodeType { Value = cnCode }` | used when `path` is blank and `cnCode` is supplied |
+| `path` | `GetClassificationTreeNodeDetailRequestType.Item` as `string` | the node path |
+
 
 **Behaviours to be aware of**
 
@@ -135,6 +136,7 @@ It reflects the current implementation in:
 
 | Target field | Source path | Notes |
 |---|---|---|
+| `nodeId` | `nodeId` | required |
 | `path` | `path` | required |
 | `label` | `Description.Value` | required |
 | `nodeType` | `type` | mapped by [Node Type Mapping](#node-type-mapping) |
