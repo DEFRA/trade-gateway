@@ -4,11 +4,13 @@ using Microsoft.Extensions.Options;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using TracesNT.ClientBehaviours;
+using System.Collections.Concurrent;
 
 namespace TracesNT.Extensions;
 
 public static class ServiceRegistrationExtensions
 {
+    private static readonly ConcurrentDictionary<string, Binding> s_bindingCache = new();
     internal static IServiceCollection AddTracesNtClient<TClient, TChannel>(
         this IServiceCollection services,
         string servicePath,
@@ -23,7 +25,7 @@ public static class ServiceRegistrationExtensions
                 var config = sp.GetRequiredService<IOptions<TracesNtConfig>>().Value;
                 var logger = sp.GetRequiredService<ILogger<TClient>>();
                 var endpoint = new EndpointAddress(config.GetServiceUrl(servicePath));
-                var binding = CreateBasicBinding(endpoint.Uri);
+                var binding = GetOrCreateBinding(endpoint.Uri);
 
                 TClient client = clientFactory(binding, endpoint);
 
@@ -39,30 +41,35 @@ public static class ServiceRegistrationExtensions
 
     }
 
-    private static Binding CreateBasicBinding(Uri endpointUrl)
+    private static Binding GetOrCreateBinding(Uri endpointUrl)
     {
-        var proxyUrl = Environment.GetEnvironmentVariable("HTTP_PROXY");
-        if (endpointUrl.Scheme == Uri.UriSchemeHttps)
+        var proxyUrl = Environment.GetEnvironmentVariable("HTTP_PROXY") ?? string.Empty;
+        var key = $"{endpointUrl.Scheme}|{proxyUrl}";
+
+        return s_bindingCache.GetOrAdd(key, _ =>
         {
-            var binding = new BasicHttpsBinding(BasicHttpsSecurityMode.Transport)
+            if (endpointUrl.Scheme == Uri.UriSchemeHttps)
+            {
+                var binding = new BasicHttpsBinding(BasicHttpsSecurityMode.Transport)
+                {
+                    MaxReceivedMessageSize = int.MaxValue,
+                    MaxBufferPoolSize = int.MaxValue,
+                };
+                binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.None;
+                if (!string.IsNullOrEmpty(proxyUrl))
+                {
+                    binding.UseDefaultWebProxy = false;
+                    binding.ProxyAddress = new Uri(proxyUrl);
+                }
+
+                return (Binding)binding;
+            }
+
+            return new BasicHttpBinding(BasicHttpSecurityMode.None)
             {
                 MaxReceivedMessageSize = int.MaxValue,
                 MaxBufferPoolSize = int.MaxValue,
             };
-            binding.Security.Transport.ClientCredentialType = HttpClientCredentialType.None;
-            if (!string.IsNullOrEmpty(proxyUrl))
-            {
-                binding.UseDefaultWebProxy = false;
-                binding.ProxyAddress = new Uri(proxyUrl);
-            }
-
-            return binding;
-        }
-
-        return new BasicHttpBinding(BasicHttpSecurityMode.None)
-        {
-            MaxReceivedMessageSize = int.MaxValue,
-            MaxBufferPoolSize = int.MaxValue,
-        };
+        });
     }
 }
