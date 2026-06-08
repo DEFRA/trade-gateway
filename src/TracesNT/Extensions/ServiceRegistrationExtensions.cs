@@ -11,6 +11,7 @@ namespace TracesNT.Extensions;
 public static class ServiceRegistrationExtensions
 {
     private static readonly ConcurrentDictionary<string, Binding> s_bindingCache = new();
+
     internal static IServiceCollection AddTracesNtClient<TClient, TChannel>(
         this IServiceCollection services,
         string servicePath,
