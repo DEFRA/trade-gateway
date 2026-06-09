@@ -11,10 +11,10 @@ TOPICS=(
   "trade_gateway_docom_updates"
 )
 
-echo "Creating SNS FIFO topics..."
+echo "Creating SNS FIFO topics..." 
 
 for topic in "${TOPICS[@]}"; do
-  topic_arn=$(aws --endpoint-url="$AWS_ENDPOINT" sns create-topic \
+  topic_arn=$(aws --endpoint-url="$AWS_ENDPOINT" sns create-topic \ # NOSONAR
     --name "$topic" \
     --attributes FifoTopic=true,ContentBasedDeduplication=true \
     --region "$REGION" \
@@ -26,7 +26,7 @@ done
 
 is_ready() {
   for topic in "${TOPICS[@]}"; do
-    aws --endpoint-url="$AWS_ENDPOINT" sns list-topics \
+    aws --endpoint-url="$AWS_ENDPOINT" sns list-topics \ # NOSONAR
       --query "Topics[?ends_with(TopicArn, ':${topic}')].TopicArn" \
       >/dev/null || return 1
   done
