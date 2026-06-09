@@ -111,6 +111,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.MapHealthChecks("/health");
     app.UseIntraEndpoints();
     app.UseAuthTestEndpoints();
+    app.UseReferenceDataEndpoints();
 
     return app;
 }

@@ -1,6 +1,8 @@
+using Api.Constants;
 using Api.Contract;
 using Api.Mapping;
 using Api.Models;
+using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
 using Trade.Gateway.Api.Contract.Certificate;
@@ -31,13 +33,13 @@ public static class IntraEndpoints
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
-        var languageCode = acceptLanguage?.Split(',')[0].Split(';')[0].Split('-')[0].Trim() ?? "en";
+        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
         var context = new MappingContext(languageCode);
         var certificate = await euIntraCertificateService.GetEuIntraCertificate(id, languageCode);
         if (certificate?.SPSCertificate == null)
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: "Not Found",
+                title: ResponseTitles.NotFound,
                 detail: $"Intra certificate '{id}' was not found."
             );
         return Results.Json(

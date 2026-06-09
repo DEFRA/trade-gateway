@@ -1,4 +1,4 @@
-﻿{
+{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -186,6 +186,270 @@
           }
         }
       }
+    },
+    /classificationSections: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        parameters: [
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.classificationsectionlist.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileClassificationSectionListResponse
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    /classificationTrees/{treeId}: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        parameters: [
+          {
+            name: treeId,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.classificationtree.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeResponse
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    /classificationTrees/{treeId}/nodes/{nodeId}: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        parameters: [
+          {
+            name: treeId,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: nodeId,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.classificationtreenodedetail.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeNodeDetailResponse
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    /metaDatas/{metadataType}: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        parameters: [
+          {
+            name: metadataType,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.metadatalist.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileMetadataListResponse
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   components: {
@@ -245,6 +509,151 @@
           typeCode: {
             type: string,
             description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      CertificateModelReference: {
+        required: [
+          modelId
+        ],
+        type: object,
+        properties: {
+          modelId: {
+            type: integer,
+            format: int32
+          },
+          shortTitle: {
+            type: string,
+            nullable: true
+          },
+          longTitle: {
+            type: string,
+            nullable: true
+          },
+          createdOn: {
+            type: string,
+            format: date-time,
+            nullable: true
+          },
+          updatedOn: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ClassificationSection: {
+        required: [
+          classCode,
+          description,
+          lms,
+          scopes
+        ],
+        type: object,
+        properties: {
+          classCode: {
+            type: string,
+            nullable: true
+          },
+          chapter: {
+            type: string,
+            nullable: true
+          },
+          lms: {
+            type: boolean
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          active: {
+            type: boolean,
+            nullable: true
+          },
+          scopes: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          operatorActivities: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ClassificationSectionGroup: {
+        required: [
+          description,
+          id,
+          sections
+        ],
+        type: object,
+        properties: {
+          id: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          sections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ClassificationTreeNode: {
+        required: [
+          label,
+          nodeId,
+          nodeType,
+          path,
+          selectable
+        ],
+        type: object,
+        properties: {
+          nodeId: {
+            type: string,
+            nullable: true
+          },
+          path: {
+            type: string,
+            nullable: true
+          },
+          label: {
+            type: string,
+            nullable: true
+          },
+          nodeType: {
+            type: string,
+            nullable: true
+          },
+          selectable: {
+            type: boolean
+          },
+          cnCode: {
+            type: string,
+            nullable: true
+          },
+          children: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationTreeNode
+            },
             nullable: true
           }
         },
@@ -442,6 +851,226 @@
         },
         additionalProperties: false
       },
+      DefraUNVTDProfileClassificationSectionListResponse: {
+        type: object,
+        properties: {
+          source: {
+            type: string,
+            nullable: true
+          },
+          service: {
+            type: string,
+            description: Optional service discriminator for classification-section responses when multiple TRACES services expose similarly named operations.,
+            nullable: true
+          },
+          sections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
+          },
+          retrievedAt: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileClassificationTreeNodeDetailResponse: {
+        type: object,
+        properties: {
+          source: {
+            type: string,
+            nullable: true
+          },
+          treeId: {
+            type: string,
+            nullable: true
+          },
+          nodePath: {
+            type: string,
+            nullable: true
+          },
+          nodeId: {
+            type: string,
+            nullable: true
+          },
+          node: {
+            $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeNodeDetailResponseNode
+          },
+          attributes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/NodeAttribute
+            },
+            nullable: true
+          },
+          documentTypes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/DocumentNodeAttribute
+            },
+            nullable: true
+          },
+          classificationSectionGroups: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSectionGroup
+            },
+            nullable: true
+          },
+          legislationAttributes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LegislationAttribute
+            },
+            nullable: true
+          },
+          taxons: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/Taxon
+            },
+            nullable: true
+          },
+          invasiveTaxons: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/Taxon
+            },
+            nullable: true
+          },
+          retrievedAt: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileClassificationTreeNodeDetailResponseNode: {
+        required: [
+          selectable
+        ],
+        type: object,
+        properties: {
+          cnCode: {
+            type: string,
+            nullable: true
+          },
+          certificateModel: {
+            $ref: #/components/schemas/CertificateModelReference
+          },
+          selectable: {
+            type: boolean
+          },
+          nodeType: {
+            type: string,
+            nullable: true
+          },
+          label: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileClassificationTreeResponse: {
+        type: object,
+        properties: {
+          source: {
+            type: string,
+            nullable: true
+          },
+          treeId: {
+            type: string,
+            nullable: true
+          },
+          nodes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationTreeNode
+            },
+            nullable: true
+          },
+          retrievedAt: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDProfileMetadataListResponse: {
+        type: object,
+        properties: {
+          source: {
+            type: string,
+            nullable: true
+          },
+          metadataType: {
+            type: string,
+            nullable: true
+          },
+          items: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/MetadataCode
+            },
+            nullable: true
+          },
+          retrievedAt: {
+            type: string,
+            format: date-time,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DocumentNodeAttribute: {
+        required: [
+          key
+        ],
+        type: object,
+        properties: {
+          key: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          documentLinkTypes: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/DocumentNodeAttributeValue
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DocumentNodeAttributeValue: {
+        required: [
+          documentType,
+          linkType
+        ],
+        type: object,
+        properties: {
+          documentType: {
+            type: string,
+            nullable: true
+          },
+          linkType: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       ExchangedDocument: {
         required: [
           documentTypeCode,
@@ -573,6 +1202,82 @@
         },
         additionalProperties: false
       },
+      LegislationAttribute: {
+        required: [
+          key,
+          legislation
+        ],
+        type: object,
+        properties: {
+          key: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          legislation: {
+            $ref: #/components/schemas/LegislationReference
+          }
+        },
+        additionalProperties: false
+      },
+      LegislationReference: {
+        required: [
+          legislationId
+        ],
+        type: object,
+        properties: {
+          legislationId: {
+            type: integer,
+            format: int32
+          },
+          celexIdentifiers: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          certificateModels: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/CertificateModelReference
+            },
+            nullable: true
+          },
+          originCountries: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          destinationCountries: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          },
+          originClassificationSections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
+          },
+          destinationClassificationSections: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ClassificationSection
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       LogisticsLocation: {
         type: object,
         properties: {
@@ -608,6 +1313,51 @@
           itemQuantity: {
             type: integer,
             format: int32,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      MetadataCode: {
+        required: [
+          value
+        ],
+        type: object,
+        properties: {
+          value: {
+            type: string,
+            nullable: true
+          },
+          mappedValue: {
+            type: string,
+            nullable: true
+          },
+          active: {
+            type: boolean,
+            nullable: true
+          },
+          displayName: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      NodeAttribute: {
+        required: [
+          key
+        ],
+        type: object,
+        properties: {
+          key: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          value: {
             nullable: true
           }
         },
@@ -702,6 +1452,36 @@
             items: {
               type: string
             },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      Taxon: {
+        required: [
+          name,
+          taxonId
+        ],
+        type: object,
+        properties: {
+          taxonId: {
+            type: integer,
+            format: int32
+          },
+          eppoCode: {
+            type: string,
+            nullable: true
+          },
+          faoCode: {
+            type: string,
+            nullable: true
+          },
+          name: {
+            type: string,
+            nullable: true
+          },
+          languageId: {
+            type: string,
             nullable: true
           }
         },
@@ -912,6 +1692,9 @@
   tags: [
     {
       name: IntraEndpoints
+    },
+    {
+      name: ReferenceDataEndpoints
     }
   ]
 }
