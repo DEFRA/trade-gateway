@@ -84,6 +84,9 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     // Add health check, this is required for the platform to know your service is alive.
     builder.Services.AddHealthChecks();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+    builder.Services.AddValidation();
+    builder.AddApiAuthentication();
 }
 
 [ExcludeFromCodeCoverage]
@@ -103,8 +106,11 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseExceptionHandler();
     app.UseHeaderPropagation();
     app.UseRouting();
+    app.UseAuthentication();
+    app.UseAuthorization();
     app.MapHealthChecks("/health");
     app.UseIntraEndpoints();
+    app.UseAuthTestEndpoints();
 
     return app;
 }

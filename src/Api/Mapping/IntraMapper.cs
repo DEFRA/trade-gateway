@@ -12,6 +12,24 @@ internal static class IntraMapper
             SpecifiedConsignment = SpsConsignmentMapper.Map(source.SPSCertificate.SPSConsignment, context),
             LaboratoryObservationResult = null,
         };
+
+    internal static DefraUNVTDINTRASummaryProfileItem Map(EuIntraCertificateQueryResultType source) =>
+        new()
+        {
+            Id = source.ID,
+            Created = source.CreateDateTime,
+            Origin = source.CountryOfOrigin?.FirstOrDefault()?.Value ?? string.Empty,
+            Updated = source.UpdateDateTime,
+        };
+
+    internal static DefraUNVTDINTRASummaryProfile Map(FindEuIntraCertificateResultType source) =>
+        new()
+        {
+            Items = source.EuIntraCertificateResult.Select(Map).ToArray(),
+            Offset = source.offset,
+            PageSize = source.pageSize,
+            HasMore = source.EuIntraCertificateResult.Length == source.pageSize,
+        };
 }
 
 internal static class EuIntraCertificateTypeExtensions
