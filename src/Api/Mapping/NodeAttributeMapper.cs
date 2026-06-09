@@ -55,7 +55,7 @@ internal static class NodeAttributeMapper
             ),
             SelectableDocumentLinkNodeAttribute _ => throw new NotSupportedException($"Use {nameof(DocumentNodeAttributeMapper)}"),
             LegislationNodeAttribute _ => throw new NotSupportedException($"Use {nameof(LegislationAttributeMapper)}"),
-            ClassificationSectionNodeAttribute _ => throw new NotSupportedException($"Use {nameof(ClassificationSectionGroupMapper)}"),
+            ClassificationSectionNodeAttribute _ => throw new NotSupportedException($"Use {nameof(ClassificationSectionNodeAttributeMapper)}"),
             TaxonNodeAttribute _ => throw new NotSupportedException($"Use {nameof(TaxonMapper)}"),
             _ => null,
         };

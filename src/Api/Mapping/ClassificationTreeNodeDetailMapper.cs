@@ -47,7 +47,7 @@ internal static class ClassificationTreeNodeDetailMapper
                 .NullIfEmpty(),
             ClassificationSectionGroups = source.Attribute
                 ?.OfType<ClassificationSectionNodeAttribute>()
-                .Select(ClassificationSectionGroupMapper.Map)
+                .Select(ClassificationSectionNodeAttributeMapper.Map)
                 .ToList()
                 .NullIfEmpty(),
             DocumentTypes = source.Attribute

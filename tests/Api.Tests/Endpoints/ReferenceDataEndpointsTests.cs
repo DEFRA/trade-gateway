@@ -66,7 +66,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.Contains(
             payload.Sections!,
             section =>
-                section is { ClassCode: "0101", Chapter: "01", Lms: true, Description: "Live horses", Active: true, Scopes: ["GB", "XI"] }
+                section is { ClassCode: "ACT", Chapter: "veterinary", Lms: true, Description: "Animal act", Active: true, Scopes: ["EFTA", "EU"], OperatorActivities: ["animal_act"] }
         );
     }
 

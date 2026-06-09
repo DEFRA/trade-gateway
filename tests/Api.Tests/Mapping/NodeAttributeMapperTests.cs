@@ -91,7 +91,7 @@ public class NodeAttributeMapperTests
         };
 
         var ex = Assert.Throws<NotSupportedException>(() => NodeAttributeMapper.Map(source));
-        ex.Message.Should().Contain(nameof(ClassificationSectionGroupMapper));
+        ex.Message.Should().Contain(nameof(ClassificationSectionNodeAttributeMapper));
     }
 
     [Fact]

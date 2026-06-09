@@ -3,7 +3,7 @@ using TracesNT.WebServices;
 
 namespace Api.Mapping;
 
-internal static class ClassificationSectionGroupMapper
+internal static class ClassificationSectionNodeAttributeMapper
 {
     internal static ClassificationSectionGroup Map(ClassificationSectionNodeAttribute source) =>
         new()

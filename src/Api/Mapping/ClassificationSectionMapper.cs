@@ -1,5 +1,9 @@
 using Api.Constants;
+
 using Defra.TradeGateway.Api.Contract.ReferenceData;
+
+using System.Diagnostics;
+
 using TracesNT.WebServices;
 
 namespace Api.Mapping;
@@ -19,6 +23,11 @@ internal static class ClassificationSectionMapper
                 .Where(value => !string.IsNullOrWhiteSpace(value))
                 .Select(value => value!)
                 .ToList() ?? [],
+            OperatorActivities = source.OperatorActivityType
+                ?.Select(activity => activity.Value)  // note - when within a ClassificationSectionType the value is used to hold the activity type
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value!)
+                .ToList() ?? [],
         };
 
     internal static ClassificationSection Map(ClassificationSectionReference source) =>
@@ -30,6 +39,11 @@ internal static class ClassificationSectionMapper
             Description = source.Description.Value,
             Scopes = source.Scope
                 ?.Select(scope => scope.Value)
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value!)
+                .ToList() ?? [],
+            OperatorActivities = source.OperatorActivityType
+                ?.Select(activity => activity.type) // note - when within a ClassificationSectionReference the activity.type is used to hold the activity type
                 .Where(value => !string.IsNullOrWhiteSpace(value))
                 .Select(value => value!)
                 .ToList() ?? [],
