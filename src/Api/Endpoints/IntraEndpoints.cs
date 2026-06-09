@@ -1,5 +1,6 @@
 using Api.Contract;
 using Api.Mapping;
+using Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
 using Trade.Gateway.Api.Contract.Certificate;
@@ -10,10 +11,15 @@ public static class IntraEndpoints
 {
     public static void UseIntraEndpoints(this IEndpointRouteBuilder app)
     {
-
         app.MapGet("intras/{id}", Get)
             .Produces<DefraUNVTDINTRAProfile>(200, MediaTypeAttribute.For<DefraUNVTDINTRAProfile>())
             .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapGet("intras", Find)
+            .Produces<DefraUNVTDINTRASummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDINTRASummaryProfile>())
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
@@ -27,22 +33,34 @@ public static class IntraEndpoints
     {
         var languageCode = acceptLanguage?.Split(',')[0].Split(';')[0].Split('-')[0].Trim() ?? "en";
         var context = new MappingContext(languageCode);
-
-
         var certificate = await euIntraCertificateService.GetEuIntraCertificate(id, languageCode);
-
-    
-    
         if (certificate?.SPSCertificate == null)
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 title: "Not Found",
                 detail: $"Intra certificate '{id}' was not found."
             );
-
         return Results.Json(
             IntraMapper.Map(certificate, context),
             contentType: MediaTypeAttribute.For<DefraUNVTDINTRAProfile>()
+        );
+    }
+
+    private static async Task<IResult> Find(
+        [AsParameters] FindCertificatesRequest query,
+        [FromServices] IEuIntraCertificateService euIntraCertificateService
+    )
+    {
+        var certificates = await euIntraCertificateService.FindEuIntraCertificates(
+            query.UpdatedFrom!.Value,
+            query.UpdatedBefore!.Value,
+            query.Offset,
+            query.PageSize,
+            query.AcceptLanguage!
+        );
+        return Results.Json(
+            IntraMapper.Map(certificates.FindEuIntraCertificateResponse1),
+            contentType: MediaTypeAttribute.For<DefraUNVTDINTRASummaryProfile>()
         );
     }
 }
