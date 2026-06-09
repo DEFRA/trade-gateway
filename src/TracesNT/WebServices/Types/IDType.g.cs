@@ -8,6 +8,8 @@
 //------------------------------------------------------------------------------
 namespace TracesNT.WebServices
 {
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(SelectableDocumentLinkNodeAttributeValue))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(EnumNodeAttributeValue))]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21")]

@@ -94,7 +94,7 @@
         },
         {
           identifier: SIGNATORY_PERSON_EMAIL,
-          content: dklemm@equalexperts.com
+          content: info@b.c
         }
       ]
     },

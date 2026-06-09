@@ -403,17 +403,6 @@ public class CSharpGenerator(SchemaLoader loader, string outputNamespace)
         RecordDeclaration(Token(SyntaxKind.RecordKeyword), Identifier(name))
             .AddModifiers(Token(SyntaxKind.PublicKeyword), Token(SyntaxKind.PartialKeyword));
 
-    private static PropertyDeclarationSyntax CreateExtensionDataProperty() =>
-        PropertyDeclaration(NullableType(ParseTypeName("Dictionary<string, JsonElement>")), "ExtensionData")
-            .AddModifiers(Token(SyntaxKind.PublicKeyword))
-            .AddAttributeLists(AttributeList(SingletonSeparatedList(Attribute(ParseName("JsonExtensionData")))))
-            .AddAccessorListAccessors(
-                AccessorDeclaration(SyntaxKind.GetAccessorDeclaration)
-                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken)),
-                AccessorDeclaration(SyntaxKind.InitAccessorDeclaration)
-                    .WithSemicolonToken(Token(SyntaxKind.SemicolonToken))
-            );
-
     private static UsingDirectiveSyntax CreateUsing(string fqn) => UsingDirective(ParseName(fqn));
 
     private static AttributeListSyntax CreateSimpleAttributeList(string type, string arg1) =>
