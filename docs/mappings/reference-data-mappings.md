@@ -116,6 +116,7 @@ It reflects the current implementation in:
 | `description` | `Description.Value` | required |
 | `active` | `active` | |
 | `scopes` | `MetaCountryGroupScope[].Value` | filtered to non-empty values; empty list if none |
+| `operatorActivities` | `OperatorActivityType[]` | `.Value` used to hold the activity type; filtered to non-empty values; empty list if none |
 
 ---
 
@@ -129,6 +130,7 @@ It reflects the current implementation in:
 | `description` | `Description.Value` | required |
 | `active` | not populated | contract field exists, reference mapper does not currently set it |
 | `scopes` | `Scope[].Value` | filtered to non-empty values; empty list if none |
+| `operatorActivities` | `OperatorActivityType[]` | `.type` used to hold the activity type; filtered to non-empty values; empty list if none |
 
 ---
 

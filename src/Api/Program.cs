@@ -85,6 +85,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     builder.Services.AddHealthChecks();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
+    builder.Services.AddValidation();
     builder.AddApiAuthentication();
 }
 

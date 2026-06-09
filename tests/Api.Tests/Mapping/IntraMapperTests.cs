@@ -1,6 +1,7 @@
 using Api.Mapping;
 using AwesomeAssertions;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.Certificate;
 
 namespace Api.Tests.Mapping;
 
@@ -43,6 +44,37 @@ public class IntraMapperTests
         var cert = MinimalCertificate();
 
         IntraMapper.Map(cert, Context).Should().BeEquivalentTo(cert.ToDefraUNVTDINTRAProfile(Context));
+    }
+
+    [Fact]
+    public async Task ToDefraUNVTDINTRAProfileSummary_Maps_All_Properties()
+    {
+        // Arrange
+        var created = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var updated = new DateTime(2024, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        var source = new FindEuIntraCertificateResultType
+        {
+            offset = 10,
+            pageSize = 2,
+            EuIntraCertificateResult =
+            [
+                new EuIntraCertificateQueryResultType
+                {
+                    ID = "CERT123",
+                    CreateDateTime = created,
+                    UpdateDateTime = updated,
+                    CountryOfOrigin = [new IDType() { Value = "GB" }],
+                },
+            ],
+        };
+
+        // Act
+        var result = IntraMapper.Map(source);
+
+        // Assert
+        result.Should().NotBeNull();
+        await Verify(result);
     }
 
     private static EuIntraCertificateType MinimalCertificate() =>
