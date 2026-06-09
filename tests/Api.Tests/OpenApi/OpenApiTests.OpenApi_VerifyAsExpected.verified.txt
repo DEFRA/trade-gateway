@@ -35,7 +35,7 @@
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDINTRAProfile
                 }
-              }a
+              }
             }
           },
           404: {
