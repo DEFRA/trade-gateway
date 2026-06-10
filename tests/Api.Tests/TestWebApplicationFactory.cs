@@ -28,8 +28,10 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                         ["TracesNt:AuthenticationKey"] = "test-auth-key",
                         ["TracesNt:WebServiceClientId"] = "test-client-id",
                         ["XApiKey"] = "test-x-api-key",
-                        ["Authentication:Authority"] = "https://test.example.com",
-                        ["Authentication:Scope"] = "test-resource-srv/access",
+                        ["Authentication:Cognito:Authority"] = "https://test-cognito.example.com",
+                        ["Authentication:Cognito:Scope"] = "test-resource-srv/access",
+                        ["Authentication:Sts:Authority"] = "https://test-sts.example.com",
+                        ["Authentication:Sts:Scope"] = "test-resource-srv/access",
                     }
                 );
             }
