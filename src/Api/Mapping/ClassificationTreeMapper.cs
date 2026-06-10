@@ -3,7 +3,7 @@ using Api.Extensions;
 using Defra.TradeGateway.Api.Contract.ReferenceData;
 
 using TracesNT.WebServices;
-
+using CertificateModelReference = TracesNT.WebServices.CertificateModelReference;
 using ContractClassificationTreeNode = Defra.TradeGateway.Api.Contract.ReferenceData.ClassificationTreeNode;
 using SoapClassificationTreeNode = TracesNT.WebServices.ClassificationTreeNode;
 
@@ -36,6 +36,7 @@ internal static class ClassificationTreeMapper
             Selectable = source.allowedForSelection,
             CnCode = (source.Item as CodeType)?.Value,
             Children = source.Node?.Select(Map).ToList().NullIfEmpty(),
+            Certificate = CertificateModelReferenceMapper.Map(source.Item as CertificateModelReference)
         };
     }
 }

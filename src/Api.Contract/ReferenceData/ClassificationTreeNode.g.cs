@@ -19,6 +19,9 @@ public partial record ClassificationTreeNode
     [JsonPropertyName("nodeType")]
     public required string NodeType { get; init; }
 
+    [JsonPropertyName("certificate")]
+    public CertificateModelReference? Certificate { get; init; }
+
     [JsonPropertyName("selectable")]
     public required bool Selectable { get; init; }
 

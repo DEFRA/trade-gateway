@@ -642,6 +642,9 @@
             type: string,
             nullable: true
           },
+          certificate: {
+            $ref: #/components/schemas/CertificateModelReference
+          },
           selectable: {
             type: boolean
           },

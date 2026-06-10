@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Linq;
 using Api.Constants;
 using Api.Contract;
 using Defra.TradeGateway.Api.Contract.ReferenceData;
@@ -176,6 +177,23 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.Equal("LIVE ANIMALS", payload.Nodes[0].Label);
         Assert.Equal("nomenclature", payload.Nodes[0].NodeType);
         Assert.False(payload.Nodes[0].Selectable);
+
+        // ensure that the certificates are correctly mapping - find cert with model id 11978
+        IEnumerable<ClassificationTreeNode> Flatten(IEnumerable<ClassificationTreeNode>? nodes) =>
+            (nodes ?? Enumerable.Empty<ClassificationTreeNode>())
+                .SelectMany(n => new[] { n }.Concat(Flatten(n.Children)));
+
+        var certNode = Flatten(payload.Nodes).FirstOrDefault(n => n.Certificate?.ModelId == 11978);
+
+        Assert.NotNull(certNode);
+        Assert.NotNull(certNode!.Certificate);
+        Assert.Equal(11978, certNode.Certificate!.ModelId);
+        Assert.Equal("11978", certNode.Certificate.ShortTitle);
+        Assert.Contains("Model animal health certificate", certNode.Certificate.LongTitle ?? string.Empty);
+        Assert.NotNull(certNode.Certificate.CreatedOn);
+        Assert.Equal(TimeSpan.Zero, certNode.Certificate.CreatedOn?.Offset);
+        Assert.NotNull(certNode.Certificate.UpdatedOn);
+        Assert.Equal(TimeSpan.Zero, certNode.Certificate.UpdatedOn?.Offset);
     }
 
     [Fact]
