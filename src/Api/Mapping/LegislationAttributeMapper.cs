@@ -1,6 +1,6 @@
-using Defra.TradeGateway.Api.Contract.ReferenceData;
-using ContractCertificateModelReference = Defra.TradeGateway.Api.Contract.ReferenceData.CertificateModelReference;
-using ContractLegislationReference = Defra.TradeGateway.Api.Contract.ReferenceData.LegislationReference;
+using Trade.Gateway.Api.Contract.ReferenceData;
+using ContractCertificateModelReference = Trade.Gateway.Api.Contract.ReferenceData.CertificateModelReference;
+using ContractLegislationReference = Trade.Gateway.Api.Contract.ReferenceData.LegislationReference;
 using SoapCertificateModelReference = TracesNT.WebServices.CertificateModelReference;
 using SoapClassificationSectionReference = TracesNT.WebServices.ClassificationSectionReference;
 using SoapLegislationReference = TracesNT.WebServices.LegislationReference;

@@ -1,5 +1,5 @@
 using Api.Constants;
-using Defra.TradeGateway.Api.Contract.ReferenceData;
+using Trade.Gateway.Api.Contract.ReferenceData;
 using TracesNT.WebServices;
 
 namespace Api.Mapping;

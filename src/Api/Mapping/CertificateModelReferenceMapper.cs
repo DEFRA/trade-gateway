@@ -1,4 +1,4 @@
-using ContractCertificateModelReference = Defra.TradeGateway.Api.Contract.ReferenceData.CertificateModelReference;
+using ContractCertificateModelReference = Trade.Gateway.Api.Contract.ReferenceData.CertificateModelReference;
 using SoapCertificateModelReference = TracesNT.WebServices.CertificateModelReference;
 
 namespace Api.Mapping;

@@ -2,9 +2,10 @@ using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Linq;
 using Api.Constants;
 using Api.Contract;
-using Defra.TradeGateway.Api.Contract.ReferenceData;
+using Trade.Gateway.Api.Contract.ReferenceData;
 using Microsoft.AspNetCore.Mvc;
 using WireMock.ResponseBuilders;
 
@@ -109,7 +110,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                     async _ =>
                         SoapUtilities.StubResponseMessage(
                             HttpStatusCode.OK,
-                            $$"""
+                            """
                             <?xml version='1.0' encoding='UTF-8'?>
                             <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
                               <S:Body>
@@ -176,6 +177,23 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         Assert.Equal("LIVE ANIMALS", payload.Nodes[0].Label);
         Assert.Equal("nomenclature", payload.Nodes[0].NodeType);
         Assert.False(payload.Nodes[0].Selectable);
+
+        // ensure that the certificates are correctly mapping - find cert with model id 11978
+        IEnumerable<ClassificationTreeNode> Flatten(IEnumerable<ClassificationTreeNode>? nodes) =>
+            (nodes ?? Enumerable.Empty<ClassificationTreeNode>())
+                .SelectMany(n => new[] { n }.Concat(Flatten(n.Children)));
+
+        var certNode = Flatten(payload.Nodes).FirstOrDefault(n => n.Certificate?.ModelId == 11978);
+
+        Assert.NotNull(certNode);
+        Assert.NotNull(certNode!.Certificate);
+        Assert.Equal(11978, certNode.Certificate!.ModelId);
+        Assert.Equal("11978", certNode.Certificate.ShortTitle);
+        Assert.Contains("Model animal health certificate", certNode.Certificate.LongTitle ?? string.Empty);
+        Assert.NotNull(certNode.Certificate.CreatedOn);
+        Assert.Equal(TimeSpan.Zero, certNode.Certificate.CreatedOn?.Offset);
+        Assert.NotNull(certNode.Certificate.UpdatedOn);
+        Assert.Equal(TimeSpan.Zero, certNode.Certificate.UpdatedOn?.Offset);
     }
 
     [Fact]
@@ -196,11 +214,18 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                     async _ =>
                         SoapUtilities.StubResponseMessage(
                             HttpStatusCode.OK,
-                            $$"""
+                            """
                             <?xml version='1.0' encoding='UTF-8'?>
-                            <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                            <S:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                              <env:Header/>
                               <S:Body>
-                                <ns13:GetClassificationTreeResponse xmlns:ns13="http://ec.europa.eu/tracesnt/referencedata/v1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:nil="true" />
+                                <S:Fault xmlns:ns3="http://www.w3.org/2003/05/soap-envelope" xmlns="">
+                                  <faultcode>S:Client</faultcode>
+                                  <faultstring>Invalid classification tree ID</faultstring>
+                                  <detail>
+                                    <ns13:PermissionDeniedException xmlns:ns9="http://ec.europa.eu/tracesnt/referencedata/classificationtree/v1" xmlns:ns8="http://ec.europa.eu/tracesnt/referencedata/classificationsection/v1" xmlns:ns7="http://ec.europa.eu/tracesnt/referencedata/certificatemodel/v1" xmlns:ns6="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ns5="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns4="http://ec.europa.eu/sanco/tracesnt/message/v1" xmlns:ns3="http://ec.europa.eu/sanco/tracesnt/error/v01" xmlns:ns2="http://ec.europa.eu/sanco/tracesnt/base/v4" xmlns:ns16="urn:un:unece:uncefact:codelist:standard:ISO:ISO2AlphaLanguageCode:2006-10-27" xmlns:ns15="http://ec.europa.eu/tracesnt/body/v3" xmlns:ns14="http://www.w3.org/2000/09/xmldsig#" xmlns:ns12="http://ec.europa.eu/tracesnt/referencedata/laboratorytest/v1" xmlns:ns11="http://ec.europa.eu/tracesnt/referencedata/common/v1" xmlns:ns10="http://ec.europa.eu/tracesnt/referencedata/nodeattribute/v1" xmlns:ns13="http://ec.europa.eu/tracesnt/referencedata/v1"/>
+                                  </detail>
+                                </S:Fault>
                               </S:Body>
                             </S:Envelope>
                             """
@@ -410,11 +435,18 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                     async _ =>
                         SoapUtilities.StubResponseMessage(
                             HttpStatusCode.OK,
-                            $$"""
+                            """
                             <?xml version='1.0' encoding='UTF-8'?>
-                            <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                            <S:Envelope xmlns:env="http://schemas.xmlsoap.org/soap/envelope/" xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+                              <env:Header/>
                               <S:Body>
-                                <ns13:GetClassificationTreeNodeDetailResponse xmlns:ns13="http://ec.europa.eu/tracesnt/referencedata/v1" />
+                                <S:Fault xmlns:ns3="http://www.w3.org/2003/05/soap-envelope" xmlns="">
+                                  <faultcode>S:Client</faultcode>
+                                  <faultstring>Node not found</faultstring>
+                                  <detail>
+                                    <ns13:NodeNotFoundException xmlns:ns9="http://ec.europa.eu/tracesnt/referencedata/classificationtree/v1" xmlns:ns8="http://ec.europa.eu/tracesnt/referencedata/classificationsection/v1" xmlns:ns7="http://ec.europa.eu/tracesnt/referencedata/certificatemodel/v1" xmlns:ns6="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ns5="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns4="http://ec.europa.eu/sanco/tracesnt/message/v1" xmlns:ns3="http://ec.europa.eu/sanco/tracesnt/error/v01" xmlns:ns2="http://ec.europa.eu/sanco/tracesnt/base/v4" xmlns:ns16="urn:un:unece:uncefact:codelist:standard:ISO:ISO2AlphaLanguageCode:2006-10-27" xmlns:ns15="http://ec.europa.eu/tracesnt/body/v3" xmlns:ns14="http://www.w3.org/2000/09/xmldsig#" xmlns:ns12="http://ec.europa.eu/tracesnt/referencedata/laboratorytest/v1" xmlns:ns11="http://ec.europa.eu/tracesnt/referencedata/common/v1" xmlns:ns10="http://ec.europa.eu/tracesnt/referencedata/nodeattribute/v1" xmlns:ns13="http://ec.europa.eu/tracesnt/referencedata/v1"/>
+                                  </detail>
+                                </S:Fault>
                               </S:Body>
                             </S:Envelope>
                             """
