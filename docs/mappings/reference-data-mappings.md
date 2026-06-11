@@ -12,7 +12,7 @@ It reflects the current implementation in:
 
 ## Endpoints
 
-### `GET /classificationSections` — `ClassificationSectionType[]` → `DefraUNVTDProfileClassificationSectionListResponse`
+### `GET /there` — `ClassificationSectionType[]` → `DefraUNVTDProfileClassificationSectionListResponse`
 
 | Target field | Source path | Notes |
 |---|---|---|
@@ -145,6 +145,7 @@ It reflects the current implementation in:
 | `selectable` | `allowedForSelection` | required |
 | `cnCode` | `Item.Value` when `Item is CodeType` | omitted for non-CN nodes |
 | `children` | `Node[]` | recursively mapped; omitted if empty |
+| `certificate` | `Item` | mapped to a `CertificateModelReference` object (intra only); omitted otherwise |
 
 ---
 
