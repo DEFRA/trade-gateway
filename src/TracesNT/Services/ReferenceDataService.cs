@@ -1,14 +1,14 @@
 using Microsoft.Extensions.Options;
 
 using System.ServiceModel;
-
+using Microsoft.Extensions.Logging;
 using TracesNT.Exceptions;
 using TracesNT.Extensions;
 using TracesNT.WebServices;
 
 namespace TracesNT.Services
 {
-    public class ReferenceDataService(ReferenceDataPortClient referenceDataPortClient, IOptions<TracesNtConfig> tracesOptions) : IReferenceDataService
+    public class ReferenceDataService(ReferenceDataPortClient referenceDataPortClient, IOptions<TracesNtConfig> tracesOptions, ILogger<ReferenceDataService> logger) : IReferenceDataService
     {
         public async Task<ClassificationSectionType[]?> GetClassificationSections(string languageCode)
         {
@@ -47,6 +47,11 @@ namespace TracesNT.Services
 
                 return getClassificationTreeResponse?.GetClassificationTreeResponse1;
             }
+            catch (FaultException ex) when (ex.Code.IsSenderFault && ex.Message.Equals("Invalid classification tree ID", StringComparison.InvariantCultureIgnoreCase))
+            {
+                logger.LogWarning(ex, "Classification tree not found for treeId '{TreeId}'", treeId);
+                return null;
+            }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
                 throw new InvalidSoapException($"An invalid soap request was returned from getClassificationTree for treeId '{treeId}' and languageCode '{languageCode}'", ex);
@@ -75,6 +80,11 @@ namespace TracesNT.Services
                 );
 
                 return response?.GetClassificationTreeNodeDetailResponse1.Node;
+            }
+            catch (FaultException<NodeNotFoundExceptionType> ex)
+            {
+                logger.LogWarning(ex, "Node not found for treeId '{TreeId}' and path '{Path}' for languageCode '{LanguageCode}'", treeId, path, languageCode);
+                return null;
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {

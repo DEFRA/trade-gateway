@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Linq;
 using Api.Constants;
 using Api.Contract;
-using Defra.TradeGateway.Api.Contract.ReferenceData;
+using Trade.Gateway.Api.Contract.ReferenceData;
 using Microsoft.AspNetCore.Mvc;
 using WireMock.ResponseBuilders;
 

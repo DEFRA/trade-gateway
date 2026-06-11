@@ -1,10 +1,10 @@
 using Api.Constants;
 using Api.Extensions;
-using Defra.TradeGateway.Api.Contract.ReferenceData;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 using TracesNT.WebServices;
 using CertificateModelReference = TracesNT.WebServices.CertificateModelReference;
-using ContractClassificationTreeNode = Defra.TradeGateway.Api.Contract.ReferenceData.ClassificationTreeNode;
+using ContractClassificationTreeNode = Trade.Gateway.Api.Contract.ReferenceData.ClassificationTreeNode;
 using SoapClassificationTreeNode = TracesNT.WebServices.ClassificationTreeNode;
 
 namespace Api.Mapping;
