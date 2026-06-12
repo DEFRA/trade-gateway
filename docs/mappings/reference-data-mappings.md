@@ -12,7 +12,7 @@ It reflects the current implementation in:
 
 ## Endpoints
 
-### `GET /there` — `ClassificationSectionType[]` → `DefraUNVTDProfileClassificationSectionListResponse`
+### `GET /classificationSections` — `ClassificationSectionType[]` → `DefraUNVTDProfileClassificationSectionListResponse`
 
 | Target field | Source path | Notes |
 |---|---|---|
@@ -30,12 +30,12 @@ It reflects the current implementation in:
 
 ---
 
-### `GET /classificationTrees/{classificationTreeId}` — `ClassificationTreeNode[]` → `DefraUNVTDProfileClassificationTreeResponse`
+### `GET /classificationTrees/{treeId}` — `ClassificationTreeNode[]` → `DefraUNVTDProfileClassificationTreeResponse`
 
 | Target field | Source path | Notes |
 |---|---|---|
 | `source` | `"traces"` | set by mapper (`ReferenceDataSource.Traces`) |
-| `treeId` | route value `classificationTreeId` | echoed from request, not derived from SOAP payload |
+| `treeId` | route value `treeId` | echoed from request, not derived from SOAP payload |
 | `nodes` | `ClassificationTreeNode[]` | each node mapped recursively; see [ClassificationTreeNode](#classificationtreenode--classificationtreenode) |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
@@ -44,11 +44,11 @@ It reflects the current implementation in:
 | Input | SOAP request path | Notes |
 |---|---|---|
 | `Accept-Language` | `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `languageCode` argument | primary tag only; defaults to `"en"` |
-| `classificationTreeId` | `GetClassificationTreeRequestType.TreeID` | passed directly from route |
+| `treeId` | `GetClassificationTreeRequestType.TreeID` | passed directly from route |
 
 ---
 
-### `GET /classificationTrees/{classificationTreeId}/nodes/{nodeId}` — `ClassificationTreeNodeDetail` → `DefraUNVTDProfileClassificationTreeNodeDetailResponse`
+### `GET /classificationTrees/{treeId}/nodes/{nodeId}` — `ClassificationTreeNodeDetail` → `DefraUNVTDProfileClassificationTreeNodeDetailResponse`
 
 | Target field | Source path | Notes |
 |---|---|---|
@@ -62,7 +62,7 @@ It reflects the current implementation in:
 | `classificationSectionGroups` | `Attribute[]` filtered to `ClassificationSectionNodeAttribute` | see [ClassificationSectionGroup](#classificationsectiongroup--classificationsectionnodeattribute) |
 | `legislationAttributes` | `Attribute[]` filtered to `LegislationNodeAttribute` | see [LegislationAttribute](#legislationattribute--legislationnodeattribute) |
 | `taxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `TAXON_POSSIBLE_VALUES` | exact id match; any other taxon attribute ids are ignored |
-| `invasiveTaxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `INVASIVE_TAXON_POSSIBLE_VALUES` | exact id match; kept separate to avoid data loss |
+| `invasiveTaxons` | `Attribute[]` select `TaxonNodeAttribute` where `id` is `INVASIVE_TAXON_POSSIBLE_VALUES` | exact id match; kept separate to avoid context loss |
 | `retrievedAt` | `DateTimeOffset.UtcNow` | API generation timestamp |
 
 **SOAP call**
@@ -70,14 +70,14 @@ It reflects the current implementation in:
 | Input | SOAP request path | Notes |
 |---|---|---|
 | `Accept-Language` | `AcceptLanguageParser.GetPrimaryLanguageCode(...)` → SOAP `languageCode` argument | primary tag only; defaults to `"en"` |
-| `classificationTreeId` | `GetClassificationTreeNodeDetailRequestType.TreeID` | passed directly from route |
+| `treeId` | `GetClassificationTreeNodeDetailRequestType.TreeID` | passed directly from route |
 | `path` | `GetClassificationTreeNodeDetailRequestType.Item` as `string` | the node path |
 
 
 **Behaviours to be aware of**
 
-- Either `path` or `cnCode` is required; the endpoint returns `400 Bad Request` if both are blank.
-- The SOAP request uses a polymorphic `Item` field: `path` is sent as a raw string, while `cnCode` is sent as a `CodeType`.
+- Only `path` is supported as intra nodes are more granular than `cnCode`
+- The SOAP request uses a polymorphic `Item` field: `path` is sent as a raw string, while `cnCode` would be sent as a `CodeType` were it to be introduced.
 - Some SOAP attribute subtypes are **not** duplicated in generic `attributes`; they are emitted through dedicated fields:
   - `LegislationNodeAttribute` → `legislationAttributes`
   - `TaxonNodeAttribute` (id `TAXON_POSSIBLE_VALUES` / `INVASIVE_TAXON_POSSIBLE_VALUES`) → `taxons` / `invasiveTaxons`
@@ -236,8 +236,8 @@ It reflects the current implementation in:
 | `taxonId` | `taxonId` | cast from `long` to `int` |
 | `eppoCode` | `eppoCode` | |
 | `faoCode` | `faoCode` | |
-| `name` | `Value` | copied directly; no fallback to `taxonId` in the current mapper |
-| `languageId` | `languageID` | copied directly from TracesNT text metadata |
+| `name` | `Value` | |
+| `languageId` | `languageID` | added as taxons are often latin (so not the same lanugage as requested language) |
 
 ---
 
