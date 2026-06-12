@@ -33,7 +33,17 @@ TRACESNT__USERNAME=your-traces-username
 TRACESNT__AUTHENTICATIONKEY=your-traces-authentication-key
 TRACESNT__WEBSERVICECLIENTID=your-traces-client-id
 XAPIKEY=
+
+# Cognito — for clients deployed outside CDP
+AUTHENTICATION__COGNITO__AUTHORITY=https://cognito-idp.<region>.amazonaws.com/<user-pool-id>
+AUTHENTICATION__COGNITO__SCOPE=<cognito-scope>
+
+# STS — for CDP-internal services authenticating via IAM role
+AUTHENTICATION__STS__AUTHORITY=https://<sts-oidc-issuer>
+AUTHENTICATION__STS__SCOPE=<sts-scope>
 ```
+
+Both authentication authorities must be reachable at startup. See [ADR-0004](docs/adr/0004-dual-issuer-authentication.md) for the full authentication design, including the IAM authorization requirement for STS clients.
 
 
 A more extensive setup is available in [github.com/DEFRA/cdp-local-environment](https://github.com/DEFRA/cdp-local-environment)

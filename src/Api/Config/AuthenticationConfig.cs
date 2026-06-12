@@ -5,8 +5,8 @@ namespace Api.Config;
 public class AuthenticationConfig
 {
     [Required]
-    public required string Authority { get; init; }
+    public required IssuerAuthenticationConfig Cognito { get; init; }
 
     [Required]
-    public required string Scope { get; init; }
+    public required IssuerAuthenticationConfig Sts { get; init; }
 }
