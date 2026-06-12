@@ -51,10 +51,10 @@ public static class LocalOidcServer
             jwks_uri = $"{authority}/.well-known/jwks",
             token_endpoint = $"{authority}/token",
             grant_types_supported = new[] { "client_credentials" },
-        })).AllowAnonymous();
+        })).AllowAnonymous().ExcludeFromDescription();
 
         app.MapGet($"{prefix}/.well-known/jwks", () => Results.Json(jwks))
-           .AllowAnonymous();
+           .AllowAnonymous().ExcludeFromDescription();
 
         app.MapPost($"{prefix}/token", ([FromForm] string? scope) =>
         {
@@ -72,6 +72,6 @@ public static class LocalOidcServer
                 token_type = "Bearer",
                 expires_in = 3600,
             });
-        }).AllowAnonymous().DisableAntiforgery();
+        }).AllowAnonymous().DisableAntiforgery().ExcludeFromDescription();
     }
 }
