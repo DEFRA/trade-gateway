@@ -51,10 +51,18 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
             }));
     }
 
-    public async Task<string> GetTokenAsync(string tokenEndpoint, string scope)
+    private const string CognitoTokenEndpoint = "/local/cognito/token";
+    private const string StsTokenEndpoint = "/local/sts/token";
+
+    public Task<string> GetCognitoTokenAsync(string scope) =>
+        PostTokenAsync(CognitoTokenEndpoint, [new("scope", scope)]);
+
+    public Task<string> GetStsTokenAsync(string audience) =>
+        PostTokenAsync(StsTokenEndpoint, [new("audience", audience)]);
+
+    private async Task<string> PostTokenAsync(string endpoint, IEnumerable<KeyValuePair<string, string>> fields)
     {
-        var response = await CreateClient().PostAsync(tokenEndpoint,
-            new FormUrlEncodedContent([new("scope", scope)]));
+        var response = await CreateClient().PostAsync(endpoint, new FormUrlEncodedContent(fields));
         using var doc = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         return doc.RootElement.GetProperty("access_token").GetString()!;
     }
