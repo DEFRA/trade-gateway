@@ -28,7 +28,7 @@ public static class AuthenticationRegistration
         builder.Services.ConfigureProxyBackchannel(CognitoScheme);
         builder.Services.ConfigureProxyBackchannel(StsScheme);
 
-        builder.Services.AddApiAuthorization(authConfig.Cognito, authConfig.Sts);
+        builder.Services.AddApiAuthorization(authConfig.Cognito);
     }
 
     private static T BindConfig<T>(this WebApplicationBuilder builder, string section)
@@ -67,7 +67,8 @@ public static class AuthenticationRegistration
             opts.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidIssuer = config.Authority,
-                ValidateAudience = false, // M2M tokens (client_credentials / IAM roles) typically omit aud
+                ValidAudience = config.Audience,
+                ValidateAudience = config.Audience is not null,
                 AuthenticationType = scheme, // required so the ClaimsIdentity carries the scheme name for policy checks
             };
         });
@@ -79,8 +80,9 @@ public static class AuthenticationRegistration
 
     private static void AddApiAuthorization(
         this IServiceCollection services,
-        IssuerAuthenticationConfig cognitoConfig,
-        IssuerAuthenticationConfig stsConfig) =>
+        IssuerAuthenticationConfig cognitoConfig)
+    {
+        ArgumentNullException.ThrowIfNull(cognitoConfig.Scope);
         services
             .AddAuthorizationBuilder()
             .AddPolicy("ApiAccess", policy => policy
@@ -92,6 +94,7 @@ public static class AuthenticationRegistration
                     var scopes = (ctx.User.FindFirst("scope")?.Value ?? "").Split(' ');
 
                     return (scheme == CognitoScheme && scopes.Contains(cognitoConfig.Scope)) ||
-                           (scheme == StsScheme && scopes.Contains(stsConfig.Scope));
+                           scheme == StsScheme; // STS tokens carry no scope claim — issuer/signature validation is sufficient
                 }));
+    }
 }

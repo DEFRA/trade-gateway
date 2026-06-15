@@ -6,14 +6,12 @@ namespace Api.Tests.Endpoints;
 [Collection(IntegrationTestCollection.Name)]
 public class AuthSchemesTests(TradeGatewayWebApplicationFactory factory)
 {
-    private const string Scope = "trade-gateway-resource-srv/access";
-    private const string CognitoTokenEndpoint = "/local/cognito/token";
-    private const string StsTokenEndpoint = "/local/sts/token";
+    private const string CognitoScope = "trade-gateway-resource-srv/access";
 
     [Fact]
     public async Task AuthTest_WithCognitoToken_Returns200()
     {
-        var client = factory.CreateClientWithToken(await factory.GetTokenAsync(CognitoTokenEndpoint, Scope));
+        var client = factory.CreateClientWithToken(await factory.GetCognitoTokenAsync(CognitoScope));
         var response = await client.GetAsync("/auth-test", TestContext.Current.CancellationToken);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
@@ -21,9 +19,17 @@ public class AuthSchemesTests(TradeGatewayWebApplicationFactory factory)
     [Fact]
     public async Task AuthTest_WithStsToken_Returns200()
     {
-        var client = factory.CreateClientWithToken(await factory.GetTokenAsync(StsTokenEndpoint, Scope));
+        var client = factory.CreateClientWithToken(await factory.GetStsTokenAsync("trade-gateway"));
         var response = await client.GetAsync("/auth-test", TestContext.Current.CancellationToken);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
+
+    [Fact]
+    public async Task AuthTest_WithStsTokenWrongAudience_Returns401()
+    {
+        var client = factory.CreateClientWithToken(await factory.GetStsTokenAsync("other-service"));
+        var response = await client.GetAsync("/auth-test", TestContext.Current.CancellationToken);
+        Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]

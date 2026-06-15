@@ -20,12 +20,13 @@ public static class LocalOidcServer
         if (!app.Environment.IsDevelopment()) return;
 
         var authConfig = app.Services.GetRequiredService<IOptions<AuthenticationConfig>>().Value;
-        MapIssuerEndpoints(app, authConfig.Cognito.Authority);
-        MapIssuerEndpoints(app, authConfig.Sts.Authority);
+        MapIssuerEndpoints(app, authConfig.Cognito);
+        MapIssuerEndpoints(app, authConfig.Sts);
     }
 
-    private static void MapIssuerEndpoints(WebApplication app, string authority)
+    private static void MapIssuerEndpoints(WebApplication app, IssuerAuthenticationConfig config)
     {
+        var authority = config.Authority;
         var prefix = new Uri(authority).AbsolutePath.TrimEnd('/');
         var rsaParams = Rsa.ExportParameters(false);
 
@@ -56,11 +57,12 @@ public static class LocalOidcServer
         app.MapGet($"{prefix}/.well-known/jwks", () => Results.Json(jwks))
            .AllowAnonymous().ExcludeFromDescription();
 
-        app.MapPost($"{prefix}/token", ([FromForm] string? scope) =>
+        app.MapPost($"{prefix}/token", ([FromForm] string? scope, [FromForm] string? audience) =>
         {
             var descriptor = new SecurityTokenDescriptor
             {
                 Issuer = authority,
+                Audience = audience,
                 Claims = new Dictionary<string, object> { ["scope"] = scope ?? "" },
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = Credentials,

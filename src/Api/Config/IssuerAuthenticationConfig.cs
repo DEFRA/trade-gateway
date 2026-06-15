@@ -7,6 +7,7 @@ public class IssuerAuthenticationConfig
     [Required]
     public required string Authority { get; init; }
 
-    [Required]
-    public required string Scope { get; init; }
+    public string? Scope { get; init; }
+
+    public string? Audience { get; init; }
 }
