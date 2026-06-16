@@ -195,6 +195,53 @@ Permissions reference the symbolic name rather than a URL path.
 
 ---
 
+## Alternatives Considered
+
+### Role-Based Access Control (RBAC)
+
+A role-based approach inverts the model: endpoints declare a required role in code, and config assigns roles to principals.
+
+Roles are named labels defined by the team (e.g. `CertificateReader`, `ChedManager`). Each endpoint is annotated with the role(s) that can access it, and config maps principals to roles:
+
+```json
+{
+  "Authorization": {
+    "Roles": {
+      "ched-importer": ["ChedManager", "IntraReader"],
+      "reference-data-reader": ["ReferenceDataReader"]
+    }
+  }
+}
+```
+
+The env var format is also simpler — a flat role list rather than nested permissions with actions and resources:
+
+```
+Authorization__Roles__ched-importer__0=ChedManager
+Authorization__Roles__ched-importer__1=IntraReader
+```
+
+RBAC is a natural fit for **user-facing systems** where a human may hold several roles simultaneously (e.g. a user who is both a Viewer and an Auditor), and where the IDP can be the authoritative source of role assignments — meaning the application receives roles as claims in the token without needing its own config.
+
+Neither of those conditions holds here. CDP does not support M2M role assignment in Cognito or STS — roles cannot be attached to a service client in the IDP and surfaced as token claims. The role-to-principal mapping would therefore still need to be maintained in application config, eliminating the primary operational advantage of RBAC. We would carry the complexity of a role model without the benefit of centralised role management.
+
+Additionally, this API uses **M2M authentication**. Service clients are not multi-role users — each client has a single, well-defined function: a CHED importer imports CHEDs, a reference data reader reads reference data. Assigning a service client multiple roles is a sign the client is doing too much, or that the roles are too fine-grained to be useful. The M2M pattern aligns more naturally with a client being granted explicit, narrow access to the specific resources it needs — which is what the path-based model expresses directly.
+
+The path-based approach also keeps the full access model in config. Changing which resources a principal can access requires only a config change, with no code deployment. RBAC splits this: role assignment lives in config, but the resource-to-role mapping is baked into endpoint annotations, meaning adding a new endpoint without assigning a required role is easy to miss.
+
+| | Path-based (this ADR) | Role-based |
+|---|---|---|
+| Access model lives in | Config entirely | Split: endpoint annotations + config |
+| M2M fit | Direct — grant exactly what's needed | Indirect — requires role-per-function design |
+| Adding a new principal | Config change only | Config change only |
+| Adding a new endpoint | Config change to grant access | Code change to annotate required role |
+| Default-deny safety | Enforced by model | Requires discipline in endpoint annotation |
+| Env var complexity | Higher (nested actions + resource) | Lower (flat role list) |
+
+RBAC was rejected in favour of the path-based model primarily because this is an M2M API: the single-function nature of service clients makes explicit resource grants a more honest and auditable representation of intent than role assignment.
+
+---
+
 ## Consequences
 
 **Positive**
