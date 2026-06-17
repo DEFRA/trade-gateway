@@ -22,14 +22,18 @@ internal static class IntraMapper
             Updated = source.UpdateDateTime,
         };
 
-    internal static DefraUNVTDINTRASummaryProfile Map(FindEuIntraCertificateResultType source) =>
-        new()
+    internal static DefraUNVTDINTRASummaryProfile Map(FindEuIntraCertificateResultType source)
+    {
+        var results = source.EuIntraCertificateResult ?? [];
+
+        return new()
         {
-            Items = source.EuIntraCertificateResult.Select(Map).ToArray(),
+            Items = results.Select(Map).ToArray(),
             Offset = source.offset,
             PageSize = source.pageSize,
-            HasMore = source.EuIntraCertificateResult.Length == source.pageSize,
+            HasMore = results.Length == source.pageSize,
         };
+    }
 }
 
 internal static class EuIntraCertificateTypeExtensions
