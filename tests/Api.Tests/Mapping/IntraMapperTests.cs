@@ -77,6 +77,22 @@ public class IntraMapperTests
         await Verify(result);
     }
 
+    [Fact]
+    public void ToDefraUNVTDINTRAProfileSummary_NullResults_ReturnsEmptyItems()
+    {
+        var source = new FindEuIntraCertificateResultType
+        {
+            offset = 0,
+            pageSize = 10,
+            EuIntraCertificateResult = null,
+        };
+
+        var result = IntraMapper.Map(source);
+
+        result.Items.Should().NotBeNull().And.BeEmpty();
+        result.HasMore.Should().BeFalse();
+    }
+
     private static EuIntraCertificateType MinimalCertificate() =>
         new()
         {
