@@ -11,6 +11,12 @@ namespace TracesNT.Extensions
             string xApiKey
         )
         {
+            services.AddTracesNtClient<ChedCertificatePortClient, ChedCertificatePort>(
+                "ChedCertificateServiceV2",
+                xApiKey,
+                (binding, endpoint) => new ChedCertificatePortClient(binding, endpoint)
+            );
+
             services.AddTracesNtClient<EuIntraCertificatePortClient, EuIntraCertificatePort>(
                 "EuIntraCertificateServiceV1",
                 xApiKey,
@@ -22,6 +28,8 @@ namespace TracesNT.Extensions
                 xApiKey,
                 (binding, endpoint) => new ReferenceDataPortClient(binding, endpoint)
             );
+
+            services.AddTransient<IChedCertificateService, ChedCertificateService>();
 
             services.AddTransient<IEuIntraCertificateService, EuIntraCertificateService>();
 

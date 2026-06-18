@@ -8,7 +8,7 @@ internal static class SpsDateTimeMapper
         source?.Item switch
         {
             DateTime { Kind: DateTimeKind.Unspecified } dt => new DateTimeOffset(DateTime.SpecifyKind(dt, DateTimeKind.Utc)),
-            DateTime dt => new DateTimeOffset(dt),
+            DateTime dt => new DateTimeOffset(dt).ToUniversalTime(),
             DateTimeTypeDateTimeString { Value: null or "" } => null,
             DateTimeTypeDateTimeString s => DateTimeOffset.Parse(s.Value, System.Globalization.CultureInfo.InvariantCulture),
             _ => null,
