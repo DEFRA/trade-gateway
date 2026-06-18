@@ -42,7 +42,7 @@ fi
 echo "Regenerating WCF WebServices from $SCRIPT_DIR/dotnet-svcutil.params.json..."
 set +e
 SVCUTIL_OUTPUT="$(
-    dotnet-svcutil -u "$SCRIPT_DIR" --projectFile "$PROJECT_FILE" 2>&1
+    dotnet dotnet-svcutil -u "$SCRIPT_DIR" --projectFile "$PROJECT_FILE" 2>&1
 )"
 SVCUTIL_EXIT=$?
 set -e
