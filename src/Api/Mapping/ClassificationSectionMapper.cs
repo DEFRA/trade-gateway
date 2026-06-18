@@ -1,6 +1,6 @@
 using Api.Constants;
 
-using Defra.TradeGateway.Api.Contract.ReferenceData;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 using System.Diagnostics;
 
@@ -38,9 +38,9 @@ internal static class ClassificationSectionMapper
             Lms = source.lms,
             Description = source.Description.Value,
             Scopes = source.Scope
-                ?.Select(scope => scope.Value)
-                .Where(value => !string.IsNullOrWhiteSpace(value))
-                .Select(value => value!)
+                ?.Select(scope => scope.id)
+                .Where(scopeId => !string.IsNullOrWhiteSpace(scopeId))
+                .Select(scopeId => scopeId!)
                 .ToList() ?? [],
             OperatorActivities = source.OperatorActivityType
                 ?.Select(activity => activity.type) // note - when within a ClassificationSectionReference the activity.type is used to hold the activity type

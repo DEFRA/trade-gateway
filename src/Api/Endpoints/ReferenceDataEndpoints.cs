@@ -4,9 +4,9 @@ using Api.Contract;
 using Api.Extensions;
 using Api.Mapping;
 using Api.Utils.Http;
-using Defra.TradeGateway.Api.Contract.ReferenceData;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 namespace Api.Endpoints;
 
