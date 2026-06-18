@@ -6,6 +6,15 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 
 ## Certificates
 
+### Ched — `ChedCertificateType` → `DefraUNVTDCHEDProfile`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `$model` | `"defra/certificate-internal/1"` | const default |
+| `$type` | `"ched"` | const default |
+| `exchangedDocument` | `SPSCertificate.SPSExchangedDocument` |  |
+| `specifiedConsignment[0]` | `SPSCertificate.SPSConsignment` | single-item list; see [Consignment](#consignment--spsconsignmenttype) |
+
 ### Intra — `EuIntraCertificateType` → `DefraUNVTDINTRAProfile`
 
 | Target field | Source path | Notes |

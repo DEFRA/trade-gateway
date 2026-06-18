@@ -32,7 +32,7 @@ namespace TracesNT.Services
                 logger.LogWarning(ex, "CHED certificate not found {Id}", id);
                 return null;
             }
-            catch (FaultException<EuIntraCertificatePermissionDeniedExceptionType> ex)
+            catch (FaultException<ChedCertificatePermissionDeniedExceptionType> ex)
             {
                 logger.LogWarning(ex, "Permission denied for CHED certificate {Id}", id);
                 throw new PermissionDeniedException(id, ex);
