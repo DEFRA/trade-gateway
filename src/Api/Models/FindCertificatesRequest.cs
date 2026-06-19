@@ -25,7 +25,7 @@ public class FindCertificatesRequest : IValidatableObject
     [Required]
     public DateTime? UpdatedBefore { get; set; }
 
-    [System.ComponentModel.Description("End of the range")]
+    [System.ComponentModel.Description("The accept language for the request")]
     [Required]
     [FromHeader(Name = "Accept-Language")]
     public string? AcceptLanguage { get; set; } = "en";
