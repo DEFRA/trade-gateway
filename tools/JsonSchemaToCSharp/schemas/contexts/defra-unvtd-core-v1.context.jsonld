@@ -1,0 +1,48 @@
+{
+  "@context": [
+    "https://vocabulary.uncefact.org/unece-context-D23B.jsonld",
+    {
+      "@version": 1.1,
+      "@protected": true,
+      "defraUnvtdProfile": "https://defra.gov.uk/trade/unvtd/profile#",
+      "exchangedDocument": {
+        "@id": "defraUnvtdProfile:exchangedDocument",
+        "@type": "@id"
+      },
+      "specifiedConsignment": {
+        "@id": "defraUnvtdProfile:specifiedConsignment",
+        "@type": "@id"
+      },
+      "notificationStatusCode": {
+        "@id": "defraUnvtdProfile:notificationStatusCode"
+      },
+      "importer": {
+        "@id": "unece:importerParty",
+        "@type": "@id"
+      },
+      "carrier": {
+        "@id": "unece:carrierParty",
+        "@type": "@id"
+      },
+      "individualTradeProductInstance": {
+        "@id": "unece:individualProductInstance",
+        "@type": "@id"
+      },
+      "LogisticsTransportMovement": {
+        "@id": "unece:TransportMovement"
+      },
+      "mainCarriageLogisticsTransportMovement": {
+        "@id": "unece:mainCarriageTransportMovement",
+        "@type": "@id"
+      },
+      "usedLogisticsTransportMeans": {
+        "@id": "unece:usedTransportMeans",
+        "@type": "@id"
+      },
+      "entryCustomsOfficeSpecifiedLogisticsLocation": {
+        "@id": "unece:entryCustomsOfficeSpecifiedLocation",
+        "@type": "@id"
+      }
+    }
+  ]
+}

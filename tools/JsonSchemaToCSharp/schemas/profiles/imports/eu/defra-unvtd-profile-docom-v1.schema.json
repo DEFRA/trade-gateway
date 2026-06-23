@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "defra-unvtd-profile-docom-v1.schema.json",
+  "title": "Defra UNVTD DOCOM profile",
+  "allOf": [
+    {
+      "$ref": "../../../core/defra-unvtd-canonical-core-v1.schema.json#/$defs/CertificatePayload"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "$model": {
+          "const": "defra/certificate-internal/1"
+        },
+        "$type": {
+          "const": "docom"
+        },
+        "specifiedConsignment": {
+          "type": "object"
+        }
+      },
+      "required": [
+        "$model",
+        "$type",
+        "exchangedDocument",
+        "specifiedConsignment"
+      ]
+    }
+  ]
+}

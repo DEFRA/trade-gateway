@@ -1,0 +1,22 @@
+{
+  "outputRoot": "./../../src/Api.Contract",
+  "namespaceRoot": "Trade.Gateway.Api.Contract",
+  "schemas": [
+    {
+      "namespace": "Certificate",
+      "schemaItems": [
+        "schemas/profiles/imports/international/defra-unvtd-profile-ched-v1.schema.json",
+        "schemas/profiles/imports/eu/defra-unvtd-profile-intra-v1.schema.json"
+      ]
+    },
+    {
+      "namespace": "ReferenceData",
+      "schemaItems": [
+        "schemas/reference-data/defra-unvtd-profile-reference-data-ClassificationSectionListResponse-v1.schema.json",
+        "schemas/reference-data/defra-unvtd-profile-reference-data-ClassificationTreeNodeDetailResponse-v1.schema.json",
+        "schemas/reference-data/defra-unvtd-profile-reference-data-ClassificationTreeResponse-v1.schema.json",
+        "schemas/reference-data/defra-unvtd-profile-reference-data-MetadataListResponse-v1.schema.json"
+      ]
+    }
+  ]
+}
