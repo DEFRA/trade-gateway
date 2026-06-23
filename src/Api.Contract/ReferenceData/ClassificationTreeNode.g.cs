@@ -4,7 +4,8 @@ using System.Text.Json.Serialization;
 using System.ComponentModel;
 using System.Collections.Generic;
 
-namespace Defra.TradeGateway.Api.Contract.ReferenceData;
+namespace Trade.Gateway.Api.Contract.ReferenceData;
+
 public partial record ClassificationTreeNode
 {
     [JsonPropertyName("nodeId")]
@@ -18,6 +19,9 @@ public partial record ClassificationTreeNode
 
     [JsonPropertyName("nodeType")]
     public required string NodeType { get; init; }
+
+    [JsonPropertyName("certificate")]
+    public CertificateModelReference? Certificate { get; init; }
 
     [JsonPropertyName("selectable")]
     public required bool Selectable { get; init; }

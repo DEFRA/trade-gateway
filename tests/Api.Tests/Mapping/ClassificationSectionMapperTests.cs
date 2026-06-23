@@ -51,8 +51,8 @@ public class ClassificationSectionMapperTests
             Description = new TextType { Value = "Dealers" },
             Scope =
             [
-                new MetaCountryGroupReference { Value = "EFTA" },
-                new MetaCountryGroupReference { Value = "European Union" },
+                new MetaCountryGroupReference { id = "EFTA" },
+                new MetaCountryGroupReference { id = "EU" },
             ],
         };
 
@@ -66,7 +66,7 @@ public class ClassificationSectionMapperTests
                     Chapter = "veterinary",
                     Lms = false,
                     Description = "Dealers",
-                    Scopes = new[] { "EFTA", "European Union" },
+                    Scopes = new[] { "EFTA", "EU" },
                 }
             );
     }
