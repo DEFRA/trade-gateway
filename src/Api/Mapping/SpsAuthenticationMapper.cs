@@ -21,7 +21,7 @@ internal static class SpsAuthenticationMapper
             TypeCode = source.TypeCode?.Value.XmlEnumCode(),
             GovernmentActionTypeCode = source.TypeCode?.name,
             ActualDateTime = SpsDateTimeMapper.Map(source.ActualDateTime),
-            ProviderParty = SpsPartyMapper.Map(source.ProviderSPSParty),
+            Provider = SpsPartyMapper.Map(source.ProviderSPSParty),
             IncludedClause = source
                 .IncludedSPSClause?.Select(c => SpsClauseMapper.Map(c, context))
                 .OfType<Clause>()

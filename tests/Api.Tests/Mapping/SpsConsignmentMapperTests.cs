@@ -39,12 +39,31 @@ public class SpsConsignmentMapperTests
     }
 
     [Fact]
-    public void Map_UnloadingBaseportLocationAndConsignmentItems_AreNull()
+    public void Map_NoUnloadingLocationOrConsignmentItems_AreNull()
     {
         var result = SpsConsignmentMapper.Map(new SPSConsignmentType(), Context);
 
         result.UnloadingBaseportLocation.Should().BeNull();
         result.IncludedConsignmentItem.Should().BeNull();
+    }
+
+    [Fact]
+    public void Map_UnloadingBaseportLocation_MapsFromCorrectSourceFields()
+    {
+        var source = new SPSConsignmentType
+        {
+            UnloadingBaseportSPSLocation = new SPSLocationType
+            {
+                ID = new IDType { Value = "GBDVR1", schemeID = "un_locode" },
+                Name = [new TextType { Value = "Dover", languageID = "en" }],
+            },
+        };
+
+        var result = SpsConsignmentMapper.Map(source, Context);
+
+        result.UnloadingBaseportLocation!.Identifier.Should().Be("GBDVR1");
+        result.UnloadingBaseportLocation.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/un_locode");
+        result.UnloadingBaseportLocation.Name.Should().Be("Dover");
     }
 
     [Fact]
@@ -58,8 +77,8 @@ public class SpsConsignmentMapperTests
 
         var result = SpsConsignmentMapper.Map(source, Context);
 
-        result.ExportCountry!.Id.Should().Be("GB");
-        result.ImportCountry!.Id.Should().Be("FR");
+        result.ExportCountry!.Code?.Value.Should().Be("GB");
+        result.ImportCountry!.Code?.Value.Should().Be("FR");
     }
 
     [Fact]
@@ -77,8 +96,8 @@ public class SpsConsignmentMapperTests
 
         var result = SpsConsignmentMapper.Map(source, Context);
 
-        result.ReExportCountry.Should().ContainSingle().Which.Id.Should().Be("DE");
-        result.TransitCountry!.Select(c => c.Id).Should().BeEquivalentTo("BE", "NL");
+        result.ReExportCountry.Should().ContainSingle().Which.Code?.Value.Should().Be("DE");
+        result.TransitCountry!.Select(c => c.Code?.Value).Should().BeEquivalentTo("BE", "NL");
     }
 
     [Fact]

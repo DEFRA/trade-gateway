@@ -22,8 +22,8 @@ public class SpsCountryMapperTests
 
         var result = SpsCountryMapper.Map(source, Context)!;
 
-        result.Id.Should().Be("GB");
-        result.Name.Should().Be("United Kingdom");
+        result.Code?.Value.Should().Be("GB");
+        result.Code?.Name.Should().Be("United Kingdom");
     }
 
     [Fact]
@@ -38,7 +38,7 @@ public class SpsCountryMapperTests
             ],
         };
 
-        SpsCountryMapper.Map(source, Context)!.Name.Should().Be("United Kingdom");
+        SpsCountryMapper.Map(source, Context)!.Code?.Name.Should().Be("United Kingdom");
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class SpsCountryMapperTests
     {
         var source = new SPSCountryType { Name = [new TextType { Value = "United Kingdom" }] };
 
-        SpsCountryMapper.Map(source, Context)!.Name.Should().Be("United Kingdom");
+        SpsCountryMapper.Map(source, Context)!.Code?.Name.Should().Be("United Kingdom");
     }
 
     [Fact]
@@ -54,8 +54,8 @@ public class SpsCountryMapperTests
     {
         var result = SpsCountryMapper.Map(new SPSCountryType(), Context)!;
 
-        result.Id.Should().BeNull();
-        result.Name.Should().BeNull();
+        result.Code?.Value.Should().BeNull();
+        result.Code?.Name.Should().BeNull();
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public class SpsCountryMapperTests
         var result = SpsCountryMapper.MapList(source, Context)!;
 
         result.Should().HaveCount(2);
-        result[0].Id.Should().Be("GB");
-        result[1].Id.Should().Be("FR");
+        result[0].Code?.Value.Should().Be("GB");
+        result[1].Code?.Value.Should().Be("FR");
     }
 }
