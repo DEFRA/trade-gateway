@@ -6,7 +6,7 @@
       "master.wsdl"
     ],
     "namespaceMappings": [
-      "*, TracesNT.WebServices"
+	  "*, TracesNT.WebServices.CertexServices"
     ],
     "outputFile": "TracesClients.cs",
     "targetFramework": "net10.0",
