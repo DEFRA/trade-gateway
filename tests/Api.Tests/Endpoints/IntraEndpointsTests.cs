@@ -32,8 +32,8 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/intras/GB123", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.GetAsync("/certificates/intra/GB123", TestContext.Current.CancellationToken);
 
         Assert.Equal(MediaTypeAttribute.For<DefraUNVTDINTRAProfile>(), response.Content.Headers.ContentType?.MediaType);
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
@@ -70,8 +70,8 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/intras/BADSOAP", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.GetAsync("/certificates/intra/BADSOAP", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
@@ -95,8 +95,8 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     .WithBody("upstream failed")
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/intras/COMMFAIL", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.GetAsync("/certificates/intra/COMMFAIL", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
@@ -138,8 +138,8 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/intras/MISSING", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.GetAsync("/certificates/intra/MISSING", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
@@ -182,8 +182,8 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/intras/FORBIDDEN", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.GetAsync("/certificates/intra/FORBIDDEN", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
@@ -192,10 +192,10 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
     [Fact]
     public async Task Find_WhenUpdatedFromIsMissing_ReturnsBadRequest()
     {
-        var client = factory.CreateClient();
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
         client.DefaultRequestHeaders.Add("Accept-Language", "en");
         var response = await client.GetAsync(
-            "/intras?pageSize=5&offset=5&updatedFrom1=2002-10-28Z&updatedBefore=2026-10-28Z",
+            "/certificates/intra?pageSize=5&offset=5&updatedFrom1=2002-10-28Z&updatedBefore=2026-10-28Z",
             TestContext.Current.CancellationToken
         );
 
@@ -225,10 +225,10 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
         client.DefaultRequestHeaders.Add("Accept-Language", "en");
         var response = await client.GetAsync(
-            "/intras?pageSize=10&offset=5&updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z",
+            "/certificates/intra?pageSize=10&offset=5&updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z",
             TestContext.Current.CancellationToken
         );
 

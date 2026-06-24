@@ -13,14 +13,14 @@ public static class IntraEndpoints
 {
     public static void UseIntraEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("intras/{id}", Get)
+        app.MapGet("certificates/intra/{id}", Get)
             .Produces<DefraUNVTDINTRAProfile>(200, MediaTypeAttribute.For<DefraUNVTDINTRAProfile>())
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
-        app.MapGet("intras", Find)
+        app.MapGet("certificates/intra", Find)
             .Produces<DefraUNVTDINTRASummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDINTRASummaryProfile>())
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)

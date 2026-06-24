@@ -1,7 +1,10 @@
+using Api.Authorization;
 using Api.Config;
 using Api.Utils.Http;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
@@ -27,6 +30,11 @@ public static class AuthenticationRegistration
 
         builder.Services.ConfigureProxyBackchannel(CognitoScheme);
         builder.Services.ConfigureProxyBackchannel(StsScheme);
+
+        builder.BindConfig<AuthorizationConfig>("Authorization");
+        builder.Services.AddSingleton<IValidateOptions<AuthorizationConfig>, AuthorizationConfigValidator>();
+        builder.Services.AddSingleton<IResourceAuthorizer, ResourceAuthorizer>();
+        builder.Services.AddSingleton<IAuthorizationHandler, ResourcePermissionHandler>();
 
         builder.Services.AddApiAuthorization(authConfig.Cognito);
     }
@@ -83,18 +91,31 @@ public static class AuthenticationRegistration
         IssuerAuthenticationConfig cognitoConfig)
     {
         ArgumentNullException.ThrowIfNull(cognitoConfig.Scope);
+
+        // ApiAccess: authenticated principal with the right scheme + scope.
+        var apiAccess = new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .RequireAssertion(ctx =>
+            {
+                var scheme = ctx.User.Identities
+                    .FirstOrDefault(i => i.IsAuthenticated)?.AuthenticationType;
+                var scopes = (ctx.User.FindFirst("scope")?.Value ?? "").Split(' ');
+
+                return (scheme == CognitoScheme && scopes.Contains(cognitoConfig.Scope)) ||
+                       scheme == StsScheme; // STS tokens carry no scope claim — issuer/signature validation is sufficient
+            })
+            .Build();
+
+        // Fallback applied to every endpoint without explicit auth metadata: ApiAccess first,
+        // then fine-grained per-principal resource/action authorisation (ADR-0005).
+        var fallback = new AuthorizationPolicyBuilder()
+            .Combine(apiAccess)
+            .AddRequirements(new ResourcePermissionRequirement())
+            .Build();
+
         services
             .AddAuthorizationBuilder()
-            .AddPolicy("ApiAccess", policy => policy
-                .RequireAuthenticatedUser()
-                .RequireAssertion(ctx =>
-                {
-                    var scheme = ctx.User.Identities
-                        .FirstOrDefault(i => i.IsAuthenticated)?.AuthenticationType;
-                    var scopes = (ctx.User.FindFirst("scope")?.Value ?? "").Split(' ');
-
-                    return (scheme == CognitoScheme && scopes.Contains(cognitoConfig.Scope)) ||
-                           scheme == StsScheme; // STS tokens carry no scope claim — issuer/signature validation is sufficient
-                }));
+            .AddPolicy("ApiAccess", apiAccess)
+            .SetFallbackPolicy(fallback);
     }
 }

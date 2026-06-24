@@ -5,7 +5,7 @@
     version: v1
   },
   paths: {
-    /intras/{id}: {
+    /certificates/intra/{id}: {
       get: {
         tags: [
           IntraEndpoints
@@ -81,7 +81,7 @@
         }
       }
     },
-    /intras: {
+    /certificates/intra: {
       get: {
         tags: [
           IntraEndpoints
@@ -187,7 +187,7 @@
         }
       }
     },
-    /classificationSections: {
+    /reference-data/classifications/sections: {
       get: {
         tags: [
           ReferenceDataEndpoints
@@ -245,7 +245,7 @@
         }
       }
     },
-    /classificationTrees/{treeId}: {
+    /reference-data/classifications/trees/{treeId}: {
       get: {
         tags: [
           ReferenceDataEndpoints
@@ -311,7 +311,7 @@
         }
       }
     },
-    /classificationTrees/{treeId}/nodes/{nodeId}: {
+    /reference-data/classifications/trees/{treeId}/nodes/{nodeId}: {
       get: {
         tags: [
           ReferenceDataEndpoints
@@ -385,7 +385,7 @@
         }
       }
     },
-    /metaDatas/{metadataType}: {
+    /reference-data/metadata/{metadataType}: {
       get: {
         tags: [
           ReferenceDataEndpoints
