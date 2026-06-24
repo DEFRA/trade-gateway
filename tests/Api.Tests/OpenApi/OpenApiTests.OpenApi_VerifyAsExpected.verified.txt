@@ -147,7 +147,7 @@
           200: {
             description: OK,
             content: {
-              application/vnd.defra.trade.intra.summary.v1+json: {
+              application/vnd.defra.trade.intra-list.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDINTRASummaryProfile
                 }

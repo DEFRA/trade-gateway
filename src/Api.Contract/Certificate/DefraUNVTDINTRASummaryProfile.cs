@@ -3,7 +3,7 @@ using Api.Contract;
 
 namespace Trade.Gateway.Api.Contract.Certificate;
 
-[MediaType("application/vnd.defra.trade.intra.summary.v1+json")]
+[MediaType("application/vnd.defra.trade.intra-list.v1+json")]
 #pragma warning disable S101
 public record DefraUNVTDINTRASummaryProfile
 #pragma warning restore S101

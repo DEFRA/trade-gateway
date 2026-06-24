@@ -40,7 +40,7 @@ Separate per-resource endpoints are used rather than a single unified `/changes?
 |-----------|----------|-------------|
 | `updatedFrom` | Yes | Return documents updated at or after this instant (inclusive). ISO 8601 UTC. |
 | `updatedBefore` | Yes | Return documents updated strictly before this instant (exclusive). ISO 8601 UTC. |
-| `page` | No | 1-based page number. Defaults to 1. |
+| `offset` | No | 0-based records to skip. Defaults to 0. |
 | `pageSize` | No | Items per page. Defaults to 20, capped at 200 (the upstream maximum). |
 
 Both `updatedFrom` and `updatedBefore` are required on every request. Open-ended time windows are not supported — they would produce unbounded result sets.
@@ -60,7 +60,7 @@ The response envelope:
 ```json
 {
   "items": [...],
-  "page": 1,
+  "offset": 0,
   "pageSize": 20,
   "hasMore": true
 }
