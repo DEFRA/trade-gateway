@@ -5,19 +5,17 @@ namespace Api.Mapping;
 
 internal static class SpsTradeLineItemMapper
 {
+    private const string LatinLanguageId = "la";
+    
     internal static TradeLineItem Map(SPSTradeLineItemType source, MappingContext context) =>
         new()
         {
             SequenceNumeric = source.SequenceNumeric is { } sn ? (int)sn.Value : null,
             Description = source.Description.ForLanguageList(context.LanguageCode),
-            ScientificName = source
-                .ScientificName?.Where(t => t.languageID == "la")
-                .Select(t => t.Value)
-                .ToList()
-                .NullIfEmpty(),
+            ScientificName = source.ScientificName.ForLanguage(LatinLanguageId),
             NetWeight = SpsMeasureMapper.Map(source.NetWeightMeasure),
             GrossWeight = SpsMeasureMapper.Map(source.GrossWeightMeasure),
-            ApplicableProductClassification = SpsClassificationMapper.MapList(
+            ApplicableClassification = SpsClassificationMapper.MapList(
                 source.ApplicableSPSClassification,
                 context
             ),

@@ -11,6 +11,9 @@ public partial record Clause
     public string? Identifier { get; init; }
 
     [JsonPropertyName("content")]
-    [Description("unece:content is xsd:string in unece-context-D23B.jsonld.")]
     public string? Content { get; init; }
+
+    [JsonPropertyName("urlId")]
+    [Description("URL to the codelist this clause's identifier and content are drawn from. BSP D23B documentClauseType.urlId (UN01013211).")]
+    public string? UrlId { get; init; }
 }

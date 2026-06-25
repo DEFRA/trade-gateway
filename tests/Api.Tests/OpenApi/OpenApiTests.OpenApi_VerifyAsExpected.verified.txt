@@ -1,4 +1,4 @@
-{
+﻿{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -454,6 +454,30 @@
   },
   components: {
     schemas: {
+      ApplicableClassification: {
+        type: object,
+        properties: {
+          systemId: {
+            type: string,
+            nullable: true
+          },
+          systemName: {
+            type: string,
+            nullable: true
+          },
+          classCode: {
+            $ref: #/components/schemas/CodedValue
+          },
+          className: {
+            type: array,
+            items: {
+              type: string
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       AttachmentBinaryObject: {
         type: object,
         properties: {
@@ -467,6 +491,11 @@
           },
           uri: {
             type: string,
+            nullable: true
+          },
+          filename: {
+            type: string,
+            description: Original filename for the attachment, where the by-reference pattern carries metadata alongside the URI.,
             nullable: true
           }
         },
@@ -490,7 +519,7 @@
             description: unece:governmentActionTypeCode is @vocab in unece-context-D23B.jsonld; use a string code or vocabulary token.,
             nullable: true
           },
-          providerParty: {
+          provider: {
             $ref: #/components/schemas/TradeParty
           },
           includedClause: {
@@ -671,7 +700,34 @@
           },
           content: {
             type: string,
-            description: unece:content is xsd:string in unece-context-D23B.jsonld.,
+            nullable: true
+          },
+          urlId: {
+            type: string,
+            description: URL to the codelist this clause's identifier and content are drawn from. BSP D23B documentClauseType.urlId (UN01013211).,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      CodedValue: {
+        required: [
+          value
+        ],
+        type: object,
+        properties: {
+          value: {
+            type: string,
+            nullable: true
+          },
+          urlId: {
+            type: string,
+            description: Codelist URI. EU TRACES: https://traces-codelists.ec.europa.eu/{listId}. Defra: https://codelists.tbc.defra.gov.uk/...,
+            nullable: true
+          },
+          name: {
+            type: string,
+            description: Human-readable label for the coded value.,
             nullable: true
           }
         },
@@ -699,8 +755,17 @@
           despatchParty: {
             $ref: #/components/schemas/TradeParty
           },
+          deliveryParty: {
+            $ref: #/components/schemas/TradeParty
+          },
+          carrier: {
+            $ref: #/components/schemas/TradeParty
+          },
           customsTransitAgentParty: {
             $ref: #/components/schemas/TradeParty
+          },
+          originCountry: {
+            $ref: #/components/schemas/TradeCountry
           },
           exportCountry: {
             $ref: #/components/schemas/TradeCountry
@@ -725,11 +790,26 @@
             nullable: true
           },
           unloadingBaseportLocation: {
+            $ref: #/components/schemas/LogisticsLocation
+          },
+          mainCarriageLogisticsTransportMovement: {
             type: array,
             items: {
-              $ref: #/components/schemas/LogisticsLocation
+              $ref: #/components/schemas/LogisticsTransportMovement
             },
+            description: Transport movement(s) for the main carriage leg(s). An array of one entry per carriage leg, with entries distinguished by id.schemeId. The SPS profile collapses BSP's three-way pre/main/on carriage split into this slot.,
             nullable: true
+          },
+          transitTradeCountry: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/TradeCountry
+            },
+            description: Transit countries between the consignment's origin and destination.,
+            nullable: true
+          },
+          packageQuantity: {
+            $ref: #/components/schemas/ConsignmentPackageQuantity
           },
           includedConsignmentItem: {
             type: array,
@@ -756,6 +836,23 @@
             items: {
               $ref: #/components/schemas/TradeLineItem
             },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ConsignmentPackageQuantity: {
+        required: [
+          content
+        ],
+        type: object,
+        properties: {
+          content: {
+            type: number,
+            format: double
+          },
+          unitCode: {
+            type: string,
             nullable: true
           }
         },
@@ -1076,7 +1173,6 @@
       },
       ExchangedDocument: {
         required: [
-          documentTypeCode,
           identifier
         ],
         type: object,
@@ -1090,9 +1186,14 @@
             type: string,
             nullable: true
           },
+          traderAssignedId: {
+            type: string,
+            description: Optional trader-entered reference. BSP/D23B canonical slot (unece:traderAssignedId, xsd:string) for an importer's own internal reference number against the consignment / pre-notification.,
+            nullable: true
+          },
           documentTypeCode: {
             type: string,
-            description: Document type: unece:typeCode is xsd:string in unece-context-D23B.jsonld (use lexical string for numeric codes).,
+            description: Document type per UNTDID 1001 (e.g. 636 CHED, 666/856 INTRA). Optional at core level; profile schemas constrain by const/enum.,
             nullable: true
           },
           documentStatusCode: {
@@ -1100,10 +1201,29 @@
             description: Status code as string per UN vocabulary typing for coded strings.,
             nullable: true
           },
+          notificationStatusCode: {
+            type: string,
+            description: Defra-internal workflow status of this notification. Codelist binding declared in the Defra profile vocabulary.,
+            nullable: true
+          },
+          versionId: {
+            type: integer,
+            description: Document revision number. V1 on first submission, increments on each subsequent re-submission. Distinct from the envelope's aggregateVersion (event sequence) and the schema's structural version.,
+            format: int32,
+            nullable: true
+          },
+          functionCode: {
+            type: string,
+            description: UNTDID 1225 message function: 9 (Original), 5 (Replace), 4 (Change), 1 (Cancellation), 3 (Deletion). Tells the consumer what the message does to its view of the document.,
+            nullable: true
+          },
           issueDateTime: {
             type: string,
             format: date-time,
             nullable: true
+          },
+          issuer: {
+            $ref: #/components/schemas/TradeParty
           },
           includedNote: {
             type: array,
@@ -1167,8 +1287,11 @@
           },
           noteSubjectCode: {
             type: string,
-            description: unece:noteSubjectCode — xsd:string in unece-context-D23B.jsonld.,
+            description: Legacy subject-code slot - flat string only. Retained for the existing INTRA/CHED samples; new code should use subjectCode below.,
             nullable: true
+          },
+          subjectCode: {
+            $ref: #/components/schemas/CodedValue
           },
           content: {
             type: array,
@@ -1181,9 +1304,9 @@
           contentCode: {
             type: array,
             items: {
-              $ref: #/components/schemas/UneceCode
+              $ref: #/components/schemas/CodedValue
             },
-            description: unece:contentCode profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of UneceCodeType objects (value + optional list metadata such as listId/listName/name).,
+            description: unece:contentCode profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of CodedValue objects (value + optional urlId and name).,
             nullable: true
           }
         },
@@ -1281,11 +1404,43 @@
         },
         additionalProperties: false
       },
+      LineTradeDelivery: {
+        type: object,
+        properties: {
+          productUnitQuantity: {
+            $ref: #/components/schemas/LineTradeDeliveryProductUnitQuantity
+          }
+        },
+        additionalProperties: false
+      },
+      LineTradeDeliveryProductUnitQuantity: {
+        required: [
+          content
+        ],
+        type: object,
+        properties: {
+          content: {
+            type: number,
+            format: double
+          },
+          unitCode: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       LogisticsLocation: {
         type: object,
         properties: {
           identifier: {
             type: string,
+            description: Location identifier as a bare string (e.g. CPH19876, GBDVR1, GBDVR). Matches the BSP D23B canonical shape where idType metadata is disabled. The sibling urlId names the register or codelist the identifier is drawn from (cph_number, bcp_reference, un_locode).,
+            nullable: true
+          },
+          urlId: {
+            type: string,
+            description: URL identifier for the codelist / register this location's identifier is drawn from.,
             nullable: true
           },
           name: {
@@ -1296,6 +1451,9 @@
             type: string,
             description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
             nullable: true
+          },
+          postalAddress: {
+            $ref: #/components/schemas/TradeAddress
           }
         },
         additionalProperties: false
@@ -1316,6 +1474,61 @@
           itemQuantity: {
             type: integer,
             format: int32,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      LogisticsTransportMovement: {
+        type: object,
+        properties: {
+          identifier: {
+            type: string,
+            description: Transport identifier as a bare string or integer (legacy INTRA shape where it was sometimes numeric). Matches the BSP D23B canonical shape where idType metadata is disabled. The sibling urlId names the register the identifier is drawn from (e.g. vessel_name, road_vehicle_registration, airplane_flight_number).,
+            nullable: true
+          },
+          urlId: {
+            type: string,
+            description: URL identifier for the codelist / register this movement's identifier is drawn from.,
+            nullable: true
+          },
+          modeCode: {
+            type: string,
+            description: Mode-of-transport code per UN/EDIFACT Recommendation 19. Accepts integer (current INTRA/CHED shape) or string (hybrid shape where GBN-AG and TRACES-textual consumers prefer it as a code value).,
+            nullable: true
+          },
+          usedLogisticsTransportMeans: {
+            $ref: #/components/schemas/LogisticsTransportMovementUsedLogisticsTransportMeans
+          },
+          transportContractRelatedReferencedDocument: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ReferencedDocument
+            },
+            nullable: true
+          },
+          arrivalEvent: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/TransportEvent
+            },
+            nullable: true
+          },
+          departureEvent: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/TransportEvent
+            },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      LogisticsTransportMovementUsedLogisticsTransportMeans: {
+        type: object,
+        properties: {
+          name: {
+            type: string,
             nullable: true
           }
         },
@@ -1392,36 +1605,11 @@
           }
         }
       },
-      ProductClassification: {
-        type: object,
-        properties: {
-          systemId: {
-            type: string,
-            nullable: true
-          },
-          systemName: {
-            type: string,
-            nullable: true
-          },
-          classCode: {
-            type: string,
-            nullable: true
-          },
-          className: {
-            type: array,
-            items: {
-              type: string
-            },
-            nullable: true
-          }
-        },
-        additionalProperties: false
-      },
       ProductLaboratoryTest: {
         type: object,
         properties: {
           applicableProductClassification: {
-            $ref: #/components/schemas/ProductClassification
+            $ref: #/components/schemas/ApplicableClassification
           },
           laboratoryTest: {
             type: array,
@@ -1435,16 +1623,23 @@
         properties: {
           typeCode: {
             type: string,
-            description: unece:typeCode is xsd:string in unece-context-D23B.jsonld.,
+            description: Document type per UNTDID 1001 (e.g. 853 Veterinary certificate, 636 CHED, 916 Journey log, 705 Bill of lading).,
             nullable: true
           },
           relationshipTypeCode: {
             type: string,
-            description: unece:relationshipTypeCode is xsd:string in unece-context-D23B.jsonld.,
+            description: Role this referenced document plays per UNTDID 1153.,
             nullable: true
           },
           identifier: {
             type: string,
+            description: Reference number assigned by the issuing authority.,
+            nullable: true
+          },
+          issueDateTime: {
+            type: string,
+            description: Issue date of the referenced document (ISO 8601 YYYY-MM-DD).,
+            format: date,
             nullable: true
           },
           attachmentBinaryObject: {
@@ -1529,14 +1724,45 @@
       TradeCountry: {
         type: object,
         properties: {
-          id: {
+          code: {
+            $ref: #/components/schemas/CodedValue
+          },
+          subordinateTradeCountrySubDivision: {
+            $ref: #/components/schemas/TradeCountrySubDivision
+          }
+        },
+        additionalProperties: false
+      },
+      TradeCountrySubDivision: {
+        required: [
+          functionTypeCode,
+          identifier
+        ],
+        type: object,
+        properties: {
+          identifier: {
             type: string,
-            description: Country identifier/code value (ISO 3166-1 alpha-2 style lexical token).,
             nullable: true
           },
-          name: {
+          urlId: {
             type: string,
-            description: Country name.,
+            description: URL to the codelist this region identifier is drawn from.,
+            nullable: true
+          },
+          functionTypeCode: {
+            $ref: #/components/schemas/TradeCountrySubDivisionFunctionTypeCode
+          }
+        },
+        additionalProperties: false
+      },
+      TradeCountrySubDivisionFunctionTypeCode: {
+        type: object,
+        properties: {
+          content: {
+            enum: [
+              106
+            ],
+            type: string,
             nullable: true
           }
         },
@@ -1558,10 +1784,8 @@
             nullable: true
           },
           scientificName: {
-            type: array,
-            items: {
-              type: string
-            },
+            type: string,
+            description: The species name for the commodity in Latin,
             nullable: true
           },
           netWeight: {
@@ -1570,10 +1794,10 @@
           grossWeight: {
             $ref: #/components/schemas/UneceWeightMeasure
           },
-          applicableProductClassification: {
+          applicableClassification: {
             type: array,
             items: {
-              $ref: #/components/schemas/ProductClassification
+              $ref: #/components/schemas/ApplicableClassification
             },
             nullable: true
           },
@@ -1582,6 +1806,30 @@
             items: {
               $ref: #/components/schemas/LogisticsPackage
             },
+            nullable: true
+          },
+          specifiedTradeProduct: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/TradeProduct
+            },
+            description: The trade product on this line. BSP-canonical structural slot; profile schemas may narrow shape and cardinality.,
+            nullable: true
+          },
+          specifiedLineTradeDelivery: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LineTradeDelivery
+            },
+            description: Delivery aspect of this line (line-level quantities).,
+            nullable: true
+          },
+          additionalInformationNote: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/IncludedNote
+            },
+            description: Per-line annotation notes. Each entry carries a coded subject and one or more content values; consumers narrow the permitted subject codes in their profile.,
             nullable: true
           }
         },
@@ -1592,6 +1840,12 @@
         properties: {
           identifier: {
             type: string,
+            description: Party identifier (bare string). The sibling urlId names the codelist/register the value is drawn from (e.g. operator_internal_activity_id, veterinary_office_identifier, authority_activity_id, or Defra-side schemes such as uk_transporter_authorisation).,
+            nullable: true
+          },
+          urlId: {
+            type: string,
+            description: URL to the codelist/register the party identifier is drawn from. The gateway translates urlId to/from TRACES schemeId / schemeAgencyId.,
             nullable: true
           },
           name: {
@@ -1600,11 +1854,14 @@
             nullable: true
           },
           partyRoleCode: {
-            type: string,
-            description: unece:partyRoleCode is @vocab in unece-context-D23B.jsonld.,
-            nullable: true
+            $ref: #/components/schemas/CodedValue
           },
           partyTypeCode: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/CodedValue
+            },
+            description: Party-type code(s) as coded values. A party can carry codes from more than one TRACES list (e.g. COMMERCIAL_TRANSPORTER under operator_activity_type plus TRANSPORTER under classification_section_code); each entry's urlId names the codelist its value is drawn from.,
             nullable: true
           },
           postalAddress: {
@@ -1626,43 +1883,65 @@
           personName: {
             type: string,
             nullable: true
+          },
+          emailURIUniversalCommunication: {
+            type: string,
+            description: Contact email. Additive to the legacy personName-only shape — TRACES SOAP does not carry contact email/phone, but Defra import pre-notifications source these from IPAFFS and need to carry them on consignor / consignee / delivery / carrier / issuer parties.,
+            nullable: true
+          },
+          telephoneUniversalCommunication: {
+            type: string,
+            description: Contact telephone. Same rationale as emailURIUniversalCommunication.,
+            nullable: true
           }
         },
         additionalProperties: false
       },
-      UneceCode: {
-        required: [
-          value
-        ],
+      TradeProduct: {
         type: object,
         properties: {
-          value: {
+          scientificName: {
             type: string,
             nullable: true
           },
-          listId: {
+          typeCode: {
             type: string,
+            description: BSP/D23B canonical slot (`unece:typeCode`, `xsd:string`) for the trade product's type/form code. Drawn from the codelist named by the sibling `urlId`.,
             nullable: true
           },
-          listName: {
+          urlId: {
             type: string,
+            description: URL to the codelist this trade product's typeCode is drawn from.,
             nullable: true
           },
-          name: {
-            type: string,
+          designatedProductClassification: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/ApplicableClassification
+            },
             nullable: true
           },
-          listAgencyId: {
+          originCountry: {
+            $ref: #/components/schemas/TradeCountry
+          }
+        },
+        additionalProperties: false
+      },
+      TransportEvent: {
+        type: object,
+        properties: {
+          scheduledOccurrenceDateTime: {
             type: string,
+            format: date-time,
             nullable: true
           },
-          listAgencyName: {
+          actualOccurrenceDateTime: {
             type: string,
+            format: date-time,
             nullable: true
           },
-          listVersionId: {
-            type: string,
-            nullable: true
+          occurrenceLogisticsLocation: {
+            $ref: #/components/schemas/LogisticsLocation
           }
         },
         additionalProperties: false

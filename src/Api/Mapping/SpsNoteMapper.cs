@@ -11,7 +11,7 @@ internal static class SpsNoteMapper
             Subject = source.SubjectCode?.Value,
             Content = source.Content?.Select(c => c.Value).ToList(),
             ContentCode = source.ContentCode is { Length: > 0 }
-                ? source.ContentCode.Select(c => new UneceCode { ListId = c.listID, Value = c.Value }).ToList()
+                ? source.ContentCode.Select(c => new CodedValue { UrlId = c.listID, Value = c.Value }).ToList()
                 : null,
         };
 }
