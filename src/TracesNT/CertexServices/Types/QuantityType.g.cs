@@ -6,53 +6,81 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices
+namespace TracesNT.WebServices.CertexServices
 {
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(TaxonReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(OperatorActivityTypeReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(MetaCountryGroupReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ClassificationTreeDescription))]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21")]
-    public partial class TextType
+    public partial class QuantityType
     {
-        private string languageIDField;
-        private string languageLocaleIDField;
-        private string valueField;
+        private string unitCodeField;
+        private string unitCodeListIDField;
+        private string unitCodeListAgencyIDField;
+        private string unitCodeListAgencyNameField;
+        private decimal valueField;
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute(DataType = "token")]
-        public string languageID
+        public string unitCode
         {
             get
             {
-                return this.languageIDField;
+                return this.unitCodeField;
             }
 
             set
             {
-                this.languageIDField = value;
+                this.unitCodeField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute(DataType = "token")]
-        public string languageLocaleID
+        public string unitCodeListID
         {
             get
             {
-                return this.languageLocaleIDField;
+                return this.unitCodeListIDField;
             }
 
             set
             {
-                this.languageLocaleIDField = value;
+                this.unitCodeListIDField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "token")]
+        public string unitCodeListAgencyID
+        {
+            get
+            {
+                return this.unitCodeListAgencyIDField;
+            }
+
+            set
+            {
+                this.unitCodeListAgencyIDField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public string unitCodeListAgencyName
+        {
+            get
+            {
+                return this.unitCodeListAgencyNameField;
+            }
+
+            set
+            {
+                this.unitCodeListAgencyNameField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value
+        public decimal Value
         {
             get
             {

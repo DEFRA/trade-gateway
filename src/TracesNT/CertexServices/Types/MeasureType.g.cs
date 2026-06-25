@@ -6,53 +6,49 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices
+namespace TracesNT.WebServices.CertexServices
 {
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(TaxonReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(OperatorActivityTypeReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(MetaCountryGroupReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ClassificationTreeDescription))]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21")]
-    public partial class TextType
+    public partial class MeasureType
     {
-        private string languageIDField;
-        private string languageLocaleIDField;
-        private string valueField;
+        private string unitCodeField;
+        private string unitCodeListVersionIDField;
+        private decimal valueField;
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute(DataType = "token")]
-        public string languageID
+        public string unitCode
         {
             get
             {
-                return this.languageIDField;
+                return this.unitCodeField;
             }
 
             set
             {
-                this.languageIDField = value;
+                this.unitCodeField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute(DataType = "token")]
-        public string languageLocaleID
+        public string unitCodeListVersionID
         {
             get
             {
-                return this.languageLocaleIDField;
+                return this.unitCodeListVersionIDField;
             }
 
             set
             {
-                this.languageLocaleIDField = value;
+                this.unitCodeListVersionIDField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value
+        public decimal Value
         {
             get
             {
