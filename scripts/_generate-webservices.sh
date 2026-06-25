@@ -28,8 +28,8 @@ if [[ ! -f "$PROJECT_FILE" ]]; then
 fi
 
 if [[ ! -d "$WEBSERVICES_DIR" ]]; then
-    echo "Required directory not found: $WEBSERVICES_DIR" >&2
-    exit 1
+    echo "Creating target directory: $WEBSERVICES_DIR"
+    mkdir -p "$WEBSERVICES_DIR" || { echo "Failed to create directory: $WEBSERVICES_DIR" >&2; exit 1; }
 fi
 
 STAGING_DIR="$(mktemp -d "$SCRIPT_DIR/tracesnt-webservices.XXXXXX")"
