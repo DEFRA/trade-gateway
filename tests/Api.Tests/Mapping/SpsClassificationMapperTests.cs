@@ -23,7 +23,7 @@ public class SpsClassificationMapperTests
 
         result.SystemId.Should().Be("CN");
         result.SystemName.Should().Be("Combined Nomenclature");
-        result.ClassCode.Should().Be("0201");
+        result.ClassCode?.Value.Should().Be("0201");
         result.ClassName.Should().BeEquivalentTo("Beef", "Boeuf");
     }
 

@@ -29,14 +29,18 @@ public partial record IncludedNote
     public string? CreationDateTime { get; init; }
 
     [JsonPropertyName("noteSubjectCode")]
-    [Description("unece:noteSubjectCode — xsd:string in unece-context-D23B.jsonld.")]
+    [Description("Legacy subject-code slot - flat string only. Retained for the existing INTRA/CHED samples; new code should use subjectCode below.")]
     public string? NoteSubjectCode { get; init; }
+
+    [JsonPropertyName("subjectCode")]
+    [Description("Subject of the note as a coded value. urlId on the CodedValue names the codelist the code is drawn from.")]
+    public CodedValue? SubjectCode { get; init; }
 
     [JsonPropertyName("content")]
     [Description("unece:content profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of strings.")]
     public List<string>? Content { get; init; }
 
     [JsonPropertyName("contentCode")]
-    [Description("unece:contentCode profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of UneceCodeType objects (value + optional list metadata such as listId/listName/name).")]
-    public List<UneceCode>? ContentCode { get; init; }
+    [Description("unece:contentCode profile extension for deterministic typed contracts and lossless TRACES XML round-tripping: always an array of CodedValue objects (value + optional urlId and name).")]
+    public List<CodedValue>? ContentCode { get; init; }
 }

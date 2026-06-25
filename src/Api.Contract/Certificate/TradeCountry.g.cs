@@ -7,11 +7,10 @@ using System.Collections.Generic;
 namespace Trade.Gateway.Api.Contract.Certificate;
 public partial record TradeCountry
 {
-    [JsonPropertyName("id")]
-    [Description("Country identifier/code value (ISO 3166-1 alpha-2 style lexical token).")]
-    public string? Id { get; init; }
+    [JsonPropertyName("code")]
+    [Description("Country code; ISO 3166-1 alpha-2 expected. ISO 3166-1 is well-known so urlId is usually omitted, but a sibling urlId can be added when a non-ISO scheme is in use.")]
+    public CodedValue? Code { get; init; }
 
-    [JsonPropertyName("name")]
-    [Description("Country name.")]
-    public string? Name { get; init; }
+    [JsonPropertyName("subordinateTradeCountrySubDivision")]
+    public TradeCountrySubDivision? SubordinateTradeCountrySubDivision { get; init; }
 }
