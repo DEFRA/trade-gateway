@@ -51,12 +51,7 @@ public class SpsTradeLineItemMapperTests
             ],
         };
 
-        SpsTradeLineItemMapper
-            .Map(source, Context)
-            .ScientificName.Should()
-            .ContainSingle()
-            .Which.Should()
-            .Be("Equus asinus");
+        SpsTradeLineItemMapper.Map(source, Context).ScientificName.Should().Be("Equus asinus");
     }
 
     [Fact]
@@ -95,7 +90,7 @@ public class SpsTradeLineItemMapperTests
         result.ScientificName.Should().BeNull();
         result.NetWeight.Should().BeNull();
         result.GrossWeight.Should().BeNull();
-        result.ApplicableProductClassification.Should().BeNull();
+        result.ApplicableClassification.Should().BeNull();
         result.PhysicalReferencedLogisticsPackage.Should().BeNull();
     }
 

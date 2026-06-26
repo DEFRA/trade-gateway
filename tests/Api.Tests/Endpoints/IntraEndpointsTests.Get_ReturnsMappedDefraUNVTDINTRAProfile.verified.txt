@@ -4,9 +4,14 @@
   exchangedDocument: {
     name: 2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’),
     identifier: INTRA.EU.FR.2026.0000041,
+    traderAssignedId: null,
     documentTypeCode: 856,
     documentStatusCode: 1,
+    notificationStatusCode: null,
+    versionId: null,
+    functionCode: null,
     issueDateTime: DateTimeOffset_1,
+    issuer: null,
     includedNote: [
       {
         type: Note,
@@ -15,6 +20,7 @@
         subject: LAST_UPDATE_DATETIME,
         creationDateTime: null,
         noteSubjectCode: null,
+        subjectCode: null,
         content: [
           DateTimeOffset_2
         ],
@@ -27,18 +33,15 @@
         subject: JOURNEY_LOG,
         creationDateTime: null,
         noteSubjectCode: null,
+        subjectCode: null,
         content: [
           null
         ],
         contentCode: [
           {
             value: NO,
-            listId: boolean,
-            listName: null,
-            name: null,
-            listAgencyId: null,
-            listAgencyName: null,
-            listVersionId: null
+            urlId: boolean,
+            name: null
           }
         ]
       }
@@ -48,6 +51,7 @@
         typeCode: 856,
         relationshipTypeCode: CAW,
         identifier: INTRA.EU.FR.2026.0000041,
+        issueDateTime: null,
         attachmentBinaryObject: null,
         information: null
       },
@@ -55,6 +59,7 @@
         typeCode: 784,
         relationshipTypeCode: ZZZ,
         identifier: wer,
+        issueDateTime: null,
         attachmentBinaryObject: null,
         information: null
       }
@@ -63,11 +68,22 @@
       typeCode: 4,
       actualDateTime: DateTimeOffset_3,
       governmentActionTypeCode: Inspection (Identification of Applicant),
-      providerParty: {
+      provider: {
         identifier: XI0000,
+        urlId: null,
         name: Department of Agriculture, Environment and Rural Affairs (DAERA),
-        partyRoleCode: VJ,
-        partyTypeCode: AUTHORITY,
+        partyRoleCode: {
+          value: VJ,
+          urlId: https://traces-codelists.ec.europa.eu/3035,
+          name: Officer (Identification of Applicant)
+        },
+        partyTypeCode: [
+          {
+            value: AUTHORITY,
+            urlId: https://traces-codelists.ec.europa.eu/user_body_role,
+            name: Authority
+          }
+        ],
         postalAddress: {
           postcodeCode: BT1,
           lineOne: DAERA main office,
@@ -79,22 +95,27 @@
         },
         definedContact: [
           {
-            personName: Daniel Klemm
+            personName: Daniel Klemm,
+            emailURIUniversalCommunication: null,
+            telephoneUniversalCommunication: null
           }
         ]
       },
       includedClause: [
         {
           identifier: PURPOSE,
-          content: FOR_TRANSIT_THROUGH_MEMBER_STATE
+          content: FOR_TRANSIT_THROUGH_MEMBER_STATE,
+          urlId: null
         },
         {
           identifier: CERTIFIED_AS_OR_FOR,
-          content: FURTHER_KEEPING
+          content: FURTHER_KEEPING,
+          urlId: null
         },
         {
           identifier: SIGNATORY_PERSON_EMAIL,
-          content: info@b.c
+          content: info@b.c,
+          urlId: null
         }
       ]
     },
@@ -107,9 +128,25 @@
     exportExitDateTime: DateTimeOffset_4,
     consignorParty: {
       identifier: 899361,
+      urlId: null,
       name: DK Test,
-      partyRoleCode: CZ,
-      partyTypeCode: IMPORTER,
+      partyRoleCode: {
+        value: CZ,
+        urlId: https://traces-codelists.ec.europa.eu/3035,
+        name: Consignor
+      },
+      partyTypeCode: [
+        {
+          value: IMPORTER,
+          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          name: Importer
+        },
+        {
+          value: OTH-OPER,
+          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          name: Other operators
+        }
+      ],
       postalAddress: {
         postcodeCode: BT9,
         lineOne: Test Street 876,
@@ -123,9 +160,25 @@
     },
     consigneeParty: {
       identifier: 899361,
+      urlId: null,
       name: DK Test,
-      partyRoleCode: CN,
-      partyTypeCode: IMPORTER,
+      partyRoleCode: {
+        value: CN,
+        urlId: https://traces-codelists.ec.europa.eu/3035,
+        name: Consignee
+      },
+      partyTypeCode: [
+        {
+          value: IMPORTER,
+          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          name: Importer
+        },
+        {
+          value: OTH-OPER,
+          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          name: Other operators
+        }
+      ],
       postalAddress: {
         postcodeCode: BT9,
         lineOne: Test Street 876,
@@ -139,9 +192,25 @@
     },
     despatchParty: {
       identifier: TEST-01-01,
+      urlId: null,
       name: Test Quarantaine,
-      partyRoleCode: PW,
-      partyTypeCode: QUARANTINE,
+      partyRoleCode: {
+        value: PW,
+        urlId: https://traces-codelists.ec.europa.eu/3035,
+        name: Despatch party (Place of dispatch)
+      },
+      partyTypeCode: [
+        {
+          value: QUARANTINE,
+          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          name: Quarantine establishment
+        },
+        {
+          value: QUR,
+          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          name: Quarantine establishments
+        }
+      ],
       postalAddress: {
         postcodeCode: 01000,
         lineOne: zdafazartaretaretrtatrrart,
@@ -153,23 +222,51 @@
       },
       definedContact: null
     },
+    deliveryParty: null,
+    carrier: null,
     customsTransitAgentParty: null,
+    originCountry: null,
     exportCountry: {
-      id: null,
-      name: null
+      code: {
+        value: null,
+        urlId: null,
+        name: null
+      },
+      subordinateTradeCountrySubDivision: null
     },
     importCountry: {
-      id: XI,
-      name: United Kingdom (Northern Ireland)
+      code: {
+        value: XI,
+        urlId: null,
+        name: United Kingdom (Northern Ireland)
+      },
+      subordinateTradeCountrySubDivision: null
     },
     reExportCountry: null,
     transitCountry: [
       {
-        id: AT,
-        name: Austria
+        code: {
+          value: AT,
+          urlId: null,
+          name: Austria
+        },
+        subordinateTradeCountrySubDivision: null
       }
     ],
     unloadingBaseportLocation: null,
+    mainCarriageLogisticsTransportMovement: [
+      {
+        identifier: R5434FGD,
+        urlId: null,
+        modeCode: 3,
+        usedLogisticsTransportMeans: null,
+        transportContractRelatedReferencedDocument: null,
+        arrivalEvent: null,
+        departureEvent: null
+      }
+    ],
+    transitTradeCountry: null,
+    packageQuantity: null,
     includedConsignmentItem: [
       {
         natureIdCargo: [
@@ -196,30 +293,35 @@
               unitCode: null,
               unitCodeListVersionId: null
             },
-            applicableProductClassification: null,
+            applicableClassification: null,
             physicalReferencedLogisticsPackage: [
               {
                 levelCode: 4,
                 typeCode: NA,
                 itemQuantity: 0
               }
-            ]
+            ],
+            specifiedTradeProduct: null,
+            specifiedLineTradeDelivery: null,
+            additionalInformationNote: null
           },
           {
             sequenceNumeric: 1,
             description: [
               null
             ],
-            scientificName: [
-              Equus asinus
-            ],
+            scientificName: Equus asinus,
             netWeight: null,
             grossWeight: null,
-            applicableProductClassification: [
+            applicableClassification: [
               {
                 systemId: CN,
                 systemName: CN Code (Combined Nomenclature),
-                classCode: 0101,
+                classCode: {
+                  value: 0101,
+                  urlId: https://traces-codelists.ec.europa.eu/class_code_system/CN,
+                  name: null
+                },
                 className: [
                   LIVE ANIMALS,
                   Live horses, asses, mules and hinnies
@@ -228,13 +330,20 @@
               {
                 systemId: IDENTIFICATION_SYSTEM,
                 systemName: Identification system,
-                classCode: TATTOO,
+                classCode: {
+                  value: TATTOO,
+                  urlId: https://traces-codelists.ec.europa.eu/class_code_system/IDENTIFICATION_SYSTEM,
+                  name: null
+                },
                 className: [
                   Tattoo
                 ]
               }
             ],
-            physicalReferencedLogisticsPackage: null
+            physicalReferencedLogisticsPackage: null,
+            specifiedTradeProduct: null,
+            specifiedLineTradeDelivery: null,
+            additionalInformationNote: null
           }
         ]
       }

@@ -47,14 +47,42 @@ public class SpsPartyMapperTests
     }
 
     [Fact]
-    public void Map_FirstTypeCode_SerializedAsJsonElement()
+    public void Map_TypeCodes_MappedToCodedValues()
     {
-        var source = new SPSPartyType { TypeCode = [new CodeType { Value = "AUTHORITY" }] };
+        var source = new SPSPartyType
+        {
+            TypeCode =
+            [
+                new CodeType { Value = "AUTHORITY", name = "Authority", listID = "operator_activity_type" },
+            ],
+        };
 
         var result = SpsPartyMapper.Map(source)!;
 
-        result.PartyTypeCode.Should().NotBeNull();
-        result.PartyTypeCode!.Value.GetString().Should().Be("AUTHORITY");
+        var typeCode = result.PartyTypeCode.Should().ContainSingle().Subject;
+        typeCode.Value.Should().Be("AUTHORITY");
+        typeCode.Name.Should().Be("Authority");
+        typeCode.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/operator_activity_type");
+    }
+
+    [Fact]
+    public void Map_RoleCode_MappedToCodedValue()
+    {
+        var source = new SPSPartyType
+        {
+            RoleCode = new PartyRoleCodeType
+            {
+                Value = PartyRoleCodeContentType.VJ,
+                name = "Authority",
+                listID = "3035",
+            },
+        };
+
+        var result = SpsPartyMapper.Map(source)!;
+
+        result.PartyRoleCode!.Value.Should().Be("VJ");
+        result.PartyRoleCode.Name.Should().Be("Authority");
+        result.PartyRoleCode.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/3035");
     }
 
     [Fact]

@@ -1,4 +1,3 @@
-using System.Text.Json;
 using TracesNT.WebServices;
 using Trade.Gateway.Api.Contract.Certificate;
 
@@ -15,14 +14,34 @@ internal static class SpsPartyMapper
         {
             Identifier = source.ID?.Value,
             Name = source.Name?.Value,
-            PartyRoleCode = source.RoleCode?.Value.XmlEnumCode(),
-            PartyTypeCode = source.TypeCode?.FirstOrDefault() is { Value: { } v }
-                ? JsonSerializer.SerializeToElement(v)
-                : (JsonElement?)null,
+            PartyRoleCode = MapRoleCode(source.RoleCode),
+            PartyTypeCode = source.TypeCode
+                ?.Where(c => !string.IsNullOrEmpty(c.Value))
+                .Select(MapTypeCode)
+                .ToList()
+                .NullIfEmpty(),
             PostalAddress = SpsAddressMapper.Map(source.SpecifiedSPSAddress),
             DefinedContact = source.SpecifiedSPSPerson?.Name?.Value is { } name
                 ? [new TradePartyDefinedContactItem { PersonName = name }]
                 : null,
         };
     }
+
+    static CodedValue? MapRoleCode(PartyRoleCodeType? roleCode) =>
+        roleCode is null
+            ? null
+            : new CodedValue
+            {
+                Value = roleCode.Value.XmlEnumCode(),
+                Name = roleCode.name,
+                UrlId = roleCode.listID.ToCodelistUri(),
+            };
+
+    static CodedValue MapTypeCode(CodeType typeCode) =>
+        new()
+        {
+            Value = typeCode.Value,
+            Name = typeCode.name,
+            UrlId = typeCode.listID.ToCodelistUri(),
+        };
 }
