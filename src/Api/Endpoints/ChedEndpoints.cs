@@ -12,7 +12,7 @@ public static class ChedEndpoints
 {
     public static void UseChedEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("cheds/{id}", Get)
+        app.MapGet("certificates/cheds/{id}", Get)
             .Produces<DefraUNVTDCHEDProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDProfile>())
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)

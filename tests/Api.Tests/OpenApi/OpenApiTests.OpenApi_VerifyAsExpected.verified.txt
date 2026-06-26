@@ -5,7 +5,7 @@
     version: v1
   },
   paths: {
-    /cheds/{id}: {
+    /certificates/cheds/{id}: {
       get: {
         tags: [
           ChedEndpoints
