@@ -81,7 +81,7 @@
         }
       }
     },
-    /intras/{id}: {
+    /certificates/intras/{id}: {
       get: {
         tags: [
           IntraEndpoints
@@ -157,7 +157,7 @@
         }
       }
     },
-    /intras: {
+    /certificates/intras: {
       get: {
         tags: [
           IntraEndpoints
