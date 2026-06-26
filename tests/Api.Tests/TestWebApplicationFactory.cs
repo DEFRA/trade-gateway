@@ -54,11 +54,16 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
     private const string CognitoTokenEndpoint = "/local/cognito/token";
     private const string StsTokenEndpoint = "/local/sts/token";
 
-    public Task<string> GetCognitoTokenAsync(string scope) =>
-        PostTokenAsync(CognitoTokenEndpoint, [new("scope", scope)]);
+    public Task<string> GetCognitoTokenAsync(string scope, string? sub = null) =>
+        PostTokenAsync(CognitoTokenEndpoint, Fields(("scope", scope), ("sub", sub)));
 
-    public Task<string> GetStsTokenAsync(string audience) =>
-        PostTokenAsync(StsTokenEndpoint, [new("audience", audience)]);
+    public Task<string> GetStsTokenAsync(string audience, string? sub = null) =>
+        PostTokenAsync(StsTokenEndpoint, Fields(("audience", audience), ("sub", sub)));
+
+    private static IEnumerable<KeyValuePair<string, string>> Fields(params (string Key, string? Value)[] fields) =>
+        fields
+            .Where(f => f.Value is not null)
+            .Select(f => new KeyValuePair<string, string>(f.Key, f.Value!));
 
     private async Task<string> PostTokenAsync(string endpoint, IEnumerable<KeyValuePair<string, string>> fields)
     {
@@ -73,4 +78,10 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         return client;
     }
+
+    public const string CognitoScope = "trade-gateway-resource-srv/access";
+
+    /// <summary>Creates a client authenticated as a principal with the given <c>sub</c> claim.</summary>
+    public async Task<HttpClient> CreateClientForPrincipalAsync(string sub) =>
+        CreateClientWithToken(await GetCognitoTokenAsync(CognitoScope, sub));
 }
