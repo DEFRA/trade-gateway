@@ -100,11 +100,11 @@ Any other method is denied by default.
 
 | Operator | Meaning | Example | Matches |
 |----------|---------|---------|---------|
-| `*`  | exactly one path segment | `/certificates/intra/*`  | `/certificates/intra/ABC123` but **not** the collection `/certificates/intra` |
-| `**` | any suffix (zero or more segments) | `/certificates/intra/**` | the collection **and** any item beneath it |
+| `*`  | exactly one path segment | `/certificates/intras/*`  | `/certificates/intras/ABC123` but **not** the collection `/certificates/intras` |
+| `**` | any suffix (zero or more segments) | `/certificates/intras/**` | the collection **and** any item beneath it |
 
 A pattern with no wildcards is an exact match. This makes it possible to grant access to
-an instance (`/certificates/intra/*` or an exact id) without exposing the collection
+an instance (`/certificates/intras/*` or an exact id) without exposing the collection
 listing.
 
 The config has two sections with different lifetimes:
@@ -124,8 +124,8 @@ the common `appsettings.json` and `Principals` in the environment-specific
   "Authorization": {
     "Permissions": {
       "ched-importer": [
-        { "Actions": ["READ", "WRITE"], "Resource": "/certificates/ched/**" },
-        { "Actions": ["READ"],          "Resource": "/certificates/intra/**" }
+        { "Actions": ["READ", "WRITE"], "Resource": "/certificates/cheds/**" },
+        { "Actions": ["READ"],          "Resource": "/certificates/intras/**" }
       ],
       "reference-data-reader": [
         { "Actions": ["READ"], "Resource": "/reference-data/**" }
@@ -157,7 +157,7 @@ principal has an empty permissions list.
 > # default env settings (shared) — Permissions
 > AUTHORIZATION__PERMISSIONS__CHED-IMPORTER__0__ACTIONS__0=READ
 > AUTHORIZATION__PERMISSIONS__CHED-IMPORTER__0__ACTIONS__1=WRITE
-> AUTHORIZATION__PERMISSIONS__CHED-IMPORTER__0__RESOURCE=/certificates/ched/**
+> AUTHORIZATION__PERMISSIONS__CHED-IMPORTER__0__RESOURCE=/certificates/cheds/**
 >
 > # per-environment settings (e.g. dev) — Principals
 > AUTHORIZATION__PRINCIPALS__CHED-IMPORTER=arn:aws:sts::123456789012:assumed-role/ched-importer-role/session

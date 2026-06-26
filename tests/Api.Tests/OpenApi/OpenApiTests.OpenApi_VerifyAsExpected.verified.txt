@@ -5,7 +5,7 @@
     version: v1
   },
   paths: {
-    /certificates/intra/{id}: {
+    /certificates/intras/{id}: {
       get: {
         tags: [
           IntraEndpoints
@@ -81,7 +81,7 @@
         }
       }
     },
-    /certificates/intra: {
+    /certificates/intras: {
       get: {
         tags: [
           IntraEndpoints
