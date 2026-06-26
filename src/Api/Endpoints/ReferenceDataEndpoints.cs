@@ -14,7 +14,7 @@ public static class ReferenceDataEndpoints
 {
     public static void UseReferenceDataEndpoints(this IEndpointRouteBuilder app)
     {
-        app.MapGet("classificationSections", GetClassificationSections)
+        app.MapGet("reference-data/classifications/sections", GetClassificationSections)
             .Produces<DefraUNVTDProfileClassificationSectionListResponse>(
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileClassificationSectionListResponse>()
@@ -23,7 +23,7 @@ public static class ReferenceDataEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
-        app.MapGet("classificationTrees/{treeId}", GetClassificationTree)
+        app.MapGet("reference-data/classifications/trees/{treeId}", GetClassificationTree)
             .Produces<DefraUNVTDProfileClassificationTreeResponse>(
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeResponse>()
@@ -33,7 +33,7 @@ public static class ReferenceDataEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet(
-                "classificationTrees/{treeId}/nodes/{nodeId}",
+                "reference-data/classifications/trees/{treeId}/nodes/{nodeId}",
                 GetClassificationTreeNodeDetail
             )
             .Produces<DefraUNVTDProfileClassificationTreeNodeDetailResponse>(
@@ -45,7 +45,7 @@ public static class ReferenceDataEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet(
-                "metaDatas/{metadataType}",
+                "reference-data/metadata/{metadataType}",
                 GetMetadatas
             )
             .Produces<DefraUNVTDProfileMetadataListResponse>(
