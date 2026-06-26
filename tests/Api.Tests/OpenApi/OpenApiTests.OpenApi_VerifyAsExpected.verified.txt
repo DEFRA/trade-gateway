@@ -1,4 +1,4 @@
-{
+﻿{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -263,7 +263,7 @@
         }
       }
     },
-    /classificationSections: {
+    /reference-data/classifications/sections: {
       get: {
         tags: [
           ReferenceDataEndpoints
@@ -321,7 +321,7 @@
         }
       }
     },
-    /classificationTrees/{treeId}: {
+    /reference-data/classifications/trees/{treeId}: {
       get: {
         tags: [
           ReferenceDataEndpoints
@@ -387,7 +387,7 @@
         }
       }
     },
-    /classificationTrees/{treeId}/nodes/{nodeId}: {
+    /reference-data/classifications/trees/{treeId}/nodes/{nodeId}: {
       get: {
         tags: [
           ReferenceDataEndpoints
@@ -461,7 +461,7 @@
         }
       }
     },
-    /metaDatas/{metadataType}: {
+    /reference-data/metadata/{metadataType}: {
       get: {
         tags: [
           ReferenceDataEndpoints

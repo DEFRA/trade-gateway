@@ -31,8 +31,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/cheds/CHEDA.XI.2026.0000063", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetAsync("/certificates/cheds/CHEDA.XI.2026.0000063", TestContext.Current.CancellationToken);
 
         Assert.Equal(MediaTypeAttribute.For<DefraUNVTDCHEDProfile>(), response.Content.Headers.ContentType?.MediaType);
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
@@ -69,8 +69,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/cheds/BADSOAP", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetAsync("/certificates/cheds/BADSOAP", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
@@ -94,8 +94,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     .WithBody("upstream failed")
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/cheds/COMMFAIL", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetAsync("/certificates/cheds/COMMFAIL", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
@@ -137,8 +137,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/cheds/MISSING", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetAsync("/certificates/cheds/MISSING", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
@@ -181,8 +181,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/cheds/FORBIDDEN", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetAsync("/certificates/cheds/FORBIDDEN", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
