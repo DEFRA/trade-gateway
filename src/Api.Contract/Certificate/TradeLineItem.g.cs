@@ -14,7 +14,8 @@ public partial record TradeLineItem
     public List<string>? Description { get; init; }
 
     [JsonPropertyName("scientificName")]
-    public List<string>? ScientificName { get; init; }
+    [Description("The species name for the commodity in Latin")]
+    public string? ScientificName { get; init; }
 
     [JsonPropertyName("netWeight")]
     public UneceWeightMeasure? NetWeight { get; init; }
@@ -22,9 +23,21 @@ public partial record TradeLineItem
     [JsonPropertyName("grossWeight")]
     public UneceWeightMeasure? GrossWeight { get; init; }
 
-    [JsonPropertyName("applicableProductClassification")]
-    public List<ProductClassification>? ApplicableProductClassification { get; init; }
+    [JsonPropertyName("applicableClassification")]
+    public List<ApplicableClassification>? ApplicableClassification { get; init; }
 
     [JsonPropertyName("physicalReferencedLogisticsPackage")]
     public List<LogisticsPackage>? PhysicalReferencedLogisticsPackage { get; init; }
+
+    [JsonPropertyName("specifiedTradeProduct")]
+    [Description("The trade product on this line. BSP-canonical structural slot; profile schemas may narrow shape and cardinality.")]
+    public List<TradeProduct>? SpecifiedTradeProduct { get; init; }
+
+    [JsonPropertyName("specifiedLineTradeDelivery")]
+    [Description("Delivery aspect of this line (line-level quantities).")]
+    public List<LineTradeDelivery>? SpecifiedLineTradeDelivery { get; init; }
+
+    [JsonPropertyName("additionalInformationNote")]
+    [Description("Per-line annotation notes. Each entry carries a coded subject and one or more content values; consumers narrow the permitted subject codes in their profile.")]
+    public List<IncludedNote>? AdditionalInformationNote { get; init; }
 }

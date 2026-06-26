@@ -51,7 +51,8 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `importCountry` | `ImportSPSCountry` | see [TradeCountry](#tradecountry--spscountrytype) |
 | `reExportCountry` | `ReExportSPSCountry[]` | list; omitted if empty, see [TradeCountry](#tradecountry--spscountrytype) |
 | `transitCountry` | `TransitSPSCountry[]` | list; omitted if empty, see [TradeCountry](#tradecountry--spscountrytype) |
-| `unloadingBaseportLocation` | `null` | not mapped in v1 |
+| `unloadingBaseportLocation` | `UnloadingBaseportSPSLocation` | see [LogisticsLocation](#logisticslocation--spslocationtype) |
+| `mainCarriageLogisticsTransportMovement` | `MainCarriageSPSTransportMovement[]` | list, one entry per carriage leg; see [LogisticsTransportMovement](#logisticstransportmovement--spstransportmovementtype); omitted if empty |
 | `includedConsignmentItem` | `IncludedSPSConsignmentItem[]` | see [ConsignmentItem](#consignmentitem--spsconsignmentitemtype); omitted if empty |
 
 ---
@@ -62,8 +63,8 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 |---|---|---|
 | `identifier` | `ID.Value` | |
 | `name` | `Name.Value` | |
-| `partyRoleCode` | `RoleCode.Value` | e.g. `"VJ"` |
-| `partyTypeCode` | `TypeCode[0].Value` | first entry |
+| `partyRoleCode` | `RoleCode` | [coded value](#coded-values): `value` ← `RoleCode.Value`, `name` ← `RoleCode.name`, `urlId` from `RoleCode.listID`; omitted if absent |
+| `partyTypeCode` | `TypeCode[]` | list of [coded values](#coded-values); a party can carry codes from more than one TRACES list, all are mapped (entries with no value are skipped); omitted if empty |
 | `postalAddress` | `SpecifiedSPSAddress` | see [TradeAddress](#tradeaddress--spsaddresstype) |
 | `definedContact[0].personName` | `SpecifiedSPSPerson.Name.Value` | single person; omitted if no person |
 
@@ -87,8 +88,21 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `id` | `ID.Value` | ISO 3166-1 alpha-2 code e.g. `"GB"` |
+| `code` | `ID` / `Name` | [coded value](#coded-values): `value` ← `ID.Value` (ISO 3166-1 alpha-2 e.g. `"GB"`), `name` ← `Name[].Value` [language-preferred](#language-selection) |
+
+---
+
+### `LogisticsLocation` ← `SPSLocationType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `identifier` | `ID.Value` | bare location identifier e.g. `"GBDVR1"` |
+| `urlId` | `ID.schemeID` | codelist/register the identifier is drawn from (e.g. `un_locode`), expressed as a `https://traces-codelists.ec.europa.eu/{schemeID}` URI; omitted if no scheme |
 | `name` | `Name[].Value` | [language-preferred](#language-selection) |
+| `typeCode` | `null` | no SOAP source on `SPSLocationType` |
+| `postalAddress` | `null` | no SOAP source on `SPSLocationType` |
+
+`SPSLocationType` carries only `ID` and `Name`, so `typeCode` and `postalAddress` are unmapped.
 
 ---
 
@@ -99,7 +113,7 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `typeCode` | `TypeCode.Value` | raw code e.g. `"4"` |
 | `governmentActionTypeCode` | `TypeCode.name` | human-readable label e.g. `"Inspection"` |
 | `actualDateTime` | `ActualDateTime.Item` | ISO 8601 |
-| `providerParty` | `ProviderSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
+| `provider` | `ProviderSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
 | `includedClause` | `IncludedSPSClause[]` | see [Clause](#clause--spsclausetype); omitted if empty |
 
 ---
@@ -118,9 +132,9 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | Target field | Source path | Notes |
 |---|---|---|
 | `type` | `"Note"` | const default |
-| `noteSubjectCode` | `SubjectCode.name ?? SubjectCode.Value` | prefers human-readable name; falls back to code |
-| `content` | `Content[lang=en] ?? Content[lang=∅] ?? Content[0]` | prefer English; then language-neutral; then first entry; omitted if no content elements |
-| `contentCode` | `ContentCode[]` → `[{ listId, value }]` | one entry per `ContentCode` element; `listID` attribute → `listId`, code value → `value`; omitted if no content code elements |
+| `subject` | `SubjectCode.Value` | raw subject code e.g. `"REFUSAL_REASON"` |
+| `content` | `Content[].Value` | every content element, in source order; omitted if no content elements |
+| `contentCode` | `ContentCode[]` | list of [coded values](#coded-values): `value` ← code value, `urlId` ← `listID` attribute; one entry per `ContentCode` element; omitted if empty |
 
 **Behaviours to be aware of:**
 
@@ -157,11 +171,29 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 |---|---|---|
 | `sequenceNumeric` | `SequenceNumeric.Value` | |
 | `description` | `Description[].Value` | [language-preferred list](#language-selection); omitted if none match |
-| `scientificName` | `ScientificName[lang=la].Value` | Latin entries only; omitted if none present |
+| `scientificName` | `ScientificName.Value` | [language-preferred](#language-selection) with fixed Latin (`la`); omitted if none present |
 | `netWeight` | `NetWeightMeasure` | see [UneceWeightMeasure](#uneceweightmeasure--measuretype) |
 | `grossWeight` | `GrossWeightMeasure` | |
-| `applicableProductClassification` | `ApplicableSPSClassification[]` | see [ProductClassification](#productclassification--spsclassificationtype); omitted if empty |
+| `applicableClassification` | `ApplicableSPSClassification[]` | see [ApplicableClassification](#applicableclassification--spsclassificationtype); omitted if empty |
 | `physicalReferencedLogisticsPackage` | `PhysicalSPSPackage[]` | see [LogisticsPackage](#logisticspackage--spspackagetype); omitted if empty |
+
+---
+
+### `LogisticsTransportMovement` ← `SPSTransportMovementType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `identifier` | `ID.Value` | transport identifier (vessel name, flight number, vehicle registration) |
+| `modeCode` | `ModeCode.Value` | UN/EDIFACT Rec 19 wire code e.g. `"3"` (Road); from the `[XmlEnum]` value |
+| `usedLogisticsTransportMeans.name` | `UsedSPSTransportMeans.Name.Value` | omitted if no transport-means name |
+| `urlId` | `null` | no SOAP source |
+| `transportContractRelatedReferencedDocument` | `null` | no SOAP source |
+| `arrivalEvent` | `null` | no SOAP source |
+| `departureEvent` | `null` | no SOAP source |
+
+`SPSConsignment.MainCarriageSPSTransportMovement` is a SOAP array and the contract slot is now a
+list (the SPS profile collapses BSP's pre/main/on-carriage split into this single slot, with one
+entry per carriage leg). Every element is mapped; an empty or absent array maps to `null`.
 
 ---
 
@@ -173,13 +205,13 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 
 ---
 
-### `ProductClassification` ← `SPSClassificationType`
+### `ApplicableClassification` ← `SPSClassificationType`
 
 | Target field | Source path | Notes |
 |---|---|---|
 | `systemId` | `SystemID.Value` | classification system identifier e.g. `"CN"` |
 | `systemName` | `SystemName[].Value` | [language-preferred](#language-selection) |
-| `classCode` | `ClassCode.Value` | e.g. `"0201"` |
+| `classCode` | `ClassCode.Value` | [coded value](#coded-values): `value` ← code e.g. `"0201"`, `urlId` built from the `class_code_system` codelist keyed by `SystemID.Value`; omitted if no code |
 | `className` | `ClassName[].Value` | [language-preferred list](#language-selection); omitted if empty |
 
 ---
@@ -232,3 +264,15 @@ All date/time fields are output in ISO 8601 format. The source may supply either
 ## Type Code Representation
 
 Type codes are always expressed as their numeric wire values (e.g. `"856"`) rather than descriptive names. Where a human-readable label is also available alongside the code, both are mapped to separate target fields.
+
+## Coded Values
+
+Several fields are mapped to a shared `CodedValue` shape rather than a bare string:
+
+| Field | Source | Notes |
+|---|---|---|
+| `value` | the code itself | required |
+| `name` | the SOAP `name` attribute / language-selected label | human-readable label; omitted if absent |
+| `urlId` | the codelist the value is drawn from | a `https://traces-codelists.ec.europa.eu/{listId}` URI; `listId` comes from the source `listID` attribute (e.g. `"3035"` for party role codes) or a fixed codelist name (e.g. `class_code_system`); omitted when no codelist is known |
+
+Fields using this shape: `TradeCountry.code`, `TradeParty.partyRoleCode`, `TradeParty.partyTypeCode[]`, `ApplicableClassification.classCode`, and `IncludedNote.contentCode[]`.

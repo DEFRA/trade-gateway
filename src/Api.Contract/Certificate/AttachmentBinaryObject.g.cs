@@ -15,4 +15,8 @@ public partial record AttachmentBinaryObject
 
     [JsonPropertyName("uri")]
     public string? Uri { get; init; }
+
+    [JsonPropertyName("filename")]
+    [Description("Original filename for the attachment, where the by-reference pattern carries metadata alongside the URI.")]
+    public string? Filename { get; init; }
 }
