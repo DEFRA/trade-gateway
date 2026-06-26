@@ -5,7 +5,6 @@ using System.ComponentModel;
 using System.Collections.Generic;
 
 namespace Trade.Gateway.Api.Contract.ReferenceData;
-
 public partial record DocumentNodeAttributeValue
 {
     [JsonPropertyName("documentType")]

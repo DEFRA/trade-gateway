@@ -8,10 +8,10 @@
 //------------------------------------------------------------------------------
 namespace TracesNT.WebServices
 {
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ClassificationTreeDescription))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(TaxonReference))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(OperatorActivityTypeReference))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(MetaCountryGroupReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ClassificationTreeDescription))]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21")]

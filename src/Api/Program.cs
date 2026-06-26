@@ -110,6 +110,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseAuthorization();
     app.MapHealthChecks("/health");
     app.MapLocalOidcEndpoints();
+    app.UseChedEndpoints();
     app.UseIntraEndpoints();
     app.UseAuthTestEndpoints();
     app.UseReferenceDataEndpoints();

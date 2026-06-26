@@ -1,10 +1,86 @@
-﻿{
+{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
     version: v1
   },
   paths: {
+    /cheds/{id}: {
+      get: {
+        tags: [
+          ChedEndpoints
+        ],
+        parameters: [
+          {
+            name: id,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.ched.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDCHEDProfile
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     /intras/{id}: {
       get: {
         tags: [
@@ -853,6 +929,44 @@
           },
           unitCode: {
             type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDCHEDProfile: {
+        required: [
+          exchangedDocument,
+          specifiedConsignment
+        ],
+        type: object,
+        properties: {
+          $model: {
+            enum: [
+              defra/certificate-internal/1
+            ],
+            type: string,
+            nullable: true
+          },
+          $type: {
+            enum: [
+              ched
+            ],
+            type: string,
+            nullable: true
+          },
+          exchangedDocument: {
+            $ref: #/components/schemas/ExchangedDocument
+          },
+          specifiedConsignment: {
+            $ref: #/components/schemas/Consignment
+          },
+          laboratoryObservationResult: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LaboratoryObservationResult
+            },
+            description: UN vocabulary-aligned laboratory observations/results collection.,
             nullable: true
           }
         },
@@ -1972,6 +2086,9 @@
     }
   },
   tags: [
+    {
+      name: ChedEndpoints
+    },
     {
       name: IntraEndpoints
     },
