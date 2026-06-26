@@ -25,9 +25,9 @@ Pagination strategy is constrained by the upstream TracesNT SOAP API, which uses
 Each resource type exposes its own collection URL with temporal filter parameters:
 
 ```
-GET /intras?updatedFrom=2026-01-01T00:00:00Z&updatedBefore=2026-01-02T00:00:00Z&page=1&pageSize=20
-GET /cheds?updatedFrom=...&updatedBefore=...&page=1&pageSize=20
-GET /docoms?updatedFrom=...&updatedBefore=...&page=1&pageSize=20
+GET /intras?updatedFrom=2026-01-01T00:00:00Z&updatedBefore=2026-01-02T00:00:00Z&offset=0&pageSize=20
+GET /cheds?updatedFrom=...&updatedBefore=...&offset=0&pageSize=20
+GET /docoms?updatedFrom=...&updatedBefore=...&offset=0&pageSize=20
 ```
 
 This is the standard REST pattern for filtering a collection: query parameters narrow the result set without introducing a non-standard URL segment. The `updatedFrom`/`updatedBefore` names make the intent explicit without requiring a special operation segment.
@@ -41,7 +41,7 @@ Separate per-resource endpoints are used rather than a single unified `/changes?
 | `updatedFrom` | Yes | Return documents updated at or after this instant (inclusive). ISO 8601 UTC. |
 | `updatedBefore` | Yes | Return documents updated strictly before this instant (exclusive). ISO 8601 UTC. |
 | `offset` | No | 0-based records to skip. Defaults to 0. |
-| `pageSize` | No | Items per page. Defaults to 20, capped at 200 (the upstream maximum). |
+| `pageSize` | No | Items per page. Defaults to 10, capped at 200 (the upstream maximum). |
 
 Both `updatedFrom` and `updatedBefore` are required on every request. Open-ended time windows are not supported — they would produce unbounded result sets.
 
@@ -49,9 +49,7 @@ The semantics were verified against the TracesNT acceptance environment: the ups
 
 ### Pagination
 
-The upstream TracesNT `findEuIntraCertificate` and `findChedCertificate` operations use **offset-based pagination**: both `pageSize` and `offset` are required parameters (cardinality 1..1). `offset` is the number of items to skip; to retrieve page _N_, the gateway computes `offset = pageSize × (N − 1)`.
-
-The gateway exposes a 1-based `page` number to consumers and translates it to an upstream offset internally. This avoids leaking the SOAP model while still mapping without any buffering or re-counting in the middle tier.
+The upstream TracesNT `findEuIntraCertificate` and `findChedCertificate` operations use **offset-based pagination**: both `pageSize` and `offset` are required parameters (cardinality 1..1). `offset` is the number of items to skip.
 
 The upstream does not return a total item count. The termination condition is: stop requesting further pages when the number of items returned is less than `pageSize`. The gateway reflects this in the response envelope.
 
@@ -60,7 +58,7 @@ The response envelope:
 ```json
 {
   "items": [...],
-  "offset": 0,
+  "offset": 1,
   "pageSize": 20,
   "hasMore": true
 }
@@ -98,7 +96,7 @@ All errors follow [ADR-0002](./0002-rest-api-conventions.md) — RFC 7807 Proble
 **Positive**
 
 - Standard REST pattern — filtering a collection via query parameters needs no explanation in API documentation.
-- Offset-based pagination aligns directly with the TracesNT SOAP API — the gateway translates a 1-based page number to an offset, which is a trivial calculation with no buffering or re-counting.
+- Offset-based pagination aligns directly with the TracesNT SOAP API
 - Per-resource endpoints align with the per-service ownership model and keep routing, authorisation, and OpenAPI schemas cleanly separated.
 - `updatedFrom`/`updatedBefore` names are self-describing without a special URL segment.
 

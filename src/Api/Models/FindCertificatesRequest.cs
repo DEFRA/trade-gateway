@@ -12,7 +12,7 @@ public class FindCertificatesRequest : IValidatableObject
 
     [FromQuery(Name = "offset")]
     [System.ComponentModel.Description("Number of records to offset")]
-    [Range(0, int.MaxValue, ErrorMessage = "offset must be equal to or greater than 0")]
+    [Range(0, 9990, ErrorMessage = "offset must be equal to or greater than 0")]
     public int Offset { get; set; }
 
     [FromQuery(Name = "updatedFrom")]
@@ -26,12 +26,13 @@ public class FindCertificatesRequest : IValidatableObject
     public DateTime? UpdatedBefore { get; set; }
 
     [System.ComponentModel.Description("End of the range")]
-    [Required]
     [FromHeader(Name = "Accept-Language")]
     public string? AcceptLanguage { get; set; } = "en";
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
+        AcceptLanguage ??= "en";
+
         if (UpdatedFrom.GetValueOrDefault().Kind != DateTimeKind.Utc)
         {
             yield return new ValidationResult("UpdatedFrom date must be UTC.", [nameof(UpdatedFrom)]);

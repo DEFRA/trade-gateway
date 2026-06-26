@@ -193,7 +193,6 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
     public async Task Find_WhenUpdatedFromIsMissing_ReturnsBadRequest()
     {
         var client = factory.CreateClient();
-        client.DefaultRequestHeaders.Add("Accept-Language", "en");
         var response = await client.GetAsync(
             "/intras?pageSize=5&offset=5&updatedFrom1=2002-10-28Z&updatedBefore=2026-10-28Z",
             TestContext.Current.CancellationToken
@@ -226,7 +225,6 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = factory.CreateClient();
-        client.DefaultRequestHeaders.Add("Accept-Language", "en");
         var response = await client.GetAsync(
             "/intras?pageSize=10&offset=5&updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z",
             TestContext.Current.CancellationToken
