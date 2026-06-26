@@ -7,8 +7,8 @@ namespace Api.Tests.Endpoints;
 [Collection(IntegrationTestCollection.Name)]
 public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory factory)
 {
-    private const string IntraInstancePath = "/certificates/intra/AUTHZ1";
-    private const string IntraCollectionPath = "/certificates/intra";
+    private const string IntraInstancePath = "/certificates/intras/AUTHZ1";
+    private const string IntraCollectionPath = "/certificates/intras";
     private const string ReferenceDataPath = "/reference-data/classifications/sections";
 
     [Fact]

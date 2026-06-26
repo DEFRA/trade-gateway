@@ -16,7 +16,7 @@ public class AuthorizationConfigValidatorTests
             Principals = new Dictionary<string, string> { ["intra-reader"] = "sub-1" },
             Permissions = new Dictionary<string, List<PermissionGrant>>
             {
-                ["intra-reader"] = [new PermissionGrant { Actions = ["READ"], Resource = "/certificates/intra/**" }],
+                ["intra-reader"] = [new PermissionGrant { Actions = ["READ"], Resource = "/certificates/intras/**" }],
             },
         };
 
@@ -31,7 +31,7 @@ public class AuthorizationConfigValidatorTests
             Principals = new Dictionary<string, string>(),
             Permissions = new Dictionary<string, List<PermissionGrant>>
             {
-                ["intra-reader"] = [new PermissionGrant { Actions = ["READ"], Resource = "/certificates/intra/**" }],
+                ["intra-reader"] = [new PermissionGrant { Actions = ["READ"], Resource = "/certificates/intras/**" }],
             },
         };
 

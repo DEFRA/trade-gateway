@@ -56,8 +56,8 @@ Permissions are expressed as URL path patterns. Two wildcard operators are suppo
 
 | Operator | Meaning | Example | Matches |
 |----------|---------|---------|---------|
-| `*` | Any single path segment (no `/`) | `/certificates/*/detail` | `/certificates/ched/detail` but not `/certificates/ched/123/detail` |
-| `**` | Any path suffix (zero or more segments) | `/certificates/**` | `/certificates/`, `/certificates/ched`, `/certificates/ched/123` |
+| `*` | Any single path segment (no `/`) | `/certificates/*/detail` | `/certificates/cheds/detail` but not `/certificates/cheds/123/detail` |
+| `**` | Any path suffix (zero or more segments) | `/certificates/**` | `/certificates/`, `/certificates/cheds`, `/certificates/cheds/123` |
 
 Path matching is **case-insensitive**. Trailing slashes are normalised before matching.
 
@@ -79,8 +79,8 @@ The combined structure expressed as JSON (used locally and in tests via `appsett
     },
     "Permissions": {
       "ched-importer": [
-        { "Actions": ["READ", "WRITE"], "Resource": "/certificates/ched/**" },
-        { "Actions": ["READ"],          "Resource": "/certificates/intra/**" }
+        { "Actions": ["READ", "WRITE"], "Resource": "/certificates/cheds/**" },
+        { "Actions": ["READ"],          "Resource": "/certificates/intras/**" }
       ],
       "reference-data-reader": [
         { "Actions": ["READ"], "Resource": "/reference-data/**" }
@@ -102,9 +102,9 @@ Authorization__Principals__reference-data-reader=b2c3d4e5-f6a7-8901-bcde-f123456
 ```
 Authorization__Permissions__ched-importer__0__Actions__0=READ
 Authorization__Permissions__ched-importer__0__Actions__1=WRITE
-Authorization__Permissions__ched-importer__0__Resource=/certificates/ched/**
+Authorization__Permissions__ched-importer__0__Resource=/certificates/cheds/**
 Authorization__Permissions__ched-importer__1__Actions__0=READ
-Authorization__Permissions__ched-importer__1__Resource=/certificates/intra/**
+Authorization__Permissions__ched-importer__1__Resource=/certificates/intras/**
 ```
 
 The verbosity of the `Permissions` env var form is a consequence of the platform constraint, not the data model. Indices must be zero-based and contiguous — a gap in the sequence causes the remainder to be silently dropped by the ASP.NET Core binder.
@@ -162,9 +162,9 @@ The resource path patterns used in permissions depend on the API's URL structure
 Adopt a hierarchical route structure that makes grouping explicit in the URL:
 
 ```
-/certificates/intra          (currently: /intras)
-/certificates/intra/{id}     (currently: /intras/{id})
-/certificates/ched/**        (future)
+/certificates/intras          (currently: /intras)
+/certificates/intras/{id}     (currently: /intras/{id})
+/certificates/cheds/**        (future)
 /reference-data/classifications/sections    (currently: /classificationSections)
 /reference-data/classifications/trees/{id} (currently: /classificationTrees/{id})
 /reference-data/metadata/{type}            (currently: /metaDatas/{type})
