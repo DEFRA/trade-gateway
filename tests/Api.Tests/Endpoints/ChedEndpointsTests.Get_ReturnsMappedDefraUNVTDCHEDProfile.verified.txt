@@ -1,4 +1,4 @@
-﻿{
+{
   $model: defra/certificate-internal/1,
   $type: ched,
   exchangedDocument: {
@@ -11,16 +11,56 @@
     versionId: null,
     functionCode: null,
     issueDateTime: DateTimeOffset_1,
-    issuer: null,
+    issuer: {
+      identifier: XIXXX1,
+      urlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+      name: Belfast Port,
+      partyRoleCode: {
+        value: VJ,
+        urlId: https://traces-codelists.ec.europa.eu/3035,
+        name: Officer (Identification of Applicant)
+      },
+      partyTypeCode: [
+        {
+          value: AUTHORITY,
+          urlId: https://traces-codelists.ec.europa.eu/user_body_role,
+          name: Authority
+        }
+      ],
+      postalAddress: {
+        postcodeCode: BT4,
+        lineOne:
+DAERA Plant Health Inspection Branch
+                Room 1022 Dundonald House
+                Upper Newtownards Road
+              ,
+        lineTwo: null,
+        cityName: Belfast,
+        countryId: XI,
+        countryName: United Kingdom (Northern Ireland),
+        countrySubDivisionName: County Antrim
+      },
+      definedContact: [
+        {
+          personName: Name Redacted,
+          emailURIUniversalCommunication: null,
+          telephoneUniversalCommunication: null
+        }
+      ]
+    },
     includedNote: [
       {
         type: Note,
         identifier: null,
         name: null,
-        subject: CHED_TYPE,
+        subject: null,
         creationDateTime: null,
         noteSubjectCode: null,
-        subjectCode: null,
+        subjectCode: {
+          value: CHED_TYPE,
+          urlId: ched_note_subject_code,
+          name: null
+        },
         content: [
           null
         ],
@@ -36,10 +76,14 @@
         type: Note,
         identifier: null,
         name: null,
-        subject: LAST_UPDATE_DATETIME,
+        subject: null,
         creationDateTime: null,
         noteSubjectCode: null,
-        subjectCode: null,
+        subjectCode: {
+          value: LAST_UPDATE_DATETIME,
+          urlId: ched_note_subject_code,
+          name: null
+        },
         content: [
           DateTimeOffset_2
         ],
@@ -104,7 +148,7 @@
     exportExitDateTime: null,
     consignorParty: {
       identifier: 123434567890,
-      urlId: null,
+      urlId: https://traces-codelists.ec.europa.eu/national_registry_number,
       name: Defra Test,
       partyRoleCode: {
         value: EX,
@@ -136,7 +180,7 @@
     },
     consigneeParty: {
       identifier: NL0000000001,
-      urlId: null,
+      urlId: https://traces-codelists.ec.europa.eu/national_registry_number,
       name: Company Name Redacted LTD,
       partyRoleCode: {
         value: CN,
@@ -167,11 +211,42 @@
       definedContact: null
     },
     despatchParty: null,
-    deliveryParty: null,
+    deliveryParty: {
+      identifier: DAERA-12345,
+      urlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      name: COOPERATIVEtx26 Ltd,
+      partyRoleCode: {
+        value: DP,
+        urlId: https://traces-codelists.ec.europa.eu/3035,
+        name: Delivery party (Place of destination)
+      },
+      partyTypeCode: [
+        {
+          value: IMPORTER,
+          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          name: Importer
+        },
+        {
+          value: GEN,
+          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          name: General activity establishment - EU
+        }
+      ],
+      postalAddress: {
+        postcodeCode: BT5,
+        lineOne: Address 1,
+        lineTwo: null,
+        cityName: City,
+        countryId: XI,
+        countryName: United Kingdom (Northern Ireland),
+        countrySubDivisionName: Northern Ireland
+      },
+      definedContact: null
+    },
     carrier: null,
     customsTransitAgentParty: {
       identifier: 78557,
-      urlId: null,
+      urlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
       name: ABP EU TEST,
       partyRoleCode: {
         value: CB,

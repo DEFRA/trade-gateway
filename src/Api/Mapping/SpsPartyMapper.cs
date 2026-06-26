@@ -14,6 +14,7 @@ internal static class SpsPartyMapper
         {
             Identifier = source.ID?.Value,
             Name = source.Name?.Value,
+            UrlId = source.ID?.schemeID.ToCodelistUri(),
             PartyRoleCode = MapRoleCode(source.RoleCode),
             PartyTypeCode = source.TypeCode
                 ?.Where(c => !string.IsNullOrEmpty(c.Value))

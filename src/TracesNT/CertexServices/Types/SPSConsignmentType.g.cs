@@ -156,20 +156,20 @@ namespace TracesNT.WebServices.CertexServices
             }
         }
 
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("StorageSPSEvent", Order = 8)]
-        public SPSEventType[] StorageSPSEvent
-        {
-            get
-            {
-                return this.storageSPSEventField;
-            }
+/// <remarks/>
+[System.Xml.Serialization.XmlElementAttribute("StorageSPSEvent", Order = 8)]
+public SPSEventType[] StorageSPSEvent
+{
+    get
+    {
+        return this.storageSPSEventField;
+    }
 
-            set
-            {
-                this.storageSPSEventField = value;
-            }
-        }
+    set
+    {
+        this.storageSPSEventField = value;
+    }
+}
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 9)]

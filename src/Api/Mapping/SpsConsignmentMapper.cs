@@ -12,6 +12,7 @@ internal static class SpsConsignmentMapper
             ExportExitDateTime = SpsDateTimeMapper.Map(source.ExportExitDateTime),
             ConsignorParty = SpsPartyMapper.Map(source.ConsignorSPSParty),
             ConsigneeParty = SpsPartyMapper.Map(source.ConsigneeSPSParty),
+            DeliveryParty = SpsPartyMapper.Map(source.DeliverySPSParty),
             DespatchParty = SpsPartyMapper.Map(source.DespatchSPSParty),
             CustomsTransitAgentParty = SpsPartyMapper.Map(source.CustomsTransitAgentSPSParty),
             ExportCountry = SpsCountryMapper.Map(source.ExportSPSCountry, context),

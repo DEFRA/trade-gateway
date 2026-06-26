@@ -11,11 +11,12 @@ public class SpsNoteMapperTests
     {
         var source = new SPSNoteType
         {
-            SubjectCode = new CodeType { Value = "REFUSAL_REASON" },
+            SubjectCode = new CodeType { listID = "ched_note_subject_code", Value = "CHED_TYPE" },
             Content = [],
         };
 
-        SpsNoteMapper.Map(source).Subject.Should().Be("REFUSAL_REASON");
+        SpsNoteMapper.Map(source).SubjectCode!.Value.Should().Be("CHED_TYPE");
+        SpsNoteMapper.Map(source).SubjectCode!.UrlId.Should().Be("ched_note_subject_code");
     }
 
     [Fact]
