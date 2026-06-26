@@ -73,6 +73,6 @@ public class SpsAuthenticationMapperTests
             ProviderSPSParty = new SPSPartyType { ID = new IDType { Value = "PARTY-1" } },
         };
 
-        SpsAuthenticationMapper.Map(source, Context)!.ProviderParty!.Identifier.Should().Be("PARTY-1");
+        SpsAuthenticationMapper.Map(source, Context)!.Provider!.Identifier.Should().Be("PARTY-1");
     }
 }

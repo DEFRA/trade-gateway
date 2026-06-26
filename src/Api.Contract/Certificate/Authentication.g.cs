@@ -18,8 +18,9 @@ public partial record Authentication
     [Description("unece:governmentActionTypeCode is @vocab in unece-context-D23B.jsonld; use a string code or vocabulary token.")]
     public string? GovernmentActionTypeCode { get; init; }
 
-    [JsonPropertyName("providerParty")]
-    public TradeParty? ProviderParty { get; init; }
+    [JsonPropertyName("provider")]
+    [Description("The party authenticating this signatory entry (the issuing veterinarian, the certifying authority, the inspecting body). Maps to UN/CEFACT documentAuthentication.provider. Renamed from providerParty per TIG §4.4 naming alignment.")]
+    public TradeParty? Provider { get; init; }
 
     [JsonPropertyName("includedClause")]
     public List<Clause>? IncludedClause { get; init; }
