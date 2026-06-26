@@ -106,7 +106,7 @@
             description: Number of records to offset,
             required: true,
             schema: {
-              maximum: 2147483647,
+              maximum: 9990,
               minimum: 0,
               type: integer,
               description: Number of records to offset,
