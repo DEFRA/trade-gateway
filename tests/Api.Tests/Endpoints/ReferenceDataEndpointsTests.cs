@@ -48,9 +48,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
         var response = await client.GetAsync(
-            "/classificationSections",
+            "/reference-data/classifications/sections",
             TestContext.Current.CancellationToken
         );
         var payload =
@@ -84,8 +84,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
             )
             .RespondWith(Response.Create().WithStatusCode(500));
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/classificationSections", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync("/reference-data/classifications/sections", TestContext.Current.CancellationToken);
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
@@ -122,8 +122,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync("/classificationSections", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync("/reference-data/classifications/sections", TestContext.Current.CancellationToken);
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -155,9 +155,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
         var response = await client.GetAsync(
-            "/classificationTrees/intra_trade",
+            "/reference-data/classifications/trees/intra_trade",
             TestContext.Current.CancellationToken
         );
         var payload =
@@ -233,8 +233,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync($"/classificationTrees/{treeId}", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync($"/reference-data/classifications/trees/{treeId}", TestContext.Current.CancellationToken);
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -259,8 +259,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
             )
             .RespondWith(Response.Create().WithStatusCode(500));
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync($"/classificationTrees/{treeId}", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync($"/reference-data/classifications/trees/{treeId}", TestContext.Current.CancellationToken);
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
@@ -288,8 +288,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync($"/classificationTrees/{treeId}", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync($"/reference-data/classifications/trees/{treeId}", TestContext.Current.CancellationToken);
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
@@ -323,9 +323,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
         var response = await client.GetAsync(
-            $"/classificationTrees/intra_trade/nodes/{nodeId}",
+            $"/reference-data/classifications/trees/intra_trade/nodes/{nodeId}",
             TestContext.Current.CancellationToken
         );
         var payload =
@@ -454,9 +454,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
         var response = await client.GetAsync(
-            $"/classificationTrees/intra_trade/nodes/{nodeId}",
+            $"/reference-data/classifications/trees/intra_trade/nodes/{nodeId}",
             TestContext.Current.CancellationToken
         );
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
@@ -487,9 +487,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
         var response = await client.GetAsync(
-            $"/classificationTrees/intra_trade/nodes/{nodeId}",
+            $"/reference-data/classifications/trees/intra_trade/nodes/{nodeId}",
             TestContext.Current.CancellationToken
         );
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
@@ -524,8 +524,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync($"/metaDatas/{metadataType}", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync($"/reference-data/metadata/{metadataType}", TestContext.Current.CancellationToken);
         var payload =
             await response.Content.ReadFromJsonAsync<DefraUNVTDProfileMetadataListResponse>(
                 TestContext.Current.CancellationToken
@@ -561,8 +561,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
             )
             .RespondWith(Response.Create().WithStatusCode(500));
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync($"/metaDatas/{metadataType}", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync($"/reference-data/metadata/{metadataType}", TestContext.Current.CancellationToken);
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
@@ -601,8 +601,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync($"/metaDatas/{metadataType}", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync($"/reference-data/metadata/{metadataType}", TestContext.Current.CancellationToken);
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
@@ -631,8 +631,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             );
 
-        var client = factory.CreateClient();
-        var response = await client.GetAsync($"/metaDatas/{metadataType}", TestContext.Current.CancellationToken);
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.GetAsync($"/reference-data/metadata/{metadataType}", TestContext.Current.CancellationToken);
         var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);

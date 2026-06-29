@@ -57,13 +57,17 @@ public static class LocalOidcServer
         app.MapGet($"{prefix}/.well-known/jwks", () => Results.Json(jwks))
            .AllowAnonymous().ExcludeFromDescription();
 
-        app.MapPost($"{prefix}/token", ([FromForm] string? scope, [FromForm] string? audience) =>
+        app.MapPost($"{prefix}/token", ([FromForm] string? scope, [FromForm] string? audience, [FromForm] string? sub) =>
         {
+            var claims = new Dictionary<string, object> { ["scope"] = scope ?? "" };
+            if (!string.IsNullOrEmpty(sub))
+                claims["sub"] = sub;
+
             var descriptor = new SecurityTokenDescriptor
             {
                 Issuer = authority,
                 Audience = audience,
-                Claims = new Dictionary<string, object> { ["scope"] = scope ?? "" },
+                Claims = claims,
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = Credentials,
             };

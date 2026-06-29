@@ -108,7 +108,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
-    app.MapHealthChecks("/health");
+    app.MapHealthChecks("/health").AllowAnonymous();
     app.MapLocalOidcEndpoints();
     app.UseIntraEndpoints();
     app.UseAuthTestEndpoints();
