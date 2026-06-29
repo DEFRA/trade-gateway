@@ -18,6 +18,20 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 
 ---
 
+### CHED — `ChedCertificateType` → `DefraUNVTDCHEDProfile`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `$model` | `"defra/certificate-internal/1"` | const default |
+| `$type` | `"ched"` | const default |
+| `exchangedDocument.documentTypeCode` | `SPSCertificate.SPSExchangedDocument.TypeCode.Value` | profile-specific const `636` applied via profile (shared ExchangedDocument type) |
+| `specifiedConsignment` | `SPSCertificate.SPSConsignment` | maps to a see [Consignment](#consignment--spsconsignmenttype) object |
+| `laboratoryObservationResult` | `null` | `SPSConsignmentItemLaboratoryTest` not mapped in v1 |
+
+---
+
+---
+
 ## Shared Types
 
 ### `ExchangedDocument` ← `SPSExchangedDocumentType`
@@ -29,6 +43,7 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `documentTypeCode` | `TypeCode.Value` | e.g. `"856"` |
 | `documentStatusCode` | `StatusCode.Value` | e.g. `"1"` |
 | `issueDateTime` | `IssueDateTime.Item` | ISO 8601; see [Date/Time Handling](#datetime-handling) |
+| `issuer` | `IssuerSPSParty` | see [TradeParty](#tradeparty--spspartytype); the party responsible for issuing the document |
 | `includedNote` | `IncludedSPSNote[]` | see [IncludedNote](#includednote--spsnotetype); omitted if empty |
 | `referenceDocument` | `ReferenceSPSReferencedDocument[]` | see [ReferencedDocument](#referenceddocument--spsreferenceddocumenttype); omitted if empty |
 | `firstSignatoryAuthentication` | `SignatorySPSAuthentication` where `TypeCode = 4` (Inspection) | see [Authentication](#authentication--spsauthenticationtype); matched by type code, not position |
@@ -46,13 +61,18 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `consignorParty` | `ConsignorSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
 | `consigneeParty` | `ConsigneeSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
 | `despatchParty` | `DespatchSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
-| `customsTransitAgentParty` | `CustomsTransitAgentSPSParty` |  see [TradeParty](#tradeparty--spspartytype) |
+| `deliveryParty` | `DeliverySPSParty` | see [TradeParty](#tradeparty--spspartytype) |
+| `carrier` | `CarrierSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
+| `customsTransitAgentParty` | `CustomsTransitAgentSPSParty` | see [TradeParty](#tradeparty--spspartytype) |
 | `exportCountry` | `ExportSPSCountry` | see [TradeCountry](#tradecountry--spscountrytype) |
+| `originCountry` | `OriginSPSCountry` | see [TradeCountry](#tradecountry--spscountrytype) |
 | `importCountry` | `ImportSPSCountry` | see [TradeCountry](#tradecountry--spscountrytype) |
 | `reExportCountry` | `ReExportSPSCountry[]` | list; omitted if empty, see [TradeCountry](#tradecountry--spscountrytype) |
 | `transitCountry` | `TransitSPSCountry[]` | list; omitted if empty, see [TradeCountry](#tradecountry--spscountrytype) |
+| `transitTradeCountry` | `TransitSPSCountry[]` | see [TradeCountry](#tradecountry--spscountrytype) |
 | `unloadingBaseportLocation` | `UnloadingBaseportSPSLocation` | see [LogisticsLocation](#logisticslocation--spslocationtype) |
 | `mainCarriageLogisticsTransportMovement` | `MainCarriageSPSTransportMovement[]` | list, one entry per carriage leg; see [LogisticsTransportMovement](#logisticstransportmovement--spstransportmovementtype); omitted if empty |
+| `packageQuantity` | `— (no direct SOAP equivalent on SPSConsignmentType)` | The canonical `packageQuantity` slot exists on the contract type but is not present on all SOAP variants; it remains unmapped unless a source element is available in the SOAP payload |
 | `includedConsignmentItem` | `IncludedSPSConsignmentItem[]` | see [ConsignmentItem](#consignmentitem--spsconsignmentitemtype); omitted if empty |
 
 ---
