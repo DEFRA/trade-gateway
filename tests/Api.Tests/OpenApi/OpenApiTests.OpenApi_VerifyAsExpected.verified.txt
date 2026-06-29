@@ -106,7 +106,7 @@
             description: Number of records to offset,
             required: true,
             schema: {
-              maximum: 2147483647,
+              maximum: 9990,
               minimum: 0,
               type: integer,
               description: Number of records to offset,
@@ -147,7 +147,7 @@
           200: {
             description: OK,
             content: {
-              application/vnd.defra.trade.intra.summary.v1+json: {
+              application/vnd.defra.trade.intra-list.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDINTRASummaryProfile
                 }
