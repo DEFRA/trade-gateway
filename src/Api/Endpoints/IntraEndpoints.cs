@@ -56,8 +56,8 @@ public static class IntraEndpoints
         var certificates = await euIntraCertificateService.FindEuIntraCertificates(
             query.UpdatedFrom!.Value,
             query.UpdatedBefore!.Value,
-            query.Offset,
-            query.PageSize,
+            query.Offset!.Value,
+            query.PageSize!.Value,
             query.AcceptLanguage!
         );
         return Results.Json(

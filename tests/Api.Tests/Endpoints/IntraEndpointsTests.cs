@@ -204,7 +204,7 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
     }
 
     [Fact]
-    public async Task Find_WhenValidRequest_AndNoAcceptHeader_ReturnsOk()
+    public async Task Find_WhenValidRequest_AndNoOptionalParameters_ReturnsOk()
     {
         factory
             .WireMockServer.Given(
@@ -225,9 +225,8 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
-        client.DefaultRequestHeaders.Add("Accept-Language", "en");
         var response = await client.GetAsync(
-            "/certificates/intras?pageSize=10&offset=5&updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z",
+            "/certificates/intras?updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z",
             TestContext.Current.CancellationToken
         );
 
