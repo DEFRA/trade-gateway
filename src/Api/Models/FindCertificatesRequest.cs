@@ -8,12 +8,12 @@ public class FindCertificatesRequest : IValidatableObject
     [FromQuery(Name = "pageSize")]
     [System.ComponentModel.Description("The number of records to return")]
     [Range(10, 200, ErrorMessage = "pageSize must be between 10 and 200")]
-    public int PageSize { get; set; } = 10;
+    public int? PageSize { get; set; } = 10;
 
     [FromQuery(Name = "offset")]
     [System.ComponentModel.Description("Number of records to offset")]
     [Range(0, 9990, ErrorMessage = "offset must be equal to or greater than 0")]
-    public int Offset { get; set; }
+    public int? Offset { get; set; } = 0;
 
     [FromQuery(Name = "updatedFrom")]
     [System.ComponentModel.Description("Start of the range")]
@@ -31,6 +31,8 @@ public class FindCertificatesRequest : IValidatableObject
 
     public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
     {
+        PageSize ??= 10;
+        Offset ??= 0;
         AcceptLanguage ??= "en";
 
         if (UpdatedFrom.GetValueOrDefault().Kind != DateTimeKind.Utc)
