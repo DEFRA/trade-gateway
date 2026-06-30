@@ -91,7 +91,6 @@
             name: pageSize,
             in: query,
             description: The number of records to return,
-            required: true,
             schema: {
               maximum: 200,
               minimum: 10,
@@ -104,7 +103,6 @@
             name: offset,
             in: query,
             description: Number of records to offset,
-            required: true,
             schema: {
               maximum: 9990,
               minimum: 0,
