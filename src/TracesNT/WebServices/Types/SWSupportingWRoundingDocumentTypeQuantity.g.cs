@@ -8,51 +8,47 @@
 //------------------------------------------------------------------------------
 namespace TracesNT.WebServices
 {
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(ClassificationTreeDescription))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(OperatorActivityTypeReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(MetaCountryGroupReference))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(TaxonReference))]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21")]
-    public partial class TextType
+    [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
+    public partial class SWSupportingWRoundingDocumentTypeQuantity
     {
-        private string languageIDField;
-        private string languageLocaleIDField;
-        private string valueField;
+        private decimal technicalRoundingQuantityField;
+        private bool technicalRoundingQuantityFieldSpecified;
+        private decimal valueField;
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "token")]
-        public string languageID
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        public decimal TechnicalRoundingQuantity
         {
             get
             {
-                return this.languageIDField;
+                return this.technicalRoundingQuantityField;
             }
 
             set
             {
-                this.languageIDField = value;
+                this.technicalRoundingQuantityField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute(DataType = "token")]
-        public string languageLocaleID
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool TechnicalRoundingQuantitySpecified
         {
             get
             {
-                return this.languageLocaleIDField;
+                return this.technicalRoundingQuantityFieldSpecified;
             }
 
             set
             {
-                this.languageLocaleIDField = value;
+                this.technicalRoundingQuantityFieldSpecified = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlTextAttribute()]
-        public string Value
+        public decimal Value
         {
             get
             {

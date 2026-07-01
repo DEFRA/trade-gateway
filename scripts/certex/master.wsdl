@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
-We dynamically create a master WSDL that pulls in all endpoints simultaneously.
-This FORCES dotnet-svcutil to resolve the entire global object graph in memory at once,
-which natively deduplicates the data models.
--->
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" targetNamespace="http://tempuri.org/">
-  <wsdl:import location="https://webgate.acceptance.ec.europa.eu/tracesnt/ws/CustomsCertexChedServiceV04?wsdl" namespace="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v04" />
-</wsdl:definitions>
