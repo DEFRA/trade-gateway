@@ -12,4 +12,26 @@ internal static class ChedMapper
             SpecifiedConsignment = SpsConsignmentMapper.Map(source.SPSCertificate.SPSConsignment, context),
             LaboratoryObservationResult = null
         };
+
+    internal static DefraUNVTDCHEDSummaryProfileItem Map(ChedCertificateQueryResultType source) =>
+        new()
+        {
+            Id = source.ID,
+            Created = source.CreateDateTime,
+            Origin = source.CountryOfOrigin?.FirstOrDefault()?.Value ?? string.Empty,
+            Updated = source.UpdateDateTime,
+        };
+
+    internal static DefraUNVTDCHEDSummaryProfile Map(FindChedCertificateResultType source)
+    {
+        var results = source.ChedCertificateResult ?? [];
+
+        return new()
+        {
+            Items = results.Select(Map).ToArray(),
+            Offset = source.offset,
+            PageSize = source.pageSize,
+            HasMore = results.Length == source.pageSize,
+        };
+    }
 }

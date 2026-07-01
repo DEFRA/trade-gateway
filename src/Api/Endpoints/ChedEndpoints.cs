@@ -1,6 +1,7 @@
 using Api.Constants;
 using Api.Contract;
 using Api.Mapping;
+using Api.Models;
 using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
@@ -15,6 +16,12 @@ public static class ChedEndpoints
         app.MapGet("certificates/cheds/{id}", Get)
             .Produces<DefraUNVTDCHEDProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDProfile>())
             .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapGet("certificates/cheds", Find)
+            .Produces<DefraUNVTDINTRASummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDINTRASummaryProfile>())
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
@@ -38,6 +45,24 @@ public static class ChedEndpoints
         return Results.Json(
             ChedMapper.Map(certificate, context),
             contentType: MediaTypeAttribute.For<DefraUNVTDCHEDProfile>()
+        );
+    }
+
+    private static async Task<IResult> Find(
+        [AsParameters] FindCertificatesRequest query,
+        [FromServices] IChedCertificateService chedCertificateService
+    )
+    {
+        var certificates = await chedCertificateService.FindChedCertificates(
+            query.UpdatedFrom!.Value,
+            query.UpdatedBefore!.Value,
+            query.Offset,
+            query.PageSize,
+            query.AcceptLanguage!
+        );
+        return Results.Json(
+            ChedMapper.Map(certificates.FindChedCertificateResponse1),
+            contentType: MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>()
         );
     }
 }
