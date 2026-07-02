@@ -15,7 +15,6 @@ public static class ServiceRegistrationExtensions
     internal static IServiceCollection AddTracesNtClient<TClient, TChannel>(
         this IServiceCollection services,
         string servicePath,
-            string? xApiKey,
             Func<Binding, EndpointAddress, TClient> clientFactory
         )
             where TClient : ClientBase<TChannel>, TChannel
@@ -33,7 +32,7 @@ public static class ServiceRegistrationExtensions
                 // Logging runs before WS-Security so credentials are never captured in logs.
                 // BeforeSendRequest fires in registration order; WS-Security adds its header last.
                 client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(logger));
-                client.Endpoint.EndpointBehaviors.Add(new WsSecurityEndpointBehavior(config, xApiKey));
+                client.Endpoint.EndpointBehaviors.Add(new WsSecurityEndpointBehavior(config));
 
                 return client;
             });

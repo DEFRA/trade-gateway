@@ -9,7 +9,7 @@ public class WsSecurityEndpointBehaviorTests
     [Fact]
     public void ApplyClientBehavior_AddsWsSecurityMessageInspector()
     {
-        var sut = new WsSecurityEndpointBehavior(new TracesNtConfig(), "api-key");
+        var sut = new WsSecurityEndpointBehavior(new TracesNtConfig());
         var clientRuntime = WcfTestHelpers.CreateClientRuntime();
 
         sut.ApplyClientBehavior(WcfTestHelpers.CreateEndpoint(), clientRuntime);
@@ -19,22 +19,5 @@ public class WsSecurityEndpointBehaviorTests
             .ContainSingle()
             .Which.Should()
             .BeOfType<WsSecurityMessageInspector>();
-    }
-
-    [Fact]
-    public void AddBindingParameters_AddsCustomHeaderDelegatingHandlerFactory()
-    {
-        var sut = new WsSecurityEndpointBehavior(new TracesNtConfig(), "api-key");
-        var parameters = new BindingParameterCollection();
-
-        sut.AddBindingParameters(WcfTestHelpers.CreateEndpoint(), parameters);
-
-        parameters.Should().ContainSingle();
-        var factory = parameters[0].Should().BeOfType<Func<HttpClientHandler, HttpMessageHandler>>().Subject;
-        var innerHandler = new HttpClientHandler();
-        var handler = factory(innerHandler);
-
-        handler.Should().BeOfType<CustomHeaderDelegatingHandler>();
-        ((DelegatingHandler)handler).InnerHandler.Should().BeSameAs(innerHandler);
     }
 }
