@@ -32,11 +32,8 @@ public class GlobalExceptionHandler(
                 "Bad Gateway",
                 "An error occurred communicating with an upstream service."
             ),
-            _ => (
-                StatusCodes.Status500InternalServerError,
-                "Internal Server Error",
-                "An unexpected error occurred."
-            ),
+            BadHttpRequestException => (StatusCodes.Status400BadRequest, "Bad Request", exception.Message),
+            _ => (StatusCodes.Status500InternalServerError, "Internal Server Error", "An unexpected error occurred."),
         };
 
         if (statusCode >= 500)
