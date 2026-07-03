@@ -10,20 +10,22 @@ namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
     public partial class ProcessedChedRequestType
     {
         private System.DateTime sendingDateField;
         private string chedCertificateIdField;
         private string tARICDocumentField;
-        private string customsDocumentReferenceField;
+        private CustomsDeclarationReferenceNumber4CoiChedR51InputType customsDeclarationReferenceNumberField;
         private CompetentCustomsOfficeType competentCustomsOfficeField;
-        private ConsignmentItemEnhancedR4ForReservationType[] commodityDescriptionForChedField;
+        private ConsignmentItemR6ForReservationType[] commodityDescriptionForChedField;
         private bool pdfGenerationIndicationField;
         private bool pdfGenerationIndicationFieldSpecified;
         private string languageField;
         private string quantityManagementIndicationField;
         private PushIndicationType pushIndicationField;
+        private TransformationIndicationType transformationIndictionField;
+        private bool transformationIndictionFieldSpecified;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
         public System.DateTime SendingDate
@@ -71,16 +73,16 @@ namespace TracesNT.WebServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public string CustomsDocumentReference
+        public CustomsDeclarationReferenceNumber4CoiChedR51InputType CustomsDeclarationReferenceNumber
         {
             get
             {
-                return this.customsDocumentReferenceField;
+                return this.customsDeclarationReferenceNumberField;
             }
 
             set
             {
-                this.customsDocumentReferenceField = value;
+                this.customsDeclarationReferenceNumberField = value;
             }
         }
 
@@ -101,7 +103,7 @@ namespace TracesNT.WebServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("CommodityDescriptionForChed", Order = 5)]
-        public ConsignmentItemEnhancedR4ForReservationType[] CommodityDescriptionForChed
+        public ConsignmentItemR6ForReservationType[] CommodityDescriptionForChed
         {
             get
             {
@@ -186,6 +188,36 @@ namespace TracesNT.WebServices
             set
             {
                 this.pushIndicationField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order = 10)]
+        public TransformationIndicationType TransformationIndiction
+        {
+            get
+            {
+                return this.transformationIndictionField;
+            }
+
+            set
+            {
+                this.transformationIndictionField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public bool TransformationIndictionSpecified
+        {
+            get
+            {
+                return this.transformationIndictionFieldSpecified;
+            }
+
+            set
+            {
+                this.transformationIndictionFieldSpecified = value;
             }
         }
     }

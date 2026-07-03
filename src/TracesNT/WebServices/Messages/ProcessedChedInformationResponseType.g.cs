@@ -10,16 +10,18 @@ namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
     public partial class ProcessedChedInformationResponseType
     {
         private CertificateChedType chedCertificateField;
-        private QuantityManagementCommoditySummaryEnhanced4ChedR4Type quantityManagementSummaryField;
+        private QuantityManagementCommoditySummaryEnhanced4ChedR51Type quantityManagementSummaryField;
         private string operationCodeField;
         private PdfCertificateType1 chedPdfCertificateField;
         private bool reservationResultField;
         private bool reservationResultFieldSpecified;
         private string reservationFailureReasonField;
+        private ReservationFailureConsignmentItemType reservationFailureConsignmentItemField;
+        private QuantitiesPrevalidationResultEnhancedType prevalidationResultField;
         private bool pushActiveField;
         private PushStopReasonType pushStopReasonField;
         private bool pushStopReasonFieldSpecified;
@@ -40,7 +42,7 @@ namespace TracesNT.WebServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public QuantityManagementCommoditySummaryEnhanced4ChedR4Type QuantityManagementSummary
+        public QuantityManagementCommoditySummaryEnhanced4ChedR51Type QuantityManagementSummary
         {
             get
             {
@@ -130,6 +132,36 @@ namespace TracesNT.WebServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
+        public ReservationFailureConsignmentItemType ReservationFailureConsignmentItem
+        {
+            get
+            {
+                return this.reservationFailureConsignmentItemField;
+            }
+
+            set
+            {
+                this.reservationFailureConsignmentItemField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
+        public QuantitiesPrevalidationResultEnhancedType PrevalidationResult
+        {
+            get
+            {
+                return this.prevalidationResultField;
+            }
+
+            set
+            {
+                this.prevalidationResultField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Order = 8)]
         public bool PushActive
         {
             get
@@ -144,7 +176,7 @@ namespace TracesNT.WebServices
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 7)]
+        [System.Xml.Serialization.XmlElementAttribute(Order = 9)]
         public PushStopReasonType PushStopReason
         {
             get

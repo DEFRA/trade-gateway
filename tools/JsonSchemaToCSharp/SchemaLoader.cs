@@ -2,17 +2,12 @@ using Json.Schema;
 
 namespace JsonSchemaToCSharp;
 
-public record ResolvedRef(JsonSchema Schema, string SourceFile);
+public record ResolvedReference(JsonSchema Schema, string SourceFile);
 
-public class SchemaLoader
+public class SchemaLoader(string basePath)
 {
-    private readonly string _basePath;
+    private readonly string _basePath = Path.GetFullPath(basePath);
     private readonly Dictionary<string, JsonSchema> _cache = new();
-
-    public SchemaLoader(string basePath)
-    {
-        _basePath = Path.GetFullPath(basePath);
-    }
 
     public JsonSchema LoadFile(string path)
     {
@@ -27,41 +22,40 @@ public class SchemaLoader
         return schema;
     }
 
-    public ResolvedRef Resolve(string refPath, string currentFile)
+    public ResolvedReference Resolve(string refPath, string currentFile)
     {
-        string filePart;
-        string pointer;
+        string fileName;
+        string referenceName;
 
         if (refPath.Contains('#'))
         {
             var parts = refPath.Split('#', 2);
-            filePart = parts[0];
-            pointer = parts[1];
+            fileName = parts[0];
+            referenceName = parts[1];
         }
         else
         {
-            filePart = refPath;
-            pointer = "";
+            fileName = refPath;
+            referenceName = "";
         }
 
         string resolvedPath;
-        JsonSchema root;
-        if (string.IsNullOrEmpty(filePart))
+        if (string.IsNullOrEmpty(fileName))
         {
             resolvedPath = NormalizePath(currentFile);
-            root = LoadFile(resolvedPath);
         }
         else
         {
             var currentDir = Path.GetDirectoryName(currentFile) ?? string.Empty;
-            resolvedPath = NormalizePath(Path.Combine(currentDir, filePart));
-            root = LoadFile(resolvedPath);
+            resolvedPath = NormalizePath(Path.Combine(currentDir, fileName));
         }
 
-        if (string.IsNullOrEmpty(pointer) || pointer == "/")
-            return new ResolvedRef(root, resolvedPath);
+        var jsonSchemaRoot = LoadFile(resolvedPath);
 
-        return new ResolvedRef(ResolvePointer(root, pointer), resolvedPath);
+        if (string.IsNullOrEmpty(referenceName) || referenceName == "/")
+            return new ResolvedReference(jsonSchemaRoot, resolvedPath);
+
+        return new ResolvedReference(ResolveReference(jsonSchemaRoot, referenceName), resolvedPath);
     }
 
     private string NormalizePath(string path)
@@ -70,9 +64,9 @@ public class SchemaLoader
         return Path.GetFullPath(Path.IsPathRooted(candidate) ? candidate : Path.Combine(_basePath, candidate));
     }
 
-    private static JsonSchema ResolvePointer(JsonSchema schema, string pointer)
+    private static JsonSchema ResolveReference(JsonSchema schema, string reference)
     {
-        var segments = pointer.TrimStart('/').Split('/');
+        var segments = reference.TrimStart('/').Split('/');
         var current = schema;
 
         var i = 0;
@@ -87,9 +81,9 @@ public class SchemaLoader
                     var key = segments[i++].Replace("~1", "/").Replace("~0", "~");
                     var defs =
                         current.GetKeyword<DefsKeyword>()?.Definitions
-                        ?? throw new InvalidOperationException($"Schema has no $defs (pointer: '{pointer}')");
+                        ?? throw new InvalidOperationException($"Schema has no $defs (reference: '{reference}')");
                     if (!defs.TryGetValue(key, out var def))
-                        throw new InvalidOperationException($"$defs has no key '{key}' (pointer: '{pointer}')");
+                        throw new InvalidOperationException($"$defs has no key '{key}' (reference: '{reference}')");
                     current = def;
                     break;
                 }
@@ -98,9 +92,9 @@ public class SchemaLoader
                     var key = segments[i++].Replace("~1", "/").Replace("~0", "~");
                     var props =
                         current.GetKeyword<PropertiesKeyword>()?.Properties
-                        ?? throw new InvalidOperationException($"Schema has no properties (pointer: '{pointer}')");
+                        ?? throw new InvalidOperationException($"Schema has no properties (reference: '{reference}')");
                     if (!props.TryGetValue(key, out var prop))
-                        throw new InvalidOperationException($"properties has no key '{key}' (pointer: '{pointer}')");
+                        throw new InvalidOperationException($"properties has no key '{key}' (reference: '{reference}')");
                     current = prop;
                     break;
                 }
@@ -109,7 +103,7 @@ public class SchemaLoader
                     var idx = int.Parse(segments[i++]);
                     var schemas =
                         current.GetKeyword<AllOfKeyword>()?.Schemas
-                        ?? throw new InvalidOperationException($"Schema has no allOf (pointer: '{pointer}')");
+                        ?? throw new InvalidOperationException($"Schema has no allOf (reference: '{reference}')");
                     current = schemas[idx];
                     break;
                 }
@@ -118,7 +112,7 @@ public class SchemaLoader
                     var idx = int.Parse(segments[i++]);
                     var schemas =
                         current.GetKeyword<OneOfKeyword>()?.Schemas
-                        ?? throw new InvalidOperationException($"Schema has no oneOf (pointer: '{pointer}')");
+                        ?? throw new InvalidOperationException($"Schema has no oneOf (reference: '{reference}')");
                     current = schemas[idx];
                     break;
                 }
@@ -127,7 +121,7 @@ public class SchemaLoader
                     var idx = int.Parse(segments[i++]);
                     var schemas =
                         current.GetKeyword<AnyOfKeyword>()?.Schemas
-                        ?? throw new InvalidOperationException($"Schema has no anyOf (pointer: '{pointer}')");
+                        ?? throw new InvalidOperationException($"Schema has no anyOf (reference: '{reference}')");
                     current = schemas[idx];
                     break;
                 }
@@ -135,12 +129,12 @@ public class SchemaLoader
                 {
                     current =
                         current.GetKeyword<ItemsKeyword>()?.SingleSchema
-                        ?? throw new InvalidOperationException($"Schema has no items (pointer: '{pointer}')");
+                        ?? throw new InvalidOperationException($"Schema has no items (reference: '{reference}')");
                     break;
                 }
                 default:
                     throw new InvalidOperationException(
-                        $"Cannot resolve JSON pointer segment '{segment}' in '{pointer}'"
+                        $"Cannot resolve JSON reference segment '{segment}' in '{reference}'"
                     );
             }
         }

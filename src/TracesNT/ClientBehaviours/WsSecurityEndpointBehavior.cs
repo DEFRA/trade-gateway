@@ -4,17 +4,12 @@ using System.ServiceModel.Dispatcher;
 
 namespace TracesNT.ClientBehaviours;
 
-public class WsSecurityEndpointBehavior(TracesNtConfig config, string? xApiKey) : IEndpointBehavior
+public class WsSecurityEndpointBehavior(TracesNtConfig config) : IEndpointBehavior
 {
     public void ApplyClientBehavior(ServiceEndpoint endpoint, ClientRuntime clientRuntime) =>
         clientRuntime.ClientMessageInspectors.Add(new WsSecurityMessageInspector(config));
 
-    public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters)
-    {
-        bindingParameters.Add(
-            new Func<HttpClientHandler, HttpMessageHandler>(x => new CustomHeaderDelegatingHandler(x, xApiKey))
-        );
-    }
+    public void AddBindingParameters(ServiceEndpoint endpoint, BindingParameterCollection bindingParameters) { }
 
     public void ApplyDispatchBehavior(ServiceEndpoint endpoint, EndpointDispatcher endpointDispatcher) { }
 

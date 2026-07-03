@@ -8,28 +8,51 @@ Generates strongly-typed C# `record` classes from JSON Schema files. Designed fo
 
 ## Usage
 
+This tool is driven by a control JSON file that specifies which schema files to process, the output root, and namespace mappings.
+
 ```bash
-# Default: reads from ./schema/, writes to ./schema-output/
-dotnet run
-
-# Custom arguments
-dotnet run -- --schema "/path/to/schemas" --output "/path/to/output" --namespace "My.Namespace"
-
-# Load arguments from a file
-dotnet run -- @args.txt
+# Run with a control file (required)
+dotnet run -- --control-file "./args.json"
 ```
 
-### Arguments
+The control file must be a JSON object with these required properties:
 
-| Flag | Description | Default |
-|------|-------------|---------|
-| `--schema` | Path to directory containing `*.schema.json` files | `./schema/` |
-| `--output` | Path to directory where `*.g.cs` files will be written | `./schema-output/` |
-| `--namespace` | C# namespace for generated types | `Api.Models.Unece` |
+- `outputRoot` (string): path where generated `*.g.cs` files will be written (relative paths are resolved from the repository root when running via dotnet run)
+- `namespaceRoot` (string): root C# namespace to prepend to group namespaces
+- `schemas` (array): list of schema groups; each group must contain:
+  - `namespace` (string)
+  - `schemaItems` (array of strings): paths to individual schema files
 
-The output directory is created if it does not exist. All `*.g.cs` files in the output directory are deleted before each run.
+Example control file:
 
-If no `*.schema.json` files are found, the tool falls back to matching `*.json`.
+```json
+{
+  "outputRoot": "./../../src/Api.Contract",
+  "namespaceRoot": "Api.Models",
+  "schemas": [
+    {
+      "namespace": "Certificate",
+      "schemaItems": [
+        "schemas/profiles/imports/international/defra-unvtd-profile-ched-v1.schema.json",
+        "schemas/profiles/imports/eu/defra-unvtd-profile-intra-v1.schema.json"
+      ]
+    },
+    {
+      "namespace": "ReferenceData",
+      "schemaItems": [
+        "schemas/reference-data/defra-unvtd-profile-reference-data-ClassificationSectionListResponse-v1.schema.json",
+        "schemas/reference-data/defra-unvtd-profile-reference-data-ClassificationTreeNodeDetailResponse-v1.schema.json",
+        "schemas/reference-data/defra-unvtd-profile-reference-data-ClassificationTreeResponse-v1.schema.json",
+        "schemas/reference-data/defra-unvtd-profile-reference-data-MetadataListResponse-v1.schema.json"
+      ]
+    }
+  ]
+}
+```
+
+The output directory is created if it does not exist. All `*.g.cs` files in the output directories are deleted before each run.
+
+Control file validation is performed; missing required fields cause the tool to exit with an error message. If you want the older behavior of globbing a schema folder, create a control file that lists the schema files to process.
 
 ## Output
 

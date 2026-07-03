@@ -10,7 +10,7 @@ namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
     public partial class ChedClearanceRequestType
     {
         private CompetentCustomsOfficeType competentCustomsOfficeField;

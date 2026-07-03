@@ -9,18 +9,24 @@
 namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public enum ChedCertificateType
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/tracesnt/certificate/ched/v2")]
+    public partial class ChedCertificateType
     {
+        private SPSCertificateType sPSCertificateField;
         /// <remarks/>
-        A,
-        /// <remarks/>
-        P,
-        /// <remarks/>
-        PP,
-        /// <remarks/>
-        D,
-        /// <remarks/>
-        N,
+        [System.Xml.Serialization.XmlElementAttribute(Namespace = "urn:un:unece:uncefact:data:standard:SPSCertificate:17", Order = 0)]
+        public SPSCertificateType SPSCertificate
+        {
+            get
+            {
+                return this.sPSCertificateField;
+            }
+
+            set
+            {
+                this.sPSCertificateField = value;
+            }
+        }
     }
 }

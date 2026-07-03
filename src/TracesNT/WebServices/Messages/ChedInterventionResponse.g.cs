@@ -14,9 +14,9 @@ namespace TracesNT.WebServices
     [System.ServiceModel.MessageContractAttribute(IsWrapped = false)]
     public partial class ChedInterventionResponse
     {
-        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
         public TracesNT.WebServices.CertexHeaderType CertexHeader;
-        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ChedInterventionResponse", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04", Order = 0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ChedInterventionResponse", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06", Order = 0)]
         public TracesNT.WebServices.ChedQuantityManagementOutcomeType ChedInterventionResponse1;
         public ChedInterventionResponse()
         {

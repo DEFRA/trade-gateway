@@ -72,9 +72,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     // add the Traces NT clients
     var tracesNtSection = builder.Configuration.GetRequiredSection("TracesNt");
     builder.Services.AddOptions<TracesNtConfig>().Bind(tracesNtSection).ValidateDataAnnotations().ValidateOnStart();
-
-    var xApiKey = builder.Configuration.GetValue<string?>("XApiKey");
-    builder.Services.AddTracesNtClients(xApiKey!);
+    builder.Services.AddTracesNtClients();
 
     // Set up the MongoDB client. Config and credentials are injected automatically at runtime.
     MongoClientSettings.Extensions.AddAWSAuthentication();
@@ -110,6 +108,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseAuthorization();
     app.MapHealthChecks("/health").AllowAnonymous();
     app.MapLocalOidcEndpoints();
+    app.UseChedEndpoints();
     app.UseIntraEndpoints();
     app.UseAuthTestEndpoints();
     app.UseReferenceDataEndpoints();

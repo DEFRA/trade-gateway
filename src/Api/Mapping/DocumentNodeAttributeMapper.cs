@@ -10,7 +10,7 @@ internal static class DocumentNodeAttributeMapper
         {
             Key = source.id,
             Description = source.Description.Value,
-            DocumentLinkTypes = source.DocumentTypeValue.Select(Map).ToList()
+            DocumentLinkTypes = source.DocumentTypeValue?.Select(Map).ToList()
         };
 
     internal static DocumentNodeAttributeValue Map(SelectableDocumentLinkNodeAttributeValue source) =>

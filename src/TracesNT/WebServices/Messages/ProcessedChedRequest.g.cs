@@ -22,9 +22,9 @@ namespace TracesNT.WebServices
         public TracesNT.WebServices.ISO2AlphaLanguageCodeContentType LanguageCode;
         [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/tracesnt/body/v1")]
         public string CustomsOfficeReferenceNumber;
-        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
         public TracesNT.WebServices.CertexHeaderType CertexHeader;
-        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ProcessedChedRequest", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04", Order = 0)]
+        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ProcessedChedRequest", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06", Order = 0)]
         public TracesNT.WebServices.ProcessedChedRequestType ProcessedChedRequest1;
         public ProcessedChedRequest()
         {

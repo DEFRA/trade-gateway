@@ -10,7 +10,7 @@ namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
     public partial class ChedInterventionRequestType
     {
         private CompetentCustomsOfficeType competentCustomsOfficeField;
@@ -18,7 +18,7 @@ namespace TracesNT.WebServices
         private string customsDocumentReferenceField;
         private string tARICDocumentField;
         private string chedCertificateIdField;
-        private ConsignmentItemEnhancedR4ForInterventionType[] consignmentItemField;
+        private ConsignmentItemR6ForInterventionType[] consignmentItemField;
         private InterventionMessageInformationType interventionTypeField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
@@ -97,7 +97,7 @@ namespace TracesNT.WebServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ConsignmentItem", Order = 5)]
-        public ConsignmentItemEnhancedR4ForInterventionType[] ConsignmentItem
+        public ConsignmentItemR6ForInterventionType[] ConsignmentItem
         {
             get
             {
