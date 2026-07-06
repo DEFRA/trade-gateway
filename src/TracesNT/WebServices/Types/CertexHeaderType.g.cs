@@ -11,53 +11,37 @@ namespace TracesNT.WebServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class SWSupportingDocumentType
+    public partial class CertexHeaderType
     {
-        private UniversalUnitOfMeasureType unitOfMeasureField;
-        private decimal quantityField;
-        private string certificateLineNumberField;
+        private string messageIdField;
+        private string uniqRequesterPrefixField;
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public UniversalUnitOfMeasureType UnitOfMeasure
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "token", Order = 0)]
+        public string MessageId
         {
             get
             {
-                return this.unitOfMeasureField;
+                return this.messageIdField;
             }
 
             set
             {
-                this.unitOfMeasureField = value;
+                this.messageIdField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public decimal Quantity
+        public string UniqRequesterPrefix
         {
             get
             {
-                return this.quantityField;
+                return this.uniqRequesterPrefixField;
             }
 
             set
             {
-                this.quantityField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 2)]
-        public string CertificateLineNumber
-        {
-            get
-            {
-                return this.certificateLineNumberField;
-            }
-
-            set
-            {
-                this.certificateLineNumberField = value;
+                this.uniqRequesterPrefixField = value;
             }
         }
     }

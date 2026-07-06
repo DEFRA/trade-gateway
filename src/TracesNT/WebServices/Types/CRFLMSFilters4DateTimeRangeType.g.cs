@@ -11,53 +11,37 @@ namespace TracesNT.WebServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class SWSupportingDocumentType
+    public partial class CRFLMSFilters4DateTimeRangeType
     {
-        private UniversalUnitOfMeasureType unitOfMeasureField;
-        private decimal quantityField;
-        private string certificateLineNumberField;
+        private DateTimeRangeType modifyDateAndTimeRangeField;
+        private DateTimeRangeType statusChangeDateAndTimeRangeField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public UniversalUnitOfMeasureType UnitOfMeasure
+        public DateTimeRangeType ModifyDateAndTimeRange
         {
             get
             {
-                return this.unitOfMeasureField;
+                return this.modifyDateAndTimeRangeField;
             }
 
             set
             {
-                this.unitOfMeasureField = value;
+                this.modifyDateAndTimeRangeField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public decimal Quantity
+        public DateTimeRangeType StatusChangeDateAndTimeRange
         {
             get
             {
-                return this.quantityField;
+                return this.statusChangeDateAndTimeRangeField;
             }
 
             set
             {
-                this.quantityField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 2)]
-        public string CertificateLineNumber
-        {
-            get
-            {
-                return this.certificateLineNumberField;
-            }
-
-            set
-            {
-                this.certificateLineNumberField = value;
+                this.statusChangeDateAndTimeRangeField = value;
             }
         }
     }

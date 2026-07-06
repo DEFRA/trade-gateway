@@ -9,14 +9,12 @@
 namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public enum TransformationIndicationType
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03", IncludeInSchema = false)]
+    public enum ItemChoiceType1
     {
         /// <remarks/>
-        IM,
+        LRN,
         /// <remarks/>
-        TR,
-        /// <remarks/>
-        EX,
+        MRN,
     }
 }

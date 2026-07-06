@@ -9,14 +9,24 @@
 namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public enum TransformationIndicationType
+    public partial class CompetentCustomsOfficeType
     {
+        private string referenceNumberField;
         /// <remarks/>
-        IM,
-        /// <remarks/>
-        TR,
-        /// <remarks/>
-        EX,
+        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
+        public string ReferenceNumber
+        {
+            get
+            {
+                return this.referenceNumberField;
+            }
+
+            set
+            {
+                this.referenceNumberField = value;
+            }
+        }
     }
 }

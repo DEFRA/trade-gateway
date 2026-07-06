@@ -9,14 +9,7 @@
 namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public enum TransformationIndicationType
+    public interface CustomsCertexChedPortChannel : TracesNT.WebServices.CustomsCertexChedPort, System.ServiceModel.IClientChannel
     {
-        /// <remarks/>
-        IM,
-        /// <remarks/>
-        TR,
-        /// <remarks/>
-        EX,
     }
 }

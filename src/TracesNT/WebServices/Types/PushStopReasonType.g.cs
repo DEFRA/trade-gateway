@@ -10,13 +10,22 @@ namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public enum TransformationIndicationType
+    public enum PushStopReasonType
     {
         /// <remarks/>
-        IM,
+        [System.Xml.Serialization.XmlEnumAttribute("01")]
+        Item01,
         /// <remarks/>
-        TR,
+        [System.Xml.Serialization.XmlEnumAttribute("02")]
+        Item02,
         /// <remarks/>
-        EX,
+        [System.Xml.Serialization.XmlEnumAttribute("03")]
+        Item03,
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("04")]
+        Item04,
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("05")]
+        Item05,
     }
 }

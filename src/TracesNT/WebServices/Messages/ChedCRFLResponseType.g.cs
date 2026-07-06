@@ -10,38 +10,38 @@ namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class ReservationFailureConsignmentItemType
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
+    public partial class ChedCRFLResponseType
     {
-        private string goodsItemNumberField;
-        private string documentLineItemNumberField;
+        private System.DateTime dateTimeField;
+        private string operationCodeField;
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 0)]
-        public string GoodsItemNumber
+        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
+        public System.DateTime DateTime
         {
             get
             {
-                return this.goodsItemNumberField;
+                return this.dateTimeField;
             }
 
             set
             {
-                this.goodsItemNumberField = value;
+                this.dateTimeField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 1)]
-        public string DocumentLineItemNumber
+        public string OperationCode
         {
             get
             {
-                return this.documentLineItemNumberField;
+                return this.operationCodeField;
             }
 
             set
             {
-                this.documentLineItemNumberField = value;
+                this.operationCodeField = value;
             }
         }
     }

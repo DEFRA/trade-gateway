@@ -11,53 +11,37 @@ namespace TracesNT.WebServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class SWSupportingDocumentType
+    public partial class PushIndicationType
     {
-        private UniversalUnitOfMeasureType unitOfMeasureField;
-        private decimal quantityField;
-        private string certificateLineNumberField;
+        private PushMarkerType pushMarkerField;
+        private PushValidityPeriodType validityPeriodForThePushField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
-        public UniversalUnitOfMeasureType UnitOfMeasure
+        public PushMarkerType PushMarker
         {
             get
             {
-                return this.unitOfMeasureField;
+                return this.pushMarkerField;
             }
 
             set
             {
-                this.unitOfMeasureField = value;
+                this.pushMarkerField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public decimal Quantity
+        public PushValidityPeriodType ValidityPeriodForThePush
         {
             get
             {
-                return this.quantityField;
+                return this.validityPeriodForThePushField;
             }
 
             set
             {
-                this.quantityField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 2)]
-        public string CertificateLineNumber
-        {
-            get
-            {
-                return this.certificateLineNumberField;
-            }
-
-            set
-            {
-                this.certificateLineNumberField = value;
+                this.validityPeriodForThePushField = value;
             }
         }
     }
