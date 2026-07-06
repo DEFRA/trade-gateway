@@ -7,25 +7,21 @@ namespace TracesNT.Extensions
     public static class TracesClientRegistrationExtensions
     {
         public static IServiceCollection AddTracesNtClients(
-            this IServiceCollection services,
-            string xApiKey
+            this IServiceCollection services
         )
         {
             services.AddTracesNtClient<ChedCertificatePortClient, ChedCertificatePort>(
                 "ChedCertificateServiceV2",
-                xApiKey,
                 (binding, endpoint) => new ChedCertificatePortClient(binding, endpoint)
             );
 
             services.AddTracesNtClient<EuIntraCertificatePortClient, EuIntraCertificatePort>(
                 "EuIntraCertificateServiceV1",
-                xApiKey,
                 (binding, endpoint) => new EuIntraCertificatePortClient(binding, endpoint)
             );
 
             services.AddTracesNtClient<ReferenceDataPortClient, ReferenceDataPort>(
                 "ReferenceDataServiceV1",
-                xApiKey,
                 (binding, endpoint) => new ReferenceDataPortClient(binding, endpoint)
             );
 

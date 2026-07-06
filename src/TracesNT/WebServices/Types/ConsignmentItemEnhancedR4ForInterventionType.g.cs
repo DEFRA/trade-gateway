@@ -6,16 +6,16 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class ConsignmentItemEnhancedR4ForReservationType
+    public partial class ConsignmentItemEnhancedR4ForInterventionType
     {
         private string goodsItemNumberField;
         private string classCodeField;
-        private QuantityR4ForReservationType quantityField;
+        private QuantityR4ForInterventionAllocationType quantityField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 0)]
         public string GoodsItemNumber
@@ -48,7 +48,7 @@ namespace TracesNT.WebServices.CertexServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public QuantityR4ForReservationType Quantity
+        public QuantityR4ForInterventionAllocationType Quantity
         {
             get
             {

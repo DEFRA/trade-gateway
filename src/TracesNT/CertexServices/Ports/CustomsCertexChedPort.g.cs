@@ -6,27 +6,27 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-    [System.ServiceModel.ServiceContractAttribute(Namespace = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04", ConfigurationName = "TracesNT.WebServices.CertexServices.CustomsCertexChedPort")]
+    [System.ServiceModel.ServiceContractAttribute(Namespace = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06", ConfigurationName = "TracesNT.WebServices.CustomsCertexChedPort")]
     public interface CustomsCertexChedPort
     {
-        [System.ServiceModel.OperationContractAttribute(Action = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04/CustomsCertexChedPor" + "t/ProcessedChedRequest", ReplyAction = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04/CustomsCertexChedPor" + "t/ProcessedChedInformationResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(TracesNT.WebServices.CertexServices.ExceptionWithUniqueInfoType), Action = "http://www.w3.org/2005/08/addressing/soap/fault", Name = "ProcessedChedRequestFault", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+        [System.ServiceModel.OperationContractAttribute(Action = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPor" + "t/ProcessedChedRequest", ReplyAction = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPor" + "t/ProcessedChedInformationResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(TracesNT.WebServices.ExceptionWithUniqueInfoType), Action = "http://www.w3.org/2005/08/addressing/soap/fault", Name = "ProcessedChedRequestFault", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-        System.Threading.Tasks.Task<TracesNT.WebServices.CertexServices.ProcessedChedInformationResponse> processedChedRequestAsync(TracesNT.WebServices.CertexServices.ProcessedChedRequest request);
-        [System.ServiceModel.OperationContractAttribute(Action = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04/CustomsCertexChedPor" + "t/ChedClearanceRequest", ReplyAction = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04/CustomsCertexChedPor" + "t/ChedClearanceResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(TracesNT.WebServices.CertexServices.ExceptionWithUniqueInfoType), Action = "http://www.w3.org/2005/08/addressing/soap/fault", Name = "ChedClearanceRequestFault", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+        System.Threading.Tasks.Task<TracesNT.WebServices.ProcessedChedInformationResponse> processedChedRequestAsync(TracesNT.WebServices.ProcessedChedRequest request);
+        [System.ServiceModel.OperationContractAttribute(Action = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPor" + "t/ChedClearanceRequest", ReplyAction = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPor" + "t/ChedClearanceResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(TracesNT.WebServices.ExceptionWithUniqueInfoType), Action = "http://www.w3.org/2005/08/addressing/soap/fault", Name = "ChedClearanceRequestFault", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-        System.Threading.Tasks.Task<TracesNT.WebServices.CertexServices.ChedClearanceResponse> chedClearanceRequestAsync(TracesNT.WebServices.CertexServices.ChedClearanceRequest request);
-        [System.ServiceModel.OperationContractAttribute(Action = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04/CustomsCertexChedPor" + "t/ChedInterventionRequest", ReplyAction = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04/CustomsCertexChedPor" + "t/ChedInterventionResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(TracesNT.WebServices.CertexServices.ExceptionWithUniqueInfoType), Action = "http://www.w3.org/2005/08/addressing/soap/fault", Name = "ChedInterventionRequestFault", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+        System.Threading.Tasks.Task<TracesNT.WebServices.ChedClearanceResponse> chedClearanceRequestAsync(TracesNT.WebServices.ChedClearanceRequest request);
+        [System.ServiceModel.OperationContractAttribute(Action = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPor" + "t/ChedInterventionRequest", ReplyAction = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPor" + "t/ChedInterventionResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(TracesNT.WebServices.ExceptionWithUniqueInfoType), Action = "http://www.w3.org/2005/08/addressing/soap/fault", Name = "ChedInterventionRequestFault", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-        System.Threading.Tasks.Task<TracesNT.WebServices.CertexServices.ChedInterventionResponse> chedInterventionRequestAsync(TracesNT.WebServices.CertexServices.ChedInterventionRequest request);
-        [System.ServiceModel.OperationContractAttribute(Action = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04/CustomsCertexChedPor" + "t/ChedCRFLRequest", ReplyAction = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v04/CustomsCertexChedPor" + "t/ChedCRFLResponse")]
-        [System.ServiceModel.FaultContractAttribute(typeof(TracesNT.WebServices.CertexServices.ExceptionWithUniqueInfoType), Action = "http://www.w3.org/2005/08/addressing/soap/fault", Name = "ChedCRFLRequestFault", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+        System.Threading.Tasks.Task<TracesNT.WebServices.ChedInterventionResponse> chedInterventionRequestAsync(TracesNT.WebServices.ChedInterventionRequest request);
+        [System.ServiceModel.OperationContractAttribute(Action = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPor" + "t/ChedCRFLRequest", ReplyAction = "http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPor" + "t/ChedCRFLResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(TracesNT.WebServices.ExceptionWithUniqueInfoType), Action = "http://www.w3.org/2005/08/addressing/soap/fault", Name = "ChedCRFLRequestFault", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults = true)]
-        System.Threading.Tasks.Task<TracesNT.WebServices.CertexServices.ChedCRFLResponse> chedCRFLRequestAsync(TracesNT.WebServices.CertexServices.ChedCRFLRequest request);
+        System.Threading.Tasks.Task<TracesNT.WebServices.ChedCRFLResponse> chedCRFLRequestAsync(TracesNT.WebServices.ChedCRFLRequest request);
     }
 }

@@ -6,7 +6,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
@@ -15,22 +15,22 @@ namespace TracesNT.WebServices.CertexServices
     public partial class ChedCRFLRequest
     {
         [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" + "")]
-        public TracesNT.WebServices.CertexServices.SecurityHeaderType Security;
+        public TracesNT.WebServices.SecurityHeaderType Security;
         [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/base/v3")]
         public string WebServiceClientId;
         [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/base/v3")]
-        public TracesNT.WebServices.CertexServices.ISO2AlphaLanguageCodeContentType LanguageCode;
+        public TracesNT.WebServices.ISO2AlphaLanguageCodeContentType LanguageCode;
         [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/tracesnt/body/v1")]
         public string CustomsOfficeReferenceNumber;
-        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
-        public TracesNT.WebServices.CertexServices.CertexHeaderType CertexHeader;
-        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ChedCRFLRequest", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04", Order = 0)]
-        public TracesNT.WebServices.CertexServices.ChedCRFLRequestType ChedCRFLRequest1;
+        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
+        public TracesNT.WebServices.CertexHeaderType CertexHeader;
+        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ChedCRFLRequest", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06", Order = 0)]
+        public TracesNT.WebServices.ChedCRFLRequestType ChedCRFLRequest1;
         public ChedCRFLRequest()
         {
         }
 
-        public ChedCRFLRequest(TracesNT.WebServices.CertexServices.SecurityHeaderType Security, string WebServiceClientId, TracesNT.WebServices.CertexServices.ISO2AlphaLanguageCodeContentType LanguageCode, string CustomsOfficeReferenceNumber, TracesNT.WebServices.CertexServices.CertexHeaderType CertexHeader, TracesNT.WebServices.CertexServices.ChedCRFLRequestType ChedCRFLRequest1)
+        public ChedCRFLRequest(TracesNT.WebServices.SecurityHeaderType Security, string WebServiceClientId, TracesNT.WebServices.ISO2AlphaLanguageCodeContentType LanguageCode, string CustomsOfficeReferenceNumber, TracesNT.WebServices.CertexHeaderType CertexHeader, TracesNT.WebServices.ChedCRFLRequestType ChedCRFLRequest1)
         {
             this.Security = Security;
             this.WebServiceClientId = WebServiceClientId;

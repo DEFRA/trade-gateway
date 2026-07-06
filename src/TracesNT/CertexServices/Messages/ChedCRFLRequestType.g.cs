@@ -10,15 +10,15 @@ namespace TracesNT.WebServices.CertexServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
     public partial class ChedCRFLRequestType
     {
         private CompetentCustomsOfficeType competentCustomsOfficeField;
-        private CRFLMSFilters4CHEDType cRFLMSFilters4CHEDField;
+        private CRFLMSFilters4CHEDEnhancedType cRFLMSFilters4CHEDField;
         private CRFLMSFilters4DateTimeRangeType cRFLMSFilters4DateTimeRangeField;
         private CRFLCHEDFilters4ConsignmentType cRFLCHEDFilters4ConsignmentField;
         private System.DateTime sendingDateField;
-        private SubscriptionIndicationType subscriptionIndicationField;
+        private SubscriptionIndicationExtendedNumericalSizeType subscriptionIndicationField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
         public CompetentCustomsOfficeType CompetentCustomsOffice
@@ -36,7 +36,7 @@ namespace TracesNT.WebServices.CertexServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public CRFLMSFilters4CHEDType CRFLMSFilters4CHED
+        public CRFLMSFilters4CHEDEnhancedType CRFLMSFilters4CHED
         {
             get
             {
@@ -96,7 +96,7 @@ namespace TracesNT.WebServices.CertexServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 5)]
-        public SubscriptionIndicationType SubscriptionIndication
+        public SubscriptionIndicationExtendedNumericalSizeType SubscriptionIndication
         {
             get
             {

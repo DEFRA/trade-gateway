@@ -11,53 +11,40 @@ namespace TracesNT.WebServices.CertexServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class QuantityR4ForReservationType
+    public partial class CustomsDeclarationReferenceNumber4CoiChedR51InputType
     {
-        private string certificateLineNumberField;
-        private UniversalQuantityType netWeightMeasureField;
-        private UniversalQuantityType supplementaryUnitsField;
+        private string itemField;
+        private ItemChoiceType1 itemElementNameField;
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 0)]
-        public string CertificateLineNumber
+        [System.Xml.Serialization.XmlElementAttribute("LRN", typeof(string), Order = 0)]
+        [System.Xml.Serialization.XmlElementAttribute("MRN", typeof(string), Order = 0)]
+        [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
+        public string Item
         {
             get
             {
-                return this.certificateLineNumberField;
+                return this.itemField;
             }
 
             set
             {
-                this.certificateLineNumberField = value;
+                this.itemField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public UniversalQuantityType NetWeightMeasure
+        [System.Xml.Serialization.XmlIgnoreAttribute()]
+        public ItemChoiceType1 ItemElementName
         {
             get
             {
-                return this.netWeightMeasureField;
+                return this.itemElementNameField;
             }
 
             set
             {
-                this.netWeightMeasureField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public UniversalQuantityType SupplementaryUnits
-        {
-            get
-            {
-                return this.supplementaryUnitsField;
-            }
-
-            set
-            {
-                this.supplementaryUnitsField = value;
+                this.itemElementNameField = value;
             }
         }
     }

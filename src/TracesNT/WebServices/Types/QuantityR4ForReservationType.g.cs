@@ -6,18 +6,16 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class ProductQuantityEnhancedType
+    public partial class QuantityR4ForReservationType
     {
         private string certificateLineNumberField;
-        private string cnCodeField;
-        private string commodityCodeTARICCodeField;
-        private MassQuantityType netWeightMeasureField;
-        private SupplementaryQuantityType supplementaryUnitsField;
+        private UniversalQuantityType netWeightMeasureField;
+        private UniversalQuantityType supplementaryUnitsField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 0)]
         public string CertificateLineNumber
@@ -35,37 +33,7 @@ namespace TracesNT.WebServices.CertexServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public string CnCode
-        {
-            get
-            {
-                return this.cnCodeField;
-            }
-
-            set
-            {
-                this.cnCodeField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public string CommodityCodeTARICCode
-        {
-            get
-            {
-                return this.commodityCodeTARICCodeField;
-            }
-
-            set
-            {
-                this.commodityCodeTARICCodeField = value;
-            }
-        }
-
-        /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 3)]
-        public MassQuantityType NetWeightMeasure
+        public UniversalQuantityType NetWeightMeasure
         {
             get
             {
@@ -79,8 +47,8 @@ namespace TracesNT.WebServices.CertexServices
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 4)]
-        public SupplementaryQuantityType SupplementaryUnits
+        [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
+        public UniversalQuantityType SupplementaryUnits
         {
             get
             {

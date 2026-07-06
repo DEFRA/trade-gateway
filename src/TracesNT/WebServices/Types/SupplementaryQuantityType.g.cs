@@ -6,24 +6,24 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class MassQuantityType
+    public partial class SupplementaryQuantityType
     {
-        private MassQuantityTypeUnitCode unitCodeField;
+        private SupplementaryQuantityTypeUnitCode unitCodeField;
         private decimal valueField;
-        public MassQuantityType()
+        public SupplementaryQuantityType()
         {
-            this.unitCodeField = MassQuantityTypeUnitCode.KGM;
+            this.unitCodeField = SupplementaryQuantityTypeUnitCode.H87;
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(MassQuantityTypeUnitCode.KGM)]
-        public MassQuantityTypeUnitCode unitCode
+        [System.ComponentModel.DefaultValueAttribute(SupplementaryQuantityTypeUnitCode.H87)]
+        public SupplementaryQuantityTypeUnitCode unitCode
         {
             get
             {

@@ -11,43 +11,37 @@ namespace TracesNT.WebServices.CertexServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class UniversalQuantityType
+    public partial class ProductQuantityEnhancedPlusPlusType
     {
-        private UniversalQuantityTypeUnitCode unitCodeField;
-        private decimal valueField;
-        public UniversalQuantityType()
-        {
-            this.unitCodeField = UniversalQuantityTypeUnitCode.KGM;
-        }
-
+        private CommodityCodeEnhanced4AvailableType commodityCodeField;
+        private SWSupportingDocumentType swSupportingDocumentField;
         /// <remarks/>
-        [System.Xml.Serialization.XmlAttributeAttribute()]
-        [System.ComponentModel.DefaultValueAttribute(UniversalQuantityTypeUnitCode.KGM)]
-        public UniversalQuantityTypeUnitCode unitCode
+        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
+        public CommodityCodeEnhanced4AvailableType CommodityCode
         {
             get
             {
-                return this.unitCodeField;
+                return this.commodityCodeField;
             }
 
             set
             {
-                this.unitCodeField = value;
+                this.commodityCodeField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlTextAttribute()]
-        public decimal Value
+        [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
+        public SWSupportingDocumentType SwSupportingDocument
         {
             get
             {
-                return this.valueField;
+                return this.swSupportingDocumentField;
             }
 
             set
             {
-                this.valueField = value;
+                this.swSupportingDocumentField = value;
             }
         }
     }

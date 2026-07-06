@@ -6,7 +6,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -20,7 +20,7 @@ namespace TracesNT.WebServices.CertexServices
         private bool sendingDateFieldSpecified;
         private CompetentCustomsOfficeType competentCustomsOfficeField;
         private string itemField;
-        private ItemChoiceType itemElementNameField;
+        private ItemChoiceType1 itemElementNameField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 0)]
         public string GoodsItemNumber
@@ -131,7 +131,7 @@ namespace TracesNT.WebServices.CertexServices
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType ItemElementName
+        public ItemChoiceType1 ItemElementName
         {
             get
             {

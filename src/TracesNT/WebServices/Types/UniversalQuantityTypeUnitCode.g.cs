@@ -6,12 +6,20 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Xml.Serialization.XmlTypeAttribute(AnonymousType = true, Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public enum SupplementaryQuantityTypeUnitCode
+    public enum UniversalQuantityTypeUnitCode
     {
+        /// <remarks/>
+        TNE,
+        /// <remarks/>
+        KTN,
+        /// <remarks/>
+        KGM,
+        /// <remarks/>
+        GRM,
         /// <remarks/>
         LTR,
         /// <remarks/>
@@ -23,120 +31,134 @@ namespace TracesNT.WebServices.CertexServices
         /// <remarks/>
         STW,
         /// <remarks/>
-        BG,
+        ASV,
         /// <remarks/>
-        BL,
+        ASVX,
         /// <remarks/>
-        BX,
+        CCT,
+        /// <remarks/>
+        CEN,
+        /// <remarks/>
+        CMQ,
+        /// <remarks/>
+        CTM,
+        /// <remarks/>
+        DAP,
+        /// <remarks/>
+        DHS,
+        /// <remarks/>
+        DTN,
+        /// <remarks/>
+        DTNE,
+        /// <remarks/>
+        DTNF,
+        /// <remarks/>
+        DTNG,
+        /// <remarks/>
+        DTNL,
+        /// <remarks/>
+        DTNM,
+        /// <remarks/>
+        DTNR,
+        /// <remarks/>
+        DTNS,
+        /// <remarks/>
+        DTNZ,
+        /// <remarks/>
+        ENP,
+        /// <remarks/>
+        EUR,
+        /// <remarks/>
+        GFI,
+        /// <remarks/>
+        GRT,
+        /// <remarks/>
+        HLT,
+        /// <remarks/>
+        HMT,
+        /// <remarks/>
+        KAC,
+        /// <remarks/>
+        KCC,
+        /// <remarks/>
+        KCL,
+        /// <remarks/>
+        KGMA,
+        /// <remarks/>
+        KGME,
+        /// <remarks/>
+        KGMG,
+        /// <remarks/>
+        KGMP,
+        /// <remarks/>
+        KGMS,
+        /// <remarks/>
+        KGMT,
+        /// <remarks/>
+        KLT,
+        /// <remarks/>
+        KMA,
+        /// <remarks/>
+        KMT,
+        /// <remarks/>
+        KNI,
+        /// <remarks/>
+        KNS,
+        /// <remarks/>
+        KPH,
+        /// <remarks/>
+        KPO,
+        /// <remarks/>
+        KPP,
+        /// <remarks/>
+        KSD,
+        /// <remarks/>
+        KSH,
+        /// <remarks/>
+        KUR,
+        /// <remarks/>
+        LPA,
+        /// <remarks/>
+        LTRA,
+        /// <remarks/>
+        MIL,
+        /// <remarks/>
+        MLT,
+        /// <remarks/>
+        MPR,
         /// <remarks/>
         MTK,
         /// <remarks/>
-        BY,
+        MTQC,
         /// <remarks/>
-        VR,
+        MTR,
         /// <remarks/>
-        CA,
+        MWH,
         /// <remarks/>
-        CI,
+        NARB,
         /// <remarks/>
-        CT,
+        NCL,
         /// <remarks/>
-        CS,
+        NPR,
         /// <remarks/>
-        CK,
+        TJO,
         /// <remarks/>
-        CF,
+        TCE,
         /// <remarks/>
-        CN,
+        TNEE,
         /// <remarks/>
-        CR,
+        TNEI,
         /// <remarks/>
-        DR,
+        TNEJ,
         /// <remarks/>
-        FB,
+        TNEK,
         /// <remarks/>
-        JR,
+        TNEM,
         /// <remarks/>
-        PK,
+        TNER,
         /// <remarks/>
-        PL,
+        TNEZ,
         /// <remarks/>
-        PX,
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("8C")]
-        Item8C,
-        /// <remarks/>
-        SA,
-        /// <remarks/>
-        SH,
-        /// <remarks/>
-        SI,
-        /// <remarks/>
-        ST,
-        /// <remarks/>
-        TK,
-        /// <remarks/>
-        TY,
-        /// <remarks/>
-        TT,
-        /// <remarks/>
-        PT,
-        /// <remarks/>
-        DT,
-        /// <remarks/>
-        TU,
-        /// <remarks/>
-        VI,
-        /// <remarks/>
-        QP,
-        /// <remarks/>
-        QQ,
-        /// <remarks/>
-        BA,
-        /// <remarks/>
-        BE,
-        /// <remarks/>
-        BH,
-        /// <remarks/>
-        BI,
-        /// <remarks/>
-        QH,
-        /// <remarks/>
-        QJ,
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("24")]
-        Item24,
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("12")]
-        Item12,
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("16")]
-        Item16,
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("15")]
-        Item15,
-        /// <remarks/>
-        [System.Xml.Serialization.XmlEnumAttribute("8B")]
-        Item8B,
-        /// <remarks/>
-        XD,
-        /// <remarks/>
-        RT,
-        /// <remarks/>
-        PA,
-        /// <remarks/>
-        PO,
-        /// <remarks/>
-        PJ,
-        /// <remarks/>
-        LE,
-        /// <remarks/>
-        GR,
-        /// <remarks/>
-        WA,
-        /// <remarks/>
-        DU,
-        /// <remarks/>
-        PB,
+        WAT,
     }
 }

@@ -11,7 +11,7 @@ namespace TracesNT.WebServices.CertexServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class DateTimeRangeWithFreqType
+    public partial class DateTimeRangeWithNumericalFreqType
     {
         private System.DateTime dateTimeFromField;
         private bool dateTimeFromFieldSpecified;
@@ -79,7 +79,7 @@ namespace TracesNT.WebServices.CertexServices
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 2)]
         public string SubscriptionFrequency
         {
             get

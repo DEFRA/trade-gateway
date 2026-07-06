@@ -6,7 +6,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
@@ -14,15 +14,15 @@ namespace TracesNT.WebServices.CertexServices
     [System.ServiceModel.MessageContractAttribute(IsWrapped = false)]
     public partial class ChedInterventionResponse
     {
-        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
-        public TracesNT.WebServices.CertexServices.CertexHeaderType CertexHeader;
-        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ChedInterventionResponse", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04", Order = 0)]
-        public TracesNT.WebServices.CertexServices.ChedQuantityManagementOutcomeType ChedInterventionResponse1;
+        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
+        public TracesNT.WebServices.CertexHeaderType CertexHeader;
+        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ChedInterventionResponse", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06", Order = 0)]
+        public TracesNT.WebServices.ChedQuantityManagementOutcomeType ChedInterventionResponse1;
         public ChedInterventionResponse()
         {
         }
 
-        public ChedInterventionResponse(TracesNT.WebServices.CertexServices.CertexHeaderType CertexHeader, TracesNT.WebServices.CertexServices.ChedQuantityManagementOutcomeType ChedInterventionResponse1)
+        public ChedInterventionResponse(TracesNT.WebServices.CertexHeaderType CertexHeader, TracesNT.WebServices.ChedQuantityManagementOutcomeType ChedInterventionResponse1)
         {
             this.CertexHeader = CertexHeader;
             this.ChedInterventionResponse1 = ChedInterventionResponse1;

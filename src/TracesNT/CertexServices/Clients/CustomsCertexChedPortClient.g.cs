@@ -20,7 +20,7 @@ namespace TracesNT.WebServices.CertexServices
         static partial void ConfigureEndpoint(System.ServiceModel.Description.ServiceEndpoint serviceEndpoint, System.ServiceModel.Description.ClientCredentials clientCredentials);
         public CustomsCertexChedPortClient() : base(CustomsCertexChedPortClient.GetDefaultBinding(), CustomsCertexChedPortClient.GetDefaultEndpointAddress())
         {
-            this.Endpoint.Name = EndpointConfiguration.CustomsCertexChedServiceV04Endpoint.ToString();
+            this.Endpoint.Name = EndpointConfiguration.CustomsCertexChedServiceV06Endpoint.ToString();
             ConfigureEndpoint(this.Endpoint, this.ClientCredentials);
         }
 
@@ -132,7 +132,7 @@ namespace TracesNT.WebServices.CertexServices
 #endif
         private static System.ServiceModel.Channels.Binding GetBindingForEndpoint(EndpointConfiguration endpointConfiguration)
         {
-            if ((endpointConfiguration == EndpointConfiguration.CustomsCertexChedServiceV04Endpoint))
+            if ((endpointConfiguration == EndpointConfiguration.CustomsCertexChedServiceV06Endpoint))
             {
                 System.ServiceModel.BasicHttpBinding result = new System.ServiceModel.BasicHttpBinding();
                 result.MaxBufferSize = int.MaxValue;
@@ -148,9 +148,9 @@ namespace TracesNT.WebServices.CertexServices
 
         private static System.ServiceModel.EndpointAddress GetEndpointAddress(EndpointConfiguration endpointConfiguration)
         {
-            if ((endpointConfiguration == EndpointConfiguration.CustomsCertexChedServiceV04Endpoint))
+            if ((endpointConfiguration == EndpointConfiguration.CustomsCertexChedServiceV06Endpoint))
             {
-                return new System.ServiceModel.EndpointAddress("https://webgate.acceptance.ec.europa.eu/tracesnt/ws/CustomsCertexChedServiceV04");
+                return new System.ServiceModel.EndpointAddress("https://webgate.acceptance.ec.europa.eu/tracesnt/ws/CustomsCertexChedServiceV06");
             }
 
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));
@@ -158,17 +158,17 @@ namespace TracesNT.WebServices.CertexServices
 
         private static System.ServiceModel.Channels.Binding GetDefaultBinding()
         {
-            return CustomsCertexChedPortClient.GetBindingForEndpoint(EndpointConfiguration.CustomsCertexChedServiceV04Endpoint);
+            return CustomsCertexChedPortClient.GetBindingForEndpoint(EndpointConfiguration.CustomsCertexChedServiceV06Endpoint);
         }
 
         private static System.ServiceModel.EndpointAddress GetDefaultEndpointAddress()
         {
-            return CustomsCertexChedPortClient.GetEndpointAddress(EndpointConfiguration.CustomsCertexChedServiceV04Endpoint);
+            return CustomsCertexChedPortClient.GetEndpointAddress(EndpointConfiguration.CustomsCertexChedServiceV06Endpoint);
         }
 
         public enum EndpointConfiguration
         {
-            CustomsCertexChedServiceV04Endpoint,
+            CustomsCertexChedServiceV06Endpoint,
         }
     }
 }

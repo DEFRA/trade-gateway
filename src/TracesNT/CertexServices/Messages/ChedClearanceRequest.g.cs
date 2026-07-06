@@ -22,10 +22,10 @@ namespace TracesNT.WebServices.CertexServices
         public TracesNT.WebServices.CertexServices.ISO2AlphaLanguageCodeContentType LanguageCode;
         [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/tracesnt/body/v1")]
         public string CustomsOfficeReferenceNumber;
-        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
-        public TracesNT.WebServices.CertexServices.CertexHeaderType CertexHeader;
-        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ChedClearanceRequest", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04", Order = 0)]
-        public TracesNT.WebServices.CertexServices.ChedClearanceRequestType ChedClearanceRequest1;
+        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
+        public TracesNT.WebServices.CertexHeaderType CertexHeader;
+        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ChedClearanceRequest", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06", Order = 0)]
+        public TracesNT.WebServices.ChedClearanceRequestType ChedClearanceRequest1;
         public ChedClearanceRequest()
         {
         }

@@ -11,19 +11,20 @@ namespace TracesNT.WebServices.CertexServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class CRFLMSFilters4CHEDType
+    public partial class CRFLMSFilters4CHEDEnhancedType
     {
-        private ChedCertificateType[] chedTypeField;
+        private ChedCertificateType1[] chedTypeField;
         private string[] chedStatusField;
         private string[] countryOfEntryField;
         private string[] countryOfDispatchField;
         private string[] countryOfExportField;
         private string[] countryOfDestinationField;
         private string[] countryOfIssuingField;
+        private string[] bCPCodeRUnLocodeField;
         private string[] customsDocumentReferenceField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("ChedType", Order = 0)]
-        public ChedCertificateType[] ChedType
+        public ChedCertificateType1[] ChedType
         {
             get
             {
@@ -127,7 +128,22 @@ namespace TracesNT.WebServices.CertexServices
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("CustomsDocumentReference", Order = 7)]
+        [System.Xml.Serialization.XmlElementAttribute("BCPCodeRUnLocode", Order = 7)]
+        public string[] BCPCodeRUnLocode
+        {
+            get
+            {
+                return this.bCPCodeRUnLocodeField;
+            }
+
+            set
+            {
+                this.bCPCodeRUnLocodeField = value;
+            }
+        }
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("CustomsDocumentReference", Order = 8)]
         public string[] CustomsDocumentReference
         {
             get

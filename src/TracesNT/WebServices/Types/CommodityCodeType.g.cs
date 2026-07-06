@@ -6,58 +6,58 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class QuantityR4ForInterventionAllocationType
+    public partial class CommodityCodeType
     {
-        private string certificateLineNumberField;
-        private UniversalQuantityType netWeightMeasureField;
-        private UniversalQuantityType supplementaryUnitsField;
+        private string harmonizedSystemSubheadingcodeField;
+        private string combinedNomenclatureCodeField;
+        private string tARICCodeField;
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 0)]
-        public string CertificateLineNumber
+        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
+        public string HarmonizedSystemSubheadingcode
         {
             get
             {
-                return this.certificateLineNumberField;
+                return this.harmonizedSystemSubheadingcodeField;
             }
 
             set
             {
-                this.certificateLineNumberField = value;
+                this.harmonizedSystemSubheadingcodeField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        public UniversalQuantityType NetWeightMeasure
+        public string CombinedNomenclatureCode
         {
             get
             {
-                return this.netWeightMeasureField;
+                return this.combinedNomenclatureCodeField;
             }
 
             set
             {
-                this.netWeightMeasureField = value;
+                this.combinedNomenclatureCodeField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public UniversalQuantityType SupplementaryUnits
+        public string TARICCode
         {
             get
             {
-                return this.supplementaryUnitsField;
+                return this.tARICCodeField;
             }
 
             set
             {
-                this.supplementaryUnitsField = value;
+                this.tARICCodeField = value;
             }
         }
     }

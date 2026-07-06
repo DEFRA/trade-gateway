@@ -1,4 +1,4 @@
-{
+﻿{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -44,112 +44,6 @@
               application/problem+json: {
                 schema: {
                   $ref: #/components/schemas/ProblemDetails
-                }
-              }
-            }
-          },
-          403: {
-            description: Forbidden,
-            content: {
-              application/problem+json: {
-                schema: {
-                  $ref: #/components/schemas/ProblemDetails
-                }
-              }
-            }
-          },
-          500: {
-            description: Internal Server Error,
-            content: {
-              application/problem+json: {
-                schema: {
-                  $ref: #/components/schemas/ProblemDetails
-                }
-              }
-            }
-          },
-          502: {
-            description: Bad Gateway,
-            content: {
-              application/problem+json: {
-                schema: {
-                  $ref: #/components/schemas/ProblemDetails
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    /certificates/cheds: {
-      get: {
-        tags: [
-          ChedEndpoints
-        ],
-        parameters: [
-          {
-            name: pageSize,
-            in: query,
-            description: The number of records to return,
-            required: true,
-            schema: {
-              maximum: 200,
-              minimum: 10,
-              type: integer,
-              description: The number of records to return,
-              format: int32
-            }
-          },
-          {
-            name: offset,
-            in: query,
-            description: Number of records to offset,
-            required: true,
-            schema: {
-              maximum: 2147483647,
-              minimum: 0,
-              type: integer,
-              description: Number of records to offset,
-              format: int32
-            }
-          },
-          {
-            name: updatedFrom,
-            in: query,
-            description: Start of the range,
-            schema: {
-              type: string,
-              description: Start of the range,
-              format: date-time
-            }
-          },
-          {
-            name: updatedBefore,
-            in: query,
-            description: End of the range,
-            schema: {
-              type: string,
-              description: End of the range,
-              format: date-time
-            }
-          },
-          {
-            name: Accept-Language,
-            in: header,
-            description: End of the range,
-            schema: {
-              type: string,
-              description: End of the range
-            }
-          }
-        ],
-        responses: {
-          200: {
-            description: OK,
-            content: {
-              application/vnd.defra.trade.intra.summary.v1+json: {
-                schema: {
-                  $ref: #/components/schemas/DefraUNVTDINTRASummaryProfile
                 }
               }
             }
@@ -273,7 +167,6 @@
             name: pageSize,
             in: query,
             description: The number of records to return,
-            required: true,
             schema: {
               maximum: 200,
               minimum: 10,
@@ -286,9 +179,8 @@
             name: offset,
             in: query,
             description: Number of records to offset,
-            required: true,
             schema: {
-              maximum: 2147483647,
+              maximum: 9990,
               minimum: 0,
               type: integer,
               description: Number of records to offset,
@@ -329,7 +221,7 @@
           200: {
             description: OK,
             content: {
-              application/vnd.defra.trade.intra.summary.v1+json: {
+              application/vnd.defra.trade.intra-list.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDINTRASummaryProfile
                 }

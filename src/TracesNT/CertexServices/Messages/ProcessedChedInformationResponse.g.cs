@@ -6,7 +6,7 @@
 //     the code is regenerated.
 // </auto-generated>
 //------------------------------------------------------------------------------
-namespace TracesNT.WebServices.CertexServices
+namespace TracesNT.WebServices
 {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
@@ -14,15 +14,15 @@ namespace TracesNT.WebServices.CertexServices
     [System.ServiceModel.MessageContractAttribute(IsWrapped = false)]
     public partial class ProcessedChedInformationResponse
     {
-        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04")]
-        public TracesNT.WebServices.CertexServices.CertexHeaderType CertexHeader;
-        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ProcessedChedInformationResponse", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v04", Order = 0)]
-        public TracesNT.WebServices.CertexServices.ProcessedChedInformationResponseType ProcessedChedInformationResponse1;
+        [System.ServiceModel.MessageHeaderAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
+        public TracesNT.WebServices.CertexHeaderType CertexHeader;
+        [System.ServiceModel.MessageBodyMemberAttribute(Name = "ProcessedChedInformationResponse", Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06", Order = 0)]
+        public TracesNT.WebServices.ProcessedChedInformationResponseType ProcessedChedInformationResponse1;
         public ProcessedChedInformationResponse()
         {
         }
 
-        public ProcessedChedInformationResponse(TracesNT.WebServices.CertexServices.CertexHeaderType CertexHeader, TracesNT.WebServices.CertexServices.ProcessedChedInformationResponseType ProcessedChedInformationResponse1)
+        public ProcessedChedInformationResponse(TracesNT.WebServices.CertexHeaderType CertexHeader, TracesNT.WebServices.ProcessedChedInformationResponseType ProcessedChedInformationResponse1)
         {
             this.CertexHeader = CertexHeader;
             this.ProcessedChedInformationResponse1 = ProcessedChedInformationResponse1;

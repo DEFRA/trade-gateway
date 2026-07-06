@@ -11,53 +11,53 @@ namespace TracesNT.WebServices.CertexServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class SubscriptionIndicationType
+    public partial class PrevalidationFailureConsignmentItemType
     {
-        private string subscriptionMarkerField;
-        private string[] subscriptionIDField;
-        private DateTimeRangeWithFreqType validityPeriodForSubscriptionField;
+        private string goodsItemNumberField;
+        private string documentLineItemNumberField;
+        private string reasonForPrevalidationFailureField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 0)]
-        public string SubscriptionMarker
+        public string GoodsItemNumber
         {
             get
             {
-                return this.subscriptionMarkerField;
+                return this.goodsItemNumberField;
             }
 
             set
             {
-                this.subscriptionMarkerField = value;
+                this.goodsItemNumberField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("SubscriptionID", Order = 1)]
-        public string[] SubscriptionID
+        [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 1)]
+        public string DocumentLineItemNumber
         {
             get
             {
-                return this.subscriptionIDField;
+                return this.documentLineItemNumberField;
             }
 
             set
             {
-                this.subscriptionIDField = value;
+                this.documentLineItemNumberField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 2)]
-        public DateTimeRangeWithFreqType ValidityPeriodForSubscription
+        public string ReasonForPrevalidationFailure
         {
             get
             {
-                return this.validityPeriodForSubscriptionField;
+                return this.reasonForPrevalidationFailureField;
             }
 
             set
             {
-                this.validityPeriodForSubscriptionField = value;
+                this.reasonForPrevalidationFailureField = value;
             }
         }
     }
