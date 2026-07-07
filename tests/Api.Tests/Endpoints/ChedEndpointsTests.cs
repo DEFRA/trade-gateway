@@ -237,4 +237,34 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
         );
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
+
+    [Fact]
+    public async Task Find_WhenTracesCommunicationFails_ReturnsBadGateway()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    FindChedCertificateSoapAction,
+                    "/*[local-name() = 'FindChedCertificateRequest']"
+                        + "/*[local-name() = 'UpdateDateTimeRange']"
+                        + "/*[local-name() = 'From' and contains(text(), '1999')]"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithStatusCode((int)HttpStatusCode.BadGateway)
+                    .WithHeader("Content-Type", "text/plain; charset=utf-8")
+                    .WithBody("upstream failed")
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetAsync(
+            "/certificates/cheds?updatedFrom=1999-10-28Z&updatedBefore=2026-10-28Z",
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
 }
