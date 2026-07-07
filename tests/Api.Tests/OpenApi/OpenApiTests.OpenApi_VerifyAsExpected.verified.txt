@@ -1,4 +1,4 @@
-{
+﻿{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -145,9 +145,9 @@
           200: {
             description: OK,
             content: {
-              application/vnd.defra.trade.intra-list.v1+json: {
+              application/vnd.defra.trade.ched.summary.v1+json: {
                 schema: {
-                  $ref: #/components/schemas/DefraUNVTDINTRASummaryProfile
+                  $ref: #/components/schemas/DefraUNVTDCHEDSummaryProfile
                 }
               }
             }
@@ -1070,6 +1070,64 @@
             },
             description: UN vocabulary-aligned laboratory observations/results collection.,
             nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDCHEDSummaryProfile: {
+        required: [
+          hasMore,
+          items,
+          offset,
+          pageSize
+        ],
+        type: object,
+        properties: {
+          items: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/DefraUNVTDCHEDSummaryProfileItem
+            },
+            nullable: true
+          },
+          offset: {
+            type: integer,
+            format: int32
+          },
+          pageSize: {
+            type: integer,
+            format: int32
+          },
+          hasMore: {
+            type: boolean
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDCHEDSummaryProfileItem: {
+        required: [
+          created,
+          id,
+          origin,
+          updated
+        ],
+        type: object,
+        properties: {
+          id: {
+            type: string,
+            nullable: true
+          },
+          origin: {
+            type: string,
+            nullable: true
+          },
+          created: {
+            type: string,
+            format: date-time
+          },
+          updated: {
+            type: string,
+            format: date-time
           }
         },
         additionalProperties: false
