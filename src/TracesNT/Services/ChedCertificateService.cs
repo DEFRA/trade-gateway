@@ -49,5 +49,40 @@ namespace TracesNT.Services
                 throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
             }
         }
+
+        public async Task<FindChedCertificateResponse> FindChedCertificates(
+            DateTime after,
+            DateTime before,
+            int offset,
+            int pageSize,
+            string languageCode
+        )
+        {
+            var language = Enum.TryParse<ISO2AlphaLanguageCodeContentType>(languageCode, out var parsed)
+                ? parsed
+                : ISO2AlphaLanguageCodeContentType.en;
+
+            try
+            {
+                var response = await chedCertificatePort.findChedCertificateAsync(
+                    new SecurityHeaderType(),
+                    tracesOptions.Value.WebServiceClientId,
+                    language,
+                    [],
+                    new FindChedCertificateRequestType
+                    {
+                        offset = offset,
+                        pageSize = pageSize,
+                        UpdateDateTimeRange = new DateTimeRange() { From = after, To = before },
+                    }
+                );
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
+            }
+        }
     }
 }

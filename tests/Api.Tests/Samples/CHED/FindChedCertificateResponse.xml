@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header>
+    <Message xmlns="http://ec.europa.eu/sanco/tracesnt/message/v1" severity="debugging">
+      <ID>WS_REQUEST_ID</ID>
+      <Message>025c036d-95ff-4006-a148-c90ed2716dea</Message>
+    </Message>
+    <ns2:Security
+      xmlns:ns1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+      xmlns:ns2="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    >
+      <ns1:Timestamp>
+        <ns1:Created>2026-06-03T12:53:13.148+02:00</ns1:Created>
+        <ns1:Expires>2026-06-03T12:53:18.148+02:00</ns1:Expires>
+      </ns1:Timestamp>
+    </ns2:Security>
+  </S:Header>
+  <S:Body>
+    <ns7:FindChedCertificateResponse
+      xmlns:ns2="http://ec.europa.eu/sanco/tracesnt/base/v4"
+      xmlns:ns4="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21"
+      xmlns:ns5="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21"
+      xmlns:ns7="http://ec.europa.eu/tracesnt/certificate/ched/v2"
+      pageSize="5"
+      offset="5"
+    >
+      <ns7:ChedCertificateResult>
+        <ns7:ID>CHEDA.XI.2026.0000063</ns7:ID>
+        <ns7:CommodityApplicableSPSClassification>
+          <ns4:SystemID>CN</ns4:SystemID>
+          <ns4:SystemName>CN Code (Combined Nomenclature)</ns4:SystemName>
+          <ns4:ClassCode>010410</ns4:ClassCode>
+          <ns4:ClassName languageID="en">LIVE ANIMALS</ns4:ClassName>
+        </ns7:CommodityApplicableSPSClassification>
+        <ns7:CountryOfOrigin>GB</ns7:CountryOfOrigin>
+        <ns7:CreateDateTime>2026-04-14T13:25:58.000Z</ns7:CreateDateTime>
+        <ns7:UpdateDateTime>2026-04-14T13:25:58.000Z</ns7:UpdateDateTime>
+      </ns7:ChedCertificateResult>
+      <ns7:ChedCertificateResult>
+        <ns7:ID>CHEDPP.XI.2026.0000064</ns7:ID>
+        <ns7:CommodityApplicableSPSClassification>
+          <ns4:SystemID>CN</ns4:SystemID>
+          <ns4:SystemName>CN Code (Combined Nomenclature)</ns4:SystemName>
+          <ns4:ClassCode>05111000</ns4:ClassCode>
+          <ns4:ClassName languageID="en">PRODUCTS OF ANIMAL ORIGIN</ns4:ClassName>
+        </ns7:CommodityApplicableSPSClassification>
+        <ns7:CountryOfOrigin>BE</ns7:CountryOfOrigin>
+        <ns7:CreateDateTime>2026-04-09T12:39:54.000Z</ns7:CreateDateTime>
+        <ns7:UpdateDateTime>2026-04-09T12:39:54.000Z</ns7:UpdateDateTime>
+      </ns7:ChedCertificateResult>
+    </ns7:FindChedCertificateResponse>
+  </S:Body>
+</S:Envelope>

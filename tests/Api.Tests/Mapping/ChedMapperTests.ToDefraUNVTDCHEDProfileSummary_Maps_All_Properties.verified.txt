@@ -1,0 +1,13 @@
+﻿{
+  Items: [
+    {
+      Id: CHEDA.XI.2026.0000063,
+      Origin: GB,
+      Created: DateTimeOffset_1,
+      Updated: DateTimeOffset_2
+    }
+  ],
+  Offset: 10,
+  PageSize: 2,
+  HasMore: false
+}

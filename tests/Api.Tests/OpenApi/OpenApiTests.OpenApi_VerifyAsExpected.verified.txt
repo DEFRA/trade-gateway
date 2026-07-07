@@ -81,6 +81,110 @@
         }
       }
     },
+    /certificates/cheds: {
+      get: {
+        tags: [
+          ChedEndpoints
+        ],
+        parameters: [
+          {
+            name: pageSize,
+            in: query,
+            description: The number of records to return,
+            schema: {
+              maximum: 200,
+              minimum: 10,
+              type: integer,
+              description: The number of records to return,
+              format: int32
+            }
+          },
+          {
+            name: offset,
+            in: query,
+            description: Number of records to offset,
+            schema: {
+              maximum: 9990,
+              minimum: 0,
+              type: integer,
+              description: Number of records to offset,
+              format: int32
+            }
+          },
+          {
+            name: updatedFrom,
+            in: query,
+            description: Start of the range,
+            schema: {
+              type: string,
+              description: Start of the range,
+              format: date-time
+            }
+          },
+          {
+            name: updatedBefore,
+            in: query,
+            description: End of the range,
+            schema: {
+              type: string,
+              description: End of the range,
+              format: date-time
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            description: End of the range,
+            schema: {
+              type: string,
+              description: End of the range
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.ched.summary.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDCHEDSummaryProfile
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     /certificates/intras/{id}: {
       get: {
         tags: [
@@ -966,6 +1070,64 @@
             },
             description: UN vocabulary-aligned laboratory observations/results collection.,
             nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDCHEDSummaryProfile: {
+        required: [
+          hasMore,
+          items,
+          offset,
+          pageSize
+        ],
+        type: object,
+        properties: {
+          items: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/DefraUNVTDCHEDSummaryProfileItem
+            },
+            nullable: true
+          },
+          offset: {
+            type: integer,
+            format: int32
+          },
+          pageSize: {
+            type: integer,
+            format: int32
+          },
+          hasMore: {
+            type: boolean
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDCHEDSummaryProfileItem: {
+        required: [
+          created,
+          id,
+          origin,
+          updated
+        ],
+        type: object,
+        properties: {
+          id: {
+            type: string,
+            nullable: true
+          },
+          origin: {
+            type: string,
+            nullable: true
+          },
+          created: {
+            type: string,
+            format: date-time
+          },
+          updated: {
+            type: string,
+            format: date-time
           }
         },
         additionalProperties: false
