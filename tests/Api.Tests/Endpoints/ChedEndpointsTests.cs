@@ -9,6 +9,7 @@ namespace Api.Tests.Endpoints;
 public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string GetChedCertificateSoapAction = "\"getChedCertificate\"";
+    private const string FindChedCertificateSoapAction = "\"findChedCertificate\"";
 
     [Fact]
     public async Task Get_ReturnsMappedDefraUNVTDCHEDProfile()
@@ -186,5 +187,54 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Find_WhenUpdatedFromIsMissing_ReturnsBadRequest()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetAsync(
+            "/certificates/cheds?pageSize=5&offset=5&updatedFrom1=2002-10-28Z&updatedBefore=2026-10-28Z",
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task Find_WhenValidRequest_AndNoOptionalParameters_ReturnsOk()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    FindChedCertificateSoapAction,
+                    "/*[local-name() = 'FindChedCertificateRequest']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.CHED.FindChedCertificateResponse.xml"
+                        )
+                    )
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetAsync(
+            "/certificates/cheds?updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z",
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(
+            MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>(),
+            response.Content.Headers.ContentType?.MediaType
+        );
+        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
 }

@@ -1,0 +1,19 @@
+﻿{
+  items: [
+    {
+      id: CHEDA.XI.2026.0000063,
+      origin: GB,
+      created: DateTimeOffset_1,
+      updated: DateTimeOffset_1
+    },
+    {
+      id: CHEDPP.XI.2026.0000064,
+      origin: BE,
+      created: DateTimeOffset_2,
+      updated: DateTimeOffset_2
+    }
+  ],
+  offset: 5,
+  pageSize: 5,
+  hasMore: false
+}
