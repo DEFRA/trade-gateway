@@ -34,7 +34,6 @@ TRACES_NT_BASE_URL=traces_base_url
 TRACES_NT_USERNAME=traces_username
 TRACES_NT_AUTHENTICATION_KEY=traces_authentication_key
 TRACES_NT_WEB_SERVICE_CLIENT_ID=traces_client_id
-XAPIKEY=
 
 # Cognito — for clients deployed outside CDP
 AUTHENTICATION__COGNITO__AUTHORITY=https://cognito-idp.<region>.amazonaws.com/<user-pool-id>

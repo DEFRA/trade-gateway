@@ -31,7 +31,6 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                 ["TracesNt:Username"] = "test-user",
                 ["TracesNt:AuthenticationKey"] = "test-auth-key",
                 ["TracesNt:WebServiceClientId"] = "test-client-id",
-                ["XApiKey"] = "test-x-api-key",
                 // Authentication authorities come from appsettings.Development.json so that BindConfig
                 // (which reads config before WebApplicationFactory overrides apply) sees the same values
                 // as the OIDC token endpoints registered by LocalOidcServer at runtime.
