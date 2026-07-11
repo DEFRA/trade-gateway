@@ -11,8 +11,6 @@ services:
 
   mongodb:
     image: mongo:6.0.28
-    volumes:
-      - ./scripts/mongodb:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD", "mongosh", "--eval", "db.hello().ok"]
       interval: 5s
