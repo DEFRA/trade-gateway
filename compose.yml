@@ -1,78 +1,39 @@
 services:
-  # floci is a replacement for localstack. It emulates AWS resources (sqs, sns, s3 etc) for local development
-  # See: https://floci.io for more details
   floci:
-    image: hectorvent/floci:latest-aws
-    ports:
-      - '4566:4566'
+    image: floci/floci:1.5.25-compat
     env_file:
-      - 'compose/aws.env'
-    environment:
-      FLOCI_DEFAULT_REGION: eu-west-2
-      FLOCI_HOSTNAME: floci
-      FLOCI_STORAGE_MODE: hybrid
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "wget -qO- http://localhost:4566/_localstack/health || exit 1"
-        ]
-      interval: 5s
-      timeout: 5s
-      retries: 20
-      start_period: 15s
-
-  aws-init:
-    image: amazon/aws-cli
-    depends_on:
-      floci:
-        condition: service_healthy
+      - ./compose/config/aws.env
+      - ./compose/config/floci.env
     volumes:
-      - ./compose/init-floci.sh:/init-floci.sh:ro
-    environment:
-      AWS_ACCESS_KEY_ID: test
-      AWS_SECRET_ACCESS_KEY: test
-      AWS_DEFAULT_REGION: eu-west-2
-    entrypoint: ["/bin/sh", "/init-floci.sh"]
-
- 
+      - ./compose/scripts/floci/ready.d:/etc/floci/init/ready.d:ro
+    ports:
+      - "4566:4566"
 
   mongodb:
-    image: mongo:6.0.13
+    image: mongo:6.0.28
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.hello().ok"]
+      interval: 5s
+      start_period: 5s
+      retries: 3
     ports:
-      - '27017:27017'
-    volumes:
-      - mongodb-data:/data
-    restart: always
+      - "27017:27017"
 
   trade-gateway:
-    build: ./
-    ports:
-      - '8080:8080'
-    links:
-      - 'floci:floci'
-      - 'mongodb:mongodb'
+    build:
+      context: ./
+    env_file:
+      - ./compose/config/aws.env
+      - ./compose/config/trade-gateway.env
     depends_on:
       floci:
         condition: service_healthy
       mongodb:
-        condition: service_started
-    env_file:
-      - 'compose/aws.env'
-      - 'compose/localdev.env'
-    environment:
-      PORT: 8080
-      
-      LOCALSTACK_ENDPOINT: http://localstack:4566
-      MONGO_URI: mongodb://mongodb:27017/
-      Mongo__DatabaseUri: mongodb://mongodb:27017
-      Mongo__DatabaseName: trade-gateway
-      TracesNt__BaseUrl: ${TRACESNT__BASEURL}
-      TracesNt__Username: ${TRACESNT__USERNAME}
-      TracesNt__AuthenticationKey: ${TRACESNT__AUTHENTICATIONKEY}
-      TracesNt__WebServiceClientId: ${TRACESNT__WEBSERVICECLIENTID}
-      XApiKey: ${XAPIKEY:-}
-
-
-volumes:
-  mongodb-data:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "http://localhost:8080/health"]
+      interval: 3s
+      start_period: 2s
+      retries: 3
+    ports:
+      - "3000:8080"
