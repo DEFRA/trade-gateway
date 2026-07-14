@@ -21,7 +21,8 @@ jobs:
     permissions:
       id-token: write
       contents: write
-      pull-requests: write
+      pull-requests: write      
+      packages: write
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
