@@ -12,5 +12,6 @@
     <RepositoryUrl>https://github.com/DEFRA/trade-gateway</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
 </Project>
