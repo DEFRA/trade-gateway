@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 env:
   AWS_REGION: eu-west-2
