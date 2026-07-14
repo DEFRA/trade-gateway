@@ -13,7 +13,6 @@ on:
 
 permissions:
   contents: read
-  packages: read
 
 jobs:
   pr-validator:
@@ -21,7 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-      id-token: write
+      id-token: write      
+      packages: write
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
@@ -57,6 +57,22 @@ jobs:
             --ignore-unfixed \
             --exit-code 1 \
             trade-gateway:latest
+      - name: Pack NuGets
+        if: github.actor != 'dependabot[bot]'
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number || '' }}
+          BUILD_NUMBER: ${{ github.run_number }}
+        run: |
+          echo "Building a pre-release package for PR #$PR_NUMBER"
+          dotnet pack --no-restore --configuration Release -o ./nupkg \
+            /p:VersionSuffix="pr-$PR_NUMBER.$BUILD_NUMBER"
+      - name: Publish NuGets
+        if: github.actor != 'dependabot[bot]'
+        run: |
+          dotnet nuget push ./nupkg/*.nupkg \
+            --source "https://nuget.pkg.github.com/${{ github.repository_owner }}/index.json" \
+            --api-key "$GITHUB_TOKEN" \
+            --skip-duplicate
   sonarcloud-scan:
     name: CDP SonarCloud Scan
     permissions:
