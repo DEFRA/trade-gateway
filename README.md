@@ -41,7 +41,7 @@ AUTHENTICATION__COGNITO__SCOPE=<cognito-scope>
 
 # STS — for CDP-internal services authenticating via IAM role
 AUTHENTICATION__STS__AUTHORITY=https://<sts-oidc-issuer>
-AUTHENTICATION__STS__SCOPE=<sts-scope>
+AUTHENTICATION__STS__AUDIENCE=trade-gateway
 ```
 
 Both authentication authorities must be reachable at startup. See [ADR-0004](docs/adr/0004-dual-issuer-authentication.md) for the full authentication design, including the IAM authorization requirement for STS clients.
@@ -75,8 +75,28 @@ Configuration (see env vars in [Docker Compose](#docker-compose) above):
 }
 ```
 
-Both authorities must be reachable at startup. In local development a stub OIDC server
-([LocalOidcServer](src/Api/Utils/LocalOidcServer.cs)) mints and validates tokens.
+Both authorities must be reachable at startup. In local development
+[LocalTokenServer](src/Api/Utils/LocalTokenServer.cs) stands in for both issuers, signing with a
+single in-memory key it publishes over OIDC discovery so each scheme can verify what it mints:
+
+| Prefix | Endpoints |
+|--------|-----------|
+| `/local/cognito` | OIDC discovery, JWKS, and `POST /token` — form fields `scope`, `audience`, `sub` |
+| `/local/sts` | OIDC discovery, JWKS, and `sts:GetWebIdentityToken` mounted on the prefix itself |
+
+The STS half deliberately has no `/token` endpoint: real STS has no such operation. Localstack does
+not implement `GetWebIdentityToken` either, so a service that authenticates through it — such as
+`trade-gateway-publisher` — points the AWS SDK at this app instead, with no code change on its side:
+
+```env
+AWS_ENDPOINT_URL_STS=http://localhost:5000/local/sts
+```
+
+Tokens it issues carry `sub: trade-gateway-publisher`, which
+[appsettings.Development.json](src/Api/appsettings.Development.json) grants READ on the certificate
+collections. [LocalStsEndpointTests](tests/Api.Tests/Authorization/LocalStsEndpointTests.cs) drives
+the endpoint through the real AWS SDK client so the response envelope cannot drift out of shape
+with the SDK's unmarshaller.
 
 ### Authorisation
 
