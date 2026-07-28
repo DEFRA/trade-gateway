@@ -21,6 +21,9 @@
     <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="10.0.9" />
     <PackageReference Include="MongoDB.Driver" Version="3.8.1" />
     <PackageReference Include="MongoDB.Driver.Authentication.AWS" Version="3.8.1" />
+    <!-- Transitive via MongoDB.Driver (which asks for >= 0.30.1); pinned to pull in the
+         fix for CVE-2026-44788. Remove once the driver's floor moves past 0.48.0. -->
+    <PackageReference Include="SharpCompress" Version="0.48.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="2.9.0" />
     <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
