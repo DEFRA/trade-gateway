@@ -1,0 +1,21 @@
+﻿{
+  EventId: Guid_1,
+  AggregateType: TracesChed,
+  SubType: CHEDA-GB-2026-1234567,
+  AggregateId: Imports.TracesChed.CHEDA-GB-2026-1234567.CHEDA-GB-2026-1234567,
+  EventType: Trade.Gateway.Api.Contract.Certificate.DefraUNVTDCHEDProfile,
+  Timestamp: DateTime_1,
+  Data: {
+    Model: defra/certificate-internal/1,
+    Type: ched,
+    ExchangedDocument: {
+      Identifier: CHEDA-GB-2026-1234567
+    },
+    SpecifiedConsignment: {}
+  },
+  Metadata: {
+    CorrelationId: testCorrelationId,
+    SchemaVersion: 1.0.0,
+    SchemaUri: https://github.com/DEFRA/trade-imports-schemas/blob/main/schemas/profiles/imports/international/defra-unvtd-profile-ched-v1.schema.json
+  }
+}
