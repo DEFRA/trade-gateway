@@ -32,6 +32,13 @@ public class GlobalExceptionHandler(
                 "Bad Gateway",
                 "An error occurred communicating with an upstream service."
             ),
+            // The upstream errorMessage stays on the exception for the log below; it must not reach
+            // the response body.
+            CustomsFaultException => (
+                StatusCodes.Status502BadGateway,
+                "Bad Gateway",
+                "An error occurred communicating with an upstream service."
+            ),
             BadHttpRequestException => (StatusCodes.Status400BadRequest, "Bad Request", exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "Internal Server Error", "An unexpected error occurred."),
         };

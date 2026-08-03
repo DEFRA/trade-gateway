@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ProcessedChedInformationResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+      <ChedCertificate>
+        <SPSCertificate xmlns="urn:un:unece:uncefact:data:standard:SPSCertificate:17">
+          <SPSExchangedDocument>
+            <ID xmlns="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21">CHEDA.GB.2026.0000123</ID>
+          </SPSExchangedDocument>
+        </SPSCertificate>
+      </ChedCertificate>
+      <QuantityManagementSummary>
+        <AvailableQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <CommodityCode>
+            <HarmonizedSystemSubheadingcode>020329</HarmonizedSystemSubheadingcode>
+            <CombinedNomenclatureCode>02032955</CombinedNomenclatureCode>
+            <TARICCode>0203295500</TARICCode>
+          </CommodityCode>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity>1250.5</Quantity>
+            <CertificateLineNumber>1</CertificateLineNumber>
+          </SwSupportingDocument>
+        </AvailableQuantity>
+        <AvailableQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <SwSupportingDocument>
+            <UnitOfMeasure>H87</UnitOfMeasure>
+            <Quantity>40</Quantity>
+            <CertificateLineNumber>2</CertificateLineNumber>
+          </SwSupportingDocument>
+        </AvailableQuantity>
+        <ReservedQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <GoodsItemNumber>1</GoodsItemNumber>
+          <CommodityCode>
+            <HarmonizedSystemSubheadingcode>020329</HarmonizedSystemSubheadingcode>
+            <CombinedNomenclatureCode>02032955</CombinedNomenclatureCode>
+          </CommodityCode>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity TechnicalRoundingQuantity="0.25">300</Quantity>
+            <CertificateLineNumber>1</CertificateLineNumber>
+          </SwSupportingDocument>
+          <EventDateTime>2026-03-04T09:15:00Z</EventDateTime>
+          <CompetentCustomsOffice>
+            <ReferenceNumber>GB000060</ReferenceNumber>
+          </CompetentCustomsOffice>
+          <MRN>26GB16RF3TDPZE7AR2</MRN>
+        </ReservedQuantity>
+        <ReservedQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <GoodsItemNumber>1</GoodsItemNumber>
+          <CommodityCode>
+            <HarmonizedSystemSubheadingcode>020329</HarmonizedSystemSubheadingcode>
+            <CombinedNomenclatureCode>02032955</CombinedNomenclatureCode>
+          </CommodityCode>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity>90</Quantity>
+            <CertificateLineNumber>1</CertificateLineNumber>
+          </SwSupportingDocument>
+          <EventDateTime>2026-03-04T09:15:00Z</EventDateTime>
+          <CompetentCustomsOffice>
+            <ReferenceNumber>GB000060</ReferenceNumber>
+          </CompetentCustomsOffice>
+          <MRN>26GB99WTYXQ2LM5BC7</MRN>
+        </ReservedQuantity>
+        <ConsumedQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <GoodsItemNumber>2</GoodsItemNumber>
+          <CommodityCode>
+            <HarmonizedSystemSubheadingcode>020329</HarmonizedSystemSubheadingcode>
+            <CombinedNomenclatureCode>02032955</CombinedNomenclatureCode>
+          </CommodityCode>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity>120</Quantity>
+            <CertificateLineNumber>2</CertificateLineNumber>
+          </SwSupportingDocument>
+          <EventDateTime>2026-03-04T09:15:00Z</EventDateTime>
+          <CompetentCustomsOffice>
+            <ReferenceNumber>GB000060</ReferenceNumber>
+          </CompetentCustomsOffice>
+          <MRN>26GB16RF3TDPZE7AR2</MRN>
+        </ConsumedQuantity>
+      </QuantityManagementSummary>
+      <OperationCode>1</OperationCode>
+      <PushActive>false</PushActive>
+    </ProcessedChedInformationResponse>
+  </S:Body>
+</S:Envelope>

@@ -38,6 +38,8 @@ namespace TracesNT.Extensions
 
             services.AddTransient<IReferenceDataService, ReferenceDataService>();
 
+            services.AddTransient<ICustomsChedService, CustomsChedService>();
+
             return services;
         }
     }

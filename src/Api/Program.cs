@@ -111,6 +111,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.MapHealthChecks("/health").AllowAnonymous();
     app.MapLocalTokenEndpoints();
     app.UseChedEndpoints();
+    app.UseCustomsChedQuantityEndpoints();
     app.UseIntraEndpoints();
     app.UseAuthTestEndpoints();
     app.UseReferenceDataEndpoints();

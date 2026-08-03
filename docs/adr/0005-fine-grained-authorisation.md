@@ -168,6 +168,7 @@ Adopt a hierarchical route structure that makes grouping explicit in the URL:
 /reference-data/classifications/sections    (currently: /classificationSections)
 /reference-data/classifications/trees/{id} (currently: /classificationTrees/{id})
 /reference-data/metadata/{type}            (currently: /metaDatas/{type})
+/customs/cheds/{id}/**                     customs quantity management
 ```
 
 Permission rules become self-explanatory: `READ /certificates/**`, `READ /reference-data/**`. The URL directly reflects the resource taxonomy the authorisation model is built on.
@@ -191,7 +192,19 @@ Permissions reference the symbolic name rather than a URL path.
 
 ---
 
-*This section should be resolved before this ADR is accepted.*
+### Why `/customs/**` sits beside `/certificates/**`
+
+Customs quantity management is *about* a CHED, so the obvious placement is beneath it — `/certificates/cheds/{id}/quantities`. That placement is rejected, and the reason is authorisation rather than taxonomy.
+
+`ched-reader` is granted `READ` on `/certificates/cheds/**`. Under the `**` semantics above, any resource added beneath that prefix is conferred on every existing holder of that grant, silently and retroactively — no config change, no review, no deployment. Certificate content and customs quantity data have different sensitivity and different consumers: a service that reads CHED certificates to render them has no business seeing what a customs declaration has reserved against one.
+
+Placing quantity management under its own top-level `/customs/**` prefix means the two grants cannot overlap by accident. Extending a principal's reach across the boundary requires adding a permission entry, which is a reviewable change. `FineGrainedAuthorizationTests.ChedReader_cannot_read_customs_quantities` and `CustomsQuantityReader_cannot_read_ched_certificate` hold the boundary in place.
+
+The generalisation: **a `**` grant is a standing commitment to everything ever added beneath that prefix.** New resource families whose access profile differs from an existing prefix's holders get their own prefix.
+
+---
+
+*The remainder of this section should be resolved before this ADR is accepted.*
 
 ---
 

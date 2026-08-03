@@ -29,6 +29,18 @@ A URL identifies a resource. The collection that contains the resource is plural
 
 The `{id}` segment is the business identifier for the resource (e.g. a certificate reference number), not a database key.
 
+#### Top-level prefixes
+
+Resources are grouped under a top-level prefix naming the domain that owns them:
+
+```
+GET /certificates/**     document retrieval
+GET /reference-data/**   TracesNT code lists and classification trees
+GET /customs/**          customs quantity management
+```
+
+`customs/` is deliberately a **sibling** of `certificates/`, not a child of it. A CHED's quantity-management position is customs data, not certificate content, and the split is what stops the existing `ched-reader` grant on `/certificates/cheds/**` from silently conferring access to it. See [ADR-0005](./0005-fine-grained-authorisation.md).
+
 ### 2. HTTP methods
 
 | Method | Meaning |

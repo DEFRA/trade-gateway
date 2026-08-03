@@ -33,6 +33,7 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                     new Dictionary<string, string?>
                     {
                         ["TracesNt:BaseUrl"] = tracesBaseUrl,
+                        ["TracesNt:CustomsOfficeReferenceNumber"] = "GBTEST01",
                         ["TracesNt:Credentials:Default:Username"] = "test-user",
                         ["TracesNt:Credentials:Default:AuthenticationKey"] = "test-auth-key",
                         ["TracesNt:Credentials:Default:WebServiceClientId"] = "test-client-id",

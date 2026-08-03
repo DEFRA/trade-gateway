@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ProcessedChedInformationResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+      <ChedCertificate>
+        <SPSCertificate xmlns="urn:un:unece:uncefact:data:standard:SPSCertificate:17">
+          <SPSExchangedDocument>
+            <ID xmlns="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21">NOSUMMARY</ID>
+          </SPSExchangedDocument>
+        </SPSCertificate>
+      </ChedCertificate>
+      <OperationCode>1</OperationCode>
+      <PushActive>false</PushActive>
+    </ProcessedChedInformationResponse>
+  </S:Body>
+</S:Envelope>
