@@ -27,13 +27,22 @@ A local environment with:
 docker compose up --build -d
 ```
 
-Note: running docker locally requires the following  environment variables:
+Note: running docker locally requires the following environment variables in a `.env` file, which
+compose passes into the container. Names are the configuration binding path with `__` between
+segments — note `TRACESNT`, not `TRACES_NT`, since the underscore would make it a different section.
 
 ```env
-TRACES_NT_BASE_URL=traces_base_url
-TRACES_NT_USERNAME=traces_username
-TRACES_NT_AUTHENTICATION_KEY=traces_authentication_key
-TRACES_NT_WEB_SERVICE_CLIENT_ID=traces_client_id
+TRACESNT__BASEURL=traces_base_url
+
+# The default TracesNT account, used by the CHED, EU-INTRA and reference-data ports
+TRACESNT__CREDENTIALS__DEFAULT__USERNAME=traces_username
+TRACESNT__CREDENTIALS__DEFAULT__AUTHENTICATIONKEY=traces_authentication_key
+TRACESNT__CREDENTIALS__DEFAULT__WEBSERVICECLIENTID=traces_client_id
+
+# The customs account, used by the quantity-management port
+TRACESNT__CREDENTIALS__CUSTOMS__USERNAME=traces_customs_username
+TRACESNT__CREDENTIALS__CUSTOMS__AUTHENTICATIONKEY=traces_customs_authentication_key
+TRACESNT__CREDENTIALS__CUSTOMS__WEBSERVICECLIENTID=traces_customs_client_id
 
 # Cognito — for clients deployed outside CDP
 AUTHENTICATION__COGNITO__AUTHORITY=https://cognito-idp.<region>.amazonaws.com/<user-pool-id>

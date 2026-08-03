@@ -25,6 +25,9 @@ services:
     env_file:
       - ./compose/config/aws.env
       - ./compose/config/trade-gateway.env
+      # TracesNT credentials, kept out of source control. See .env.example.
+      - path: .env
+        required: false
     depends_on:
       floci:
         condition: service_healthy

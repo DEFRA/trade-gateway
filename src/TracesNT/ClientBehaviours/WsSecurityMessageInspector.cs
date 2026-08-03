@@ -4,14 +4,14 @@ using System.ServiceModel.Dispatcher;
 
 namespace TracesNT.ClientBehaviours;
 
-public class WsSecurityMessageInspector(TracesNtConfig config) : IClientMessageInspector
+public class WsSecurityMessageInspector(TracesNtCredentials credentials) : IClientMessageInspector
 {
     private const string WsseNamespace =
         "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
 
     public object? BeforeSendRequest(ref Message request, IClientChannel channel)
     {
-        if (string.IsNullOrEmpty(config.Username) || string.IsNullOrEmpty(config.AuthenticationKey))
+        if (string.IsNullOrEmpty(credentials.Username) || string.IsNullOrEmpty(credentials.AuthenticationKey))
         {
             return null;
         }
@@ -23,7 +23,7 @@ public class WsSecurityMessageInspector(TracesNtConfig config) : IClientMessageI
             request.Headers.RemoveAt(headerIndex);
         }
 
-        request.Headers.Add(new WsSecurityHeader(config.Username, config.AuthenticationKey));
+        request.Headers.Add(new WsSecurityHeader(credentials.Username, credentials.AuthenticationKey));
 
         return null;
     }

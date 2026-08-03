@@ -10,16 +10,18 @@ namespace TracesNT.Services
     public class EuIntraCertificateService(
         EuIntraCertificatePortClient euIntraCertificatePort,
         ILogger<EuIntraCertificateService> logger,
-        IOptions<TracesNtConfig> tracesOptions
+        IOptionsMonitor<TracesNtCredentials> credentials
     ) : IEuIntraCertificateService
     {
+        private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.Default);
+
         public async Task<EuIntraCertificateType?> GetEuIntraCertificate(string id, string languageCode)
         {
             try
             {
                 var certificateResponse = await euIntraCertificatePort.getEuIntraCertificateAsync(
                     new SecurityHeaderType(),
-                    tracesOptions.Value.WebServiceClientId,
+                    _credentials.WebServiceClientId,
                     languageCode.ToIso2AlphaLanguageCodeContentType(),
                     [],
                     new GetEuIntraCertificateRequestType { ID = id }
@@ -66,7 +68,7 @@ namespace TracesNT.Services
             {
                 var response = await euIntraCertificatePort.findEuIntraCertificateAsync(
                     new SecurityHeaderType(),
-                    tracesOptions.Value.WebServiceClientId,
+                    _credentials.WebServiceClientId,
                     language,
                     [],
                     new FindEuIntraCertificateRequestType()

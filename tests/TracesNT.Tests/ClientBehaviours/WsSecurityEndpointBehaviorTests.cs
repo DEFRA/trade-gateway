@@ -9,7 +9,7 @@ public class WsSecurityEndpointBehaviorTests
     [Fact]
     public void ApplyClientBehavior_AddsWsSecurityMessageInspector()
     {
-        var sut = new WsSecurityEndpointBehavior(new TracesNtConfig());
+        var sut = new WsSecurityEndpointBehavior(new TracesNtCredentials());
         var clientRuntime = WcfTestHelpers.CreateClientRuntime();
 
         sut.ApplyClientBehavior(WcfTestHelpers.CreateEndpoint(), clientRuntime);
