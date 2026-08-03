@@ -1,15 +1,15 @@
 ﻿{
   EventId: Guid_1,
   AggregateType: TracesIntra,
-  SubType: CHEDP-GB-2026-1234567,
-  AggregateId: Imports.TracesIntra.CHEDP-GB-2026-1234567.CHEDP-GB-2026-1234567,
+  SubType: CHEDA,
+  AggregateId: Imports.TracesIntra.CHEDA.CHEDA.GB.2026.1234567,
   EventType: Trade.Gateway.Api.Contract.Certificate.DefraUNVTDINTRAProfile,
   Timestamp: DateTime_1,
   Data: {
     Model: defra/certificate-internal/1,
     Type: intra,
     ExchangedDocument: {
-      Identifier: CHEDP-GB-2026-1234567
+      Identifier: CHEDA.GB.2026.1234567
     },
     SpecifiedConsignment: {}
   },
