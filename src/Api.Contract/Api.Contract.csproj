@@ -6,7 +6,7 @@
     <RootNamespace>Trade.Gateway.Api.Contract</RootNamespace>
     <IsPackable>true</IsPackable>
     <PackageId>Defra.Trade.Gateway.Api.Contract</PackageId>
-    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionPrefix>0.1.1</VersionPrefix>
     <PackageDescription>Defra Trade Gateway Api Contracts</PackageDescription>
     <Company>DEFRA</Company>
     <RepositoryUrl>https://github.com/DEFRA/trade-gateway</RepositoryUrl>
