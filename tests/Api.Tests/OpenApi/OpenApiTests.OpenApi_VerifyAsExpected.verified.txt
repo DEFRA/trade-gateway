@@ -185,6 +185,82 @@
         }
       }
     },
+    /customs/cheds/{chedId}/quantities: {
+      get: {
+        tags: [
+          CustomsChedQuantityEndpoints
+        ],
+        parameters: [
+          {
+            name: chedId,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.ched-quantities.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/ChedQuantityLedger
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     /certificates/intras/{id}: {
       get: {
         tags: [
@@ -632,6 +708,60 @@
   },
   components: {
     schemas: {
+      AllocatedCommodityQuantity: {
+        required: [
+          quantity
+        ],
+        type: object,
+        properties: {
+          goodsItemNumber: {
+            type: integer,
+            description: The item on the customs declaration this allocation was made for.,
+            format: int32,
+            nullable: true
+          },
+          commodityCode: {
+            $ref: #/components/schemas/CommodityCode
+          },
+          certificateLineNumber: {
+            type: integer,
+            description: The CHED line this allocation draws from.,
+            format: int32,
+            nullable: true
+          },
+          unitOfMeasure: {
+            type: string,
+            description: UN/ECE Recommendation 20 unit code, for example KGM or TNE. Absent when TracesNT did not state one — never assume a default.,
+            nullable: true
+          },
+          quantity: {
+            type: number,
+            description: The allocated amount, expressed in unitOfMeasure.,
+            format: double
+          },
+          technicalRoundingQuantity: {
+            type: number,
+            description: Amount added or removed by TracesNT to reconcile unit conversion rounding.,
+            format: double,
+            nullable: true
+          },
+          eventDateTime: {
+            type: string,
+            description: When the allocation was made.,
+            format: date-time,
+            nullable: true
+          },
+          customsOffice: {
+            type: string,
+            description: Reference number of the customs office that made the allocation.,
+            nullable: true
+          },
+          declarationReference: {
+            $ref: #/components/schemas/DeclarationReference
+          }
+        },
+        additionalProperties: false
+      },
       ApplicableClassification: {
         type: object,
         properties: {
@@ -710,6 +840,34 @@
         },
         additionalProperties: false
       },
+      AvailableCommodityQuantity: {
+        required: [
+          quantity
+        ],
+        type: object,
+        properties: {
+          commodityCode: {
+            $ref: #/components/schemas/CommodityCode
+          },
+          certificateLineNumber: {
+            type: integer,
+            description: The CHED line this quantity belongs to.,
+            format: int32,
+            nullable: true
+          },
+          unitOfMeasure: {
+            type: string,
+            description: UN/ECE Recommendation 20 unit code, for example KGM or TNE. Absent when TracesNT did not state one — never assume a default.,
+            nullable: true
+          },
+          quantity: {
+            type: number,
+            description: The available amount, expressed in unitOfMeasure.,
+            format: double
+          }
+        },
+        additionalProperties: false
+      },
       CargoNature: {
         type: object,
         properties: {
@@ -748,6 +906,26 @@
             type: string,
             format: date-time,
             nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ChedQuantityLedger: {
+        required: [
+          available
+        ],
+        type: object,
+        properties: {
+          available: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/AvailableCommodityQuantity
+            },
+            description: Quantities not yet reserved or consumed by any declaration.,
+            nullable: true
+          },
+          allocations: {
+            $ref: #/components/schemas/QuantityAllocations
           }
         },
         additionalProperties: false
@@ -911,6 +1089,27 @@
         },
         additionalProperties: false
       },
+      CommodityCode: {
+        type: object,
+        properties: {
+          harmonizedSystemSubheadingCode: {
+            type: string,
+            description: Harmonized System subheading, 6 digits.,
+            nullable: true
+          },
+          combinedNomenclatureCode: {
+            type: string,
+            description: Combined Nomenclature code, extending the HS subheading to 8 digits.,
+            nullable: true
+          },
+          taricCode: {
+            type: string,
+            description: TARIC code, extending the Combined Nomenclature code to 10 digits.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       Consignment: {
         type: object,
         properties: {
@@ -1035,6 +1234,31 @@
           }
         },
         additionalProperties: false
+      },
+      DeclarationReference: {
+        required: [
+          type,
+          value
+        ],
+        type: object,
+        properties: {
+          type: {
+            $ref: #/components/schemas/DeclarationReferenceType
+          },
+          value: {
+            type: string,
+            description: The declaration reference itself.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DeclarationReferenceType: {
+        enum: [
+          LRN,
+          MRN
+        ],
+        type: string
       },
       DefraUNVTDCHEDProfile: {
         required: [
@@ -1892,6 +2116,32 @@
         },
         additionalProperties: false
       },
+      QuantityAllocations: {
+        required: [
+          consumed,
+          reserved
+        ],
+        type: object,
+        properties: {
+          reserved: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/AllocatedCommodityQuantity
+            },
+            description: Quantities held for a declaration but not yet written off.,
+            nullable: true
+          },
+          consumed: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/AllocatedCommodityQuantity
+            },
+            description: Quantities written off against a declaration when goods were cleared.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       ReferencedDocument: {
         type: object,
         properties: {
@@ -2248,6 +2498,9 @@
   tags: [
     {
       name: ChedEndpoints
+    },
+    {
+      name: CustomsChedQuantityEndpoints
     },
     {
       name: IntraEndpoints

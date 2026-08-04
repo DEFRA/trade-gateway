@@ -16,7 +16,7 @@ public class WsSecurityMessageInspectorTests
     public void BeforeSendRequest_WithCredentials_ReplacesExistingSecurityHeader()
     {
         var sut = new WsSecurityMessageInspector(
-            new TracesNtConfig { Username = "alice", AuthenticationKey = "secret" }
+            new TracesNtCredentials { Username = "alice", AuthenticationKey = "secret" }
         );
         var request = Message.CreateMessage(MessageVersion.Soap11, "urn:test-action");
         request.Headers.Add(MessageHeader.CreateHeader("Security", WsseNamespace, string.Empty));
@@ -38,7 +38,7 @@ public class WsSecurityMessageInspectorTests
     public void BeforeSendRequest_WithoutCredentials_LeavesHeadersUntouched(string userName, string secret)
     {
         var sut = new WsSecurityMessageInspector(
-            new TracesNtConfig { Username = userName, AuthenticationKey = secret }
+            new TracesNtCredentials { Username = userName, AuthenticationKey = secret }
         );
         var request = Message.CreateMessage(MessageVersion.Soap11, "urn:test-action");
         request.Headers.Add(MessageHeader.CreateHeader("Security", WsseNamespace, string.Empty));

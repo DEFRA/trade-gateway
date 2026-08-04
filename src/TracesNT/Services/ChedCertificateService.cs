@@ -10,16 +10,18 @@ namespace TracesNT.Services
     public class ChedCertificateService(
         ChedCertificatePortClient chedCertificatePort,
         ILogger<ChedCertificateService> logger,
-        IOptions<TracesNtConfig> tracesOptions
+        IOptionsMonitor<TracesNtCredentials> credentials
     ) : IChedCertificateService
     {
+        private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.Default);
+
         public async Task<ChedCertificateType?> GetChedCertificate(string id, string languageCode)
         {
             try
             {
                 var certificateResponse = await chedCertificatePort.getChedCertificateAsync(
                     new SecurityHeaderType(),
-                    tracesOptions.Value.WebServiceClientId,
+                    _credentials.WebServiceClientId,
                     languageCode.ToIso2AlphaLanguageCodeContentType(),
                     [],
                     new GetChedCertificateRequestType { ID = id }
@@ -66,7 +68,7 @@ namespace TracesNT.Services
             {
                 var response = await chedCertificatePort.findChedCertificateAsync(
                     new SecurityHeaderType(),
-                    tracesOptions.Value.WebServiceClientId,
+                    _credentials.WebServiceClientId,
                     language,
                     [],
                     new FindChedCertificateRequestType

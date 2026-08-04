@@ -27,13 +27,26 @@ A local environment with:
 docker compose up --build -d
 ```
 
-Note: running docker locally requires the following  environment variables:
+Note: running docker locally requires the following environment variables in a `.env` file, which
+compose passes into the container. Names are the configuration binding path with `__` between
+segments — note `TRACESNT`, not `TRACES_NT`, since the underscore would make it a different section.
 
 ```env
-TRACES_NT_BASE_URL=traces_base_url
-TRACES_NT_USERNAME=traces_username
-TRACES_NT_AUTHENTICATION_KEY=traces_authentication_key
-TRACES_NT_WEB_SERVICE_CLIENT_ID=traces_client_id
+TRACESNT__BASEURL=traces_base_url
+
+# The customs office this gateway speaks for, sent on every customs quantity-management call.
+# 1-8 alphanumeric characters; the app will not start without it.
+TRACESNT__CUSTOMSOFFICEREFERENCENUMBER=traces_customs_office_reference_number
+
+# The default TracesNT account, used by the CHED, EU-INTRA and reference-data ports
+TRACESNT__CREDENTIALS__DEFAULT__USERNAME=traces_username
+TRACESNT__CREDENTIALS__DEFAULT__AUTHENTICATIONKEY=traces_authentication_key
+TRACESNT__CREDENTIALS__DEFAULT__WEBSERVICECLIENTID=traces_client_id
+
+# The customs account, used by the quantity-management port
+TRACESNT__CREDENTIALS__CUSTOMS__USERNAME=traces_customs_username
+TRACESNT__CREDENTIALS__CUSTOMS__AUTHENTICATIONKEY=traces_customs_authentication_key
+TRACESNT__CREDENTIALS__CUSTOMS__WEBSERVICECLIENTID=traces_customs_client_id
 
 # Cognito — for clients deployed outside CDP
 AUTHENTICATION__COGNITO__AUTHORITY=https://cognito-idp.<region>.amazonaws.com/<user-pool-id>
@@ -103,6 +116,12 @@ with the SDK's unmarshaller.
 Downstream of `ApiAccess`, a fine-grained, **per-principal, per-resource, per-action**
 layer enforces least privilege — every principal is granted only the resources it needs.
 See [ADR-0005](docs/adr/0005-fine-grained-authorisation.md) for the full design.
+
+Resources sit under three top-level prefixes: `/certificates/**`, `/reference-data/**` and
+`/customs/**`. A `**` grant is a standing commitment to everything ever added beneath it, so
+customs quantity management lives beside the certificates rather than under them — a `ched-reader`
+must not gain customs quantity data by having a resource added to a prefix it already holds.
+See [ADR-0006](docs/adr/0006-customs-quantity-management.md).
 
 ```
 Request → Authentication → ApiAccess (scheme + scope) → Fine-grained authz → Handler

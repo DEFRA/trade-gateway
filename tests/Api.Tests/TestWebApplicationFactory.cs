@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+using System.Text.Json;
 using Amazon.Runtime;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
@@ -10,8 +12,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using WireMock.Server;
 
 namespace Api.Tests;
@@ -27,30 +27,40 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
         var server = WireMockServer.Start();
         var tracesBaseUrl = $"http://localhost:{server.Port}";
 
-        builder.ConfigureAppConfiguration((_, config) =>
-            config.AddInMemoryCollection(new Dictionary<string, string?>
-            {
-                ["TracesNt:BaseUrl"] = tracesBaseUrl,
-                ["TracesNt:Username"] = "test-user",
-                ["TracesNt:AuthenticationKey"] = "test-auth-key",
-                ["TracesNt:WebServiceClientId"] = "test-client-id",
-                // Authentication authorities come from appsettings.Development.json so that BindConfig
-                // (which reads config before WebApplicationFactory overrides apply) sees the same values
-                // as the token endpoints registered by LocalTokenServer at runtime.
-            }));
+        builder.ConfigureAppConfiguration(
+            (_, config) =>
+                config.AddInMemoryCollection(
+                    new Dictionary<string, string?>
+                    {
+                        ["TracesNt:BaseUrl"] = tracesBaseUrl,
+                        ["TracesNt:CustomsOfficeReferenceNumber"] = "GBTEST01",
+                        ["TracesNt:Credentials:Default:Username"] = "test-user",
+                        ["TracesNt:Credentials:Default:AuthenticationKey"] = "test-auth-key",
+                        ["TracesNt:Credentials:Default:WebServiceClientId"] = "test-client-id",
+                        // Deliberately different from the default set — TracesNtCredentialsTests
+                        // asserts the customs port authenticates as this account, not the default one.
+                        ["TracesNt:Credentials:Customs:Username"] = "test-customs-user",
+                        ["TracesNt:Credentials:Customs:AuthenticationKey"] = "test-customs-auth-key",
+                        ["TracesNt:Credentials:Customs:WebServiceClientId"] = "test-customs-client-id",
+                        // Authentication authorities come from appsettings.Development.json so that BindConfig
+                        // (which reads config before WebApplicationFactory overrides apply) sees the same values
+                        // as the token endpoints registered by LocalTokenServer at runtime.
+                    }
+                )
+        );
 
-        builder.ConfigureServices(services =>
-            services.AddSingleton(server));
+        builder.ConfigureServices(services => services.AddSingleton(server));
 
         builder.ConfigureTestServices(services =>
             services.PostConfigureAll<JwtBearerOptions>(opts =>
             {
-                if (string.IsNullOrEmpty(opts.Authority)) return;
+                if (string.IsNullOrEmpty(opts.Authority))
+                    return;
                 var oidcConfig = new OpenIdConnectConfiguration { Issuer = opts.Authority };
                 oidcConfig.SigningKeys.Add(LocalTokenServer.Key);
-                opts.ConfigurationManager =
-                    new StaticConfigurationManager<OpenIdConnectConfiguration>(oidcConfig);
-            }));
+                opts.ConfigurationManager = new StaticConfigurationManager<OpenIdConnectConfiguration>(oidcConfig);
+            })
+        );
     }
 
     private const string CognitoTokenEndpoint = "/local/cognito/token";
@@ -73,21 +83,19 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                 ServiceURL = StsEndpoint,
                 AuthenticationRegion = "eu-west-2",
                 HttpClientFactory = new TestServerHttpClientFactory(this),
-            });
+            }
+        );
 
-        return await sts.GetWebIdentityTokenAsync(new GetWebIdentityTokenRequest
-        {
-            Audience = [audience],
-            DurationSeconds = 900,
-        });
+        return await sts.GetWebIdentityTokenAsync(
+            new GetWebIdentityTokenRequest { Audience = [audience], DurationSeconds = 900 }
+        );
     }
 
     public async Task<string> GetStsTokenAsync(string audience) =>
         (await GetWebIdentityTokenAsync(audience)).WebIdentityToken;
 
     /// <summary>Routes the AWS SDK's requests into the in-memory test server.</summary>
-    private sealed class TestServerHttpClientFactory(TradeGatewayWebApplicationFactory factory)
-        : HttpClientFactory
+    private sealed class TestServerHttpClientFactory(TradeGatewayWebApplicationFactory factory) : HttpClientFactory
     {
         public override HttpClient CreateHttpClient(IClientConfig clientConfig) =>
             factory.CreateDefaultClient(new CanonicaliseUriHandler());
@@ -105,7 +113,9 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
     private sealed class CanonicaliseUriHandler : DelegatingHandler
     {
         protected override Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request, CancellationToken cancellationToken)
+            HttpRequestMessage request,
+            CancellationToken cancellationToken
+        )
         {
             if (request.RequestUri is not null)
                 request.RequestUri = new Uri(request.RequestUri.OriginalString);
@@ -115,9 +125,7 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
     }
 
     private static IEnumerable<KeyValuePair<string, string>> Fields(params (string Key, string? Value)[] fields) =>
-        fields
-            .Where(f => f.Value is not null)
-            .Select(f => new KeyValuePair<string, string>(f.Key, f.Value!));
+        fields.Where(f => f.Value is not null).Select(f => new KeyValuePair<string, string>(f.Key, f.Value!));
 
     private async Task<string> PostTokenAsync(string endpoint, IEnumerable<KeyValuePair<string, string>> fields)
     {

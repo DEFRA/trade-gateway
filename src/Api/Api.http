@@ -17,6 +17,13 @@ Content-Type: application/x-www-form-urlencoded
 
 scope={{scope}}&sub=test-intra-reader
 
+### Token — customs quantity reader (/customs/** only)
+# @name customsToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-customs-quantity-reader
+
 ###############################################################################
 # CHED
 ###############################################################################
@@ -54,3 +61,41 @@ Authorization: Bearer {{intraToken.response.body.access_token}}
 GET {{host}}/certificates/intras?updatedBefore=2026-10-28Z
 Accept-Language: en
 Authorization: Bearer {{intraToken.response.body.access_token}}
+
+###############################################################################
+# CUSTOMS — quantity management
+#
+# Calls the customs TracesNT account (TracesNt:Credentials:Customs), not the
+# default one, and needs TracesNt:CustomsOfficeReferenceNumber set or the app
+# will not start. Read-only: QuantityManagementIndication is always "0".
+###############################################################################
+
+@chedId = CHEDP.XI.2026.0000598
+
+### Get the quantity ledger for a CHED
+# 200 with available[] and allocations{reserved[],consumed[]}.
+# Each allocation carries declarationReference {type,value} — filter on BOTH
+# fields to narrow to one declaration; an LRN can carry the same value as an MRN.
+GET {{host}}/customs/cheds/{{chedId}}/quantities
+Accept: application/vnd.defra.trade.ched-quantities.v1+json
+Accept-Language: en
+Authorization: Bearer {{customsToken.response.body.access_token}}
+
+### Unknown CHED returns 502, not 404
+# The customs port has one untyped fault, so "no such CHED" is indistinguishable from any
+# other upstream failure. 502 says "we don't know"; 404 would assert it doesn't exist.
+GET {{host}}/customs/cheds/CHEDA.GB.2026.9999999/quantities
+Accept-Language: en
+Authorization: Bearer {{customsToken.response.body.access_token}}
+
+### A CHED reader gets 403 on /customs/** — proves the prefix decision
+# customs/ is a sibling of certificates/, so the ched-reader grant on
+# /certificates/cheds/** cannot reach customs quantity data.
+GET {{host}}/customs/cheds/{{chedId}}/quantities
+Accept-Language: en
+Authorization: Bearer {{chedToken.response.body.access_token}}
+
+### A customs reader gets 403 on /certificates/** — the boundary holds both ways
+GET {{host}}/certificates/cheds/CHEDA.XI.2026.0000063
+Accept-Language: en
+Authorization: Bearer {{customsToken.response.body.access_token}}

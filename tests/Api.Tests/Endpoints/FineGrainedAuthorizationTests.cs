@@ -10,6 +10,8 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     private const string IntraInstancePath = "/certificates/intras/AUTHZ1";
     private const string IntraCollectionPath = "/certificates/intras";
     private const string ReferenceDataPath = "/reference-data/classifications/sections";
+    private const string ChedPath = "/certificates/cheds/CHEDA.XI.2026.0000063";
+    private const string CustomsQuantitiesPath = "/customs/cheds/CHEDA.GB.2026.0000123/quantities";
 
     [Fact]
     public async Task IntraReader_can_read_intra()
@@ -66,6 +68,42 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         collection.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
+    /// <summary>
+    /// The load-bearing test for the URL shape: <c>customs/</c> is a sibling of <c>certificates/</c>
+    /// precisely so that the <c>ched-reader</c> grant on <c>/certificates/cheds/**</c> cannot reach
+    /// customs quantity data.
+    /// </summary>
+    [Fact]
+    public async Task ChedReader_cannot_read_customs_quantities()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+
+        var response = await client.GetAsync(CustomsQuantitiesPath, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task CustomsQuantityReader_can_read_customs_quantities()
+    {
+        StubCustomsQuantities();
+        var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");
+
+        var response = await client.GetAsync(CustomsQuantitiesPath, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task CustomsQuantityReader_cannot_read_ched_certificate()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");
+
+        var response = await client.GetAsync(ChedPath, TestContext.Current.CancellationToken);
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
     [Fact]
     public async Task Authenticated_principal_with_no_config_entry_is_forbidden()
     {
@@ -101,6 +139,16 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
                 await SoapUtilities.CreateResponseFromResource(
                     HttpStatusCode.OK,
                     "Api.Tests.Samples.INTRA.GetEuIntraCertificateResponse.xml")));
+
+    private void StubCustomsQuantities() =>
+        factory.WireMockServer
+            .Given(SoapUtilities.CreateSoapRequestInterceptor(
+                "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"",
+                "/*[local-name() = 'ProcessedChedRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"))
+            .RespondWith(Response.Create().WithCallback(async _ =>
+                await SoapUtilities.CreateResponseFromResource(
+                    HttpStatusCode.OK,
+                    "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_CHEDA.GB.2026.0000123.xml")));
 
     private void StubClassificationSections() =>
         factory.WireMockServer

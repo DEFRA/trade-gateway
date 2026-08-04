@@ -1,34 +1,46 @@
-using Microsoft.Extensions.Options;
-
 using System.ServiceModel;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using TracesNT.Exceptions;
 using TracesNT.Extensions;
 using TracesNT.WebServices;
 
 namespace TracesNT.Services
 {
-    public class ReferenceDataService(ReferenceDataPortClient referenceDataPortClient, IOptions<TracesNtConfig> tracesOptions, ILogger<ReferenceDataService> logger) : IReferenceDataService
+    public class ReferenceDataService(
+        ReferenceDataPortClient referenceDataPortClient,
+        IOptionsMonitor<TracesNtCredentials> credentials,
+        ILogger<ReferenceDataService> logger
+    ) : IReferenceDataService
     {
+        private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.Default);
+
         public async Task<ClassificationSectionType[]?> GetClassificationSections(string languageCode)
         {
             try
             {
                 var getClassificationSectionsResponse = await referenceDataPortClient.getClassificationSectionsAsync(
                     new SecurityHeaderType(),
-                    tracesOptions.Value.WebServiceClientId,
+                    _credentials.WebServiceClientId,
                     languageCode.ToIso2AlphaLanguageCodeContentType(),
-                    new GetClassificationSectionsRequestType { });
+                    new GetClassificationSectionsRequestType { }
+                );
 
                 return getClassificationSectionsResponse?.GetClassificationSectionsResponse1;
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException($"An invalid soap request was returned from getClassificationSections for languageCode '{languageCode}'", ex);
+                throw new InvalidSoapException(
+                    $"An invalid soap request was returned from getClassificationSections for languageCode '{languageCode}'",
+                    ex
+                );
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException($"An error occurred calling the Traces web service getClassificationSections for languageCode '{languageCode}'", ex);
+                throw new TracesCommunicationException(
+                    $"An error occurred calling the Traces web service getClassificationSections for languageCode '{languageCode}'",
+                    ex
+                );
             }
         }
 
@@ -38,43 +50,54 @@ namespace TracesNT.Services
             {
                 var getClassificationTreeResponse = await referenceDataPortClient.getClassificationTreeAsync(
                     new SecurityHeaderType(),
-                    tracesOptions.Value.WebServiceClientId,
+                    _credentials.WebServiceClientId,
                     languageCode.ToIso2AlphaLanguageCodeContentType(),
-                    new GetClassificationTreeRequestType
-                    {
-                        TreeID = treeId
-                    });
+                    new GetClassificationTreeRequestType { TreeID = treeId }
+                );
 
                 return getClassificationTreeResponse?.GetClassificationTreeResponse1;
             }
-            catch (FaultException ex) when (ex.Code.IsSenderFault && ex.Message.Equals("Invalid classification tree ID", StringComparison.InvariantCultureIgnoreCase))
+            catch (FaultException ex)
+                when (ex.Code.IsSenderFault
+                    && ex.Message.Equals("Invalid classification tree ID", StringComparison.InvariantCultureIgnoreCase)
+                )
             {
                 logger.LogWarning(ex, "Classification tree not found for treeId '{TreeId}'", treeId);
                 return null;
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException($"An invalid soap request was returned from getClassificationTree for treeId '{treeId}' and languageCode '{languageCode}'", ex);
+                throw new InvalidSoapException(
+                    $"An invalid soap request was returned from getClassificationTree for treeId '{treeId}' and languageCode '{languageCode}'",
+                    ex
+                );
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException($"An error occurred calling the Traces web service getClassificationTree for treeId '{treeId}' and languageCode '{languageCode}'", ex);
+                throw new TracesCommunicationException(
+                    $"An error occurred calling the Traces web service getClassificationTree for treeId '{treeId}' and languageCode '{languageCode}'",
+                    ex
+                );
             }
         }
 
-        public async Task<ClassificationTreeNodeDetail?> GetClassificationTreeNodeDetail(string treeId, string path, string languageCode)
+        public async Task<ClassificationTreeNodeDetail?> GetClassificationTreeNodeDetail(
+            string treeId,
+            string path,
+            string languageCode
+        )
         {
             try
             {
                 var getClassificationsTreesRequest = new GetClassificationTreeNodeDetailRequestType
                 {
                     TreeID = treeId,
-                    Item = path
+                    Item = path,
                 };
 
                 var response = await referenceDataPortClient.getClassificationTreeNodeDetailAsync(
                     new SecurityHeaderType(),
-                    tracesOptions.Value.WebServiceClientId,
+                    _credentials.WebServiceClientId,
                     languageCode.ToIso2AlphaLanguageCodeContentType(),
                     getClassificationsTreesRequest
                 );
@@ -83,16 +106,28 @@ namespace TracesNT.Services
             }
             catch (FaultException<NodeNotFoundExceptionType> ex)
             {
-                logger.LogWarning(ex, "Node not found for treeId '{TreeId}' and path '{Path}' for languageCode '{LanguageCode}'", treeId, path, languageCode);
+                logger.LogWarning(
+                    ex,
+                    "Node not found for treeId '{TreeId}' and path '{Path}' for languageCode '{LanguageCode}'",
+                    treeId,
+                    path,
+                    languageCode
+                );
                 return null;
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException($"Traces SOAP bad request calling getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' for languageCode '{languageCode}'", ex);
+                throw new InvalidSoapException(
+                    $"Traces SOAP bad request calling getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' for languageCode '{languageCode}'",
+                    ex
+                );
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException($"An error occurred calling the Traces web service getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' for languageCode '{languageCode}'", ex);
+                throw new TracesCommunicationException(
+                    $"An error occurred calling the Traces web service getClassificationTreeNodeDetail for treeId '{treeId}' and path '{path}' for languageCode '{languageCode}'",
+                    ex
+                );
             }
         }
 
@@ -102,23 +137,26 @@ namespace TracesNT.Services
             {
                 var response = await referenceDataPortClient.getMetadatasAsync(
                     new SecurityHeaderType(),
-                    tracesOptions.Value.WebServiceClientId,
+                    _credentials.WebServiceClientId,
                     languageCode.ToIso2AlphaLanguageCodeContentType(),
-                    new GetMetadatasRequestType
-                    {
-                        MetadataType = metaDataType
-                    }
+                    new GetMetadatasRequestType { MetadataType = metaDataType }
                 );
 
                 return response?.GetMetadatasResponse1;
             }
             catch (FaultException ex) when (ex.Code.IsSenderFault)
             {
-                throw new InvalidSoapException($"Traces SOAP bad request calling getMetadatas for metadata type '{metaDataType}' and languageCode '{languageCode}'", ex);
+                throw new InvalidSoapException(
+                    $"Traces SOAP bad request calling getMetadatas for metadata type '{metaDataType}' and languageCode '{languageCode}'",
+                    ex
+                );
             }
             catch (Exception ex)
             {
-                throw new TracesCommunicationException($"An error occurred calling the Traces web service getMetadatas for metadata type {metaDataType} and languageCode {languageCode}", ex);
+                throw new TracesCommunicationException(
+                    $"An error occurred calling the Traces web service getMetadatas for metadata type {metaDataType} and languageCode {languageCode}",
+                    ex
+                );
             }
         }
     }
