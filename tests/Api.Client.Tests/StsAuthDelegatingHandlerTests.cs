@@ -176,7 +176,7 @@ public class StsAuthDelegatingHandlerTests
         // Assert
         await sts.Received(1).GetWebIdentityTokenAsync(
             Arg.Is<GetWebIdentityTokenRequest>(r =>
-                r.Audience.Single() == "expected-audience" &&
+                r!.Audience.Single() == "expected-audience" &&
                 r.DurationSeconds == 1234 &&
                 r.SigningAlgorithm == "RS256"),
             Arg.Any<CancellationToken>());
