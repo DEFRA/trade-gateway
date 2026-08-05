@@ -1,413 +1,319 @@
-{
-  $model: defra/certificate-internal/1,
-  $type: ched,
-  exchangedDocument: {
-    name: CHED-A - Common Health Entry Document for Animal,
-    identifier: CHEDA.XI.2026.0000001,
-    traderAssignedId: null,
-    documentTypeCode: 636,
-    documentStatusCode: 1,
-    notificationStatusCode: null,
-    versionId: null,
-    functionCode: null,
-    issueDateTime: DateTimeOffset_1,
-    issuer: {
-      identifier: XIXXX1,
-      urlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
-      name: Belfast Port,
-      partyRoleCode: {
-        value: VJ,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Officer (Identification of Applicant)
+﻿{
+  Model: defra/certificate-internal/1,
+  Type: ched,
+  ExchangedDocument: {
+    Name: CHED-A - Common Health Entry Document for Animal,
+    Identifier: CHEDA.XI.2026.0000001,
+    DocumentTypeCode: 636,
+    DocumentStatusCode: 1,
+    IssueDateTime: DateTimeOffset_1,
+    Issuer: {
+      Identifier: XIXXX1,
+      UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+      Name: Belfast Port,
+      PartyRoleCode: {
+        Value: VJ,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Officer (Identification of Applicant)
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: AUTHORITY,
-          urlId: https://traces-codelists.ec.europa.eu/user_body_role,
-          name: Authority
+          Value: AUTHORITY,
+          UrlId: https://traces-codelists.ec.europa.eu/user_body_role,
+          Name: Authority
         }
       ],
-      postalAddress: {
-        postcodeCode: BT4,
-        lineOne:
+      PostalAddress: {
+        PostcodeCode: BT4,
+        LineOne:
 DAERA Plant Health Inspection Branch
                 Room 1022 Dundonald House
                 Upper Newtownards Road
               ,
-        lineTwo: null,
-        cityName: Belfast,
-        countryId: XI,
-        countryName: United Kingdom (Northern Ireland),
-        countrySubDivisionName: County Antrim
+        CityName: Belfast,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: County Antrim
       },
-      definedContact: [
+      DefinedContact: [
         {
-          personName: Name Redacted,
-          emailURIUniversalCommunication: null,
-          telephoneUniversalCommunication: null
+          PersonName: Name Redacted
         }
       ]
     },
-    includedNote: [
+    IncludedNote: [
       {
-        type: Note,
-        identifier: null,
-        name: null,
-        subject: null,
-        creationDateTime: null,
-        noteSubjectCode: null,
-        subjectCode: {
-          value: CHED_TYPE,
-          urlId: ched_note_subject_code,
-          name: null
+        Type: Note,
+        SubjectCode: {
+          Value: CHED_TYPE,
+          UrlId: ched_note_subject_code
         },
-        content: [
+        Content: [
           null
         ],
-        contentCode: [
+        ContentCode: [
           {
-            value: A,
-            urlId: ched_type,
-            name: null
+            Value: A,
+            UrlId: ched_type
           }
         ]
       },
       {
-        type: Note,
-        identifier: null,
-        name: null,
-        subject: null,
-        creationDateTime: null,
-        noteSubjectCode: null,
-        subjectCode: {
-          value: LAST_UPDATE_DATETIME,
-          urlId: ched_note_subject_code,
-          name: null
+        Type: Note,
+        SubjectCode: {
+          Value: LAST_UPDATE_DATETIME,
+          UrlId: ched_note_subject_code
         },
-        content: [
+        Content: [
           DateTimeOffset_2
-        ],
-        contentCode: null
+        ]
       }
     ],
-    referenceDocument: [
+    ReferenceDocument: [
       {
-        typeCode: 636,
-        relationshipTypeCode: CAW,
-        identifier: CHEDA.XI.2026.0000063,
-        issueDateTime: null,
-        attachmentBinaryObject: null,
-        information: null
+        TypeCode: 636,
+        RelationshipTypeCode: CAW,
+        Identifier: CHEDA.XI.2026.0000063
       },
       {
-        typeCode: 521,
-        relationshipTypeCode: ZZZ,
-        identifier: 455645665566,
-        issueDateTime: null,
-        attachmentBinaryObject: null,
-        information: null
+        TypeCode: 521,
+        RelationshipTypeCode: ZZZ,
+        Identifier: 455645665566
       }
     ],
-    firstSignatoryAuthentication: {
-      typeCode: 4,
-      actualDateTime: DateTimeOffset_1,
-      governmentActionTypeCode: Inspection (Identification of Applicant),
-      provider: {
-        identifier: null,
-        urlId: null,
-        name: null,
-        partyRoleCode: null,
-        partyTypeCode: null,
-        postalAddress: null,
-        definedContact: null
-      },
-      includedClause: [
+    FirstSignatoryAuthentication: {
+      TypeCode: 4,
+      ActualDateTime: DateTimeOffset_1,
+      GovernmentActionTypeCode: Inspection (Identification of Applicant),
+      Provider: {},
+      IncludedClause: [
         {
-          identifier: PURPOSE,
-          content: FREE_CIRCULATION,
-          urlId: null
+          Identifier: PURPOSE,
+          Content: FREE_CIRCULATION
         },
         {
-          identifier: GOODS_CERTIFIED_AS,
-          content: BREEDING_PRODUCTION,
-          urlId: null
+          Identifier: GOODS_CERTIFIED_AS,
+          Content: BREEDING_PRODUCTION
         },
         {
-          identifier: SIGNATORY_PERSON_EMAIL,
-          content: email.address.redacted@domain.redacted.uk,
-          urlId: null
+          Identifier: SIGNATORY_PERSON_EMAIL,
+          Content: email.address.redacted@domain.redacted.uk
         }
       ]
-    },
-    secondSignatoryAuthentication: null,
-    thirdSignatoryAuthentication: null,
-    fourthSignatoryAuthentication: null
+    }
   },
-  specifiedConsignment: {
-    availabilityDueDateTime: DateTimeOffset_3,
-    exportExitDateTime: null,
-    consignorParty: {
-      identifier: 123434567890,
-      urlId: https://traces-codelists.ec.europa.eu/national_registry_number,
-      name: Defra Test,
-      partyRoleCode: {
-        value: EX,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Exporter
+  SpecifiedConsignment: {
+    AvailabilityDueDateTime: DateTimeOffset_3,
+    ConsignorParty: {
+      Identifier: 123434567890,
+      UrlId: https://traces-codelists.ec.europa.eu/national_registry_number,
+      Name: Defra Test,
+      PartyRoleCode: {
+        Value: EX,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Exporter
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: ANIMAL_EXPORTER,
-          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
-          name: Animal exporter
+          Value: ANIMAL_EXPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Animal exporter
         },
         {
-          value: EXP,
-          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
-          name: Animal exporter
+          Value: EXP,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Animal exporter
         }
       ],
-      postalAddress: {
-        postcodeCode: CW1,
-        lineOne: Test,
-        lineTwo: null,
-        cityName: Crewe,
-        countryId: GB,
-        countryName: United Kingdom,
-        countrySubDivisionName: Cheshire East
-      },
-      definedContact: null
+      PostalAddress: {
+        PostcodeCode: CW1,
+        LineOne: Test,
+        CityName: Crewe,
+        CountryId: GB,
+        CountryName: United Kingdom,
+        CountrySubDivisionName: Cheshire East
+      }
     },
-    consigneeParty: {
-      identifier: NL0000000001,
-      urlId: https://traces-codelists.ec.europa.eu/national_registry_number,
-      name: Company Name Redacted LTD,
-      partyRoleCode: {
-        value: CN,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Consignee (Importer)
+    ConsigneeParty: {
+      Identifier: NL0000000001,
+      UrlId: https://traces-codelists.ec.europa.eu/national_registry_number,
+      Name: Company Name Redacted LTD,
+      PartyRoleCode: {
+        Value: CN,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Consignee (Importer)
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: ANIMAL_ESTABLISHMENT,
-          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
-          name: Animal establishment
+          Value: ANIMAL_ESTABLISHMENT,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Animal establishment
         },
         {
-          value: OTH-OPER,
-          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
-          name: Other operators
+          Value: OTH-OPER,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Other operators
         }
       ],
-      postalAddress: {
-        postcodeCode: BT38,
-        lineOne: KILROOT BUSINESS PARK COUNTY .ANTRIM,
-        lineTwo: null,
-        cityName: Carrickfergus,
-        countryId: XI,
-        countryName: United Kingdom (Northern Ireland),
-        countrySubDivisionName: County Antrim
-      },
-      definedContact: null
+      PostalAddress: {
+        PostcodeCode: BT38,
+        LineOne: KILROOT BUSINESS PARK COUNTY .ANTRIM,
+        CityName: Carrickfergus,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: County Antrim
+      }
     },
-    despatchParty: null,
-    deliveryParty: {
-      identifier: DAERA-12345,
-      urlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
-      name: COOPERATIVEtx26 Ltd,
-      partyRoleCode: {
-        value: DP,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Delivery party (Place of destination)
+    DeliveryParty: {
+      Identifier: DAERA-12345,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: COOPERATIVEtx26 Ltd,
+      PartyRoleCode: {
+        Value: DP,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Delivery party (Place of destination)
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: IMPORTER,
-          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
-          name: Importer
+          Value: IMPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Importer
         },
         {
-          value: GEN,
-          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
-          name: General activity establishment - EU
+          Value: GEN,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: General activity establishment - EU
         }
       ],
-      postalAddress: {
-        postcodeCode: BT5,
-        lineOne: Address 1,
-        lineTwo: null,
-        cityName: City,
-        countryId: XI,
-        countryName: United Kingdom (Northern Ireland),
-        countrySubDivisionName: Northern Ireland
-      },
-      definedContact: null
+      PostalAddress: {
+        PostcodeCode: BT5,
+        LineOne: Address 1,
+        CityName: City,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: Northern Ireland
+      }
     },
-    carrier: null,
-    customsTransitAgentParty: {
-      identifier: 78557,
-      urlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
-      name: ABP EU TEST,
-      partyRoleCode: {
-        value: CB,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Customs broker (Responsible for consignment)
+    CustomsTransitAgentParty: {
+      Identifier: 78557,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
+      Name: ABP EU TEST,
+      PartyRoleCode: {
+        Value: CB,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Customs broker (Responsible for consignment)
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: RESPONSIBLE_FOR_THE_LOAD,
-          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
-          name: Responsible for the load
+          Value: RESPONSIBLE_FOR_THE_LOAD,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Responsible for the load
         },
         {
-          value: RFL,
-          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
-          name: Responsible For the Load (Freight Forwarder)
+          Value: RFL,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Responsible For the Load (Freight Forwarder)
         }
       ],
-      postalAddress: {
-        postcodeCode: 13700,
-        lineOne: Address a,
-        lineTwo: null,
-        cityName: City a,
-        countryId: FR,
-        countryName: France,
-        countrySubDivisionName: City Subdivison
-      },
-      definedContact: null
+      PostalAddress: {
+        PostcodeCode: 13700,
+        LineOne: Address a,
+        CityName: City a,
+        CountryId: FR,
+        CountryName: France,
+        CountrySubDivisionName: City Subdivison
+      }
     },
-    originCountry: null,
-    exportCountry: {
-      code: {
-        value: null,
-        urlId: null,
-        name: null
-      },
-      subordinateTradeCountrySubDivision: null
+    ExportCountry: {
+      Code: {}
     },
-    importCountry: {
-      code: {
-        value: null,
-        urlId: null,
-        name: null
-      },
-      subordinateTradeCountrySubDivision: null
+    ImportCountry: {
+      Code: {}
     },
-    reExportCountry: null,
-    transitCountry: null,
-    unloadingBaseportLocation: {
-      identifier: GBBEL,
-      urlId: https://traces-codelists.ec.europa.eu/un_locode,
-      name: County Down,
-      typeCode: null,
-      postalAddress: null
+    UnloadingBaseportLocation: {
+      Identifier: GBBEL,
+      UrlId: https://traces-codelists.ec.europa.eu/un_locode,
+      Name: County Down
     },
-    mainCarriageLogisticsTransportMovement: [
+    MainCarriageLogisticsTransportMovement: [
       {
-        identifier: N1 CKP,
-        urlId: null,
-        modeCode: 3,
-        usedLogisticsTransportMeans: null,
-        transportContractRelatedReferencedDocument: null,
-        arrivalEvent: null,
-        departureEvent: null
+        Identifier: N1 CKP,
+        ModeCode: 3
       }
     ],
-    transitTradeCountry: null,
-    packageQuantity: null,
-    includedConsignmentItem: [
+    IncludedConsignmentItem: [
       {
-        natureIdCargo: [
+        NatureIdCargo: [
           {
-            typeCode: 12
+            TypeCode: 12
           }
         ],
-        includedTradeLineItem: [
+        IncludedTradeLineItem: [
           {
-            sequenceNumeric: 0,
-            description: [
+            SequenceNumeric: 0,
+            Description: [
               Consignment totals and summary
             ],
-            scientificName: null,
-            netWeight: {
-              content: 0,
-              value: null,
-              unitCode: null,
-              unitCodeListVersionId: null
+            NetWeight: {
+              Content: 0
             },
-            grossWeight: {
-              content: 2000,
-              value: null,
-              unitCode: KGM,
-              unitCodeListVersionId: null
+            GrossWeight: {
+              Content: 2000,
+              UnitCode: KGM
             },
-            applicableClassification: null,
-            physicalReferencedLogisticsPackage: [
+            PhysicalReferencedLogisticsPackage: [
               {
-                levelCode: 4,
-                typeCode: NA,
-                itemQuantity: 0
+                LevelCode: 4,
+                TypeCode: NA,
+                ItemQuantity: 0
               }
-            ],
-            specifiedTradeProduct: null,
-            specifiedLineTradeDelivery: null,
-            additionalInformationNote: null
+            ]
           },
           {
-            sequenceNumeric: 1,
-            description: [
+            SequenceNumeric: 1,
+            Description: [
               null
             ],
-            scientificName: Babyrousa,
-            netWeight: null,
-            grossWeight: null,
-            applicableClassification: [
+            ScientificName: Babyrousa,
+            ApplicableClassification: [
               {
-                systemId: CN,
-                systemName: CN Code (Combined Nomenclature),
-                classCode: {
-                  value: 0103,
-                  urlId: https://traces-codelists.ec.europa.eu/class_code_system/CN,
-                  name: null
+                SystemId: CN,
+                SystemName: CN Code (Combined Nomenclature),
+                ClassCode: {
+                  Value: 0103,
+                  UrlId: https://traces-codelists.ec.europa.eu/class_code_system/CN
                 },
-                className: [
+                ClassName: [
                   LIVE ANIMALS,
                   Live swine
                 ]
               },
               {
-                systemId: IDENTIFICATION_SYSTEM,
-                systemName: Identification system,
-                classCode: {
-                  value: BRAND,
-                  urlId: https://traces-codelists.ec.europa.eu/class_code_system/IDENTIFICATION_SYSTEM,
-                  name: null
+                SystemId: IDENTIFICATION_SYSTEM,
+                SystemName: Identification system,
+                ClassCode: {
+                  Value: BRAND,
+                  UrlId: https://traces-codelists.ec.europa.eu/class_code_system/IDENTIFICATION_SYSTEM
                 },
-                className: [
+                ClassName: [
                   Brand
                 ]
               },
               {
-                systemId: PRODUCT_TYPE,
-                systemName: Product type,
-                classCode: {
-                  value: HATCHING_EGGS,
-                  urlId: https://traces-codelists.ec.europa.eu/class_code_system/PRODUCT_TYPE,
-                  name: null
+                SystemId: PRODUCT_TYPE,
+                SystemName: Product type,
+                ClassCode: {
+                  Value: HATCHING_EGGS,
+                  UrlId: https://traces-codelists.ec.europa.eu/class_code_system/PRODUCT_TYPE
                 },
-                className: [
+                ClassName: [
                   Hatching eggs
                 ]
               }
-            ],
-            physicalReferencedLogisticsPackage: null,
-            specifiedTradeProduct: null,
-            specifiedLineTradeDelivery: null,
-            additionalInformationNote: null
+            ]
           }
         ]
       }
     ]
-  },
-  laboratoryObservationResult: null
+  }
 }

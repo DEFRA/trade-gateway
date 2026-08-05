@@ -1,0 +1,6 @@
+﻿{
+  Type: https://tools.ietf.org/html/rfc9110#section-15.6.3,
+  Title: Bad Gateway,
+  Status: 502,
+  Detail: An error occurred communicating with an upstream service.
+}

@@ -1,0 +1,402 @@
+﻿{
+  Source: traces,
+  MetadataType: ACCOMPANYING_DOCUMENT_TYPE,
+  Items: [
+    {
+      Value: AIRWAY_BILL,
+      Active: true,
+      DisplayName: Air Waybill
+    },
+    {
+      Value: LANDING_BILL,
+      Active: true,
+      DisplayName: Bill of lading
+    },
+    {
+      Value: CARGO_MANIFEST,
+      Active: true,
+      DisplayName: Cargo Manifest
+    },
+    {
+      Value: COMMERCIAL_INVOICE,
+      Active: true,
+      DisplayName: Commercial invoice
+    },
+    {
+      Value: CONTRACT,
+      Active: true,
+      DisplayName: Contract
+    },
+    {
+      Value: FREIGHT_INVOICE,
+      Active: true,
+      DisplayName: Freight invoice
+    },
+    {
+      Value: NEGOTIABLE_MARITIME_TRANSPORT,
+      Active: true,
+      DisplayName: Negotiable maritime transport document
+    },
+    {
+      Value: PROFORMA_INVOICE,
+      Active: true,
+      DisplayName: Proforma invoice
+    },
+    {
+      Value: PURCHASE_ORDER,
+      Active: true,
+      DisplayName: Purchase order
+    },
+    {
+      Value: UNIVERSAL_TRANSPORT,
+      Active: true,
+      DisplayName: Universal transport document
+    },
+    {
+      Value: SEAWAY_BILL,
+      Active: true,
+      DisplayName: Sea Waybill
+    },
+    {
+      Value: RAILWAY_BILL,
+      Active: true,
+      DisplayName: Railway bill
+    },
+    {
+      Value: CERTIFICATE_ORIGIN,
+      Active: true,
+      DisplayName: Origin certificate
+    },
+    {
+      Value: CERTIFICATE_HEAT_TREATMENT,
+      Active: true,
+      DisplayName: Heat treatment certificate
+    },
+    {
+      Value: CERTIFICATE_INSPECTION,
+      Active: true,
+      DisplayName: Inspection certificate
+    },
+    {
+      Value: CERTIFICATE_INTERNAL,
+      Active: true,
+      DisplayName: Internal certificate
+    },
+    {
+      Value: CERTIFICATE_PHYTOSANITARY,
+      Active: true,
+      DisplayName: Phytosanitary certificate
+    },
+    {
+      Value: CUSTOMS_CUSTODY_RECEIPT,
+      Active: true,
+      DisplayName: Customs custody receipt
+    },
+    {
+      Value: CUSTOMS_DECLARATION,
+      Active: true,
+      DisplayName: Customs declaration
+    },
+    {
+      Value: CUSTOMS_DECLARATION_POST_PARCELS,
+      Active: true,
+      DisplayName: Customs declaration (post parcels)
+    },
+    {
+      Value: CUSTOMS_INVOICE,
+      Active: true,
+      DisplayName: Customs invoice
+    },
+    {
+      Value: CUSTOMS_INTERNATIONAL_TIF_TIR,
+      Active: true,
+      DisplayName: Internal customs declaration forms (TIF, TIR)
+    },
+    {
+      Value: DELIVERY_NOTICE,
+      Active: true,
+      DisplayName: Delivery notice
+    },
+    {
+      Value: IMPORT_REQUEST,
+      Active: true,
+      DisplayName: Import request
+    },
+    {
+      Value: INFORMAL_EMBASSY_ATTESTATION,
+      Active: true,
+      DisplayName: Informal embassy attestation
+    },
+    {
+      Value: AUTHORITY_LETTER,
+      Active: true,
+      DisplayName: Letter of authority (Regulation (EU) 2019/829)
+    },
+    {
+      Value: ORDER,
+      Active: true,
+      DisplayName: Order
+    },
+    {
+      Value: PACKING_LIST,
+      Active: true,
+      DisplayName: Packing list
+    },
+    {
+      Value: PLANT_HEALTH_MOVEMENT,
+      Active: true,
+      DisplayName: Plant health movement document
+    },
+    {
+      Value: PLANT_PASSPORT,
+      Active: true,
+      DisplayName: Plant passport
+    },
+    {
+      Value: REFORWARDING_PHYTOSANITARY,
+      Active: true,
+      DisplayName: Reforwarding phytosanitary certificate
+    },
+    {
+      Value: REPLACEMENT_CUSTOMS_DECLARATION,
+      Active: true,
+      DisplayName: Replacement customs declaration
+    },
+    {
+      Value: DELIVERY_ORDER,
+      Active: true,
+      DisplayName: Delivery order
+    },
+    {
+      Value: CONTAINER_MANIFEST,
+      Active: true,
+      DisplayName: Container manifest
+    },
+    {
+      Value: OTHER,
+      Active: true,
+      DisplayName: Other
+    },
+    {
+      Value: IMPORT_PERMIT,
+      Active: true,
+      DisplayName: Import permit
+    },
+    {
+      Value: CERTIFICATE_HEALTH,
+      Active: true,
+      DisplayName: Health certificate
+    },
+    {
+      Value: CERTIFICATE_VETERINARY,
+      Active: true,
+      DisplayName: Veterinary certificate
+    },
+    {
+      Value: CATCH_CERTIFICATE,
+      Active: true,
+      DisplayName: Catch certificate paper version
+    },
+    {
+      Value: CATCH_PROCESSING_STATEMENT,
+      Active: true,
+      DisplayName: Processing statement
+    },
+    {
+      Value: CATCH_NON_MANIPULATION_DOCUMENT,
+      Active: true,
+      DisplayName: Catch non manipulation document
+    },
+    {
+      Value: CATCH_DOCUMENTS_UNDER_ARTICLE_14,
+      Active: true,
+      DisplayName: Documents under Art. 14(1) of IUU Regulation
+    },
+    {
+      Value: CATCH_RFMO_STATISTICAL_DOCUMENT,
+      Active: true,
+      DisplayName: RFMO statistical document
+    },
+    {
+      Value: LABORATORY_REPORT,
+      Active: true,
+      DisplayName: Laboratory report
+    },
+    {
+      Value: ANALYTICAL_REPORT,
+      Active: true,
+      DisplayName: Analytical Report
+    },
+    {
+      Value: PRIVATE_ATTESTATION,
+      Active: true,
+      DisplayName: Private attestation
+    },
+    {
+      Value: EXPERTS_APPRAISALS,
+      Active: true,
+      DisplayName: Experts appraisals
+    },
+    {
+      Value: INSURANCE_DOCUMENTS,
+      Active: true,
+      DisplayName: Insurance documents
+    },
+    {
+      Value: CONDITION_REPORTS,
+      Active: true,
+      DisplayName: Condition reports
+    },
+    {
+      Value: DECLARATIONS_COUNTRY_EXIT,
+      Active: true,
+      DisplayName: Declarations under oath of the exporter, the seller or other third party, testifying as to the date on which the cultural good has left the third country
+    },
+    {
+      Value: DECLARATIONS_OTHER_EVENTS,
+      Active: true,
+      DisplayName: Declarations under oath of the exporter, the seller or other third party, testifying other events supporting cultural goods licit provenance
+    },
+    {
+      Value: PROPERTY_TITLES,
+      Active: true,
+      DisplayName: Property titles
+    },
+    {
+      Value: NOTARISED_WILLS,
+      Active: true,
+      DisplayName: Notarised wills
+    },
+    {
+      Value: HANDWRITTEN_TESTAMENTS,
+      Active: true,
+      DisplayName: Handwritten testaments
+    },
+    {
+      Value: PUBLICATIONS_OF_MUSEUMS,
+      Active: true,
+      DisplayName: Publications of museums
+    },
+    {
+      Value: PUBLICATIONS_OF_EXHIBITION_CATALOGUES,
+      Active: true,
+      DisplayName: Publications of exhibition catalogues
+    },
+    {
+      Value: ARTICLES_IN_RELATED_PERIODICALS,
+      Active: true,
+      DisplayName: Articles in related periodicals
+    },
+    {
+      Value: AUCTION_CATALOGUES_ADVERTISEMENTS_AND_OTHER,
+      Active: true,
+      DisplayName: Auction catalogues, advertisements and other promotional sales material
+    },
+    {
+      Value: PROMOTIONAL_SALES_MATERIAL,
+      Active: true,
+      DisplayName: promotional sales material
+    },
+    {
+      Value: OTHER_DOCUMENT_LEGALITY,
+      Active: true,
+      DisplayName: Other document, which supports the legality of export of the cultural good from the third country of interest
+    },
+    {
+      Value: OTHER_DOCUMENT_EXPORT,
+      Active: true,
+      DisplayName: Other document, which demonstrates the export of the cultural good from the Union
+    },
+    {
+      Value: CUSTOMS_DOCUMENTATIONS,
+      Active: true,
+      DisplayName: Customs documentation
+    },
+    {
+      Value: OTHER_TRANSPORT_DOCUMENT,
+      Active: true,
+      DisplayName: Other transport document
+    },
+    {
+      Value: PRE_EXPORT_CERTIFICATE,
+      Active: true,
+      DisplayName: Pre-export certificate
+    },
+    {
+      Value: NORTHERN_IRELAND_PLANT_HEALTH_LABEL,
+      Active: true,
+      DisplayName: Northern Ireland Plant Health Label
+    },
+    {
+      Value: LABORATORY_REPORT_2019_1793,
+      Active: true,
+      DisplayName: Laboratory Report Reg. 2019/1793
+    },
+    {
+      Value: ANALYTICAL_REPORT_2019_1793,
+      Active: true,
+      DisplayName: Analytical Report Reg. 2019/1793
+    },
+    {
+      Value: OFFICIAL_CERTIFICATE_2019_1793,
+      Active: true,
+      DisplayName: Official Certificate Reg. 2019/1793
+    },
+    {
+      Value: OFFICIAL_CERTIFICATE_2020_1158,
+      Active: true,
+      DisplayName: Official Certificate Reg. 2020/1158
+    },
+    {
+      Value: LABORATORY_REPORT_2020_1158,
+      Active: true,
+      DisplayName: Laboratory Report Reg. 2020/1158
+    },
+    {
+      Value: HEALTH_CERTIFICATE_2011_884,
+      Active: true,
+      DisplayName: Health Certificate 2011/884
+    },
+    {
+      Value: ANALYTICAL_REPORT_2011_884,
+      Active: true,
+      DisplayName: Analytical Report 2011/884
+    },
+    {
+      Value: LABORATORY_REPORT_2011_884,
+      Active: true,
+      DisplayName: Laboratory report Reg. 2011/884
+    },
+    {
+      Value: STATEMENT_2011_884,
+      Active: true,
+      DisplayName: Statement 2011/884
+    },
+    {
+      Value: LABORATORY_REPORT_284_2011,
+      Active: true,
+      DisplayName: Laboratory report Reg. 284/2011
+    },
+    {
+      Value: OPERATOR_AUTHORISATION_TO_ISSUE_PLANT_PASSPORT,
+      Active: true,
+      DisplayName: Operator authorisation to issue plant passports (for specified plants)
+    },
+    {
+      Value: ANTE_MORTEM_AND_POST_MORTEM_REPORT,
+      Active: true,
+      DisplayName: Ante-mortem and post-mortem report (Art 39(6) of Reg. 2019/627)
+    },
+    {
+      Value: GB_CERTIFICATE_LOGISTICS_PILOT,
+      Active: true,
+      DisplayName: GB Certificate Logistics Pilot (CLP)
+    },
+    {
+      Value: DECLARATION_BY_THE_OPERATOR_EQUI,
+      Active: true,
+      DisplayName: Declaration by the operator-EQUI
+    }
+  ],
+  RetrievedAt: DateTimeOffset_1
+}

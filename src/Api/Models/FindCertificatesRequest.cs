@@ -18,12 +18,12 @@ public class FindCertificatesRequest : IValidatableObject
     [FromQuery(Name = "updatedFrom")]
     [System.ComponentModel.Description("Start of the range")]
     [Required]
-    public DateTime? UpdatedFrom { get; set; }
+    public DateTimeOffset? UpdatedFrom { get; set; }
 
     [FromQuery(Name = "updatedBefore")]
     [System.ComponentModel.Description("End of the range")]
     [Required]
-    public DateTime? UpdatedBefore { get; set; }
+    public DateTimeOffset? UpdatedBefore { get; set; }
 
     [System.ComponentModel.Description("End of the range")]
     [FromHeader(Name = "Accept-Language")]
@@ -35,12 +35,12 @@ public class FindCertificatesRequest : IValidatableObject
         Offset ??= 0;
         AcceptLanguage ??= "en";
 
-        if (UpdatedFrom.GetValueOrDefault().Kind != DateTimeKind.Utc)
+        if (UpdatedFrom?.Offset != TimeSpan.Zero)
         {
             yield return new ValidationResult("UpdatedFrom date must be UTC.", [nameof(UpdatedFrom)]);
         }
 
-        if (UpdatedBefore.GetValueOrDefault().Kind != DateTimeKind.Utc)
+        if (UpdatedBefore?.Offset != TimeSpan.Zero)
         {
             yield return new ValidationResult("UpdatedBefore date must be UTC.", [nameof(UpdatedBefore)]);
         }

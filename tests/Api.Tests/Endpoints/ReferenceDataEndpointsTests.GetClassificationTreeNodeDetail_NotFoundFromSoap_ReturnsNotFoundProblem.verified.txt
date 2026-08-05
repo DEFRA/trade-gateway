@@ -1,0 +1,6 @@
+﻿{
+  Type: https://tools.ietf.org/html/rfc9110#section-15.5.5,
+  Title: Not Found,
+  Status: 404,
+  Detail: Classification tree node detail with id 'intra_trade' nodeId 'R_N-10000_N-10065_L-10121_L-10301_C-11978' not found.
+}

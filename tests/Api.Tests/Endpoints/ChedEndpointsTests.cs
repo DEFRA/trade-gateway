@@ -1,5 +1,6 @@
-using System.Net;
 using Api.Contract;
+using Refit;
+using System.Net;
 using Trade.Gateway.Api.Contract.Certificate;
 using WireMock.ResponseBuilders;
 
@@ -33,10 +34,10 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetAsync("/certificates/cheds/CHEDA.XI.2026.0000063", TestContext.Current.CancellationToken);
+        var response = await client.GetChedCertification("CHEDA.XI.2026.0000063", TestContext.Current.CancellationToken);
 
-        Assert.Equal(MediaTypeAttribute.For<DefraUNVTDCHEDProfile>(), response.Content.Headers.ContentType?.MediaType);
-        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        Assert.Equal(MediaTypeAttribute.For<DefraUNVTDCHEDProfile>(), response.ContentHeaders?.ContentType?.MediaType);
+        await Verify(response.Content);
     }
 
     [Fact]
@@ -71,10 +72,10 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetAsync("/certificates/cheds/BADSOAP", TestContext.Current.CancellationToken);
+        var response = await client.GetChedCertification("BADSOAP", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
     }
 
     [Fact]
@@ -96,10 +97,10 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetAsync("/certificates/cheds/COMMFAIL", TestContext.Current.CancellationToken);
+        var response = await client.GetChedCertification("COMMFAIL", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
     }
 
     [Fact]
@@ -139,11 +140,11 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetAsync("/certificates/cheds/MISSING", TestContext.Current.CancellationToken);
+        var response = await client.GetChedCertification("MISSING", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+        await Verify((response.Error as ValidationApiException)?.Content);
     }
 
     [Fact]
@@ -183,24 +184,26 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetAsync("/certificates/cheds/FORBIDDEN", TestContext.Current.CancellationToken);
+        var response = await client.GetChedCertification("FORBIDDEN", TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
     }
 
     [Fact]
-    public async Task Find_WhenUpdatedFromIsMissing_ReturnsBadRequest()
+    public async Task Find_WhenOffsetIsLessThanZero_ReturnsBadRequest()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetAsync(
-            "/certificates/cheds?pageSize=5&offset=5&updatedFrom1=2002-10-28Z&updatedBefore=2026-10-28Z",
-            TestContext.Current.CancellationToken
-        );
+
+        var response = await client.FindChedUpdates(new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            10,
+            -1,
+            TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
-        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+        await Verify((response.Error as ValidationApiException)?.Content);
     }
 
     [Fact]
@@ -225,17 +228,18 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetAsync(
-            "/certificates/cheds?updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z",
-            TestContext.Current.CancellationToken
-        );
+        var response = await client.FindChedUpdates(new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            10,
+            0,
+            TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(
             MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>(),
-            response.Content.Headers.ContentType?.MediaType
+            response.ContentHeaders?.ContentType?.MediaType
         );
-        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        await Verify(response.Content);
     }
 
     [Fact]
@@ -259,12 +263,13 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetAsync(
-            "/certificates/cheds?updatedFrom=1999-10-28Z&updatedBefore=2026-10-28Z",
-            TestContext.Current.CancellationToken
-        );
+        var response = await client.FindChedUpdates(new DateTime(1999, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            10,
+            0,
+            TestContext.Current.CancellationToken);
 
         Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
     }
 }

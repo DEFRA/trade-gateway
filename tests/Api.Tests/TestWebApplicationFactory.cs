@@ -1,5 +1,3 @@
-using System.Net.Http.Headers;
-using System.Text.Json;
 using Amazon.Runtime;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
@@ -12,6 +10,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Refit;
+using System.Net.Http.Headers;
+using System.Text.Json;
+using Trade.Gateway.Api.Client.Clients;
+using Trade.Gateway.Api.Client.Extensions;
 using WireMock.Server;
 
 namespace Api.Tests;
@@ -49,7 +52,11 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                 )
         );
 
-        builder.ConfigureServices(services => services.AddSingleton(server));
+        builder.ConfigureServices((context, services) =>
+        {
+            services.AddSingleton(server);
+            services.AddTracesGatewayApiClients(context.Configuration, () => Guid.CreateVersion7().ToString("o"));
+        });
 
         builder.ConfigureTestServices(services =>
             services.PostConfigureAll<JwtBearerOptions>(opts =>
@@ -61,6 +68,8 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                 opts.ConfigurationManager = new StaticConfigurationManager<OpenIdConnectConfiguration>(oidcConfig);
             })
         );
+
+        
     }
 
     private const string CognitoTokenEndpoint = "/local/cognito/token";
@@ -143,7 +152,34 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
 
     public const string CognitoScope = "trade-gateway-resource-srv/access";
 
-    /// <summary>Creates a client authenticated as a principal with the given <c>sub</c> claim.</summary>
-    public async Task<HttpClient> CreateClientForPrincipalAsync(string sub) =>
-        CreateClientWithToken(await GetCognitoTokenAsync(CognitoScope, sub));
+    public async Task<ITracesGatewayClient> CreateClientForPrincipalAsync(string sub)
+    {
+        var client = CreateClient();
+        
+        var token = await GetCognitoTokenAsync(CognitoScope, sub);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        return RestService.For<ITracesGatewayClient>(client, new RefitSettings(
+            new SystemTextJsonContentSerializer(
+                new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never,
+                }
+            )
+        ));
+    }
+
+    public ITracesGatewayClient CreateITracesGatewayClient()
+    {
+        var client = CreateClient();
+        return RestService.For<ITracesGatewayClient>(client, new RefitSettings(
+            new SystemTextJsonContentSerializer(
+                new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never,
+                }
+            )
+        ));
+    }
 }

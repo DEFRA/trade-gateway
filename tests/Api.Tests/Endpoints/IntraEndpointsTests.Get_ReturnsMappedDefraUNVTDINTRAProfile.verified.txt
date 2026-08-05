@@ -1,392 +1,308 @@
-{
-  $model: defra/certificate-internal/1,
-  $type: intra,
-  exchangedDocument: {
-    name: 2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’),
-    identifier: INTRA.EU.FR.2026.0000041,
-    traderAssignedId: null,
-    documentTypeCode: 856,
-    documentStatusCode: 1,
-    notificationStatusCode: null,
-    versionId: null,
-    functionCode: null,
-    issueDateTime: DateTimeOffset_1,
-    issuer: null,
-    includedNote: [
+﻿{
+  Model: defra/certificate-internal/1,
+  Type: intra,
+  ExchangedDocument: {
+    Name: 2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’),
+    Identifier: INTRA.EU.FR.2026.0000041,
+    DocumentTypeCode: 856,
+    DocumentStatusCode: 1,
+    IssueDateTime: DateTimeOffset_1,
+    IncludedNote: [
       {
-        type: Note,
-        identifier: null,
-        name: null,
-        subject: null,
-        creationDateTime: null,
-        noteSubjectCode: null,
-        subjectCode: {
-          value: LAST_UPDATE_DATETIME,
-          urlId: eu_intra_note_subject_code,
-          name: null
+        Type: Note,
+        SubjectCode: {
+          Value: LAST_UPDATE_DATETIME,
+          UrlId: eu_intra_note_subject_code
         },
-        content: [
+        Content: [
           DateTimeOffset_2
-        ],
-        contentCode: null
+        ]
       },
       {
-        type: Note,
-        identifier: null,
-        name: null,
-        subject: null,
-        creationDateTime: null,
-        noteSubjectCode: null,
-        subjectCode: {
-          value: JOURNEY_LOG,
-          urlId: eu_intra_note_subject_code,
-          name: null
+        Type: Note,
+        SubjectCode: {
+          Value: JOURNEY_LOG,
+          UrlId: eu_intra_note_subject_code
         },
-        content: [
+        Content: [
           null
         ],
-        contentCode: [
+        ContentCode: [
           {
-            value: NO,
-            urlId: boolean,
-            name: null
+            Value: NO,
+            UrlId: boolean
           }
         ]
       }
     ],
-    referenceDocument: [
+    ReferenceDocument: [
       {
-        typeCode: 856,
-        relationshipTypeCode: CAW,
-        identifier: INTRA.EU.FR.2026.0000041,
-        issueDateTime: null,
-        attachmentBinaryObject: null,
-        information: null
+        TypeCode: 856,
+        RelationshipTypeCode: CAW,
+        Identifier: INTRA.EU.FR.2026.0000041
       },
       {
-        typeCode: 784,
-        relationshipTypeCode: ZZZ,
-        identifier: wer,
-        issueDateTime: null,
-        attachmentBinaryObject: null,
-        information: null
+        TypeCode: 784,
+        RelationshipTypeCode: ZZZ,
+        Identifier: wer
       }
     ],
-    firstSignatoryAuthentication: {
-      typeCode: 4,
-      actualDateTime: DateTimeOffset_3,
-      governmentActionTypeCode: Inspection (Identification of Applicant),
-      provider: {
-        identifier: XI0000,
-        urlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
-        name: Department of Agriculture, Environment and Rural Affairs (DAERA),
-        partyRoleCode: {
-          value: VJ,
-          urlId: https://traces-codelists.ec.europa.eu/3035,
-          name: Officer (Identification of Applicant)
+    FirstSignatoryAuthentication: {
+      TypeCode: 4,
+      ActualDateTime: DateTimeOffset_3,
+      GovernmentActionTypeCode: Inspection (Identification of Applicant),
+      Provider: {
+        Identifier: XI0000,
+        UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+        Name: Department of Agriculture, Environment and Rural Affairs (DAERA),
+        PartyRoleCode: {
+          Value: VJ,
+          UrlId: https://traces-codelists.ec.europa.eu/3035,
+          Name: Officer (Identification of Applicant)
         },
-        partyTypeCode: [
+        PartyTypeCode: [
           {
-            value: AUTHORITY,
-            urlId: https://traces-codelists.ec.europa.eu/user_body_role,
-            name: Authority
+            Value: AUTHORITY,
+            UrlId: https://traces-codelists.ec.europa.eu/user_body_role,
+            Name: Authority
           }
         ],
-        postalAddress: {
-          postcodeCode: BT1,
-          lineOne: DAERA main office,
-          lineTwo: null,
-          cityName: Belfast,
-          countryId: XI,
-          countryName: United Kingdom (Northern Ireland),
-          countrySubDivisionName: County Antrim
+        PostalAddress: {
+          PostcodeCode: BT1,
+          LineOne: DAERA main office,
+          CityName: Belfast,
+          CountryId: XI,
+          CountryName: United Kingdom (Northern Ireland),
+          CountrySubDivisionName: County Antrim
         },
-        definedContact: [
+        DefinedContact: [
           {
-            personName: Daniel Klemm,
-            emailURIUniversalCommunication: null,
-            telephoneUniversalCommunication: null
+            PersonName: Daniel Klemm
           }
         ]
       },
-      includedClause: [
+      IncludedClause: [
         {
-          identifier: PURPOSE,
-          content: FOR_TRANSIT_THROUGH_MEMBER_STATE,
-          urlId: null
+          Identifier: PURPOSE,
+          Content: FOR_TRANSIT_THROUGH_MEMBER_STATE
         },
         {
-          identifier: CERTIFIED_AS_OR_FOR,
-          content: FURTHER_KEEPING,
-          urlId: null
+          Identifier: CERTIFIED_AS_OR_FOR,
+          Content: FURTHER_KEEPING
         },
         {
-          identifier: SIGNATORY_PERSON_EMAIL,
-          content: info@b.c,
-          urlId: null
+          Identifier: SIGNATORY_PERSON_EMAIL,
+          Content: info@b.c
         }
       ]
-    },
-    secondSignatoryAuthentication: null,
-    thirdSignatoryAuthentication: null,
-    fourthSignatoryAuthentication: null
+    }
   },
-  specifiedConsignment: {
-    availabilityDueDateTime: null,
-    exportExitDateTime: DateTimeOffset_4,
-    consignorParty: {
-      identifier: 899361,
-      urlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
-      name: DK Test,
-      partyRoleCode: {
-        value: CZ,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Consignor
+  SpecifiedConsignment: {
+    ExportExitDateTime: DateTimeOffset_4,
+    ConsignorParty: {
+      Identifier: 899361,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
+      Name: DK Test,
+      PartyRoleCode: {
+        Value: CZ,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Consignor
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: IMPORTER,
-          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
-          name: Importer
+          Value: IMPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Importer
         },
         {
-          value: OTH-OPER,
-          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
-          name: Other operators
+          Value: OTH-OPER,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Other operators
         }
       ],
-      postalAddress: {
-        postcodeCode: BT9,
-        lineOne: Test Street 876,
-        lineTwo: null,
-        cityName: Belfast,
-        countryId: XI,
-        countryName: United Kingdom (Northern Ireland),
-        countrySubDivisionName: County Antrim
-      },
-      definedContact: null
+      PostalAddress: {
+        PostcodeCode: BT9,
+        LineOne: Test Street 876,
+        CityName: Belfast,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: County Antrim
+      }
     },
-    consigneeParty: {
-      identifier: 899361,
-      urlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
-      name: DK Test,
-      partyRoleCode: {
-        value: CN,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Consignee
+    ConsigneeParty: {
+      Identifier: 899361,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
+      Name: DK Test,
+      PartyRoleCode: {
+        Value: CN,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Consignee
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: IMPORTER,
-          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
-          name: Importer
+          Value: IMPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Importer
         },
         {
-          value: OTH-OPER,
-          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
-          name: Other operators
+          Value: OTH-OPER,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Other operators
         }
       ],
-      postalAddress: {
-        postcodeCode: BT9,
-        lineOne: Test Street 876,
-        lineTwo: null,
-        cityName: Belfast,
-        countryId: XI,
-        countryName: United Kingdom (Northern Ireland),
-        countrySubDivisionName: County Antrim
-      },
-      definedContact: null
+      PostalAddress: {
+        PostcodeCode: BT9,
+        LineOne: Test Street 876,
+        CityName: Belfast,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: County Antrim
+      }
     },
-    despatchParty: {
-      identifier: TEST-01-01,
-      urlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
-      name: Test Quarantaine,
-      partyRoleCode: {
-        value: PW,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Despatch party (Place of dispatch)
+    DespatchParty: {
+      Identifier: TEST-01-01,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: Test Quarantaine,
+      PartyRoleCode: {
+        Value: PW,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Despatch party (Place of dispatch)
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: QUARANTINE,
-          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
-          name: Quarantine establishment
+          Value: QUARANTINE,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Quarantine establishment
         },
         {
-          value: QUR,
-          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
-          name: Quarantine establishments
+          Value: QUR,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Quarantine establishments
         }
       ],
-      postalAddress: {
-        postcodeCode: 01000,
-        lineOne: zdafazartaretaretrtatrrart,
-        lineTwo: null,
-        cityName: Bourg-en-Bresse,
-        countryId: FR,
-        countryName: France,
-        countrySubDivisionName: Ain.
-      },
-      definedContact: null
+      PostalAddress: {
+        PostcodeCode: 01000,
+        LineOne: zdafazartaretaretrtatrrart,
+        CityName: Bourg-en-Bresse,
+        CountryId: FR,
+        CountryName: France,
+        CountrySubDivisionName: Ain.
+      }
     },
-    deliveryParty: {
-      identifier: 899361,
-      urlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
-      name: DK Test,
-      partyRoleCode: {
-        value: DP,
-        urlId: https://traces-codelists.ec.europa.eu/3035,
-        name: Delivery party (Place of destination)
+    DeliveryParty: {
+      Identifier: 899361,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
+      Name: DK Test,
+      PartyRoleCode: {
+        Value: DP,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Delivery party (Place of destination)
       },
-      partyTypeCode: [
+      PartyTypeCode: [
         {
-          value: IMPORTER,
-          urlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
-          name: Importer
+          Value: IMPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Importer
         },
         {
-          value: OTH-OPER,
-          urlId: https://traces-codelists.ec.europa.eu/classification_section_code,
-          name: Other operators
+          Value: OTH-OPER,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Other operators
         }
       ],
-      postalAddress: {
-        postcodeCode: BT9,
-        lineOne: Test Street 876,
-        lineTwo: null,
-        cityName: Belfast,
-        countryId: XI,
-        countryName: United Kingdom (Northern Ireland),
-        countrySubDivisionName: County Antrim
-      },
-      definedContact: null
+      PostalAddress: {
+        PostcodeCode: BT9,
+        LineOne: Test Street 876,
+        CityName: Belfast,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: County Antrim
+      }
     },
-    carrier: null,
-    customsTransitAgentParty: null,
-    originCountry: null,
-    exportCountry: {
-      code: {
-        value: null,
-        urlId: null,
-        name: null
-      },
-      subordinateTradeCountrySubDivision: null
+    ExportCountry: {
+      Code: {}
     },
-    importCountry: {
-      code: {
-        value: XI,
-        urlId: null,
-        name: United Kingdom (Northern Ireland)
-      },
-      subordinateTradeCountrySubDivision: null
+    ImportCountry: {
+      Code: {
+        Value: XI,
+        Name: United Kingdom (Northern Ireland)
+      }
     },
-    reExportCountry: null,
-    transitCountry: [
+    TransitCountry: [
       {
-        code: {
-          value: AT,
-          urlId: null,
-          name: Austria
-        },
-        subordinateTradeCountrySubDivision: null
+        Code: {
+          Value: AT,
+          Name: Austria
+        }
       }
     ],
-    unloadingBaseportLocation: null,
-    mainCarriageLogisticsTransportMovement: [
+    MainCarriageLogisticsTransportMovement: [
       {
-        identifier: R5434FGD,
-        urlId: null,
-        modeCode: 3,
-        usedLogisticsTransportMeans: null,
-        transportContractRelatedReferencedDocument: null,
-        arrivalEvent: null,
-        departureEvent: null
+        Identifier: R5434FGD,
+        ModeCode: 3
       }
     ],
-    transitTradeCountry: null,
-    packageQuantity: null,
-    includedConsignmentItem: [
+    IncludedConsignmentItem: [
       {
-        natureIdCargo: [
+        NatureIdCargo: [
           {
-            typeCode: 12
+            TypeCode: 12
           }
         ],
-        includedTradeLineItem: [
+        IncludedTradeLineItem: [
           {
-            sequenceNumeric: 0,
-            description: [
+            SequenceNumeric: 0,
+            Description: [
               Consignment totals and summary
             ],
-            scientificName: null,
-            netWeight: {
-              content: 0,
-              value: null,
-              unitCode: null,
-              unitCodeListVersionId: null
+            NetWeight: {
+              Content: 0
             },
-            grossWeight: {
-              content: 1,
-              value: null,
-              unitCode: null,
-              unitCodeListVersionId: null
+            GrossWeight: {
+              Content: 1
             },
-            applicableClassification: null,
-            physicalReferencedLogisticsPackage: [
+            PhysicalReferencedLogisticsPackage: [
               {
-                levelCode: 4,
-                typeCode: NA,
-                itemQuantity: 0
+                LevelCode: 4,
+                TypeCode: NA,
+                ItemQuantity: 0
               }
-            ],
-            specifiedTradeProduct: null,
-            specifiedLineTradeDelivery: null,
-            additionalInformationNote: null
+            ]
           },
           {
-            sequenceNumeric: 1,
-            description: [
+            SequenceNumeric: 1,
+            Description: [
               null
             ],
-            scientificName: Equus asinus,
-            netWeight: null,
-            grossWeight: null,
-            applicableClassification: [
+            ScientificName: Equus asinus,
+            ApplicableClassification: [
               {
-                systemId: CN,
-                systemName: CN Code (Combined Nomenclature),
-                classCode: {
-                  value: 0101,
-                  urlId: https://traces-codelists.ec.europa.eu/class_code_system/CN,
-                  name: null
+                SystemId: CN,
+                SystemName: CN Code (Combined Nomenclature),
+                ClassCode: {
+                  Value: 0101,
+                  UrlId: https://traces-codelists.ec.europa.eu/class_code_system/CN
                 },
-                className: [
+                ClassName: [
                   LIVE ANIMALS,
                   Live horses, asses, mules and hinnies
                 ]
               },
               {
-                systemId: IDENTIFICATION_SYSTEM,
-                systemName: Identification system,
-                classCode: {
-                  value: TATTOO,
-                  urlId: https://traces-codelists.ec.europa.eu/class_code_system/IDENTIFICATION_SYSTEM,
-                  name: null
+                SystemId: IDENTIFICATION_SYSTEM,
+                SystemName: Identification system,
+                ClassCode: {
+                  Value: TATTOO,
+                  UrlId: https://traces-codelists.ec.europa.eu/class_code_system/IDENTIFICATION_SYSTEM
                 },
-                className: [
+                ClassName: [
                   Tattoo
                 ]
               }
-            ],
-            physicalReferencedLogisticsPackage: null,
-            specifiedTradeProduct: null,
-            specifiedLineTradeDelivery: null,
-            additionalInformationNote: null
+            ]
           }
         ]
       }
     ]
-  },
-  laboratoryObservationResult: null
+  }
 }

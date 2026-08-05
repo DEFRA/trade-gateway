@@ -1,6 +1,7 @@
-using System.Net;
 using Api.Contract;
 using AwesomeAssertions;
+using Refit;
+using System.Net;
 using Trade.Gateway.Api.Contract.Customs;
 using WireMock.ResponseBuilders;
 
@@ -28,13 +29,13 @@ public class CustomsChedQuantityEndpointsTests(TradeGatewayWebApplicationFactory
     {
         StubSample(Ched, FullLedgerSample);
 
-        var response = await GetAsync($"/customs/cheds/{Ched}/quantities");
+        var response = await GetAsync($"{Ched}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
         response
-            .Content.Headers.ContentType?.MediaType.Should()
+            .ContentHeaders?.ContentType?.MediaType.Should()
             .Be(MediaTypeAttribute.For<ChedQuantityLedger>());
-        await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
+        await Verify(response.Content);
     }
 
     /// <summary>
@@ -47,10 +48,10 @@ public class CustomsChedQuantityEndpointsTests(TradeGatewayWebApplicationFactory
     {
         StubSample("UNKNOWN", UnknownChedSample);
 
-        var response = await GetAsync("/customs/cheds/UNKNOWN/quantities");
+        var response = await GetAsync("UNKNOWN");
 
         response.StatusCode.Should().Be(HttpStatusCode.NotFound);
-        response.Content.Headers.ContentType?.MediaType.Should().Be("application/problem+json");
+        response.ContentHeaders?.ContentType?.MediaType.Should().Be("application/problem+json");
     }
 
     /// <summary>
@@ -63,13 +64,13 @@ public class CustomsChedQuantityEndpointsTests(TradeGatewayWebApplicationFactory
     {
         StubSample("NOSUMMARY", NoSummarySample);
 
-        var response = await GetAsync("/customs/cheds/NOSUMMARY/quantities");
+        var response = await GetAsync("NOSUMMARY");
 
         // Never 200 with an empty ledger: absent and empty are identical on the wire, so an empty
         // success would assert "nothing is reserved" on no evidence. And never 404 — the CHED is
         // demonstrably there.
         response.StatusCode.Should().Be(HttpStatusCode.BadGateway);
-        response.Content.Headers.ContentType?.MediaType.Should().Be("application/problem+json");
+        response.ContentHeaders?.ContentType?.MediaType.Should().Be("application/problem+json");
     }
 
     [Fact]
@@ -78,11 +79,10 @@ public class CustomsChedQuantityEndpointsTests(TradeGatewayWebApplicationFactory
         const string upstreamError = "internal upstream detail that must not be published";
         StubFault("FAULTY", upstreamError);
 
-        var response = await GetAsync("/customs/cheds/FAULTY/quantities");
+        var response = await GetAsync("FAULTY");
 
         response.StatusCode.Should().Be(HttpStatusCode.BadGateway);
-        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-        body.Should().NotContain(upstreamError, "upstream error text must reach logs only (ADR-0002 §4)");
+        await Verify((response.Error as ApiException)?.Content);
     }
 
     [Fact]
@@ -90,15 +90,15 @@ public class CustomsChedQuantityEndpointsTests(TradeGatewayWebApplicationFactory
     {
         StubSaxFault("BADSOAP");
 
-        var response = await GetAsync("/customs/cheds/BADSOAP/quantities");
+        var response = await GetAsync("BADSOAP");
 
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }
 
-    private async Task<HttpResponseMessage> GetAsync(string path)
+    private async Task<ApiResponse<ChedQuantityLedger>> GetAsync(string id)
     {
         var client = await factory.CreateClientForPrincipalAsync(Principal);
-        return await client.GetAsync(path, TestContext.Current.CancellationToken);
+        return await client.GetChedQuantities(id, TestContext.Current.CancellationToken);
     }
 
     private void StubSample(string chedId, string resourceName) =>
