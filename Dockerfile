@@ -30,6 +30,7 @@ COPY src/TracesNT/TracesNT.csproj src/TracesNT/TracesNT.csproj
 COPY src/Api.Contract/Api.Contract.csproj src/Api.Contract/Api.Contract.csproj
 COPY tests/Api.Tests/Api.Tests.csproj tests/Api.Tests/Api.Tests.csproj
 COPY tests/TracesNT.Tests/TracesNT.Tests.csproj tests/TracesNT.Tests/TracesNT.Tests.csproj
+COPY tests/Api.Client.Tests/Api.Client.Tests.csproj tests/Api.Client.Tests/Api.Client.Tests.csproj
 
 COPY TradeGateway.sln TradeGateway.sln
 COPY Directory.Build.props Directory.Build.props
@@ -42,6 +43,7 @@ COPY src/Api.Contract src/Api.Contract
 COPY src/TracesNT src/TracesNT
 COPY tests/Api.Tests tests/Api.Tests
 COPY tests/TracesNT.Tests tests/TracesNT.Tests
+COPY tests/Api.Client.Tests tests/Api.Client.Tests
 
 RUN dotnet test --no-restore --filter "Category!=IntegrationTests"
 

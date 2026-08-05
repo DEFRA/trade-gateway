@@ -1,8 +1,10 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.Logging;
 
 namespace Trade.Gateway.Api.Client.DelegatingHandlers;
 
+[ExcludeFromCodeCoverage]
 public sealed class HttpLoggingDelegatingHandler(ILogger<HttpLoggingDelegatingHandler> logger) : DelegatingHandler
 {
     protected override async Task<HttpResponseMessage> SendAsync(
