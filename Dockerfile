@@ -25,6 +25,7 @@ COPY .csharpierignore .csharpierignore
 RUN dotnet tool restore
 
 COPY src/Api/Api.csproj src/Api/Api.csproj
+COPY src/Api.Client/Api.Client.csproj src/Api.Client/Api.Client.csproj
 COPY src/TracesNT/TracesNT.csproj src/TracesNT/TracesNT.csproj
 COPY src/Api.Contract/Api.Contract.csproj src/Api.Contract/Api.Contract.csproj
 COPY tests/Api.Tests/Api.Tests.csproj tests/Api.Tests/Api.Tests.csproj
@@ -36,6 +37,7 @@ COPY Directory.Build.props Directory.Build.props
 RUN dotnet restore
 
 COPY src/Api src/Api
+COPY src/Api.Client src/Api.Client
 COPY src/Api.Contract src/Api.Contract
 COPY src/TracesNT src/TracesNT
 COPY tests/Api.Tests tests/Api.Tests
