@@ -72,7 +72,8 @@ public class FindCertificatesRequestTests
     {
         // Arrange
         var request = CreateValidRequest();
-        request.UpdatedFrom = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Local);
+        request.UpdatedFrom = 
+            new DateTimeOffset(new DateTime(2024, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), TimeSpan.FromHours(1));
 
         // Act
         var results = ValidateModel(request);
@@ -91,7 +92,8 @@ public class FindCertificatesRequestTests
     {
         // Arrange
         var request = CreateValidRequest();
-        request.UpdatedBefore = new DateTime(2024, 1, 2, 0, 0, 0, DateTimeKind.Local);
+        request.UpdatedBefore =
+            new DateTimeOffset(new DateTime(2024, 1, 2, 0, 0,0,0, DateTimeKind.Unspecified), TimeSpan.FromHours(1));
 
         // Act
         var results = ValidateModel(request);
