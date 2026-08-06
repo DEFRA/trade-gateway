@@ -19,7 +19,7 @@ public class TracingDelegatingHandlerTests
             return new HttpResponseMessage(HttpStatusCode.OK);
         });
 
-        var handler = new TracingDelegatingHandler(() => traceId)
+        var handler = new TracingDelegatingHandler(_ => traceId, null!)
         {
             InnerHandler = innerHandler
         };
@@ -44,11 +44,11 @@ public class TracingDelegatingHandlerTests
         var innerHandler = new TestHttpMessageHandler(_ =>
             new HttpResponseMessage(HttpStatusCode.OK));
 
-        var handler = new TracingDelegatingHandler(() =>
+        var handler = new TracingDelegatingHandler(_ =>
         {
             count++;
             return $"trace-{count}";
-        })
+        }, null!)
         {
             InnerHandler = innerHandler
         };
@@ -76,7 +76,7 @@ public class TracingDelegatingHandlerTests
         });
 
         var counter = 0;
-        var handler = new TracingDelegatingHandler(() => $"trace-{++counter}")
+        var handler = new TracingDelegatingHandler(_ => $"trace-{++counter}", null!)
         {
             InnerHandler = innerHandler
         };

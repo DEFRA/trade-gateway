@@ -11,7 +11,7 @@ namespace Trade.Gateway.Api.Client.Extensions;
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddTracesGatewayApiClients(this IServiceCollection services, IConfiguration configuration,
-        Func<string> traceIdAccessor)
+        Func<IServiceProvider, string> traceIdAccessor)
     {
         services.AddSingleton<UtcDateTimeUrlParameterFormatter>();
         services
@@ -32,7 +32,7 @@ public static class ServiceCollectionExtensions
         services.AddRefitClient<ITracesGatewayIntraClient>();
 
         services.AddSingleton<StsAuthDelegatingHandler>();
-        services.AddSingleton<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor));
+        services.AddSingleton<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor, sp));
         services.AddSingleton<AcceptLanguageDelegatingHandle>();
         services.AddSingleton<HttpLoggingDelegatingHandler>();
 
