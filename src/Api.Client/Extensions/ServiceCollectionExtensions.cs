@@ -13,7 +13,6 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddTracesGatewayApiClients(this IServiceCollection services, IConfiguration configuration,
         Func<IServiceProvider, string> traceIdAccessor)
     {
-        services.AddSingleton<UtcDateTimeUrlParameterFormatter>();
         services
             .AddOptions<TracesGatewayOptions>()
             .Bind(configuration.GetSection(TracesGatewayOptions.SectionName))
@@ -31,10 +30,10 @@ public static class ServiceCollectionExtensions
         services.AddRefitClient<ITracesGatewayChedClient>();
         services.AddRefitClient<ITracesGatewayIntraClient>();
 
-        services.AddSingleton<StsAuthDelegatingHandler>();
-        services.AddSingleton<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor, sp));
-        services.AddSingleton<AcceptLanguageDelegatingHandle>();
-        services.AddSingleton<HttpLoggingDelegatingHandler>();
+        services.AddTransient<StsAuthDelegatingHandler>();
+        services.AddTransient<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor, sp));
+        services.AddTransient<AcceptLanguageDelegatingHandle>();
+        services.AddTransient<HttpLoggingDelegatingHandler>();
 
         return services;
     }
@@ -42,10 +41,7 @@ public static class ServiceCollectionExtensions
     private static void AddRefitClient<TClient>(this IServiceCollection services) where TClient : class
     {
         services
-            .AddRefitClient<TClient>(provider => new RefitSettings
-            {
-                UrlParameterFormatter = provider.GetRequiredService<UtcDateTimeUrlParameterFormatter>(),
-            })
+            .AddRefitClient<TClient>(_ => new RefitSettings())
             .ConfigureHttpClient(
                 (sp, c) =>
                 {

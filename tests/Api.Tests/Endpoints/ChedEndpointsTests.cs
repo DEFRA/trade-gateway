@@ -195,11 +195,13 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
     {
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
 
-        var response = await client.FindChedUpdates(new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+        var response = await client.FindChedUpdates(
+            new DateTimeOffset(2002, 10, 28, 0, 0, 0, TimeSpan.Zero),
             new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
             10,
             -1,
-            TestContext.Current.CancellationToken);
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
