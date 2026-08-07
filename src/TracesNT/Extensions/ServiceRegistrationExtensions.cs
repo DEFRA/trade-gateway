@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TracesNT.ClientBehaviours;
+using TracesNT.Services;
 
 namespace TracesNT.Extensions;
 
@@ -28,6 +29,7 @@ public static class ServiceRegistrationExtensions
             var logger = sp.GetRequiredService<ILogger<TClient>>();
             var endpoint = new EndpointAddress(config.GetServiceUrl(servicePath));
             var binding = GetOrCreateBinding(endpoint.Uri);
+            var metricsService = sp.GetRequiredService<ITracesNtClientMetricsService>();
 
             TClient client = clientFactory(binding, endpoint);
 
@@ -35,6 +37,7 @@ public static class ServiceRegistrationExtensions
             // BeforeSendRequest fires in registration order; WS-Security adds its header last.
             client.Endpoint.EndpointBehaviors.Add(new LoggingEndpointBehavior(logger));
             client.Endpoint.EndpointBehaviors.Add(new WsSecurityEndpointBehavior(credentials));
+            client.Endpoint.EndpointBehaviors.Add(new MetricsEndpointBehaviour(metricsService, logger));
 
             return client;
         });
