@@ -1,78 +1,72 @@
 ﻿{
-  available: [
+  Available: [
     {
-      commodityCode: {
-        harmonizedSystemSubheadingCode: 020329,
-        combinedNomenclatureCode: 02032955,
-        taricCode: 0203295500
+      CommodityCode: {
+        HarmonizedSystemSubheadingCode: 020329,
+        CombinedNomenclatureCode: 02032955,
+        TaricCode: 0203295500
       },
-      certificateLineNumber: 1,
-      unitOfMeasure: KGM,
-      quantity: 1250.5
+      CertificateLineNumber: 1,
+      UnitOfMeasure: KGM,
+      Quantity: 1250.5
     },
     {
-      commodityCode: null,
-      certificateLineNumber: 2,
-      unitOfMeasure: H87,
-      quantity: 40
+      CertificateLineNumber: 2,
+      UnitOfMeasure: H87,
+      Quantity: 40.0
     }
   ],
-  allocations: {
-    reserved: [
+  Allocations: {
+    Reserved: [
       {
-        goodsItemNumber: 1,
-        commodityCode: {
-          harmonizedSystemSubheadingCode: 020329,
-          combinedNomenclatureCode: 02032955,
-          taricCode: null
+        GoodsItemNumber: 1,
+        CommodityCode: {
+          HarmonizedSystemSubheadingCode: 020329,
+          CombinedNomenclatureCode: 02032955
         },
-        certificateLineNumber: 1,
-        unitOfMeasure: KGM,
-        quantity: 300,
-        technicalRoundingQuantity: 0.25,
-        eventDateTime: DateTimeOffset_1,
-        customsOffice: GB000060,
-        declarationReference: {
-          type: MRN,
-          value: 26GB16RF3TDPZE7AR2
+        CertificateLineNumber: 1,
+        UnitOfMeasure: KGM,
+        Quantity: 300.0,
+        TechnicalRoundingQuantity: 0.25,
+        EventDateTime: DateTimeOffset_1,
+        CustomsOffice: GB000060,
+        DeclarationReference: {
+          Type: Mrn,
+          Value: 26GB16RF3TDPZE7AR2
         }
       },
       {
-        goodsItemNumber: 1,
-        commodityCode: {
-          harmonizedSystemSubheadingCode: 020329,
-          combinedNomenclatureCode: 02032955,
-          taricCode: null
+        GoodsItemNumber: 1,
+        CommodityCode: {
+          HarmonizedSystemSubheadingCode: 020329,
+          CombinedNomenclatureCode: 02032955
         },
-        certificateLineNumber: 1,
-        unitOfMeasure: KGM,
-        quantity: 90,
-        technicalRoundingQuantity: null,
-        eventDateTime: DateTimeOffset_1,
-        customsOffice: GB000060,
-        declarationReference: {
-          type: MRN,
-          value: 26GB99WTYXQ2LM5BC7
+        CertificateLineNumber: 1,
+        UnitOfMeasure: KGM,
+        Quantity: 90.0,
+        EventDateTime: DateTimeOffset_1,
+        CustomsOffice: GB000060,
+        DeclarationReference: {
+          Type: Mrn,
+          Value: 26GB99WTYXQ2LM5BC7
         }
       }
     ],
-    consumed: [
+    Consumed: [
       {
-        goodsItemNumber: 2,
-        commodityCode: {
-          harmonizedSystemSubheadingCode: 020329,
-          combinedNomenclatureCode: 02032955,
-          taricCode: null
+        GoodsItemNumber: 2,
+        CommodityCode: {
+          HarmonizedSystemSubheadingCode: 020329,
+          CombinedNomenclatureCode: 02032955
         },
-        certificateLineNumber: 2,
-        unitOfMeasure: KGM,
-        quantity: 120,
-        technicalRoundingQuantity: null,
-        eventDateTime: DateTimeOffset_1,
-        customsOffice: GB000060,
-        declarationReference: {
-          type: MRN,
-          value: 26GB16RF3TDPZE7AR2
+        CertificateLineNumber: 2,
+        UnitOfMeasure: KGM,
+        Quantity: 120.0,
+        EventDateTime: DateTimeOffset_1,
+        CustomsOffice: GB000060,
+        DeclarationReference: {
+          Type: Mrn,
+          Value: 26GB16RF3TDPZE7AR2
         }
       }
     ]

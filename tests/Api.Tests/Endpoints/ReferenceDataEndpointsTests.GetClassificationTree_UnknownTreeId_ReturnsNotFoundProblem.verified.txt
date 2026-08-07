@@ -2,5 +2,5 @@
   Type: https://tools.ietf.org/html/rfc9110#section-15.5.5,
   Title: Not Found,
   Status: 404,
-  Detail: Intra certificate 'MISSING' was not found.
+  Detail: Classification tree with id 'unknown_tree' not found.
 }

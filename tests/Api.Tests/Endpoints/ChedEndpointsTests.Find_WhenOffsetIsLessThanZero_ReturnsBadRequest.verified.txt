@@ -1,7 +1,7 @@
 ﻿{
   Errors: {
-    PageSize: [
-      pageSize must be between 10 and 200
+    Offset: [
+      offset must be equal to or greater than 0
     ]
   },
   Type: https://tools.ietf.org/html/rfc9110#section-15.5.1,

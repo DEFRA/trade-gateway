@@ -1,0 +1,3586 @@
+﻿{
+  Source: traces,
+  TreeId: intra_trade,
+  NodePath: R/N-10000/N-10065/L-10121/L-10301/C-11978,
+  NodeId: R_N-10000_N-10065_L-10121_L-10301_C-11978,
+  Node: {
+    CertificateModel: {
+      ModelId: 11978,
+      ShortTitle: 11978,
+      LongTitle: 2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’),
+      CreatedOn: DateTimeOffset_1,
+      UpdatedOn: DateTimeOffset_1
+    },
+    Selectable: true,
+    NodeType: certificate,
+    Label: 2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’)
+  },
+  Attributes: [
+    {
+      Key: AVAILABLE_EU_INTRA_DESCRIPTOR_COLUMNS,
+      Description: Descriptor Columns,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: CASE_OF_MEAT_AND_BONE_MEAL_AND_RENDERED_FATS_ACCESS,
+      Description: Access in case of Meat, Bone meal and rendered fats,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_DIRECT_TRANSIT_ACCESS,
+      Description: Purpose: For transit access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_TEMPORARY_ADMISSION_ACCESS,
+      Description: Acceptable for temporary admission access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CONSIGNEE_ACCESS,
+      Description: Consignee access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: NUMBER_OF_ANIMALS_CHECKED_ACCESS,
+      Description: Access to number of animals checked,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: MEANS_OF_TRANSPORT_ACCESS,
+      Description: Means of Transport access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PACKAGING_MATERIAL_ACCESS,
+      Description: Packaging material access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: RELATED_ORIGINAL_CERTIFICATE_ACCESS,
+      Description: Related original certificate access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DATE_OF_DEPARTURE_ACCESS,
+      Description: Date of departure access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: LINKED_RELATED_CERTIFICATE_ACCESS,
+      Description: Linked related certificates access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DATE_OF_ARRIVAL_ACCESS,
+      Description: Date of arrival access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DIGITAL_SIGNATURE_ACCESS,
+      Description: Digital signature access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_DIRECT_TRANSIT_ACCESS,
+      Description: Acceptable for transit access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: MEANS_OF_TRANSPORT_DETAILS_ACCESS,
+      Description: Means of Transport details access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CERTIFIED_AS_ACCESS,
+      Description: Certified as access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: TRANSPORTER_ACCESS,
+      Description: Transporter access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_ONWARD_TRAVEL_ACCESS,
+      Description: Purpose: For onward travel access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_TRANSHIPMENT_ACCESS,
+      Description: Acceptable for transhipment access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_ENTRY_INTO_NORTHERN_IRELAND_ACCESS,
+      Description: Purpose For entry into Northern Ireland access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CHECK_DOCUMENTARY_NATIONAL_REQUIREMENTS_ACCESS,
+      Description: Documentary check - National requirements access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: WELFARE_CHECK_ACCESS,
+      Description: Access to welfare check,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PLACE_OF_LOADING_ACCESS,
+      Description: Access to place of loading,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_INDIRECT_TRANSIT_ACCESS,
+      Description: Conformity of the goods to EU requirements,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: SEAL_CONTAINER_ACCESS,
+      Description: Seal container access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: NOT_ACCEPTABLE_MEASURE_EXTENT_ACCESS,
+      Description: Not acceptable measure extent access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_TRANSHIPMENT_ACCESS,
+      Description: Purpose: For transhipment access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CHECK_DOCUMENTARY_ACCESS,
+      Description: Documentary check access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: GOODS_COMPLIANCE_ACCESS,
+      Description: Goods compliance access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_PRIVATE_IMPORT_ACCESS,
+      Description: Purpose: For private import access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_TRANSFER_ACCESS,
+      Description: Acceptable for transfer access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: REFUSAL_REASON_EXTENT_ACCESS,
+      Description: Reason for Refusal Extent field access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: ACCOMPANYING_DOCUMENT_ACCESS,
+      Description: Accompanying document access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PLANT_HEALTH_NON_COMPLIANCE_ACCESS,
+      Description: Plant Health Non-Compliance Access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_TRANSFER_ACCESS,
+      Description: Purpose: For transfer access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CHECK_PHYSICAL_ACCESS,
+      Description: Access to the Physical check section,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: TOTAL_GROSS_VOLUME_ACCESS,
+      Description: Total gross volume access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_MONITORING_ACCESS,
+      Description: Acceptable for monitoring access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: INSPECTION_PLANNER_ACCESS,
+      Description: Inspection planner access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: FOLLOW_UP_OF_QUARANTINE_OR_ISOLATION_ACCESS,
+      Description: Access to follow-up of quarantine or isolation,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_TRANSIT_TO_US_OR_NATO_BASE_ACCESS,
+      Description: Purpose: For transit to US / NATO base access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: EU_EXPORT_PART_THREE_ACCESS,
+      Description: EU Export Part III Access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_TEMPORARY_ADMISSION_ACCESS,
+      Description: Purpose: For temporary admission access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: EXIT_INFORMATION_ACCESS,
+      Description: Exit information access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: ASSEMBLY_OPERATOR_ACCESS,
+      Description: Assembly Operator Access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: TOTAL_SPACE_ACCESS,
+      Description: Total Space Access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CITES_CERTIFICATE_ACCESS,
+      Description: CITES certificate Access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: RESPONSIBLE_FOR_LOAD_ACCESS,
+      Description: Responsible for load access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CASE_OF_FISH_OIL_FOR_DETOXIFICATION_ACCESS,
+      Description: Fish oil for detoxification Box Access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_ONWARD_TRAVEL_ACCESS,
+      Description: Decision: for onward travel access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_REENTRY_ACCESS,
+      Description: Re-entry (Re-import) purpose access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_ONWARD_TRANSPORTATION_ACCESS,
+      Description: Acceptable for onward transportation access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: TOTAL_GROSS_WEIGHT_ACCESS,
+      Description: Total gross weight access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: NON_COMPLIANCE_WITH_WELFARE_LEGISLATION_ACCESS,
+      Description: Access to non-compliance with welfare legislation,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_TRANSIT_TO_US_OR_NATO_BASE_ACCESS,
+      Description: Acceptable for transit to US / NATO base access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DESTINATION_REGION_ACCESS,
+      Description: Region of destination access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CONTROLLED_DESTINATION_ACCESS,
+      Description: Controlled destination access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_FREE_CIRCULATION_DETAILS_ACCESS,
+      Description: Access to details in case of Acceptable for internal market,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CHECK_WELFARE_ACCESS,
+      Description: Welfare check,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: IDENTITY_CHECK_TYPE_ACCESS,
+      Description: Identity check type access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DECISION_ACCEPTABLE_FOR_PRIVATE_IMPORT_ACCESS,
+      Description: Acceptable for private import access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: QUALITY_CONTROL_ACCESS,
+      Description: Quality control access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_FREE_CIRCULATION_ACCESS,
+      Description: Purpose: For internal market access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PRODUCT_TEMPERATURE_ACCESS,
+      Description: Product temperature access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: IMPACT_OF_THE_TRANSPORT_ON_ANIMALS_ACCESS,
+      Description: Access to impact of the transport on animals,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DEALER_ACCESS,
+      Description: Dealer access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: ROUTE_PLAN_ACCESS,
+      Description: Route plan access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PLACE_OF_DESTINATION_ACCESS,
+      Description: Access to place of destination,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: ORIGIN_REGION_ACCESS,
+      Description: Region of origin access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CHECK_IMPACT_TRANSPORT_ANIMALS_ACCESS,
+      Description: Transport animal impact access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: CHECK_IDENTITY_ACCESS,
+      Description: Access to Check Identity section,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: DISPATCH_COUNTRY_ACCESS,
+      Description: Country of dispatch,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PURPOSE_FOR_INDIRECT_TRANSIT_ACCESS,
+      Description: Purpose: Conformity of the goods,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: NO_PHYSICAL_CHECK_REASON_ACCESS,
+      Description: No physical checks reason access,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: SPLITTING_NON_CONFORM_CONSIGNMENT_ALLOWED,
+      Description: Splitting Non Conforming Consignment Allowed,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: BULK_VALIDATION_ALLOWED,
+      Description: Bulk Validation Allowed,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PARTIAL_REJECTION_ALLOWED,
+      Description: Partial rejection allowed,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: SPLITTING_CONFORM_CONSIGNMENT_ALLOWED,
+      Description: Splitting Conforming Consignment Allowed,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: UNREGISTERED_OWNER_OF_THE_GOODS_ALLOWED,
+      Description: [en] (CLASSIFICATION_NODE_ATTRIBUTE) UNREGISTERED_OWNER_OF_THE_GOODS_ALLOWED,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: UNREGISTERED_CONSIGNOR_ALLOWED,
+      Description: Unregistered consignor allowed,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: UNREGISTERED_CONSIGNEE_ALLOWED,
+      Description: Unregistered consignee allowed,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: UNREGISTERED_TRANSPORTER_ALLOWED,
+      Description: Unregistered transporter allowed,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: UNREGISTERED_PLACE_OF_DESTINATION_ALLOWED,
+      Description: Unregistered place of destination allowed,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: NOTIFY_REUSED_IDENTIFICATION_NUMBER,
+      Description: Notify reused Identification Number,
+      Value: {
+        ValueKind: True
+      }
+    },
+    {
+      Key: ESTABLISHMENTS_FROM_MULTIPLE_COUNTRIES_ALLOWED,
+      Description: Establishments from multiple countries allowed,
+      Value: {
+        ValueKind: False
+      }
+    },
+    {
+      Key: BREED_CATEGORY_POSSIBLE_VALUES,
+      Description: Possible breed categories,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: CONSIGNEE_ALLOWED_OPERATOR_ACTIVITY_STATUSES,
+      Description: Consignee allowed statuses,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: PRODUCT_TEMPERATURE_POSSIBLE_VALUES,
+      Description: Temperature choices,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: ACCOMPANYING_DOCUMENT_TYPE_POSSIBLE_VALUES,
+      Description: Possible accompanying documents,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: POSSIBLE_LABORATORY_TEST_CATEGORIES,
+      Description: Possible laboratory test categories,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: PLACE_OF_LOADING_POSSIBLE_META_COUNTRY_GROUPS,
+      Description: Place Of Loading meta country groups,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: PLACE_OF_DISPATCH_POSSIBLE_META_COUNTRY_GROUPS,
+      Description: Place Of Dispatch meta country groups,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: NATURE_OF_COMMODITY_POSSIBLE_VALUES,
+      Description: Nature of Commodity Possible Values,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: TRANSPORTER_ALLOWED_OPERATOR_ACTIVITY_STATUSES,
+      Description: Transporter allowed statuses,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: AGE_UNIT_POSSIBLE_VALUES,
+      Description: Age units,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: ASSEMBLY_OPERATOR_POSSIBLE_META_COUNTRY_GROUPS,
+      Description: Assembly Operator meta country groups,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: AREA_UNIT_POSSIBLE_VALUES,
+      Description: Area Unit possible values,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: PACKAGE_TYPE_POSSIBLE_VALUES,
+      Description: Possible types of packaging,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: WEIGHT_UNIT_POSSIBLE_VALUES,
+      Description: Weight units,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: CONSIGNOR_ALLOWED_OPERATOR_ACTIVITY_STATUSES,
+      Description: Consignor allowed statuses,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: EU_INTRA_CERTIFIED_AS_POSSIBLE_VALUES,
+      Description: "Certified as" choices,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: CONSIGNEE_POSSIBLE_META_COUNTRY_GROUPS,
+      Description: Consignee possible meta country groups,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: CATEGORY_OF_MATERIAL_POSSIBLE_VALUES,
+      Description: Category (of material) choices,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: LABORATORY_TEST_MOTIVATION_POSSIBLE_VALUES,
+      Description: Possible laboratory test motivations,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: PLACE_OF_LOADING_ALLOWED_OPERATOR_ACTIVITY_STATUSES,
+      Description: Place of loading allowed statuses,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: PLACE_OF_DISPATCH_ALLOWED_OPERATOR_ACTIVITY_STATUSES,
+      Description: Place of dispatch allowed statuses,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: TREATMENT_TYPE_POSSIBLE_VALUES,
+      Description: Treatment types,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: PLACE_OF_DESTINATION_ALLOWED_OPERATOR_ACTIVITY_STATUSES,
+      Description: Place of destination allowed statuses,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: ANIMAL_SUBCATEGORY_POSSIBLE_VALUES,
+      Description: Animal category,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: CONSIGNOR_POSSIBLE_META_COUNTRY_GROUPS,
+      Description: Consignor possible meta country groups,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: ASSEMBLY_OPERATOR_ALLOWED_OPERATOR_ACTIVITY_STATUSES,
+      Description: Assembly Operator status,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: COUNT_UNIT_POSSIBLE_VALUES,
+      Description: Quantity units,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: JOURNEY_LOG_THRESHOLD,
+      Description: Journey Log Threshold,
+      Value: {
+        ValueKind: Number
+      }
+    },
+    {
+      Key: MAX_GAP_ESTIMATED_ARRIVAL,
+      Description: Max. estimated arrival gap,
+      Value: {
+        ValueKind: Number
+      }
+    },
+    {
+      Key: TRANSFER_POINT_THRESHOLD,
+      Description: Transfer point threshold,
+      Value: {
+        ValueKind: Number
+      }
+    },
+    {
+      Key: TOTAL_QUANTITY_WARNING_THRESHOLD,
+      Description: Total quantity warning threshold,
+      Value: {
+        ValueKind: Number
+      }
+    },
+    {
+      Key: MAX_GAP_DEPARTURE_DATE,
+      Description: Max. departure date gap,
+      Value: {
+        ValueKind: Number
+      }
+    },
+    {
+      Key: MAX_GAP_SUBMISSION_AFTER_DEPARTURE,
+      Description: Max. Submission after departure gap,
+      Value: {
+        ValueKind: Number
+      }
+    },
+    {
+      Key: GROSS_WEIGHT_RANGE,
+      Description: Gross weight range,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: NET_WEIGHT_RANGE,
+      Description: Net weight range,
+      Value: {
+        ValueKind: Array
+      }
+    },
+    {
+      Key: PHYTOSANITARY_INSPECTION,
+      Description: Phytosanitary inspection,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: PDF_LAYOUT_TYPES,
+      Description: PDF layout type,
+      Value: {
+        ValueKind: String
+      }
+    },
+    {
+      Key: IDENTIFICATION_SYSTEM_POSSIBLE_VALUES,
+      Description: Identification System Possible Values,
+      Value: {
+        ValueKind: Array
+      }
+    }
+  ],
+  DocumentTypes: [
+    {
+      Key: SELECTABLE_DOCUMENT_LINKS,
+      Description: Selectable document links,
+      DocumentLinkTypes: [
+        {
+          DocumentType: EU_INTRA,
+          LinkType: ATTACHED_TO
+        },
+        {
+          DocumentType: ACCOMPANYING_DOCUMENT,
+          LinkType: ATTACHED_TO
+        },
+        {
+          DocumentType: JOURNEY_LOG,
+          LinkType: ATTACHED_TO
+        },
+        {
+          DocumentType: EU_EXPORT,
+          LinkType: ATTACHED_TO
+        }
+      ]
+    }
+  ],
+  ClassificationSectionGroups: [
+    {
+      Id: CONSIGNEE_CLASSIFICATION_SECTIONS,
+      Description: Consignee sections,
+      Sections: [
+        {
+          ClassCode: SEM-COL,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Semen collection centres,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_collection_centre,
+            equine_collection_centre,
+            ovine_caprine_collection_centre,
+            porcine_collection_centre
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-RE,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered aquaculture establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: POU-SLA-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Establishments  of poultry for slaughter,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pf
+          ]
+        },
+        {
+          ClassCode: ASC,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Assembly Centres,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: FOOD-OTH,
+          Chapter: food,
+          Lms: false,
+          Description: Other establishments,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            establishment,
+            exporter,
+            importer,
+            port_of_loading
+          ]
+        },
+        {
+          ClassCode: DCF-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Dogs, cats and ferrets establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            cats,
+            dogs,
+            ferrets
+          ]
+        },
+        {
+          ClassCode: RM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat of domestic ungulates,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cp,
+            establish_sh
+          ]
+        },
+        {
+          ClassCode: ASC-DCF,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres dogs, cats and ferrets,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: MM,
+          Chapter: food,
+          Lms: true,
+          Description: Minced meat, meat preparations and mechanically separated meat – MM, MP, MSM,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_mp,
+            establish_msm,
+            establish_mm
+          ]
+        },
+        {
+          ClassCode: OTHUN-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Other ungulates establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: QUR,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Quarantine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_q
+          ]
+        },
+        {
+          ClassCode: COP,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Control posts,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_s
+          ]
+        },
+        {
+          ClassCode: GERM-CONF,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Germinal product establishments - confined animals,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            germinal_product_establishment
+          ]
+        },
+        {
+          ClassCode: CAS,
+          Chapter: food,
+          Lms: true,
+          Description: Treated stomachs, bladders and intestines: casings only,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: FLS,
+          Chapter: food,
+          Lms: true,
+          Description: Frogs' legs and snails,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: MM,
+          Chapter: food,
+          Lms: true,
+          Description: Minced meat, meat preparations and mechanically separated meat – MM, MP, MSM,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_cs,
+            establish_mp,
+            establish_msm,
+            establish_mm
+          ]
+        },
+        {
+          ClassCode: COL,
+          Chapter: food,
+          Lms: true,
+          Description: Collagen,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_cc,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: POU-EST-AP,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Approved establishments keeping breeding or productive poultry,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pf
+          ]
+        },
+        {
+          ClassCode: HBEE-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Honeybees establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-AP-GR,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Group of approved aquaculture establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: RPM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat products,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: GEL,
+          Chapter: food,
+          Lms: true,
+          Description: Gelatine,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cc,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: ASC-POU,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres poultry,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: TPA,
+          Chapter: veterinary,
+          Lms: false,
+          Description: TPA,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_tpa,
+            exporter_tpa
+          ]
+        },
+        {
+          ClassCode: EEP,
+          Chapter: food,
+          Lms: true,
+          Description: Eggs and egg products,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_epc,
+            establish_lep,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: BBEE-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Bumble bees open establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: HRP,
+          Chapter: food,
+          Lms: true,
+          Description: Highly refined products,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: CONF,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Confined establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            laboratory,
+            zoo
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-DISEASE,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Disease control aquatic food establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: EXP,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Animal exporter,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            animal_exporter,
+            port_of_loading
+          ]
+        },
+        {
+          ClassCode: DCF-SHEL,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Animal shelters,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            cats,
+            dogs,
+            ferrets
+          ]
+        },
+        {
+          ClassCode: ASC-EQU,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres certain equidae,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: CAM-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Camelid establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: BBEEISO-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Bumble bees isolated establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: PM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat from poultry and lagomorphs,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cp,
+            establish_sh
+          ]
+        },
+        {
+          ClassCode: ZOO,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Bodies, institutes and centers,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ab
+          ]
+        },
+        {
+          ClassCode: FFP,
+          Chapter: food,
+          Lms: true,
+          Description: Fishery products - EU,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ah,
+            establish_fv,
+            fishing_vessel,
+            establish_zv,
+            establish_ffpp,
+            establish_pp,
+            establish_rv,
+            establish_wm
+          ]
+        },
+        {
+          ClassCode: CERV-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Cervid establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: GEN,
+          Chapter: food,
+          Lms: true,
+          Description: General activity establishment - EU,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cs,
+            exporter,
+            importer,
+            establish_rw,
+            establish_rv,
+            establish_wm
+          ]
+        },
+        {
+          ClassCode: HATCH-RE,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered Hatcheries,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            hatchery
+          ]
+        },
+        {
+          ClassCode: PORC-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Porcine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            porcine_establishment
+          ]
+        },
+        {
+          ClassCode: REG-TRANS-AUTH-I,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Type I authorised transporters,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            authorized_transporter_type_i
+          ]
+        },
+        {
+          ClassCode: BIRD-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Captive birds establishments,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: EMB,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Embryo collection and production teams,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            bov_ect,
+            bov_fiv,
+            equ_ect,
+            equ_fiv,
+            other_ect,
+            other_fiv,
+            ov_ect,
+            ov_fiv,
+            porc_ect,
+            porc_fiv
+          ]
+        },
+        {
+          ClassCode: OTH-OPER,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Other operators,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            animal_establishment,
+            establishment,
+            exporter,
+            food_establishment,
+            habitat,
+            importer,
+            port_of_loading
+          ]
+        },
+        {
+          ClassCode: OV-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Ovine/caprine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            ovine_caprine_establishment
+          ]
+        },
+        {
+          ClassCode: REG-TRANS,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered transporter,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            registered_transporter
+          ]
+        },
+        {
+          ClassCode: EMB-PRO,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Embryo production teams,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_production_team,
+            equine_production_team,
+            ovine_caprine_production_team,
+            porcine_production_team
+          ]
+        },
+        {
+          ClassCode: GM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat of farmed game,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cp,
+            establish_sh
+          ]
+        },
+        {
+          ClassCode: ASOP-UNG,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly operations for ungulates independently of an establishment,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            assembly_operator
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-RE-GR,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Group of registered aquaculture establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-AP,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Approved aquaculture establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: OTHCARN-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Other carnivores establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: GEN,
+          Chapter: food,
+          Lms: true,
+          Description: General activity establishment - non-EU,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_cs,
+            establish_rw,
+            establish_rv,
+            establish_wm
+          ]
+        },
+        {
+          ClassCode: RPM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat products,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_cs,
+            establish_pp,
+            establish_sh
+          ]
+        },
+        {
+          ClassCode: IMP,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Importer,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            animal_importer,
+            establishment,
+            exporter,
+            importer
+          ]
+        },
+        {
+          ClassCode: POU-EST-RE,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered establishments keeping breeding or productive poultry,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pf
+          ]
+        },
+        {
+          ClassCode: ASC-UNG,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres ungulates,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: GERM-PRO,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Germinal product processing establishments,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_gpp_establishment,
+            equine_gpp_establishment,
+            ovine_caprine_gpp_establishment,
+            porcine_gpp_establishment
+          ]
+        },
+        {
+          ClassCode: EQU-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Equine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            equine_establishment
+          ]
+        },
+        {
+          ClassCode: LBM,
+          Chapter: food,
+          Lms: true,
+          Description: Live bivalve molluscs,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_dc,
+            intermediary_operator,
+            establish_z,
+            establish_pc
+          ]
+        },
+        {
+          ClassCode: EMB-COL,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Embryo collection teams,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_collection_team,
+            equine_collection_team,
+            ovine_caprine_collection_team,
+            porcine_collection_team
+          ]
+        },
+        {
+          ClassCode: AQUAHOLD,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Aquaculture Holdings,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_holding
+          ]
+        },
+        {
+          ClassCode: REG-TRANS-AUTH-II,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Type II authorised transporters,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            authorized_transporter_type_ii
+          ]
+        },
+        {
+          ClassCode: FAT,
+          Chapter: food,
+          Lms: true,
+          Description: Rendered animal fats and greaves,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cc,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: ASOP-POU,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly operations for poultry independently of an establishment,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            assembly_operator
+          ]
+        },
+        {
+          ClassCode: MMP,
+          Chapter: food,
+          Lms: true,
+          Description: Raw milk, dairy products, colostrum and colostrum-based products,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cc,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: SEM,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Semen collection and storage centres,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            bov_scc,
+            bov_ssc,
+            equ_scc,
+            equ_ssc,
+            other_scc,
+            other_ssc,
+            ov_scc,
+            ov_ssc,
+            porc_scc,
+            porc_ssc
+          ]
+        },
+        {
+          ClassCode: SPR,
+          Chapter: food,
+          Lms: true,
+          Description: Sprouts,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_pdp
+          ]
+        },
+        {
+          ClassCode: MPA,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Multi-party agreement for registered race horses,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: ACT,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Animal act,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            animal_act
+          ]
+        },
+        {
+          ClassCode: GERM-OTH,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Other establishments related to certain germinal products,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            germinal_product_establishment_scientific_purposes,
+            gene_bank
+          ]
+        },
+        {
+          ClassCode: WM,
+          Chapter: food,
+          Lms: true,
+          Description: Wild game meat,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cp,
+            establish_ghe
+          ]
+        },
+        {
+          ClassCode: BOV-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Bovine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            bovine_establishment
+          ]
+        },
+        {
+          ClassCode: OTHERHOLD,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Other species locations,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            other_species_location
+          ]
+        }
+      ]
+    },
+    {
+      Id: PLACE_OF_DISPATCH_CLASSIFICATION_SECTIONS,
+      Description: Place of dispatch sections,
+      Sections: [
+        {
+          ClassCode: CONF,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Confined establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            laboratory,
+            zoo
+          ]
+        },
+        {
+          ClassCode: EQU-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Equine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            equine_establishment
+          ]
+        },
+        {
+          ClassCode: QUR,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Quarantine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_q
+          ]
+        },
+        {
+          ClassCode: ASC-UNG,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres ungulates,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: SEM-COL,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Semen collection centres,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_collection_centre,
+            equine_collection_centre,
+            ovine_caprine_collection_centre,
+            porcine_collection_centre
+          ]
+        },
+        {
+          ClassCode: ASC-EQU,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres certain equidae,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        }
+      ]
+    },
+    {
+      Id: ASSEMBLY_OPERATOR_CLASSIFICATION_SECTIONS,
+      Description: Assembly Operator sections,
+      Sections: [
+        {
+          ClassCode: ASOP-UNG,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly operations for ungulates independently of an establishment,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            assembly_operator
+          ]
+        }
+      ]
+    },
+    {
+      Id: CONSIGNOR_CLASSIFICATION_SECTIONS,
+      Description: Consignor sections,
+      Sections: [
+        {
+          ClassCode: ZOO,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Bodies, institutes and centers,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ab
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-RE,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered aquaculture establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: GERM-STO,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Germinal product storage centres,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_gps_establishment,
+            equine_gps_centre,
+            ovine_caprine_gps_centre,
+            porcine_gps_centre
+          ]
+        },
+        {
+          ClassCode: GERM-PRO,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Germinal product processing establishments,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_gpp_establishment,
+            equine_gpp_establishment,
+            ovine_caprine_gpp_establishment,
+            porcine_gpp_establishment
+          ]
+        },
+        {
+          ClassCode: ACT,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Animal act,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            animal_act
+          ]
+        },
+        {
+          ClassCode: GEN,
+          Chapter: food,
+          Lms: true,
+          Description: General activity establishment - EU,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cs,
+            exporter,
+            importer,
+            establish_rw,
+            establish_rv,
+            establish_wm
+          ]
+        },
+        {
+          ClassCode: OV-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Ovine/caprine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            ovine_caprine_establishment
+          ]
+        },
+        {
+          ClassCode: TPA,
+          Chapter: veterinary,
+          Lms: false,
+          Description: TPA,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_tpa,
+            exporter_tpa
+          ]
+        },
+        {
+          ClassCode: ABP-FERT,
+          Chapter: animal_byproducts,
+          Lms: true,
+          Description: Establishments or plants manufacturing organic fertilisers or soil improvers,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ofsibu,
+            establish_ofsipa,
+            establish_ofsipp,
+            establish_ufert
+          ]
+        },
+        {
+          ClassCode: OTHERHOLD,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Other species locations,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            other_species_location
+          ]
+        },
+        {
+          ClassCode: OTH-OPER,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Other operators,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            animal_establishment,
+            establishment,
+            exporter,
+            food_establishment,
+            habitat,
+            importer,
+            port_of_loading
+          ]
+        },
+        {
+          ClassCode: ABP-SPU,
+          Chapter: animal_byproducts,
+          Lms: true,
+          Description: Registered users of animal by-products and derived product for specific purposes,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_uder,
+            establish_udog,
+            establish_uexart,
+            establish_ufur,
+            establish_uinse,
+            establish_unec,
+            establish_urbp,
+            establish_tech,
+            establish_uwild,
+            establish_uzoo
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-AP-GR,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Group of approved aquaculture establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: FFP,
+          Chapter: food,
+          Lms: true,
+          Description: Fishery products - EU,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ah,
+            establish_fv,
+            fishing_vessel,
+            establish_zv,
+            establish_ffpp,
+            establish_pp,
+            establish_rv,
+            establish_wm
+          ]
+        },
+        {
+          ClassCode: REG-TRANS-AUTH-II,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Type II authorised transporters,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            authorized_transporter_type_ii
+          ]
+        },
+        {
+          ClassCode: AQUAHOLD,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Aquaculture Holdings,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_holding
+          ]
+        },
+        {
+          ClassCode: CAS,
+          Chapter: food,
+          Lms: true,
+          Description: Treated stomachs, bladders and intestines: casings only,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: WM,
+          Chapter: food,
+          Lms: true,
+          Description: Wild game meat,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cp,
+            establish_ghe
+          ]
+        },
+        {
+          ClassCode: OTHCARN-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Other carnivores establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: EXP,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Animal exporter,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            animal_exporter,
+            port_of_loading
+          ]
+        },
+        {
+          ClassCode: COP,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Control posts,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_s
+          ]
+        },
+        {
+          ClassCode: CERV-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Cervid establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: REG-TRANS-AUTH-I,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Type I authorised transporters,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            authorized_transporter_type_i
+          ]
+        },
+        {
+          ClassCode: FAT,
+          Chapter: food,
+          Lms: true,
+          Description: Rendered animal fats and greaves,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cc,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: HBEE-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Honeybees establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: POU-EST-RE,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered establishments keeping breeding or productive poultry,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pf
+          ]
+        },
+        {
+          ClassCode: QUR,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Quarantine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_q
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-DISEASE,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Disease control aquatic food establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: CONF,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Confined establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            laboratory,
+            zoo
+          ]
+        },
+        {
+          ClassCode: GEL,
+          Chapter: food,
+          Lms: true,
+          Description: Gelatine,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cc,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: HATCH-RE,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered Hatcheries,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            hatchery
+          ]
+        },
+        {
+          ClassCode: DCF-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Dogs, cats and ferrets establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            cats,
+            dogs,
+            ferrets
+          ]
+        },
+        {
+          ClassCode: ASC-POU,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres poultry,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: ASC-UNG,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres ungulates,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: DEL,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Dealers,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_d
+          ]
+        },
+        {
+          ClassCode: RM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat of domestic ungulates,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cp,
+            establish_sh
+          ]
+        },
+        {
+          ClassCode: FLS,
+          Chapter: food,
+          Lms: true,
+          Description: Frogs' legs and snails,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: RPM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat products,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: GERM-OTH,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Other establishments related to certain germinal products,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            germinal_product_establishment_scientific_purposes,
+            gene_bank
+          ]
+        },
+        {
+          ClassCode: FOOD-OTH,
+          Chapter: food,
+          Lms: false,
+          Description: Other establishments,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            establishment,
+            exporter,
+            importer,
+            port_of_loading
+          ]
+        },
+        {
+          ClassCode: ABP-TECHP,
+          Chapter: animal_byproducts,
+          Lms: true,
+          Description: Establishments or plants handling animal by-products or derived products for purposes outside the feed chain,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_gatrp,
+            establish_phar,
+            establish_tan,
+            establish_ucosm,
+            establish_tech
+          ]
+        },
+        {
+          ClassCode: POU-EST-AP,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Approved establishments keeping breeding or productive poultry,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pf
+          ]
+        },
+        {
+          ClassCode: SEM,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Semen collection and storage centres,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            bov_scc,
+            bov_ssc,
+            equ_scc,
+            equ_ssc,
+            other_scc,
+            other_ssc,
+            ov_scc,
+            ov_ssc,
+            porc_scc,
+            porc_ssc
+          ]
+        },
+        {
+          ClassCode: OTHUN-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Other ungulates establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: EMB-COL,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Embryo collection teams,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_collection_team,
+            equine_collection_team,
+            ovine_caprine_collection_team,
+            porcine_collection_team
+          ]
+        },
+        {
+          ClassCode: BBEE-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Bumble bees open establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-RE-GR,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Group of registered aquaculture establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: DCF-SHEL,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Animal shelters,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            cats,
+            dogs,
+            ferrets
+          ]
+        },
+        {
+          ClassCode: MM,
+          Chapter: food,
+          Lms: true,
+          Description: Minced meat, meat preparations and mechanically separated meat – MM, MP, MSM,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_mp,
+            establish_msm,
+            establish_mm
+          ]
+        },
+        {
+          ClassCode: LBM,
+          Chapter: food,
+          Lms: true,
+          Description: Live bivalve molluscs,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_dc,
+            intermediary_operator,
+            establish_z,
+            establish_pc
+          ]
+        },
+        {
+          ClassCode: SPR,
+          Chapter: food,
+          Lms: true,
+          Description: Sprouts,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_pdp
+          ]
+        },
+        {
+          ClassCode: HRP,
+          Chapter: food,
+          Lms: true,
+          Description: Highly refined products,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: BIRD-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Captive birds establishments,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: EMB-PRO,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Embryo production teams,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_production_team,
+            equine_production_team,
+            ovine_caprine_production_team,
+            porcine_production_team
+          ]
+        },
+        {
+          ClassCode: ASC,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Assembly Centres,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: ASC-EQU,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres certain equidae,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: CIRCUS,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Travelling circus,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            travelling_circus
+          ]
+        },
+        {
+          ClassCode: POU-SLA-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Establishments  of poultry for slaughter,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_pf
+          ]
+        },
+        {
+          ClassCode: REG-TRANS,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered transporter,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            registered_transporter
+          ]
+        },
+        {
+          ClassCode: BOV-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Bovine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            bovine_establishment
+          ]
+        },
+        {
+          ClassCode: MMP,
+          Chapter: food,
+          Lms: true,
+          Description: Raw milk, dairy products, colostrum and colostrum-based products,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cc,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: EEP,
+          Chapter: food,
+          Lms: true,
+          Description: Eggs and egg products,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_epc,
+            establish_lep,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: PORC-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Porcine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            porcine_establishment
+          ]
+        },
+        {
+          ClassCode: ABP-PET,
+          Chapter: animal_byproducts,
+          Lms: true,
+          Description: Petfood plants,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_petpp,
+            establish_petpr
+          ]
+        },
+        {
+          ClassCode: ASC-DCF,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres dogs, cats and ferrets,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: BIRDHATCH,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Captive birds hatcheries,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            hatchery
+          ]
+        },
+        {
+          ClassCode: PM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat from poultry and lagomorphs,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cp,
+            establish_sh
+          ]
+        },
+        {
+          ClassCode: EQU-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Equine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            equine_establishment
+          ]
+        },
+        {
+          ClassCode: RPM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat products,
+          Scopes: [
+            THIRD_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_cs,
+            establish_pp,
+            establish_sh
+          ]
+        },
+        {
+          ClassCode: AQUA-EST-AP,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Approved aquaculture establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            aquaculture_establishment
+          ]
+        },
+        {
+          ClassCode: CAM-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Camelid establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: MPA,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Multi-party agreement for registered race horses,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: COL,
+          Chapter: food,
+          Lms: true,
+          Description: Collagen,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            establish_cc,
+            establish_pp
+          ]
+        },
+        {
+          ClassCode: GM,
+          Chapter: food,
+          Lms: true,
+          Description: Meat of farmed game,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_cp,
+            establish_sh
+          ]
+        },
+        {
+          ClassCode: GERM-CONF,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Germinal product establishments - confined animals,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            germinal_product_establishment
+          ]
+        },
+        {
+          ClassCode: ASOP-POU,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly operations for poultry independently of an establishment,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            assembly_operator
+          ]
+        },
+        {
+          ClassCode: EMB,
+          Chapter: veterinary,
+          Lms: false,
+          Description: Embryo collection and production teams,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            bov_ect,
+            bov_fiv,
+            equ_ect,
+            equ_fiv,
+            other_ect,
+            other_fiv,
+            ov_ect,
+            ov_fiv,
+            porc_ect,
+            porc_fiv
+          ]
+        },
+        {
+          ClassCode: BBEEISO-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Bumble bees isolated establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            terrestrial_animal_establishment
+          ]
+        },
+        {
+          ClassCode: ASOP-UNG,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly operations for ungulates independently of an establishment,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            assembly_operator
+          ]
+        },
+        {
+          ClassCode: SEM-COL,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Semen collection centres,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_collection_centre,
+            equine_collection_centre,
+            ovine_caprine_collection_centre,
+            porcine_collection_centre
+          ]
+        }
+      ]
+    },
+    {
+      Id: TRANSPORTER_CLASSIFICATION_SECTIONS,
+      Description: Transporter sections,
+      Sections: [
+        {
+          ClassCode: REG-TRANS-AUTH-II,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Type II authorised transporters,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            authorized_transporter_type_ii
+          ]
+        },
+        {
+          ClassCode: REG-TRANS,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Registered transporter,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            registered_transporter
+          ]
+        },
+        {
+          ClassCode: REG-TRANS-AUTH-I,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Type I authorised transporters,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            authorized_transporter_type_i
+          ]
+        }
+      ]
+    },
+    {
+      Id: PLACE_OF_LOADING_CLASSIFICATION_SECTIONS,
+      Description: Place of loading sections,
+      Sections: [
+        {
+          ClassCode: SEM-COL,
+          Chapter: germinal_products,
+          Lms: true,
+          Description: Semen collection centres,
+          Scopes: [
+            ALL_COUNTRIES
+          ],
+          OperatorActivities: [
+            bovine_collection_centre,
+            equine_collection_centre,
+            ovine_caprine_collection_centre,
+            porcine_collection_centre
+          ]
+        },
+        {
+          ClassCode: EQU-EST,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Equine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            equine_establishment
+          ]
+        },
+        {
+          ClassCode: ASC-EQU,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres certain equidae,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        },
+        {
+          ClassCode: QUR,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Quarantine establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_q
+          ]
+        },
+        {
+          ClassCode: CONF,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Confined establishments,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            laboratory,
+            zoo
+          ]
+        },
+        {
+          ClassCode: ASC-UNG,
+          Chapter: veterinary,
+          Lms: true,
+          Description: Assembly centres ungulates,
+          Scopes: [
+            EFTA,
+            EU
+          ],
+          OperatorActivities: [
+            establish_ac
+          ]
+        }
+      ]
+    }
+  ],
+  LegislationAttributes: [
+    {
+      Key: LEGISLATION,
+      Description: Legislation,
+      Legislation: {
+        LegislationId: 10580,
+        OriginCountries: [
+          AD,
+          FO,
+          IS,
+          MC,
+          SM
+        ],
+        OriginClassificationSections: [
+          {
+            ClassCode: ASC-EQU,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Assembly centres certain equidae,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              establish_ac
+            ]
+          },
+          {
+            ClassCode: ASC-UNG,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Assembly centres ungulates,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              establish_ac
+            ]
+          },
+          {
+            ClassCode: CONF,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Confined establishments,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              laboratory,
+              zoo
+            ]
+          },
+          {
+            ClassCode: EQU-EST,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Equine establishments,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              equine_establishment
+            ]
+          },
+          {
+            ClassCode: QUR,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Quarantine establishments,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              establish_q
+            ]
+          },
+          {
+            ClassCode: SEM-COL,
+            Chapter: germinal_products,
+            Lms: true,
+            Description: Semen collection centres,
+            Scopes: [
+              ALL_COUNTRIES
+            ],
+            OperatorActivities: [
+              bovine_collection_centre,
+              equine_collection_centre,
+              ovine_caprine_collection_centre,
+              porcine_collection_centre
+            ]
+          }
+        ],
+        DestinationClassificationSections: [
+          {
+            ClassCode: EXP,
+            Chapter: veterinary,
+            Lms: false,
+            Description: Animal exporter,
+            Scopes: [
+              THIRD_COUNTRIES
+            ],
+            OperatorActivities: [
+              animal_exporter,
+              port_of_loading
+            ]
+          },
+          {
+            ClassCode: ASC-EQU,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Assembly centres certain equidae,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              establish_ac
+            ]
+          },
+          {
+            ClassCode: ASC-UNG,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Assembly centres ungulates,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              establish_ac
+            ]
+          },
+          {
+            ClassCode: CONF,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Confined establishments,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              laboratory,
+              zoo
+            ]
+          },
+          {
+            ClassCode: EQU-EST,
+            Chapter: veterinary,
+            Lms: true,
+            Description: Equine establishments,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              equine_establishment
+            ]
+          },
+          {
+            ClassCode: RM,
+            Chapter: food,
+            Lms: true,
+            Description: Meat of domestic ungulates,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              establish_cp,
+              establish_sh
+            ]
+          },
+          {
+            ClassCode: OTH-OPER,
+            Chapter: veterinary,
+            Lms: false,
+            Description: Other operators,
+            Scopes: [
+              EFTA,
+              EU
+            ],
+            OperatorActivities: [
+              animal_establishment,
+              establishment,
+              exporter,
+              food_establishment,
+              habitat,
+              importer,
+              port_of_loading
+            ]
+          },
+          {
+            ClassCode: FOOD-OTH,
+            Chapter: food,
+            Lms: false,
+            Description: Other establishments,
+            Scopes: [
+              THIRD_COUNTRIES
+            ],
+            OperatorActivities: [
+              establishment,
+              exporter,
+              importer,
+              port_of_loading
+            ]
+          },
+          {
+            ClassCode: SEM-COL,
+            Chapter: germinal_products,
+            Lms: true,
+            Description: Semen collection centres,
+            Scopes: [
+              ALL_COUNTRIES
+            ],
+            OperatorActivities: [
+              bovine_collection_centre,
+              equine_collection_centre,
+              ovine_caprine_collection_centre,
+              porcine_collection_centre
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  Taxons: [
+    {
+      TaxonId: 142608,
+      EppoCode: 1EQUCB,
+      Name: Equus cabalus,
+      LanguageId: la
+    },
+    {
+      TaxonId: 152598,
+      Name: Equus cabalus*asinus,
+      LanguageId: la
+    },
+    {
+      TaxonId: 109690,
+      EppoCode: EQUUSP,
+      Name: Equus sp.,
+      LanguageId: la
+    },
+    {
+      TaxonId: 142607,
+      Name: Equus asinus,
+      LanguageId: la
+    },
+    {
+      TaxonId: 142780,
+      Name: Equus zebra,
+      LanguageId: la
+    }
+  ],
+  RetrievedAt: DateTimeOffset_2
+}

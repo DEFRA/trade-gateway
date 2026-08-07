@@ -7,19 +7,13 @@ namespace Api.Tests.Endpoints;
 [Collection(IntegrationTestCollection.Name)]
 public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory factory)
 {
-    private const string IntraInstancePath = "/certificates/intras/AUTHZ1";
-    private const string IntraCollectionPath = "/certificates/intras";
-    private const string ReferenceDataPath = "/reference-data/classifications/sections";
-    private const string ChedPath = "/certificates/cheds/CHEDA.XI.2026.0000063";
-    private const string CustomsQuantitiesPath = "/customs/cheds/CHEDA.GB.2026.0000123/quantities";
-
     [Fact]
     public async Task IntraReader_can_read_intra()
     {
         StubIntraGet();
         var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
 
-        var response = await client.GetAsync(IntraInstancePath, TestContext.Current.CancellationToken);
+        var response = await client.GetIntraCertification("AUTHZ1", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -29,7 +23,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     {
         var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
 
-        var response = await client.GetAsync(ReferenceDataPath, TestContext.Current.CancellationToken);
+        var response = await client.GetClassificationSections(TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -40,7 +34,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         StubClassificationSections();
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
 
-        var response = await client.GetAsync(ReferenceDataPath, TestContext.Current.CancellationToken);
+        var response = await client.GetClassificationSections(TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -50,7 +44,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     {
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
 
-        var response = await client.GetAsync(IntraInstancePath, TestContext.Current.CancellationToken);
+        var response = await client.GetIntraCertification("AUTHZ1", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -61,10 +55,15 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         StubIntraGet();
         var client = await factory.CreateClientForPrincipalAsync("test-intra-instance-reader");
 
-        var instance = await client.GetAsync(IntraInstancePath, TestContext.Current.CancellationToken);
+        var instance = await client.GetIntraCertification("AUTHZ1", TestContext.Current.CancellationToken);
         instance.StatusCode.Should().Be(HttpStatusCode.OK);
 
-        var collection = await client.GetAsync(IntraCollectionPath, TestContext.Current.CancellationToken);
+        var collection = await client.FindIntraUpdates(
+            DateTimeOffset.MinValue,
+            DateTimeOffset.MaxValue,
+            10,
+            0,
+            TestContext.Current.CancellationToken);
         collection.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
@@ -78,7 +77,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     {
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
 
-        var response = await client.GetAsync(CustomsQuantitiesPath, TestContext.Current.CancellationToken);
+        var response = await client.GetChedQuantities("CHEDA.GB.2026.0000123", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -89,7 +88,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         StubCustomsQuantities();
         var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");
 
-        var response = await client.GetAsync(CustomsQuantitiesPath, TestContext.Current.CancellationToken);
+        var response = await client.GetChedQuantities("CHEDA.GB.2026.0000123", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -99,7 +98,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     {
         var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");
 
-        var response = await client.GetAsync(ChedPath, TestContext.Current.CancellationToken);
+        var response = await client.GetChedCertification("CHEDA.XI.2026.0000063", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -109,7 +108,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     {
         var client = await factory.CreateClientForPrincipalAsync("not-a-configured-principal");
 
-        var response = await client.GetAsync(IntraInstancePath, TestContext.Current.CancellationToken);
+        var response = await client.GetIntraCertification("AUTHZ1", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -117,7 +116,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     [Fact]
     public async Task No_token_is_unauthorized()
     {
-        var response = await factory.CreateClient().GetAsync(IntraInstancePath, TestContext.Current.CancellationToken);
+        var response = await factory.CreateITracesGatewayClient().GetIntraCertification("AUTHZ1", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }

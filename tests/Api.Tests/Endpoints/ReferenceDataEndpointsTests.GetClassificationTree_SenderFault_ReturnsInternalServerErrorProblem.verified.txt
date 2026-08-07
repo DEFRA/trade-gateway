@@ -1,0 +1,6 @@
+﻿{
+  Type: https://tools.ietf.org/html/rfc9110#section-15.6.1,
+  Title: Internal Server Error,
+  Status: 500,
+  Detail: An internal error occurred.
+}

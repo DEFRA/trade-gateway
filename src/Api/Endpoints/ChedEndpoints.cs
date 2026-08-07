@@ -54,8 +54,8 @@ public static class ChedEndpoints
     )
     {
         var certificates = await chedCertificateService.FindChedCertificates(
-            query.UpdatedFrom!.Value,
-            query.UpdatedBefore!.Value,
+            query.UpdatedFrom!.Value.UtcDateTime,
+            query.UpdatedBefore!.Value.UtcDateTime,
             query.Offset!.Value,
             query.PageSize!.Value,
             query.AcceptLanguage!
