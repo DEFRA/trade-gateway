@@ -30,10 +30,10 @@ public static class ServiceCollectionExtensions
         services.AddRefitClient<ITracesGatewayChedClient>();
         services.AddRefitClient<ITracesGatewayIntraClient>();
 
-        services.AddSingleton<StsAuthDelegatingHandler>();
-        services.AddSingleton<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor, sp));
-        services.AddSingleton<AcceptLanguageDelegatingHandle>();
-        services.AddSingleton<HttpLoggingDelegatingHandler>();
+        services.AddTransient<StsAuthDelegatingHandler>();
+        services.AddTransient<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor, sp));
+        services.AddTransient<AcceptLanguageDelegatingHandle>();
+        services.AddTransient<HttpLoggingDelegatingHandler>();
 
         return services;
     }
