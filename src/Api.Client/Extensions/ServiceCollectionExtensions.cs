@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Amazon.SecurityToken;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,6 +7,7 @@ using Trade.Gateway.Api.Client.DelegatingHandlers;
 
 namespace Trade.Gateway.Api.Client.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceCollectionExtensions
 {
     public static TracesGatewayApiClientsBuilder AddTracesGatewayApiClients(

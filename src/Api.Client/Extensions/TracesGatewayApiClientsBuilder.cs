@@ -1,9 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Refit;
 
 namespace Trade.Gateway.Api.Client.Extensions;
 
+[ExcludeFromCodeCoverage]
 public sealed class TracesGatewayApiClientsBuilder
 {
     private readonly List<IHttpClientBuilder> _clients = [];
