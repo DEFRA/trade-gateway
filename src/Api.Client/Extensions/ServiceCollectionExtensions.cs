@@ -1,8 +1,6 @@
 using Amazon.SecurityToken;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
-using Refit;
 using Trade.Gateway.Api.Client.Clients;
 using Trade.Gateway.Api.Client.DelegatingHandlers;
 
@@ -10,48 +8,65 @@ namespace Trade.Gateway.Api.Client.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddTracesGatewayApiClients(this IServiceCollection services, IConfiguration configuration,
-        Func<IServiceProvider, string> traceIdAccessor)
+    public static TracesGatewayApiClientsBuilder AddTracesGatewayApiClients(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services
             .AddOptions<TracesGatewayOptions>()
             .Bind(configuration.GetSection(TracesGatewayOptions.SectionName))
             .ValidateOnStart();
 
-        services.AddSingleton<IAmazonSecurityTokenService>(_ => new AmazonSecurityTokenServiceClient());
+      
 
         services.ConfigureHttpClientDefaults(http =>
         {
             http.RedactLoggedHeaders(_ => false);
         });
 
-        services.AddRefitClient<ITracesGatewayClient>();
-        services.AddRefitClient<IReferenceDataClient>();
-        services.AddRefitClient<ITracesGatewayChedClient>();
-        services.AddRefitClient<ITracesGatewayIntraClient>();
+        var builder = new TracesGatewayApiClientsBuilder(services);
 
-        services.AddTransient<StsAuthDelegatingHandler>();
-        services.AddTransient<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor, sp));
-        services.AddTransient<AcceptLanguageDelegatingHandle>();
-        services.AddTransient<HttpLoggingDelegatingHandler>();
+        builder.AddClient<ITracesGatewayClient>();
+        builder.AddClient<IReferenceDataClient>();
+        builder.AddClient<ITracesGatewayChedClient>();
+        builder.AddClient<ITracesGatewayIntraClient>();
 
-        return services;
+        return builder;
     }
 
-    private static void AddRefitClient<TClient>(this IServiceCollection services) where TClient : class
+    public static TracesGatewayApiClientsBuilder WithSts(
+        this TracesGatewayApiClientsBuilder builder)
     {
-        services
-            .AddRefitClient<TClient>(_ => new RefitSettings())
-            .ConfigureHttpClient(
-                (sp, c) =>
-                {
-                    var options = sp.GetRequiredService<IOptions<TracesGatewayOptions>>().Value;
-                    c.BaseAddress = new Uri(options.BaseUrl);
-                }
-            )
-            .AddHttpMessageHandler<StsAuthDelegatingHandler>()
-            .AddHttpMessageHandler<HttpLoggingDelegatingHandler>()
-            .AddHttpMessageHandler<TracingDelegatingHandler>()
-            .AddHttpMessageHandler<AcceptLanguageDelegatingHandle>();
+        builder.Services.AddSingleton<IAmazonSecurityTokenService>(
+            _ => new AmazonSecurityTokenServiceClient());
+
+        builder.AddHandler<StsAuthDelegatingHandler>();
+
+        return builder;
+    }
+
+    public static TracesGatewayApiClientsBuilder WithTracing(
+        this TracesGatewayApiClientsBuilder builder,
+        Func<IServiceProvider, string> traceIdAccessor)
+    {
+        builder.AddHandler<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor, sp));
+
+        return builder;
+    }
+
+    public static TracesGatewayApiClientsBuilder WithLogging(
+        this TracesGatewayApiClientsBuilder builder)
+    {
+        builder.AddHandler<HttpLoggingDelegatingHandler>();
+
+        return builder;
+    }
+
+    public static TracesGatewayApiClientsBuilder WithAcceptLanguage(
+        this TracesGatewayApiClientsBuilder builder)
+    {
+        builder.AddHandler<AcceptLanguageDelegatingHandle>();
+
+        return builder;
     }
 }
