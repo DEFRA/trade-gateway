@@ -35,6 +35,9 @@ COPY tests/Api.Client.Tests/Api.Client.Tests.csproj tests/Api.Client.Tests/Api.C
 COPY TradeGateway.sln TradeGateway.sln
 COPY Directory.Build.props Directory.Build.props
 
+COPY NuGet.config NuGet.config
+ARG DEFRA_NUGET_PAT
+
 RUN dotnet restore
 
 COPY src/Api src/Api

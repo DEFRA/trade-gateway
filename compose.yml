@@ -21,6 +21,8 @@ services:
 
   trade-gateway:
     build:
+      args:
+        DEFRA_NUGET_PAT: ${DEFRA_NUGET_PAT}
       context: ./
     env_file:
       - ./compose/config/aws.env
