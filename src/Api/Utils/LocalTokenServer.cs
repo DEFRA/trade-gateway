@@ -134,6 +134,11 @@ public static class LocalTokenServer
             var expires = DateTime.UtcNow.AddSeconds(
                 int.TryParse(form["DurationSeconds"], out var seconds) ? seconds : 900);
 
+            if (request.Headers.TryGetValue("x-issuer-override", out var issuerOverride))
+            {
+                authority = issuerOverride.ToString();
+            }
+
             var descriptor = new SecurityTokenDescriptor
             {
                 Issuer = authority,
