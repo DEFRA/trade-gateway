@@ -1,11 +1,13 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Metrics;
 using Api.Config;
 using Api.Endpoints;
 using Api.Utils;
 using Api.Utils.Http;
 using Api.Utils.Logging;
 using Api.Utils.Mongo;
+using Defra.TradeImports.EmfExporter;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
@@ -14,6 +16,7 @@ using MongoDB.Driver.Authentication.AWS;
 using Serilog;
 using TracesNT;
 using TracesNT.Extensions;
+using TracesNT.Services;
 
 var app = CreateWebApplication(args);
 await app.RunAsync();
@@ -73,6 +76,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     var tracesNtSection = builder.Configuration.GetRequiredSection("TracesNt");
     builder.Services.AddOptions<TracesNtConfig>().Bind(tracesNtSection).ValidateDataAnnotations().ValidateOnStart();
 
+    builder.Services.AddSingleton<ITracesNtClientMetricsService, TracesNtClientMetricsService>();
     builder.Services.AddTracesNtCredentials(tracesNtSection);
     builder.Services.AddTracesNtClients();
 
@@ -115,6 +119,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseIntraEndpoints();
     app.UseAuthTestEndpoints();
     app.UseReferenceDataEndpoints();
+    app.UseEmfExporter(TracesNtClientMetricsService.MeterName);
 
     return app;
 }
