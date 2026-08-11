@@ -47,14 +47,6 @@ public static class ServiceCollectionExtensions
         return builder;
     }
 
-    public static TracesGatewayApiClientsBuilder WithIssuerOverride(
-        this TracesGatewayApiClientsBuilder builder, string issuer)
-    {
-        builder.AddHandler<IssuerOverrideDelegatingHandle>(sp => new IssuerOverrideDelegatingHandle(issuer));
-
-        return builder;
-    }
-
     public static TracesGatewayApiClientsBuilder WithTracing(
         this TracesGatewayApiClientsBuilder builder,
         Func<IServiceProvider, string> traceIdAccessor)
