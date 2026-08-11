@@ -25,8 +25,8 @@ public static class AuthenticationRegistration
         builder.Services
             .AddAuthentication(MultiScheme)
             .AddIssuerRouter(authConfig.Sts.Authority)
-            .AddIssuerBearer(CognitoScheme, authConfig.Cognito)
-            .AddIssuerBearer(StsScheme, authConfig.Sts);
+            .AddIssuerBearer(CognitoScheme, authConfig.Cognito, builder.Environment.IsDevelopment())
+            .AddIssuerBearer(StsScheme, authConfig.Sts, builder.Environment.IsDevelopment());
 
         builder.Services.ConfigureProxyBackchannel(CognitoScheme);
         builder.Services.ConfigureProxyBackchannel(StsScheme);
@@ -67,7 +67,7 @@ public static class AuthenticationRegistration
             });
 
     private static AuthenticationBuilder AddIssuerBearer(
-        this AuthenticationBuilder auth, string scheme, IssuerAuthenticationConfig config) =>
+        this AuthenticationBuilder auth, string scheme, IssuerAuthenticationConfig config, bool isDev) =>
         auth.AddJwtBearer(scheme, opts =>
         {
             opts.Authority = config.Authority;
@@ -75,10 +75,12 @@ public static class AuthenticationRegistration
             opts.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidIssuer = config.Authority,
+                ValidateIssuer = !isDev,
                 ValidAudience = config.Audience,
                 ValidateAudience = config.Audience is not null,
                 AuthenticationType = scheme, // required so the ClaimsIdentity carries the scheme name for policy checks
             };
+
         });
 
     private static void ConfigureProxyBackchannel(this IServiceCollection services, string scheme) =>

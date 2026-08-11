@@ -55,7 +55,7 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
         builder.ConfigureServices((context, services) =>
         {
             services.AddSingleton(server);
-            services.AddTracesGatewayApiClients(context.Configuration, _ => Guid.CreateVersion7().ToString("o"));
+            services.AddTracesGatewayApiClients(context.Configuration);
         });
 
         builder.ConfigureTestServices(services =>
