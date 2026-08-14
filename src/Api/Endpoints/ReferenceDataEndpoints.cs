@@ -69,7 +69,6 @@ public static class ReferenceDataEndpoints
 
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: ResponseTitles.NotFound,
                 detail: $"Classification sections for language '{languageCode}' not found."
             );
         }
@@ -93,7 +92,6 @@ public static class ReferenceDataEndpoints
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: ResponseTitles.NotFound,
                 detail: $"Classification tree with id '{treeId}' not found."
             );
         }
@@ -122,7 +120,6 @@ public static class ReferenceDataEndpoints
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: ResponseTitles.NotFound,
                 detail: $"Classification tree node detail with id '{treeId}' nodeId '{nodeId}' not found."
             );
         }
@@ -145,7 +142,6 @@ public static class ReferenceDataEndpoints
         {
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: ResponseTitles.NotFound,
                 detail: $"Metadata of type '{metadataType}' not found."
             );
         }

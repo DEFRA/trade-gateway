@@ -261,6 +261,120 @@
         }
       }
     },
+    /customs/cheds/{chedId}/declarations/{mrn}/reservation: {
+      put: {
+        tags: [
+          CustomsChedQuantityEndpoints
+        ],
+        parameters: [
+          {
+            name: chedId,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: mrn,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        requestBody: {
+          content: {
+            application/json: {
+              schema: {
+                $ref: #/components/schemas/ChedReservationRequest
+              }
+            }
+          },
+          required: true
+        },
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.ched-reservation.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/ChedDeclarationReservation
+                }
+              }
+            }
+          },
+          400: {
+            description: Bad Request,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          409: {
+            description: Conflict,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     /certificates/intras/{id}: {
       get: {
         tags: [
@@ -910,6 +1024,32 @@
         },
         additionalProperties: false
       },
+      ChedDeclarationReservation: {
+        required: [
+          consumed,
+          reserved
+        ],
+        type: object,
+        properties: {
+          reserved: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/AllocatedCommodityQuantity
+            },
+            description: Quantities this declaration holds against the CHED but has not yet consumed.,
+            nullable: true
+          },
+          consumed: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/AllocatedCommodityQuantity
+            },
+            description: Quantities this declaration has written off against the CHED.,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       ChedQuantityLedger: {
         required: [
           available
@@ -926,6 +1066,23 @@
           },
           allocations: {
             $ref: #/components/schemas/QuantityAllocations
+          }
+        },
+        additionalProperties: false
+      },
+      ChedReservationRequest: {
+        required: [
+          items
+        ],
+        type: object,
+        properties: {
+          items: {
+            minItems: 1,
+            type: array,
+            items: {
+              $ref: #/components/schemas/ReservationCommodityItem
+            },
+            description: The consignment items to reserve. At least one is required.
           }
         },
         additionalProperties: false
@@ -1752,6 +1909,42 @@
         },
         additionalProperties: false
       },
+      HttpValidationProblemDetails: {
+        type: object,
+        properties: {
+          type: {
+            type: string,
+            nullable: true
+          },
+          title: {
+            type: string,
+            nullable: true
+          },
+          status: {
+            type: integer,
+            format: int32,
+            nullable: true
+          },
+          detail: {
+            type: string,
+            nullable: true
+          },
+          instance: {
+            type: string,
+            nullable: true
+          },
+          errors: {
+            type: object,
+            additionalProperties: {
+              type: array,
+              items: {
+                type: string
+              }
+            },
+            nullable: true
+          }
+        }
+      },
       IncludedNote: {
         type: object,
         properties: {
@@ -2174,6 +2367,58 @@
             items: {
               type: string
             },
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      ReservationCommodityItem: {
+        required: [
+          certificateLineNumber,
+          classCode,
+          goodsItemNumber
+        ],
+        type: object,
+        properties: {
+          goodsItemNumber: {
+            type: integer,
+            description: The item on the customs declaration this reservation is for.,
+            format: int32
+          },
+          certificateLineNumber: {
+            type: integer,
+            description: The CHED line to draw the quantity from.,
+            format: int32
+          },
+          classCode: {
+            minLength: 1,
+            type: string,
+            description: Commodity class code as stated on the CHED line.
+          },
+          netWeightQuantity: {
+            maximum: 1.7976931348623157E+308,
+            minimum: 0,
+            type: number,
+            description: Net weight to reserve, expressed in netWeightUnitOfMeasure.,
+            format: double,
+            nullable: true
+          },
+          netWeightUnitOfMeasure: {
+            type: string,
+            description: UN/ECE Recommendation 20 unit code for netWeightQuantity, for example KGM.,
+            nullable: true
+          },
+          netVolumeQuantity: {
+            maximum: 1.7976931348623157E+308,
+            minimum: 0,
+            type: number,
+            description: Net volume to reserve, expressed in netVolumeUnitOfMeasure.,
+            format: double,
+            nullable: true
+          },
+          netVolumeUnitOfMeasure: {
+            type: string,
+            description: UN/ECE Recommendation 20 unit code for netVolumeQuantity, for example MTQ.,
             nullable: true
           }
         },

@@ -1,7 +1,7 @@
 using Api.Mapping;
 using AwesomeAssertions;
-using Trade.Gateway.Api.Contract.Customs;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.Customs;
 
 namespace Api.Tests.Mapping;
 
@@ -144,9 +144,7 @@ public class ChedQuantityMapperTests
         var withoutDate = Allocated(Mrn, ItemChoiceType2.MRN, 1m);
         withoutDate.EventDateTimeSpecified = false;
 
-        var reserved = ChedQuantityMapper.MapLedger(Summary(withDate, withoutDate))
-            .Allocations!
-            .Reserved;
+        var reserved = ChedQuantityMapper.MapLedger(Summary(withDate, withoutDate)).Allocations!.Reserved;
 
         reserved[0].EventDateTime.Should().Be(new DateTimeOffset(2026, 3, 4, 9, 15, 0, TimeSpan.Zero));
         reserved[1].EventDateTime.Should().BeNull();
@@ -186,7 +184,9 @@ public class ChedQuantityMapperTests
 
         var reserved = ChedQuantityMapper.MapLedger(summary).Allocations!.Reserved;
 
-        reserved[0].DeclarationReference.Should().Be(new DeclarationReference { Type = DeclarationReferenceType.Mrn, Value = Mrn });
+        reserved[0]
+            .DeclarationReference.Should()
+            .Be(new DeclarationReference { Type = DeclarationReferenceType.Mrn, Value = Mrn });
         reserved[1].DeclarationReference!.Type.Should().Be(DeclarationReferenceType.Lrn);
         reserved[2].DeclarationReference.Should().BeNull("there is no reference without a value");
     }
@@ -213,6 +213,69 @@ public class ChedQuantityMapperTests
 
         allocations.Reserved.Select(r => r.DeclarationReference!.Value).Should().Equal(Mrn, "26GB99WTYXQ2LM5BC7");
         allocations.Consumed.Should().ContainSingle().Which.Quantity.Should().Be(120m);
+    }
+
+    [Fact]
+    public void MapDeclarationReservation_KeepsOnlyTheRequestedDeclaration()
+    {
+        var summary = Summary(
+            Allocated(Mrn, ItemChoiceType2.MRN, 300m),
+            Allocated("26GB99WTYXQ2LM5BC7", ItemChoiceType2.MRN, 90m)
+        );
+
+        var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn);
+
+        reservation.Reserved.Should().ContainSingle().Which.Quantity.Should().Be(300m);
+    }
+
+    [Fact]
+    public void MapDeclarationReservation_DoesNotMatchAnLrnWithTheSameValue()
+    {
+        var summary = Summary(Allocated(Mrn, ItemChoiceType2.LRN, 777m));
+
+        var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn);
+
+        reservation.Reserved.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void MapDeclarationReservation_MatchesRegardlessOfCase()
+    {
+        var summary = Summary(Allocated(Mrn, ItemChoiceType2.MRN, 300m));
+
+        var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn.ToLowerInvariant());
+
+        reservation.Reserved.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void MapReservationItems_SetsSpecifiedCompanionsForSuppliedValuesOnly()
+    {
+        ReservationCommodityItem[] items =
+        [
+            new()
+            {
+                GoodsItemNumber = 1,
+                CertificateLineNumber = 2,
+                ClassCode = "P1",
+                NetWeightQuantity = 300m,
+                NetWeightUnitOfMeasure = "KGM",
+            },
+        ];
+
+        var mapped = ChedQuantityMapper.MapReservationItems(items);
+
+        var item = mapped.Should().ContainSingle().Subject;
+        item.GoodsItemNumber.Should().Be("1");
+        item.CertificateLineNumber.Should().Be("2");
+        item.ClassCode.Should().Be("P1");
+        item.NetWeightQuantity.Should().Be(300m);
+        item.NetWeightQuantitySpecified.Should().BeTrue();
+        item.NetWeightUnitOfMeasure.Should().Be(UniversalUnitOfMeasureType.KGM);
+        item.NetWeightUnitOfMeasureSpecified.Should().BeTrue();
+
+        item.NetVolumeQuantitySpecified.Should().BeFalse();
+        item.NetVolumeUnitOfMeasureSpecified.Should().BeFalse();
     }
 
     private static QuantityManagementCommoditySummaryEnhanced4ChedR51Type Summary(

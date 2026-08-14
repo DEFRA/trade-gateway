@@ -19,3 +19,7 @@ responses differ, the tests will say so.
 | `ProcessedChedResponse_CHEDA.GB.2026.0000123.xml` | Two available lines, two reservations against different MRNs, one consumption |
 | `ProcessedChedResponse_NoSummary.xml` | A CHED that exists but has no `QuantityManagementSummary` — must yield 502 |
 | `ProcessedChedResponse_UnknownChed.xml` | A successful response with no `ChedCertificate` — TracesNT's not-found signal, must yield 404 |
+| `ProcessedChedResponse_Reserved.xml` | An accepted reservation. Also holds another MRN's reservation, and an **LRN whose characters equal the requested MRN** — neither may appear in the response |
+| `ProcessedChedResponse_ReservationRefused.xml` | `ReservationResult` false, with a `ReservationFailureReason` that must not reach the response body — must yield 409 |
+| `ProcessedChedResponse_NoReservationResult.xml` | `ReservationResult` absent, so `ReservationResultSpecified` is false — upstream never answered, must yield 502 |
+| `ProcessedChedResponse_ReservedOtherDeclarationOnly.xml` | Accepted, but the summary holds nothing for the declaration reserved against — self-contradictory, must yield 502 |

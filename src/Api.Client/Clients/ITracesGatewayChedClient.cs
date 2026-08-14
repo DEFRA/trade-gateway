@@ -20,4 +20,12 @@ public interface ITracesGatewayChedClient
 
     [Get("/customs/cheds/{id}/quantities")]
     Task<ApiResponse<ChedQuantityLedger>> GetChedQuantities(string id, CancellationToken cancellationToken);
+
+    [Put("/customs/cheds/{id}/declarations/{mrn}/reservation")]
+    Task<ApiResponse<ChedDeclarationReservation>> PutChedReservation(
+        string id,
+        string mrn,
+        [Body] ChedReservationRequest request,
+        CancellationToken cancellationToken
+    );
 }

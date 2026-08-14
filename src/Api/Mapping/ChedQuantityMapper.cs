@@ -1,6 +1,6 @@
 using System.Globalization;
-using Trade.Gateway.Api.Contract.Customs;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.Customs;
 using ContractCommodityCode = Trade.Gateway.Api.Contract.Customs.CommodityCode;
 
 namespace Api.Mapping;
@@ -28,6 +28,63 @@ internal static class ChedQuantityMapper
     private static AllocatedCommodityQuantity[] MapAllocations(
         AllocatedProductQuantityByCustomsOfficeEnhanced4ChedR51Type[]? source
     ) => [.. (source ?? []).Where(a => a is not null).Select(MapAllocated)];
+
+    /// <summary>
+    /// Narrows a whole-CHED summary to what one customs declaration holds against it. Matches on the
+    /// MRN discriminator as well as the value: an LRN can carry the same characters as an MRN while
+    /// being a different declaration.
+    /// </summary>
+    internal static ChedDeclarationReservation MapDeclarationReservation(
+        QuantityManagementCommoditySummaryEnhanced4ChedR51Type summary,
+        string mrn
+    ) =>
+        new()
+        {
+            Reserved = MapAllocationsFor(summary.ReservedQuantity, mrn),
+            Consumed = MapAllocationsFor(summary.ConsumedQuantity, mrn),
+        };
+
+    private static AllocatedCommodityQuantity[] MapAllocationsFor(
+        AllocatedProductQuantityByCustomsOfficeEnhanced4ChedR51Type[]? source,
+        string mrn
+    ) =>
+        [
+            .. MapAllocations(source)
+                .Where(allocation =>
+                    allocation.DeclarationReference is { Type: DeclarationReferenceType.Mrn } reference
+                    && string.Equals(reference.Value, mrn, StringComparison.OrdinalIgnoreCase)
+                ),
+        ];
+
+    /// <summary>
+    /// Projects the requested items onto the generated reservation type, having been validated by
+    /// <c>ReservationItemsValidator</c>. Every numeric and enum field there has a <c>Specified</c>
+    /// companion, and a value whose companion is left <c>false</c> is silently dropped from the
+    /// request, so each companion is set from whether the field was supplied.
+    /// </summary>
+    internal static ConsignmentItemR6ForReservationType[] MapReservationItems(ReservationCommodityItem[] items) =>
+        [.. items.Select(MapReservationItem)];
+
+    private static ConsignmentItemR6ForReservationType MapReservationItem(ReservationCommodityItem source)
+    {
+        var netWeightUnit = UnitOfMeasureCode.Parse(source.NetWeightUnitOfMeasure);
+        var netVolumeUnit = UnitOfMeasureCode.Parse(source.NetVolumeUnitOfMeasure);
+
+        return new ConsignmentItemR6ForReservationType
+        {
+            GoodsItemNumber = source.GoodsItemNumber?.ToString(CultureInfo.InvariantCulture),
+            CertificateLineNumber = source.CertificateLineNumber?.ToString(CultureInfo.InvariantCulture),
+            ClassCode = source.ClassCode,
+            NetWeightQuantity = source.NetWeightQuantity ?? 0m,
+            NetWeightQuantitySpecified = source.NetWeightQuantity.HasValue,
+            NetWeightUnitOfMeasure = netWeightUnit ?? default,
+            NetWeightUnitOfMeasureSpecified = netWeightUnit.HasValue,
+            NetVolumeQuantity = source.NetVolumeQuantity ?? 0m,
+            NetVolumeQuantitySpecified = source.NetVolumeQuantity.HasValue,
+            NetVolumeUnitOfMeasure = netVolumeUnit ?? default,
+            NetVolumeUnitOfMeasureSpecified = netVolumeUnit.HasValue,
+        };
+    }
 
     private static AvailableCommodityQuantity MapAvailable(ProductQuantityEnhancedPlusPlusType source) =>
         new()
@@ -61,8 +118,8 @@ internal static class ChedQuantityMapper
                 ? null
                 : MapUnitOfMeasure(source.SwSupportingDocument.UnitOfMeasure),
             Quantity = source.SwSupportingDocument?.Quantity?.Value ?? 0m,
-            TechnicalRoundingQuantity = source.SwSupportingDocument?.Quantity is
-            { TechnicalRoundingQuantitySpecified: true } quantity
+            TechnicalRoundingQuantity = source.SwSupportingDocument?.Quantity
+                is { TechnicalRoundingQuantitySpecified: true } quantity
                 ? quantity.TechnicalRoundingQuantity
                 : null,
             EventDateTime = source.EventDateTimeSpecified ? ToOffset(source.EventDateTime) : null,
@@ -101,8 +158,7 @@ internal static class ChedQuantityMapper
         if (string.IsNullOrEmpty(item))
             return null;
 
-        var type =
-            itemElementName == ItemChoiceType2.MRN ? DeclarationReferenceType.Mrn : DeclarationReferenceType.Lrn;
+        var type = itemElementName == ItemChoiceType2.MRN ? DeclarationReferenceType.Mrn : DeclarationReferenceType.Lrn;
 
         return new DeclarationReference { Type = type, Value = item };
     }

@@ -14,26 +14,57 @@ namespace TracesNT.Services
         IOptions<TracesNtConfig> config
     ) : ICustomsChedService
     {
-        /// <summary>
-        /// Read-only quantity management. <c>"1"</c> reserves quantities against a declaration, so
-        /// this constant is the only thing keeping the read endpoints from mutating customs state.
-        /// </summary>
-        private const string ReadOnlyIndication = "0";
+        private enum QuantityManagementMode
+        {
+            /// <summary>Reads quantities without reserving.</summary>
+            ReadOnly,
+
+            /// <summary>Reserves quantities against a declaration. Mutates customs state.</summary>
+            Reserve,
+        }
 
         private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.Customs);
         private readonly string _customsOffice = config.Value.CustomsOfficeReferenceNumber;
 
-        public async Task<ProcessedChedInformationResponseType?> GetChedQuantitySummary(
+        public Task<ProcessedChedInformationResponseType?> GetChedQuantitySummary(string chedId, string languageCode) =>
+            SendProcessedChedRequest(
+                chedId,
+                languageCode,
+                mode: QuantityManagementMode.ReadOnly,
+                declarationReference: EmptyDeclarationReference(),
+                items: null
+            );
+
+        public Task<ProcessedChedInformationResponseType?> ReserveChedQuantities(
             string chedId,
+            string mrn,
+            ConsignmentItemR6ForReservationType[] items,
             string languageCode
+        ) =>
+            SendProcessedChedRequest(
+                chedId,
+                languageCode,
+                mode: QuantityManagementMode.Reserve,
+                declarationReference: DeclarationReferenceFor(mrn),
+                items: items
+            );
+
+        private async Task<ProcessedChedInformationResponseType?> SendProcessedChedRequest(
+            string chedId,
+            string languageCode,
+            QuantityManagementMode mode,
+            CustomsDeclarationReferenceNumber4CoiChedR51InputType declarationReference,
+            ConsignmentItemR6ForReservationType[]? items
         )
         {
             // Correlates our logs with the MessageId the customs port echoes on responses and faults, which is
             // what DG SANTE ask for when a call is queried. 32 chars, inside the 1-48 token limit.
             var messageId = Guid.NewGuid().ToString("N");
+            var operation = ToOperationName(mode);
 
             logger.LogInformation(
-                "Requesting customs quantity summary for CHED {ChedId} as message {UpstreamMessageId}",
+                "Customs {Operation} for CHED {ChedId} as message {UpstreamMessageId}",
+                operation,
                 chedId,
                 messageId
             );
@@ -51,13 +82,11 @@ namespace TracesNT.Services
                         SendingDate = DateTime.UtcNow,
                         ChedCertificateId = chedId,
                         CompetentCustomsOffice = new CompetentCustomsOfficeType { ReferenceNumber = _customsOffice },
-                        QuantityManagementIndication = ReadOnlyIndication,
+                        QuantityManagementIndication = ToIndication(mode),
                         Language = languageCode,
-                        // Required even though the schema says it is optional — TracesNT rejects a
-                        // request without it. Sent empty: a value would narrow the response to one
-                        // declaration, and it is the field a QMI=1 write reserves against.
-                        CustomsDeclarationReferenceNumber = new CustomsDeclarationReferenceNumber4CoiChedR51InputType(),
-                        // Left unset deliberately: PdfGenerationIndication would make every read ask
+                        CustomsDeclarationReferenceNumber = declarationReference,
+                        CommodityDescriptionForChed = items,
+                        // Left unset deliberately: PdfGenerationIndication would make every call ask
                         // TracesNT to render a PDF, and PushIndication would subscribe us to updates.
                         PdfGenerationIndicationSpecified = false,
                         TransformationIndictionSpecified = false,
@@ -82,12 +111,41 @@ namespace TracesNT.Services
                     && ex.Message.Contains("SAXException", StringComparison.InvariantCultureIgnoreCase)
                 )
             {
-                throw new InvalidSoapException($"Traces SOAP bad request for CHED quantity summary {chedId}", ex);
+                throw new InvalidSoapException($"Traces SOAP bad request for CHED quantity request {chedId}", ex);
             }
             catch (Exception ex)
             {
                 throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
             }
         }
+
+        /// <summary>
+        /// Required even though the schema says it is optional — TracesNT rejects a request without
+        /// it — but left empty, since a value would narrow the response to one declaration.
+        /// </summary>
+        private static CustomsDeclarationReferenceNumber4CoiChedR51InputType EmptyDeclarationReference() => new();
+
+        /// <summary>
+        /// Sets the <c>MRN</c> discriminator explicitly: <see cref="ItemChoiceType1"/> defaults to
+        /// <c>LRN</c>, which would reserve against a different declaration carrying the same reference.
+        /// </summary>
+        private static CustomsDeclarationReferenceNumber4CoiChedR51InputType DeclarationReferenceFor(string mrn) =>
+            new() { Item = mrn, ItemElementName = ItemChoiceType1.MRN };
+
+        private static string ToIndication(QuantityManagementMode mode) =>
+            mode switch
+            {
+                QuantityManagementMode.ReadOnly => "0",
+                QuantityManagementMode.Reserve => "1",
+                _ => throw new ArgumentOutOfRangeException(nameof(mode)),
+            };
+
+        private static string ToOperationName(QuantityManagementMode mode) =>
+            mode switch
+            {
+                QuantityManagementMode.ReadOnly => "quantity summary read",
+                QuantityManagementMode.Reserve => "quantity reservation",
+                _ => throw new ArgumentOutOfRangeException(nameof(mode)),
+            };
     }
 }

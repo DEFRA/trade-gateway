@@ -1,0 +1,30 @@
+### Trade Gateway — CHED endpoints (Local Development environment)
+
+@host = http://localhost:5000
+@scope = trade-gateway-resource-srv/access
+
+### Token — CHED reader (find + get)
+# @name chedToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-ched-reader
+
+###############################################################################
+# CHED
+###############################################################################
+
+### Find CHED certificates (updatedFrom + updatedBefore required; offset/pageSize optional)
+GET {{host}}/certificates/cheds?updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z&offset=0&pageSize=10
+Accept-Language: en
+Authorization: Bearer {{chedToken.response.body.access_token}}
+
+### Get a single CHED certificate by id
+GET {{host}}/certificates/cheds/CHEDA.XI.2026.0000063
+Accept-Language: en
+Authorization: Bearer {{chedToken.response.body.access_token}}
+
+### Find CHED — missing updatedFrom returns 400 (validation)
+GET {{host}}/certificates/cheds?updatedBefore=2026-10-28Z
+Accept-Language: en
+Authorization: Bearer {{chedToken.response.body.access_token}}

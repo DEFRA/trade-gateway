@@ -15,33 +15,17 @@ public class GlobalExceptionHandler(
         CancellationToken cancellationToken
     )
     {
-        var (statusCode, title, detail) = exception switch
+        var problemDetails = exception switch
         {
-            PermissionDeniedException => (
-                StatusCodes.Status403Forbidden,
-                "Forbidden",
-                "Access to this resource is not permitted."
-            ),
-            InvalidSoapException => (
-                StatusCodes.Status500InternalServerError,
-                "Internal Server Error",
-                "An internal error occurred."
-            ),
-            TracesCommunicationException => (
-                StatusCodes.Status502BadGateway,
-                "Bad Gateway",
-                "An error occurred communicating with an upstream service."
-            ),
-            // The upstream errorMessage stays on the exception for the log below; it must not reach
-            // the response body.
-            CustomsFaultException => (
-                StatusCodes.Status502BadGateway,
-                "Bad Gateway",
-                "An error occurred communicating with an upstream service."
-            ),
-            BadHttpRequestException => (StatusCodes.Status400BadRequest, "Bad Request", exception.Message),
-            _ => (StatusCodes.Status500InternalServerError, "Internal Server Error", "An unexpected error occurred."),
+            PermissionDeniedException => Forbidden(),
+            InvalidSoapException => InternalServerError("An internal error occurred."),
+            TracesCommunicationException => BadGateway(),
+            CustomsFaultException => BadGateway(),
+            BadHttpRequestException => BadRequest(exception),
+            _ => InternalServerError("An unexpected error occurred."),
         };
+
+        var statusCode = problemDetails.Status!.Value;
 
         if (statusCode >= 500)
             logger.LogError(exception, "Unhandled exception resulted in {StatusCode}", statusCode);
@@ -50,16 +34,28 @@ public class GlobalExceptionHandler(
 
         httpContext.Response.StatusCode = statusCode;
         return await problemDetailsService.TryWriteAsync(
-            new ProblemDetailsContext
-            {
-                HttpContext = httpContext,
-                ProblemDetails =
-                {
-                    Status = statusCode,
-                    Title = title,
-                    Detail = detail,
-                },
-            }
+            new ProblemDetailsContext { HttpContext = httpContext, ProblemDetails = problemDetails }
         );
     }
+    
+    private static ProblemDetails BadRequest(Exception ex) =>
+        new() { Status = StatusCodes.Status400BadRequest, Detail = ex.Message };
+
+    private static ProblemDetails Forbidden() =>
+        new() { Status = StatusCodes.Status403Forbidden, Detail = "Access to this resource is not permitted." };
+
+    private static ProblemDetails BadGateway() =>
+        new()
+        {
+            Status = StatusCodes.Status502BadGateway,
+            Detail = "An error occurred communicating with an upstream service.",
+        };
+
+    private static ProblemDetails InternalServerError(string detail) =>
+        new()
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Title = "Internal Server Error",
+            Detail = detail,
+        };
 }
