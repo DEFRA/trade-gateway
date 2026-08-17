@@ -5,7 +5,6 @@ namespace Trade.Gateway.Api.Client.Clients;
 
 public interface ITracesGatewayIntraClient
 {
-
     [Get("/certificates/intras")]
     Task<ApiResponse<DefraUNVTDINTRASummaryProfile>> FindIntraUpdates(
         DateTimeOffset updatedFrom,

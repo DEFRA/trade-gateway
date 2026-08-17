@@ -48,6 +48,8 @@ COPY tests/Api.Tests tests/Api.Tests
 COPY tests/TracesNT.Tests tests/TracesNT.Tests
 COPY tests/Api.Client.Tests tests/Api.Client.Tests
 
+RUN dotnet csharpier check .
+
 RUN dotnet test --no-restore --filter "Category!=IntegrationTests"
 
 FROM build AS publish

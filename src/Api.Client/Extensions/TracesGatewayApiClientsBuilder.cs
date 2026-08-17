@@ -22,13 +22,14 @@ public sealed class TracesGatewayApiClientsBuilder
     {
         var client = Services
             .AddRefitClient<TClient>(_ => new RefitSettings())
-            .ConfigureHttpClient((sp, client) =>
-            {
-                var options =
-                    sp.GetRequiredService<IOptions<TracesGatewayOptions>>().Value;
+            .ConfigureHttpClient(
+                (sp, client) =>
+                {
+                    var options = sp.GetRequiredService<IOptions<TracesGatewayOptions>>().Value;
 
-                client.BaseAddress = new Uri(options.BaseUrl);
-            });
+                    client.BaseAddress = new Uri(options.BaseUrl);
+                }
+            );
 
         _clients.Add(client);
     }
@@ -44,8 +45,7 @@ public sealed class TracesGatewayApiClientsBuilder
         }
     }
 
-    internal void AddHandler<THandler>(
-        Func<IServiceProvider, THandler> factory)
+    internal void AddHandler<THandler>(Func<IServiceProvider, THandler> factory)
         where THandler : DelegatingHandler
     {
         Services.AddTransient(factory);

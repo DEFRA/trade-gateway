@@ -1,8 +1,7 @@
 using Api.Constants;
 using Api.Extensions;
-using Trade.Gateway.Api.Contract.ReferenceData;
-
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.ReferenceData;
 using CertificateModelReference = TracesNT.WebServices.CertificateModelReference;
 using ContractClassificationTreeNode = Trade.Gateway.Api.Contract.ReferenceData.ClassificationTreeNode;
 using SoapClassificationTreeNode = TracesNT.WebServices.ClassificationTreeNode;
@@ -11,10 +10,7 @@ namespace Api.Mapping;
 
 internal static class ClassificationTreeMapper
 {
-    internal static DefraUNVTDProfileClassificationTreeResponse Map(
-        SoapClassificationTreeNode[] source,
-        string treeId
-    )
+    internal static DefraUNVTDProfileClassificationTreeResponse Map(SoapClassificationTreeNode[] source, string treeId)
     {
         return new DefraUNVTDProfileClassificationTreeResponse
         {
@@ -36,7 +32,7 @@ internal static class ClassificationTreeMapper
             Selectable = source.allowedForSelection,
             CnCode = (source.Item as CodeType)?.Value,
             Children = source.Node?.Select(Map).ToList().NullIfEmpty(),
-            Certificate = CertificateModelReferenceMapper.Map(source.Item as CertificateModelReference)
+            Certificate = CertificateModelReferenceMapper.Map(source.Item as CertificateModelReference),
         };
     }
 }

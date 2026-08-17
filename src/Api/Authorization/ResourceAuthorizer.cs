@@ -37,8 +37,9 @@ public class ResourceAuthorizer : IResourceAuthorizer
             return false;
 
         return grants.Any(grant =>
-            grant.Actions.Contains(action, StringComparer.OrdinalIgnoreCase) &&
-            PathPattern.Matches(grant.Resource, path));
+            grant.Actions.Contains(action, StringComparer.OrdinalIgnoreCase)
+            && PathPattern.Matches(grant.Resource, path)
+        );
     }
 
     private static string? ResolveAction(string httpMethod) =>

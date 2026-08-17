@@ -1,10 +1,10 @@
-using Api.Config;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics.CodeAnalysis;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
+using Api.Config;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Api.Utils;
 
@@ -22,7 +22,8 @@ public static class LocalTokenServer
 
     public static void MapLocalTokenEndpoints(this WebApplication app)
     {
-        if (!app.Environment.IsDevelopment()) return;
+        if (!app.Environment.IsDevelopment())
+            return;
 
         var authConfig = app.Services.GetRequiredService<IOptions<AuthenticationConfig>>().Value;
         MapCognitoEndpoints(app, authConfig.Cognito.Authority);
@@ -51,7 +52,12 @@ public static class LocalTokenServer
 
     private static string Prefix(string authority) => new Uri(authority).AbsolutePath.TrimEnd('/');
 
-    private static void MapDiscoveryEndpoints(WebApplication app, string authority, string prefix, bool hasTokenEndpoint)
+    private static void MapDiscoveryEndpoints(
+        WebApplication app,
+        string authority,
+        string prefix,
+        bool hasTokenEndpoint
+    )
     {
         var rsaParams = Rsa.ExportParameters(false);
 
@@ -67,8 +73,8 @@ public static class LocalTokenServer
                     alg = "RS256",
                     n = Base64UrlEncoder.Encode(rsaParams.Modulus!),
                     e = Base64UrlEncoder.Encode(rsaParams.Exponent!),
-                }
-            }
+                },
+            },
         };
 
         var metadata = new Dictionary<string, object>
@@ -84,35 +90,43 @@ public static class LocalTokenServer
         }
 
         app.MapGet($"{prefix}/.well-known/openid-configuration", () => Results.Json(metadata))
-           .AllowAnonymous().ExcludeFromDescription();
+            .AllowAnonymous()
+            .ExcludeFromDescription();
 
-        app.MapGet($"{prefix}/.well-known/jwks", () => Results.Json(jwks))
-           .AllowAnonymous().ExcludeFromDescription();
+        app.MapGet($"{prefix}/.well-known/jwks", () => Results.Json(jwks)).AllowAnonymous().ExcludeFromDescription();
     }
 
     private static void MapTokenEndpoint(WebApplication app, string authority, string prefix) =>
-        app.MapPost($"{prefix}/token", ([FromForm] string? scope, [FromForm] string? audience, [FromForm] string? sub) =>
-        {
-            var claims = new Dictionary<string, object> { ["scope"] = scope ?? "" };
-            if (!string.IsNullOrEmpty(sub))
-                claims["sub"] = sub;
+        app.MapPost(
+                $"{prefix}/token",
+                ([FromForm] string? scope, [FromForm] string? audience, [FromForm] string? sub) =>
+                {
+                    var claims = new Dictionary<string, object> { ["scope"] = scope ?? "" };
+                    if (!string.IsNullOrEmpty(sub))
+                        claims["sub"] = sub;
 
-            var descriptor = new SecurityTokenDescriptor
-            {
-                Issuer = authority,
-                Audience = audience,
-                Claims = claims,
-                Expires = DateTime.UtcNow.AddHours(1),
-                SigningCredentials = Credentials,
-            };
-            var token = new JwtSecurityTokenHandler().CreateToken(descriptor);
-            return Results.Json(new
-            {
-                access_token = new JwtSecurityTokenHandler().WriteToken(token),
-                token_type = "Bearer",
-                expires_in = 3600,
-            });
-        }).AllowAnonymous().DisableAntiforgery().ExcludeFromDescription();
+                    var descriptor = new SecurityTokenDescriptor
+                    {
+                        Issuer = authority,
+                        Audience = audience,
+                        Claims = claims,
+                        Expires = DateTime.UtcNow.AddHours(1),
+                        SigningCredentials = Credentials,
+                    };
+                    var token = new JwtSecurityTokenHandler().CreateToken(descriptor);
+                    return Results.Json(
+                        new
+                        {
+                            access_token = new JwtSecurityTokenHandler().WriteToken(token),
+                            token_type = "Bearer",
+                            expires_in = 3600,
+                        }
+                    );
+                }
+            )
+            .AllowAnonymous()
+            .DisableAntiforgery()
+            .ExcludeFromDescription();
 
     /// <summary>
     /// Stands in for <c>sts:GetWebIdentityToken</c>, which localstack does not implement. A local
@@ -122,30 +136,39 @@ public static class LocalTokenServer
     /// </summary>
     private static void MapGetWebIdentityTokenEndpoint(WebApplication app, string authority, string prefix) =>
         // AWS Query protocol: Action=GetWebIdentityToken&Audience.member.1=trade-gateway&DurationSeconds=900&SigningAlgorithm=RS256
-        app.MapPost(prefix, async (HttpRequest request) =>
-        {
-            var form = await request.ReadFormAsync();
-            if (form["Action"] != "GetWebIdentityToken")
-                return Results.Text(
-                    $"""<ErrorResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/"><Error><Type>Sender</Type><Code>InvalidAction</Code><Message>Unsupported action '{form["Action"]}'</Message></Error></ErrorResponse>""",
-                    "text/xml",
-                    statusCode: 400);
+        app.MapPost(
+                prefix,
+                async (HttpRequest request) =>
+                {
+                    var form = await request.ReadFormAsync();
+                    if (form["Action"] != "GetWebIdentityToken")
+                        return Results.Text(
+                            $"""<ErrorResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/"><Error><Type>Sender</Type><Code>InvalidAction</Code><Message>Unsupported action '{form["Action"]}'</Message></Error></ErrorResponse>""",
+                            "text/xml",
+                            statusCode: 400
+                        );
 
-            var expires = DateTime.UtcNow.AddSeconds(
-                int.TryParse(form["DurationSeconds"], out var seconds) ? seconds : 900);
+                    var expires = DateTime.UtcNow.AddSeconds(
+                        int.TryParse(form["DurationSeconds"], out var seconds) ? seconds : 900
+                    );
 
-            var descriptor = new SecurityTokenDescriptor
-            {
-                Issuer = authority,
-                Audience = form["Audience.member.1"].ToString(),
-                Claims = new Dictionary<string, object> { ["sub"] = "trade-gateway-publisher" },
-                Expires = expires,
-                SigningCredentials = Credentials,
-            };
-            var handler = new JwtSecurityTokenHandler();
+                    var descriptor = new SecurityTokenDescriptor
+                    {
+                        Issuer = authority,
+                        Audience = form["Audience.member.1"].ToString(),
+                        Claims = new Dictionary<string, object> { ["sub"] = "trade-gateway-publisher" },
+                        Expires = expires,
+                        SigningCredentials = Credentials,
+                    };
+                    var handler = new JwtSecurityTokenHandler();
 
-            return Results.Text(
-                $"""<GetWebIdentityTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/"><GetWebIdentityTokenResult><WebIdentityToken>{handler.WriteToken(handler.CreateToken(descriptor))}</WebIdentityToken><Expiration>{expires:yyyy-MM-ddTHH:mm:ss}Z</Expiration></GetWebIdentityTokenResult></GetWebIdentityTokenResponse>""",
-                "text/xml");
-        }).AllowAnonymous().DisableAntiforgery().ExcludeFromDescription();
+                    return Results.Text(
+                        $"""<GetWebIdentityTokenResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/"><GetWebIdentityTokenResult><WebIdentityToken>{handler.WriteToken(handler.CreateToken(descriptor))}</WebIdentityToken><Expiration>{expires:yyyy-MM-ddTHH:mm:ss}Z</Expiration></GetWebIdentityTokenResult></GetWebIdentityTokenResponse>""",
+                        "text/xml"
+                    );
+                }
+            )
+            .AllowAnonymous()
+            .DisableAntiforgery()
+            .ExcludeFromDescription();
 }

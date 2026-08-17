@@ -32,10 +32,7 @@ public static class ReferenceDataEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
-        app.MapGet(
-                "reference-data/classifications/trees/{treeId}/nodes/{nodeId}",
-                GetClassificationTreeNodeDetail
-            )
+        app.MapGet("reference-data/classifications/trees/{treeId}/nodes/{nodeId}", GetClassificationTreeNodeDetail)
             .Produces<DefraUNVTDProfileClassificationTreeNodeDetailResponse>(
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeNodeDetailResponse>()
@@ -44,10 +41,7 @@ public static class ReferenceDataEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
-        app.MapGet(
-                "reference-data/metadata/{metadataType}",
-                GetMetadatas
-            )
+        app.MapGet("reference-data/metadata/{metadataType}", GetMetadatas)
             .Produces<DefraUNVTDProfileMetadataListResponse>(
                 200,
                 MediaTypeAttribute.For<DefraUNVTDProfileMetadataListResponse>()
@@ -57,8 +51,10 @@ public static class ReferenceDataEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
     }
 
-    private static async Task<IResult> GetClassificationSections(IReferenceDataService referenceDataService,
-        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null)
+    private static async Task<IResult> GetClassificationSections(
+        IReferenceDataService referenceDataService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
     {
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
 
@@ -66,7 +62,6 @@ public static class ReferenceDataEndpoints
 
         if (classificationSections == null)
         {
-
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 title: ResponseTitles.NotFound,
@@ -76,7 +71,8 @@ public static class ReferenceDataEndpoints
 
         return Results.Json(
             ClassificationSectionMapper.Map(classificationSections),
-            contentType: MediaTypeAttribute.For<DefraUNVTDProfileClassificationSectionListResponse>());
+            contentType: MediaTypeAttribute.For<DefraUNVTDProfileClassificationSectionListResponse>()
+        );
     }
 
     private static async Task<IResult> GetClassificationTree(
@@ -99,9 +95,9 @@ public static class ReferenceDataEndpoints
         }
 
         return Results.Json(
-                ClassificationTreeMapper.Map(classificationTreeNodes, treeId),
-                    contentType: MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeResponse>()
-                );
+            ClassificationTreeMapper.Map(classificationTreeNodes, treeId),
+            contentType: MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeResponse>()
+        );
     }
 
     private static async Task<IResult> GetClassificationTreeNodeDetail(
@@ -127,12 +123,14 @@ public static class ReferenceDataEndpoints
             );
         }
 
-        return Results.Json(ClassificationTreeNodeDetailMapper.Map(response, treeId, nodeId),
+        return Results.Json(
+            ClassificationTreeNodeDetailMapper.Map(response, treeId, nodeId),
             contentType: MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeNodeDetailResponse>()
         );
     }
 
-    private static async Task<IResult> GetMetadatas(string metadataType, 
+    private static async Task<IResult> GetMetadatas(
+        string metadataType,
         IReferenceDataService referenceDataService,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
@@ -152,6 +150,7 @@ public static class ReferenceDataEndpoints
 
         return Results.Json(
             MetadataMapper.Map(metadatas, metadataType),
-            contentType: MediaTypeAttribute.For<DefraUNVTDProfileMetadataListResponse>());
+            contentType: MediaTypeAttribute.For<DefraUNVTDProfileMetadataListResponse>()
+        );
     }
 }

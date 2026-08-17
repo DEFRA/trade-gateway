@@ -11,17 +11,17 @@ public class MetricsMessageInspector(ITracesNtClientMetricsService metricsServic
     : IClientMessageInspector
 {
     private sealed record CorrelationState(Stopwatch Stopwatch, string Action);
-    
+
     public object BeforeSendRequest(ref Message request, IClientChannel channel)
     {
         var action = request.Headers.Action;
-        
+
         if (logger.IsEnabled(LogLevel.Debug))
             logger.LogDebug("Starting SOAP Request metrics for Action: {Action}", action);
-        
+
         return new CorrelationState(Stopwatch.StartNew(), action);
     }
-    
+
     public void AfterReceiveReply(ref Message reply, object correlationState)
     {
         try

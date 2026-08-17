@@ -12,14 +12,13 @@ public static class ServiceCollectionExtensions
 {
     public static TracesGatewayApiClientsBuilder AddTracesGatewayApiClients(
         this IServiceCollection services,
-        IConfiguration configuration)
+        IConfiguration configuration
+    )
     {
         services
             .AddOptions<TracesGatewayOptions>()
             .Bind(configuration.GetSection(TracesGatewayOptions.SectionName))
             .ValidateOnStart();
-
-      
 
         services.ConfigureHttpClientDefaults(http =>
         {
@@ -36,11 +35,9 @@ public static class ServiceCollectionExtensions
         return builder;
     }
 
-    public static TracesGatewayApiClientsBuilder WithSts(
-        this TracesGatewayApiClientsBuilder builder)
+    public static TracesGatewayApiClientsBuilder WithSts(this TracesGatewayApiClientsBuilder builder)
     {
-        builder.Services.AddSingleton<IAmazonSecurityTokenService>(
-            _ => new AmazonSecurityTokenServiceClient());
+        builder.Services.AddSingleton<IAmazonSecurityTokenService>(_ => new AmazonSecurityTokenServiceClient());
 
         builder.AddHandler<StsAuthDelegatingHandler>();
 
@@ -49,23 +46,22 @@ public static class ServiceCollectionExtensions
 
     public static TracesGatewayApiClientsBuilder WithTracing(
         this TracesGatewayApiClientsBuilder builder,
-        Func<IServiceProvider, string> traceIdAccessor)
+        Func<IServiceProvider, string> traceIdAccessor
+    )
     {
         builder.AddHandler<TracingDelegatingHandler>(sp => new TracingDelegatingHandler(traceIdAccessor, sp));
 
         return builder;
     }
 
-    public static TracesGatewayApiClientsBuilder WithLogging(
-        this TracesGatewayApiClientsBuilder builder)
+    public static TracesGatewayApiClientsBuilder WithLogging(this TracesGatewayApiClientsBuilder builder)
     {
         builder.AddHandler<HttpLoggingDelegatingHandler>();
 
         return builder;
     }
 
-    public static TracesGatewayApiClientsBuilder WithAcceptLanguage(
-        this TracesGatewayApiClientsBuilder builder)
+    public static TracesGatewayApiClientsBuilder WithAcceptLanguage(this TracesGatewayApiClientsBuilder builder)
     {
         builder.AddHandler<AcceptLanguageDelegatingHandle>();
 

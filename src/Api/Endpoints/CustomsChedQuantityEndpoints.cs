@@ -3,8 +3,8 @@ using Api.Contract;
 using Api.Mapping;
 using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
-using Trade.Gateway.Api.Contract.Customs;
 using TracesNT.Services;
+using Trade.Gateway.Api.Contract.Customs;
 
 namespace Api.Endpoints;
 
