@@ -1,11 +1,13 @@
+using Amazon.Runtime.Internal;
 using Api.Contract;
+using Api.Extensions;
 using Api.Mapping;
 using Api.Utils.Http;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using Trade.Gateway.Api.Contract.Customs;
 using TracesNT.Services;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.Customs;
 
 namespace Api.Endpoints;
 
@@ -31,6 +33,14 @@ public static class CustomsChedQuantityEndpoints
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation", PutReservation)
             .Produces<ChedDeclarationReservation>(200, MediaTypeAttribute.For<ChedDeclarationReservation>())
             .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/release", Release)
+            .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -128,6 +138,39 @@ public static class CustomsChedQuantityEndpoints
             );
 
         return Results.Json(reservation, contentType: MediaTypeAttribute.For<ChedDeclarationReservation>());
+    }
+
+    private static async Task<IResult> Release(
+       string chedId,
+       string mrn,
+       ICustomsChedService customsChedService,
+       [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+   )
+    {
+        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
+        var response = await customsChedService.Release(chedId, mrn, languageCode);
+
+        var outcome = response?.QuantityManagementOutcome;
+
+        // A clean cancellation has nothing to report. Outcome 04 does — the CHED status
+        // changed mid-clearance — so it always comes back with a body.
+        if (QuantityManagementOutcomes.IsSuccess(outcome))
+        {
+            return Results.Ok();
+        }
+
+        return Results.Problem(
+            title: "Quantity management request not executed",
+            detail: QuantityManagementOutcomes.Describe(outcome),
+            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
+            extensions: new Dictionary<string, object?>
+            {
+                ["chedId"] = chedId,
+                ["mrn"] = mrn,
+                ["outcome"] = outcome,
+                ["chedStatus"] = response?.StatusCode,
+            }
+        );
     }
 
     /// <summary>

@@ -28,4 +28,11 @@ public interface ITracesGatewayChedClient
         [Body] ChedReservationRequest request,
         CancellationToken cancellationToken
     );
+
+    [Put("/customs/cheds/{id}/declarations/{mrn}/release")]
+    Task<HttpResponseMessage> ReleaseChedReservation(
+        string id,
+        string mrn,
+        CancellationToken cancellationToken
+    );
 }

@@ -49,6 +49,70 @@ namespace TracesNT.Services
                 items: items
             );
 
+        public async Task<ChedQuantityManagementOutcomeType?> Release(string chedId, string mrn, string languageCode)
+        {
+            // Correlates our logs with the MessageId the customs port echoes on responses and faults, which is
+            // what DG SANTE ask for when a call is queried. 32 chars, inside the 1-48 token limit.
+            var messageId = Guid.NewGuid().ToString("N");
+
+            logger.LogInformation(
+                "Requesting customs quantity summary for CHED {ChedId} as message {UpstreamMessageId}",
+                chedId,
+                messageId
+            );
+
+            try
+            {
+
+                var response = (
+                    await customsChedPort.chedClearanceRequestAsync(
+                        new SecurityHeaderType(),
+                        _credentials.WebServiceClientId,
+                        languageCode.ToIso2AlphaLanguageCodeContentType(),
+                        _customsOffice,
+                        new CertexHeaderType { MessageId = messageId, UniqRequesterPrefix = _customsOffice },
+                        new ChedClearanceRequestType
+                        {
+                            CompetentCustomsOffice = new CompetentCustomsOfficeType
+                            {
+                                ReferenceNumber = _customsOffice,
+                            },
+                            SendingDate = DateTime.UtcNow,
+                            CustomsDocumentReference = mrn,
+                            ChedCertificateId = chedId,
+                            GoodsClearanceInformation = GoodsClearanceInformationType.Item01,
+                        }
+                    )
+                ).ChedClearanceResponse1;
+
+                return response;
+            }
+            catch (FaultException<ExceptionWithUniqueInfoType> ex)
+            {
+                // The customs port has a single untyped fault, so an unknown CHED is indistinguishable from a
+                // genuine upstream failure. Both become 502 rather than guessing at a 404.
+                throw new CustomsFaultException(
+                    $"Customs port fault for CHED {chedId} (message {messageId})",
+                    ex.Detail?.MessageId,
+                    ex.Detail?.errorMessage,
+                    ex
+                );
+            }
+            catch (FaultException ex)
+                when (ex.Code.IsSenderFault
+                      && ex.Message.Contains("SAXException", StringComparison.InvariantCultureIgnoreCase)
+                     )
+            {
+                throw new InvalidSoapException($"Traces SOAP bad request for releasing CHED quantity {chedId} for mrn {mrn}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
+            }
+        }
+
+
+
         private async Task<ProcessedChedInformationResponseType?> SendProcessedChedRequest(
             string chedId,
             string languageCode,
