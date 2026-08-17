@@ -1,0 +1,5 @@
+# LF everywhere, in the repository and in every working tree, matching
+# end_of_line = lf in .editorconfig. Set here rather than left to each
+# developer's core.autocrlf, which is what let generated files flip between
+# CRLF and LF depending on who committed them.
+* text=auto eol=lf

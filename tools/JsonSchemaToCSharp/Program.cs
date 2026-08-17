@@ -115,9 +115,11 @@ foreach (var job in jobs)
 
                     var outputFile = Path.Combine(job.OutputPath, $"{typeName}.g.cs");
                     await using var writer = new StreamWriter(outputFile, false);
+                    // Roslyn's NormalizeWhitespace defaults to CRLF on every platform, so
+                    // the newline has to be stated explicitly to match the repo's LF.
                     syntax
-                        .NormalizeWhitespace()
-                        .WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)
+                        .NormalizeWhitespace(eol: "\n")
+                        .WithTrailingTrivia(SyntaxFactory.ElasticLineFeed)
                         .WriteTo(writer);
                     totalGenerated++;
                 }
@@ -137,9 +139,11 @@ foreach (var job in jobs)
                 {
                     var outputFile = Path.Combine(job.OutputPath, $"{rootTypeName}.g.cs");
                     await using var writer = new StreamWriter(outputFile, false);
+                    // Roslyn's NormalizeWhitespace defaults to CRLF on every platform, so
+                    // the newline has to be stated explicitly to match the repo's LF.
                     syntax
-                        .NormalizeWhitespace()
-                        .WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)
+                        .NormalizeWhitespace(eol: "\n")
+                        .WithTrailingTrivia(SyntaxFactory.ElasticLineFeed)
                         .WriteTo(writer);
                     totalGenerated++;
                     generatedTypes.Add(rootTypeName);
