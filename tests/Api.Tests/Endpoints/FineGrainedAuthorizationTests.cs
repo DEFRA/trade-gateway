@@ -140,6 +140,21 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     }
 
     [Fact]
+    public async Task CustomsQuantityManager_can_release_reservation()
+    {
+        StubCustomsReleaseReservation();
+        var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-manager");
+
+        var response = await client.ReleaseChedReservation(
+            "CHEDA.GB.2026.0000123",
+            "26GB16RF3TDPZE7AR2",
+            TestContext.Current.CancellationToken
+        );
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
     public async Task ChedReader_cannot_write_customs_reservation()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
@@ -232,6 +247,25 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
                         await SoapUtilities.CreateResponseFromResource(
                             HttpStatusCode.OK,
                             "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_Reserved.xml"
+                        )
+                    )
+            );
+
+    private void StubCustomsReleaseReservation() =>
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ChedClearanceRequest\"",
+                    "/*[local-name() = 'ChedClearanceRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.CUSTOMS.ReleaseChedResponse_Released.xml"
                         )
                     )
             );

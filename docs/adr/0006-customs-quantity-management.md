@@ -31,11 +31,12 @@ CERTEX names a supplier's product on the other end of the wire. It means nothing
 
 This covers services, exceptions, endpoints, contract namespaces, config keys and authorisation principals. Prose still says CERTEX when naming the EU system, its guidelines or its schema.
 
-### Two endpoints
+### Endpoints
 
 ```
 GET customs/cheds/{id}/quantities                         the CHED's whole quantity position
 PUT customs/cheds/{id}/declarations/{mrn}/reservation      reserve against one declaration
+PUT customs/cheds/{id}/declarations/{mrn}/reservation/release      releases the reserved quantity against one declaration
 ```
 
 The read returns the entire CHED position — every allocation, for every declaration. A per-declaration read (`GET .../reservation`) is **not** implemented: upstream has one operation returning everything, so a second URL would issue the identical call and discard most of the answer. It adds a filter, not information. Consumers interested in one declaration filter the ledger themselves.

@@ -49,6 +49,48 @@ namespace TracesNT.Services
                 items: items
             );
 
+        public async Task<ChedQuantityManagementOutcomeType?> Release(string chedId, string mrn, string languageCode)
+        {
+            // Correlates our logs with the MessageId the customs port echoes on responses and faults, which is
+            // what DG SANTE ask for when a call is queried. 32 chars, inside the 1-48 token limit.
+            var messageId = Guid.NewGuid().ToString("N");
+
+            logger.LogInformation(
+                "Customs Release for CHED {ChedId} as message {UpstreamMessageId}",
+                chedId,
+                messageId
+            );
+
+            return await ExecuteCustomsCall(
+                chedId,
+                messageId,
+                $"releasing CHED quantity for MRN {mrn}",
+                async () =>
+                {
+                    var response = await customsChedPort.chedClearanceRequestAsync(
+                        new SecurityHeaderType(),
+                        _credentials.WebServiceClientId,
+                        languageCode.ToIso2AlphaLanguageCodeContentType(),
+                        _customsOffice,
+                        new CertexHeaderType { MessageId = messageId, UniqRequesterPrefix = _customsOffice },
+                        new ChedClearanceRequestType
+                        {
+                            CompetentCustomsOffice = new CompetentCustomsOfficeType
+                            {
+                                ReferenceNumber = _customsOffice,
+                            },
+                            SendingDate = DateTime.UtcNow,
+                            CustomsDocumentReference = mrn,
+                            ChedCertificateId = chedId,
+                            GoodsClearanceInformation = GoodsClearanceInformationType.Item01,
+                        }
+                    );
+
+                    return response?.ChedClearanceResponse1;
+                }
+            );
+        }
+
         private async Task<ProcessedChedInformationResponseType?> SendProcessedChedRequest(
             string chedId,
             string languageCode,
@@ -69,36 +111,55 @@ namespace TracesNT.Services
                 messageId
             );
 
+            return await ExecuteCustomsCall(
+                chedId,
+                messageId,
+                $"CHED quantity request ({operation})",
+                async () =>
+                {
+                    var response = await customsChedPort.processedChedRequestAsync(
+                        new SecurityHeaderType(),
+                        _credentials.WebServiceClientId,
+                        languageCode.ToIso2AlphaLanguageCodeContentType(),
+                        _customsOffice,
+                        new CertexHeaderType { MessageId = messageId, UniqRequesterPrefix = _customsOffice },
+                        new ProcessedChedRequestType
+                        {
+                            SendingDate = DateTime.UtcNow,
+                            ChedCertificateId = chedId,
+                            CompetentCustomsOffice = new CompetentCustomsOfficeType
+                            {
+                                ReferenceNumber = _customsOffice,
+                            },
+                            QuantityManagementIndication = ToIndication(mode),
+                            Language = languageCode,
+                            CustomsDeclarationReferenceNumber = declarationReference,
+                            CommodityDescriptionForChed = items,
+                            PdfGenerationIndicationSpecified = false,
+                            TransformationIndictionSpecified = false,
+                        }
+                    );
+
+                    return response?.ProcessedChedInformationResponse1;
+                }
+            );
+        }
+
+        private static async Task<T?> ExecuteCustomsCall<T>(
+            string chedId,
+            string messageId,
+            string operation,
+            Func<Task<T?>> call
+        )
+        {
             try
             {
-                var response = await customsChedPort.processedChedRequestAsync(
-                    new SecurityHeaderType(),
-                    _credentials.WebServiceClientId,
-                    languageCode.ToIso2AlphaLanguageCodeContentType(),
-                    _customsOffice,
-                    new CertexHeaderType { MessageId = messageId, UniqRequesterPrefix = _customsOffice },
-                    new ProcessedChedRequestType
-                    {
-                        SendingDate = DateTime.UtcNow,
-                        ChedCertificateId = chedId,
-                        CompetentCustomsOffice = new CompetentCustomsOfficeType { ReferenceNumber = _customsOffice },
-                        QuantityManagementIndication = ToIndication(mode),
-                        Language = languageCode,
-                        CustomsDeclarationReferenceNumber = declarationReference,
-                        CommodityDescriptionForChed = items,
-                        // Left unset deliberately: PdfGenerationIndication would make every call ask
-                        // TracesNT to render a PDF, and PushIndication would subscribe us to updates.
-                        PdfGenerationIndicationSpecified = false,
-                        TransformationIndictionSpecified = false,
-                    }
-                );
-
-                return response?.ProcessedChedInformationResponse1;
+                return await call();
             }
             catch (FaultException<ExceptionWithUniqueInfoType> ex)
             {
-                // The customs port has a single untyped fault, so an unknown CHED is indistinguishable from a
-                // genuine upstream failure. Both become 502 rather than guessing at a 404.
+                // The customs port has a single untyped fault, so an unknown CHED is
+                // indistinguishable from a genuine upstream failure.
                 throw new CustomsFaultException(
                     $"Customs port fault for CHED {chedId} (message {messageId})",
                     ex.Detail?.MessageId,
@@ -111,7 +172,7 @@ namespace TracesNT.Services
                     && ex.Message.Contains("SAXException", StringComparison.InvariantCultureIgnoreCase)
                 )
             {
-                throw new InvalidSoapException($"Traces SOAP bad request for CHED quantity request {chedId}", ex);
+                throw new InvalidSoapException($"Traces SOAP bad request for {operation} {chedId}", ex);
             }
             catch (Exception ex)
             {
