@@ -1,4 +1,3 @@
-using Api.Constants;
 using Api.Contract;
 using Api.Mapping;
 using Api.Models;
@@ -39,7 +38,6 @@ public static class ChedEndpoints
         if (certificate?.SPSCertificate == null)
             return Results.Problem(
                 statusCode: StatusCodes.Status404NotFound,
-                title: ResponseTitles.NotFound,
                 detail: $"Ched certificate '{id}' was not found."
             );
         return Results.Json(

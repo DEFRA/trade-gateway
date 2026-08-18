@@ -1,0 +1,274 @@
+### Trade Gateway — CUSTOMS quantity endpoints (Local Development environment)
+
+@host = http://localhost:5000
+@scope = trade-gateway-resource-srv/access
+
+### Token — customs quantity reader (READ on /customs/** only)
+# @name customsToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-customs-quantity-reader
+
+### Token — customs quantity manager (READ + WRITE on /customs/**)
+# @name customsManagerToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-customs-quantity-manager
+
+### Token — CHED reader (used here only to prove the /customs/** boundary)
+# @name chedToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-ched-reader
+
+###############################################################################
+# CUSTOMS — quantity management
+#
+# Calls the customs TracesNT account (TracesNt:Credentials:Customs), not the
+# default one, and needs TracesNt:CustomsOfficeReferenceNumber set or the app
+# will not start. Both endpoints are the same upstream operation: the ledger
+# read sends QuantityManagementIndication "0", the reservation sends "1" and
+# mutates state in TracesNT.
+###############################################################################
+
+@chedId = CHEDP.XI.2026.0000686
+@mrn = 26GB0012345678901
+
+### Get the quantity ledger for a CHED
+# 200 with available[] and allocations{reserved[],consumed[]}.
+# Each allocation carries declarationReference {type,value} — filter on BOTH
+# fields to narrow to one declaration; an LRN can carry the same value as an MRN.
+GET {{host}}/customs/cheds/{{chedId}}/quantities
+Accept: application/vnd.defra.trade.ched-quantities.v1+json
+Accept-Language: en
+Authorization: Bearer {{customsToken.response.body.access_token}}
+
+### Unknown CHED returns 404
+# TracesNT reports it as a response carrying no certificate rather than a fault, so this is
+# the one not-found signal available. An actual upstream fault is a 502 instead — the port's
+# single untyped fault says nothing, so it never becomes a 404.
+GET {{host}}/customs/cheds/CHEDA.GB.2026.9999999/quantities
+Accept-Language: en
+Authorization: Bearer {{customsToken.response.body.access_token}}
+
+### A CHED reader gets 403 on /customs/** — proves the prefix decision
+# customs/ is a sibling of certificates/, so the ched-reader grant on
+# /certificates/cheds/** cannot reach customs quantity data.
+GET {{host}}/customs/cheds/{{chedId}}/quantities
+Accept-Language: en
+Authorization: Bearer {{chedToken.response.body.access_token}}
+
+### A customs reader gets 403 on /certificates/** — the boundary holds both ways
+GET {{host}}/certificates/cheds/CHEDA.XI.2026.0000063
+Accept-Language: en
+Authorization: Bearer {{customsToken.response.body.access_token}}
+
+###############################################################################
+# CUSTOMS — reserving quantity against a declaration
+#
+# PUT is deliberate: the body states the declaration's whole position against the
+# CHED, so re-sending it with different numbers replaces the previous hold rather
+# than adding to it. The response is narrowed to this declaration, unlike the
+# ledger above which reports the CHED's whole position.
+###############################################################################
+
+### Reserve against a declaration
+# 200 with reserved[] and consumed[] for this MRN only.
+# goodsItemNumber, certificateLineNumber and classCode are required on every item. Weight and
+# volume are independent — send either or both, but a quantity without its unit of measure is a
+# 400, never a silent default (TracesNT would assume tonnes).
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept: application/vnd.defra.trade.ched-reservation.v1+json
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "goodsItemNumber": 1,
+      "certificateLineNumber": 1,
+      "classCode": "04071100",
+      "netWeightQuantity": 2000,
+      "netWeightUnitOfMeasure": "GRM"
+    }
+  ]
+}
+
+
+### Refused by TracesNT returns 409 with the decoded reason
+# Ask for more than the CHED has left — expect failureReason {"code":"05","description":
+# "Quantities insufficient"} plus a failedItem extension with goodsItemNumber and
+# documentLineItemNumber. A code outside the gateway's table comes back as code null with
+# "Unrecognised reservation failure reason": the raw element is free text and is logged,
+# never echoed (ADR-0002 §4).
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "goodsItemNumber": 1,
+      "certificateLineNumber": 1,
+      "classCode": "1522000001",
+      "netWeightQuantity": 99999999,
+      "netWeightUnitOfMeasure": "KGM"
+    }
+  ]
+}
+
+### Empty items returns 400 — a reservation of nothing is not a way to release a hold
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+{
+  "items": []
+}
+
+### Quantity without a unit of measure returns 400
+# Not a default: TracesNT would read the missing unit as tonnes.
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "goodsItemNumber": 1,
+      "certificateLineNumber": 1,
+      "classCode": "1522000001",
+      "netWeightQuantity": 300
+    }
+  ]
+}
+
+### Weight AND volume on one item — allowed, not mutually exclusive
+# The CERTEX guidelines §3.2 say quantity management uses Net mass (18 01 001 000) "and/or"
+# Supplementary Unit (18 02 001 000). The XSD agrees: four independent optional elements with no
+# choice construct, unlike CustomsDeclarationReferenceNumber where MRN/LRN generated one.
+# A domain business rule can still refuse the combination — that arrives as a 409, not a 400.
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "goodsItemNumber": 1,
+      "certificateLineNumber": 1,
+      "classCode": "1522000001",
+      "netWeightQuantity": 100,
+      "netWeightUnitOfMeasure": "KGM",
+      "netVolumeQuantity": 2,
+      "netVolumeUnitOfMeasure": "MTQ"
+    }
+  ]
+}
+
+### Unrecognised unit of measure returns 400
+# UN/ECE Recommendation 20 codes only — "KILOS" is not one, and is rejected rather than
+# falling back to the enum's first member (TNE).
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "goodsItemNumber": 1,
+      "certificateLineNumber": 1,
+      "classCode": "1522000001",
+      "netWeightQuantity": 300,
+      "netWeightUnitOfMeasure": "KILOS"
+    }
+  ]
+}
+
+### Missing a required item field returns 400
+# TracesNT's schema requires goodsItemNumber, certificateLineNumber and classCode, and a missing one
+# is left out of the request rather than sent empty — so without the check the call fails upstream as
+# a SAXException and returns a 500. Drop any of the three from this body to see it reported.
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "certificateLineNumber": 1,
+      "netWeightQuantity": 300,
+      "netWeightUnitOfMeasure": "KGM"
+    }
+  ]
+}
+
+### Unknown CHED returns 404, same signal as the ledger read
+PUT {{host}}/customs/cheds/CHEDA.GB.2026.9999999/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "goodsItemNumber": 1,
+      "certificateLineNumber": 1,
+      "classCode": "1522000001",
+      "netWeightQuantity": 300,
+      "netWeightUnitOfMeasure": "KGM"
+    }
+  ]
+}
+
+### The read-only customs principal gets 403 — READ does not imply WRITE
+# Same /customs/** resource as the ledger GET it is allowed to call; only the action differs.
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{customsToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "goodsItemNumber": 1,
+      "certificateLineNumber": 1,
+      "classCode": "1522000001",
+      "netWeightQuantity": 300,
+      "netWeightUnitOfMeasure": "KGM"
+    }
+  ]
+}
+
+### A CHED reader gets 403 on the reservation too
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Content-Type: application/json
+Accept-Language: en
+Authorization: Bearer {{chedToken.response.body.access_token}}
+
+{
+  "items": [
+    {
+      "goodsItemNumber": 1,
+      "certificateLineNumber": 1,
+      "classCode": "1522000001",
+      "netWeightQuantity": 300,
+      "netWeightUnitOfMeasure": "KGM"
+    }
+  ]
+}
+
+### The manager can still read the ledger — WRITE grants carry READ on /customs/**
+GET {{host}}/customs/cheds/{{chedId}}/quantities
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}

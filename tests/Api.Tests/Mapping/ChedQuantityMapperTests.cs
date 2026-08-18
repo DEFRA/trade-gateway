@@ -215,6 +215,69 @@ public class ChedQuantityMapperTests
         allocations.Consumed.Should().ContainSingle().Which.Quantity.Should().Be(120m);
     }
 
+    [Fact]
+    public void MapDeclarationReservation_KeepsOnlyTheRequestedDeclaration()
+    {
+        var summary = Summary(
+            Allocated(Mrn, ItemChoiceType2.MRN, 300m),
+            Allocated("26GB99WTYXQ2LM5BC7", ItemChoiceType2.MRN, 90m)
+        );
+
+        var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn);
+
+        reservation.Reserved.Should().ContainSingle().Which.Quantity.Should().Be(300m);
+    }
+
+    [Fact]
+    public void MapDeclarationReservation_DoesNotMatchAnLrnWithTheSameValue()
+    {
+        var summary = Summary(Allocated(Mrn, ItemChoiceType2.LRN, 777m));
+
+        var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn);
+
+        reservation.Reserved.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void MapDeclarationReservation_MatchesRegardlessOfCase()
+    {
+        var summary = Summary(Allocated(Mrn, ItemChoiceType2.MRN, 300m));
+
+        var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn.ToLowerInvariant());
+
+        reservation.Reserved.Should().ContainSingle();
+    }
+
+    [Fact]
+    public void MapReservationItems_SetsSpecifiedCompanionsForSuppliedValuesOnly()
+    {
+        ReservationCommodityItem[] items =
+        [
+            new()
+            {
+                GoodsItemNumber = 1,
+                CertificateLineNumber = 2,
+                ClassCode = "P1",
+                NetWeightQuantity = 300m,
+                NetWeightUnitOfMeasure = "KGM",
+            },
+        ];
+
+        var mapped = ChedQuantityMapper.MapReservationItems(items);
+
+        var item = mapped.Should().ContainSingle().Subject;
+        item.GoodsItemNumber.Should().Be("1");
+        item.CertificateLineNumber.Should().Be("2");
+        item.ClassCode.Should().Be("P1");
+        item.NetWeightQuantity.Should().Be(300m);
+        item.NetWeightQuantitySpecified.Should().BeTrue();
+        item.NetWeightUnitOfMeasure.Should().Be(UniversalUnitOfMeasureType.KGM);
+        item.NetWeightUnitOfMeasureSpecified.Should().BeTrue();
+
+        item.NetVolumeQuantitySpecified.Should().BeFalse();
+        item.NetVolumeUnitOfMeasureSpecified.Should().BeFalse();
+    }
+
     private static QuantityManagementCommoditySummaryEnhanced4ChedR51Type Summary(
         params AllocatedProductQuantityByCustomsOfficeEnhanced4ChedR51Type[] reserved
     ) => new() { ReservedQuantity = reserved };

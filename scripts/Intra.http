@@ -1,0 +1,30 @@
+### Trade Gateway — INTRA endpoints (Local Development environment)
+
+@host = http://localhost:5000
+@scope = trade-gateway-resource-srv/access
+
+### Token — INTRA reader (find + get)
+# @name intraToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-intra-reader
+
+###############################################################################
+# INTRA
+###############################################################################
+
+### Find INTRA certificates (updatedFrom + updatedBefore required; offset/pageSize optional)
+GET {{host}}/certificates/intras?updatedFrom=2002-10-28Z&updatedBefore=2026-10-28Z&offset=0&pageSize=10
+Accept-Language: en
+Authorization: Bearer {{intraToken.response.body.access_token}}
+
+### Get a single INTRA certificate by id
+GET {{host}}/certificates/intras/INTRA.EU.GB.2025.0000001
+Accept-Language: en
+Authorization: Bearer {{intraToken.response.body.access_token}}
+
+### Find INTRA — missing updatedFrom returns 400 (validation)
+GET {{host}}/certificates/intras?updatedBefore=2026-10-28Z
+Accept-Language: en
+Authorization: Bearer {{intraToken.response.body.access_token}}

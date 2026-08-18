@@ -1,0 +1,1 @@
+﻿{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Conflict","status":409,"detail":"TracesNT refused the reservation of CHED 'CHEDA.GB.2026.0000123' against declaration '26GB16RF3TDPZE7AR2'.","failureReason":{"code":null,"description":"Unrecognised reservation failure reason"},"failedItem":{"goodsItemNumber":"1","documentLineItemNumber":"2"}}

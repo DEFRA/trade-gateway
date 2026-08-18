@@ -1,0 +1,35 @@
+﻿{
+  Reserved: [
+    {
+      GoodsItemNumber: 1,
+      CommodityCode: {
+        HarmonizedSystemSubheadingCode: 020329,
+        CombinedNomenclatureCode: 02032955
+      },
+      CertificateLineNumber: 1,
+      UnitOfMeasure: KGM,
+      Quantity: 300.0,
+      TechnicalRoundingQuantity: 0.25,
+      EventDateTime: DateTimeOffset_1,
+      CustomsOffice: GB000060,
+      DeclarationReference: {
+        Type: Mrn,
+        Value: 26GB16RF3TDPZE7AR2
+      }
+    }
+  ],
+  Consumed: [
+    {
+      GoodsItemNumber: 2,
+      CertificateLineNumber: 2,
+      UnitOfMeasure: KGM,
+      Quantity: 120.0,
+      EventDateTime: DateTimeOffset_1,
+      CustomsOffice: GB000060,
+      DeclarationReference: {
+        Type: Mrn,
+        Value: 26GB16RF3TDPZE7AR2
+      }
+    }
+  ]
+}

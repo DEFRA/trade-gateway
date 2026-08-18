@@ -48,7 +48,7 @@ Two actions are defined:
 
 Any HTTP method not in this table (`PATCH`, `DELETE`, `HEAD`, `OPTIONS`) is not currently modelled and is denied by default. The model must be extended explicitly if such methods are added to the API.
 
-> **Note:** No `WRITE` endpoints exist today. WRITE is defined in the model now to avoid a breaking change to configuration when write endpoints are introduced. Any WRITE permission granted in config has no runtime effect until a corresponding endpoint exists.
+> **Note:** `WRITE` is live. `PUT /customs/cheds/{id}/declarations/{mrn}/reservation` is the first endpoint to require it, so a `WRITE` grant now has runtime effect. `READ` on a prefix does not confer `WRITE` on it: `customs-quantity-reader` holds `READ` on `/customs/**` and is refused the reservation write, which `FineGrainedAuthorizationTests.CustomsQuantityReader_cannot_write_reservation` holds in place.
 
 ### Resource Paths and Wildcard Matching
 
@@ -269,4 +269,5 @@ RBAC was rejected in favour of the path-based model primarily because this is an
 - Environment variable array notation (`__0__`, `__1__`) is verbose and error-prone for principals with multiple permissions. Startup validation is essential to catch misconfiguration early.
 - `sub` values are environment-specific, requiring per-environment configuration of the same logical principals. Aliases provide consistency but the binding must be maintained across environments.
 - Adding a new principal currently requires a deployment. There is no mechanism to grant access at runtime without restarting the application.
-- No WRITE endpoints exist today; the WRITE action in config is dormant until write endpoints are built.
+- `WRITE` is no longer dormant. A `WRITE` grant on `/customs/**` permits reserving customs quantities, which changes state in TracesNT — so granting it is a materially different decision from granting `READ`, and the two are held by separate principals (`customs-quantity-manager` and `customs-quantity-reader`).
+- `DELETE` remains unmapped and therefore denied by default. That is the correct posture while no endpoint uses it; adding one requires extending `ResourceAuthorizer.ResolveAction` deliberately.

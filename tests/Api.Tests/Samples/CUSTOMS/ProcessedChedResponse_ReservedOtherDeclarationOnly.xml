@@ -1,0 +1,37 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- A reservation TracesNT reports as accepted, whose summary holds nothing for the declaration it
+     was made against. Self-contradictory: returning empty arrays would tell the caller this
+     declaration holds nothing immediately after telling them the reservation succeeded, so this
+     must yield 502. -->
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ProcessedChedInformationResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+      <ChedCertificate>
+        <SPSCertificate xmlns="urn:un:unece:uncefact:data:standard:SPSCertificate:17">
+          <SPSExchangedDocument>
+            <ID xmlns="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21"
+              >CHEDA.GB.2026.0000123</ID
+            >
+          </SPSExchangedDocument>
+        </SPSCertificate>
+      </ChedCertificate>
+      <QuantityManagementSummary>
+        <ReservedQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <GoodsItemNumber>1</GoodsItemNumber>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity>90</Quantity>
+            <CertificateLineNumber>1</CertificateLineNumber>
+          </SwSupportingDocument>
+          <CompetentCustomsOffice>
+            <ReferenceNumber>GB000060</ReferenceNumber>
+          </CompetentCustomsOffice>
+          <MRN>26GB99WTYXQ2LM5BC7</MRN>
+        </ReservedQuantity>
+      </QuantityManagementSummary>
+      <OperationCode>1</OperationCode>
+      <ReservationResult>true</ReservationResult>
+      <PushActive>false</PushActive>
+    </ProcessedChedInformationResponse>
+  </S:Body>
+</S:Envelope>

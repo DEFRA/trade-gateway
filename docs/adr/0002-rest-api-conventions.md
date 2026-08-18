@@ -46,8 +46,10 @@ GET /customs/**          customs quantity management
 | Method | Meaning |
 |--------|---------|
 | `GET` | Retrieve a representation of a resource. Must be safe and idempotent — no side-effects. |
+| `PUT` | State the complete contents of a singleton sub-resource. Idempotent: repeating the request must leave the same result, not accumulate. |
 
-Only `GET` is used in the current API. Additional methods (`POST`, `PUT`, `DELETE`) will be decided per-endpoint if needed and will be added to this ADR at that time.
+
+`POST` and `DELETE` are still undecided and will be added here per-endpoint if needed.
 
 ### 3. HTTP status codes
 
@@ -57,6 +59,7 @@ Only `GET` is used in the current API. Additional methods (`POST`, `PUT`, `DELET
 | `400 Bad Request` | The client sent a structurally invalid request. |
 | `403 Forbidden` | The client is authenticated but not permitted to access this resource. |
 | `404 Not Found` | No resource matching the given identifier exists. |
+| `409 Conflict` | The upstream service refused the change because the resource's current state does not permit it. |
 | `500 Internal Server Error` | An unexpected error occurred within the gateway. |
 | `502 Bad Gateway` | The gateway could not communicate with the upstream service (TracesNT). |
 

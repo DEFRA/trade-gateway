@@ -1,5 +1,6 @@
 using System.Net;
 using AwesomeAssertions;
+using Trade.Gateway.Api.Contract.Customs;
 using WireMock.ResponseBuilders;
 
 namespace Api.Tests.Endpoints;
@@ -108,6 +109,52 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     }
 
     [Fact]
+    public async Task CustomsQuantityReader_cannot_write_reservation()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");
+
+        var response = await client.PutChedReservation(
+            "CHEDA.GB.2026.0000123",
+            "26GB16RF3TDPZE7AR2",
+            ReservationRequest,
+            TestContext.Current.CancellationToken
+        );
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
+    public async Task CustomsQuantityManager_can_write_reservation()
+    {
+        StubCustomsReservation();
+        var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-manager");
+
+        var response = await client.PutChedReservation(
+            "CHEDA.GB.2026.0000123",
+            "26GB16RF3TDPZE7AR2",
+            ReservationRequest,
+            TestContext.Current.CancellationToken
+        );
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task ChedReader_cannot_write_customs_reservation()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+
+        var response = await client.PutChedReservation(
+            "CHEDA.GB.2026.0000123",
+            "26GB16RF3TDPZE7AR2",
+            ReservationRequest,
+            TestContext.Current.CancellationToken
+        );
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
     public async Task Authenticated_principal_with_no_config_entry_is_forbidden()
     {
         var client = await factory.CreateClientForPrincipalAsync("not-a-configured-principal");
@@ -150,6 +197,41 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
                         await SoapUtilities.CreateResponseFromResource(
                             HttpStatusCode.OK,
                             "Api.Tests.Samples.INTRA.GetEuIntraCertificateResponse.xml"
+                        )
+                    )
+            );
+
+    private static ChedReservationRequest ReservationRequest =>
+        new()
+        {
+            Items =
+            [
+                new ReservationCommodityItem
+                {
+                    GoodsItemNumber = 1,
+                    CertificateLineNumber = 1,
+                    ClassCode = "P1",
+                    NetWeightQuantity = 300m,
+                    NetWeightUnitOfMeasure = "KGM",
+                },
+            ],
+        };
+
+    private void StubCustomsReservation() =>
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"",
+                    "/*[local-name() = 'ProcessedChedRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_Reserved.xml"
                         )
                     )
             );

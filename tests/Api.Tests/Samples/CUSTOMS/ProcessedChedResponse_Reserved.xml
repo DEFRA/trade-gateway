@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ProcessedChedInformationResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+      <ChedCertificate>
+        <SPSCertificate xmlns="urn:un:unece:uncefact:data:standard:SPSCertificate:17">
+          <SPSExchangedDocument>
+            <ID xmlns="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21"
+              >CHEDA.GB.2026.0000123</ID
+            >
+          </SPSExchangedDocument>
+        </SPSCertificate>
+      </ChedCertificate>
+      <QuantityManagementSummary>
+        <AvailableQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity>950.5</Quantity>
+            <CertificateLineNumber>1</CertificateLineNumber>
+          </SwSupportingDocument>
+        </AvailableQuantity>
+        <ReservedQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <GoodsItemNumber>1</GoodsItemNumber>
+          <CommodityCode>
+            <HarmonizedSystemSubheadingcode>020329</HarmonizedSystemSubheadingcode>
+            <CombinedNomenclatureCode>02032955</CombinedNomenclatureCode>
+          </CommodityCode>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity TechnicalRoundingQuantity="0.25">300</Quantity>
+            <CertificateLineNumber>1</CertificateLineNumber>
+          </SwSupportingDocument>
+          <EventDateTime>2026-03-04T09:15:00Z</EventDateTime>
+          <CompetentCustomsOffice>
+            <ReferenceNumber>GB000060</ReferenceNumber>
+          </CompetentCustomsOffice>
+          <MRN>26GB16RF3TDPZE7AR2</MRN>
+        </ReservedQuantity>
+        <!-- A different declaration's holding against the same CHED. Must not appear in the response. -->
+        <ReservedQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <GoodsItemNumber>1</GoodsItemNumber>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity>90</Quantity>
+            <CertificateLineNumber>1</CertificateLineNumber>
+          </SwSupportingDocument>
+          <EventDateTime>2026-03-04T09:15:00Z</EventDateTime>
+          <CompetentCustomsOffice>
+            <ReferenceNumber>GB000060</ReferenceNumber>
+          </CompetentCustomsOffice>
+          <MRN>26GB99WTYXQ2LM5BC7</MRN>
+        </ReservedQuantity>
+        <!-- An LRN whose characters are identical to the requested MRN. A different declaration
+             entirely: it must not be reported as this declaration's holding. -->
+        <ReservedQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <GoodsItemNumber>9</GoodsItemNumber>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity>777</Quantity>
+            <CertificateLineNumber>1</CertificateLineNumber>
+          </SwSupportingDocument>
+          <EventDateTime>2026-03-04T09:15:00Z</EventDateTime>
+          <CompetentCustomsOffice>
+            <ReferenceNumber>GB000060</ReferenceNumber>
+          </CompetentCustomsOffice>
+          <LRN>26GB16RF3TDPZE7AR2</LRN>
+        </ReservedQuantity>
+        <ConsumedQuantity xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">
+          <GoodsItemNumber>2</GoodsItemNumber>
+          <SwSupportingDocument>
+            <UnitOfMeasure>KGM</UnitOfMeasure>
+            <Quantity>120</Quantity>
+            <CertificateLineNumber>2</CertificateLineNumber>
+          </SwSupportingDocument>
+          <EventDateTime>2026-03-04T09:15:00Z</EventDateTime>
+          <CompetentCustomsOffice>
+            <ReferenceNumber>GB000060</ReferenceNumber>
+          </CompetentCustomsOffice>
+          <MRN>26GB16RF3TDPZE7AR2</MRN>
+        </ConsumedQuantity>
+      </QuantityManagementSummary>
+      <OperationCode>1</OperationCode>
+      <ReservationResult>true</ReservationResult>
+      <PushActive>false</PushActive>
+    </ProcessedChedInformationResponse>
+  </S:Body>
+</S:Envelope>

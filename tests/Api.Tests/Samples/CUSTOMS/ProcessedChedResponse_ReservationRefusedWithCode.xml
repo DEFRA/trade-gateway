@@ -1,0 +1,26 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Body>
+    <ProcessedChedInformationResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+      <ChedCertificate>
+        <SPSCertificate xmlns="urn:un:unece:uncefact:data:standard:SPSCertificate:17">
+          <SPSExchangedDocument>
+            <ID xmlns="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21"
+              >CHEDA.GB.2026.0000123</ID
+            >
+          </SPSExchangedDocument>
+        </SPSCertificate>
+      </ChedCertificate>
+      <OperationCode>1</OperationCode>
+      <ReservationResult>false</ReservationResult>
+      <ReservationFailureReason>05</ReservationFailureReason>
+      <ReservationFailureConsignmentItem>
+        <GoodsItemNumber xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">1</GoodsItemNumber>
+        <DocumentLineItemNumber xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03"
+          >2</DocumentLineItemNumber
+        >
+      </ReservationFailureConsignmentItem>
+      <PushActive>false</PushActive>
+    </ProcessedChedInformationResponse>
+  </S:Body>
+</S:Envelope>

@@ -18,4 +18,16 @@ public interface ICustomsChedService
     /// <see cref="Exceptions.CustomsFaultException"/> rather than returning <c>null</c>.
     /// </returns>
     Task<ProcessedChedInformationResponseType?> GetChedQuantitySummary(string chedId, string languageCode);
+
+    /// <summary>
+    /// Reserves quantities against a declaration (<c>QuantityManagementIndication = "1"</c>). Mutates
+    /// customs state and is not retried. States the declaration's whole position rather than adding to
+    /// it, so calling twice replaces rather than accumulates.
+    /// </summary>
+    Task<ProcessedChedInformationResponseType?> ReserveChedQuantities(
+        string chedId,
+        string mrn,
+        ConsignmentItemR6ForReservationType[] items,
+        string languageCode
+    );
 }
