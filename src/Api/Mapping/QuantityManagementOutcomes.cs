@@ -1,4 +1,4 @@
-namespace Api.Extensions;
+namespace Api.Mapping;
 
 /// <summary>
 /// CERTEX quantity management outcome codes returned by clearance and intervention requests.

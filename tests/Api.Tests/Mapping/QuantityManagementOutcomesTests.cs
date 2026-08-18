@@ -1,7 +1,7 @@
-using Api.Extensions;
+using Api.Mapping;
 using Microsoft.AspNetCore.Http;
 
-namespace Api.Tests.Extensions;
+namespace Api.Tests.Mapping;
 
 public class QuantityManagementOutcomesTests
 {

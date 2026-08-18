@@ -1,6 +1,5 @@
 using Amazon.Runtime.Internal;
 using Api.Contract;
-using Api.Extensions;
 using Api.Mapping;
 using Api.Utils.Http;
 using FluentValidation;
@@ -39,7 +38,7 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
-        app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/release", Release)
+        app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/release", Release)
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)

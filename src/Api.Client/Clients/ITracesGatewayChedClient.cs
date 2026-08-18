@@ -29,6 +29,6 @@ public interface ITracesGatewayChedClient
         CancellationToken cancellationToken
     );
 
-    [Put("/customs/cheds/{id}/declarations/{mrn}/release")]
+    [Put("/customs/cheds/{id}/declarations/{mrn}/reservation/release")]
     Task<HttpResponseMessage> ReleaseChedReservation(string id, string mrn, CancellationToken cancellationToken);
 }

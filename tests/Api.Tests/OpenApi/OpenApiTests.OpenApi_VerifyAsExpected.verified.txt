@@ -375,7 +375,7 @@
         }
       }
     },
-    /customs/cheds/{chedId}/declarations/{mrn}/release: {
+    /customs/cheds/{chedId}/declarations/{mrn}/reservation/release: {
       put: {
         tags: [
           CustomsChedQuantityEndpoints
