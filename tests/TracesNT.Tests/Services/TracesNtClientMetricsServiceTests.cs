@@ -15,7 +15,7 @@ public class TracesNtClientMetricsServiceTests
         _serviceProvider = CreateServiceProvider();
         _meterFactory = _serviceProvider.GetRequiredService<IMeterFactory>();
     }
-    
+
     private static ServiceProvider CreateServiceProvider()
     {
         var serviceCollection = new ServiceCollection();
@@ -30,7 +30,7 @@ public class TracesNtClientMetricsServiceTests
     {
         return new MetricCollector<T>(_meterFactory, TracesNtClientMetricsService.MeterName, instrumentName);
     }
-    
+
     [Fact]
     public void RecordRequest_ShouldEmitMeasurement()
     {
@@ -39,7 +39,7 @@ public class TracesNtClientMetricsServiceTests
 
         metricsService.RecordRequest("some-tracesnt-action", 123, 200, null);
         metricsService.RecordRequest("some-tracesnt-action", 456, 500, "Client");
-        
+
         var receivedMeasurements = requestDurationCollector.GetMeasurementSnapshot();
         receivedMeasurements.Count.Should().Be(2);
         receivedMeasurements[0].Value.Should().Be(123);
@@ -49,7 +49,7 @@ public class TracesNtClientMetricsServiceTests
         receivedMeasurements[0].Tags["ResponseStatusCode"].Should().Be(200);
         receivedMeasurements[0].ContainsTags("FaultCode").Should().BeTrue();
         receivedMeasurements[0].Tags["FaultCode"].Should().BeNull();
-        
+
         receivedMeasurements[1].Value.Should().Be(456);
         receivedMeasurements[1].ContainsTags("Action").Should().BeTrue();
         receivedMeasurements[1].Tags["Action"].Should().Be("some-tracesnt-action");

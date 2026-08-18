@@ -23,8 +23,6 @@ public class AuthorizationConfigValidator : IValidateOptions<AuthorizationConfig
                 failures.Add($"Permission alias '{alias}' has an empty permissions list.");
         }
 
-        return failures.Count > 0
-            ? ValidateOptionsResult.Fail(failures)
-            : ValidateOptionsResult.Success;
+        return failures.Count > 0 ? ValidateOptionsResult.Fail(failures) : ValidateOptionsResult.Success;
     }
 }

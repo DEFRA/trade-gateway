@@ -1,7 +1,7 @@
 using Api.Mapping;
 using AwesomeAssertions;
-using Trade.Gateway.Api.Contract.ReferenceData;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 namespace Api.Tests.Mapping;
 
@@ -20,14 +20,15 @@ public class MetadataCodeMapperTests
 
         var result = MetadataCodeMapper.Map(source);
 
-        result.Should()
+        result
+            .Should()
             .BeEquivalentTo(
                 new MetadataCode
                 {
                     Value = "A",
                     MappedValue = "mapped-a",
                     Active = false,
-                    DisplayName = "Test Metadata Code"
+                    DisplayName = "Test Metadata Code",
                 }
             );
     }

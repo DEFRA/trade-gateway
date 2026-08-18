@@ -13,9 +13,9 @@ public class MetricsEndpointBehaviourTests
         var logger = new TestLogger();
         var sut = new MetricsEndpointBehaviour(metricsService, logger);
         var clientRuntime = WcfTestHelpers.CreateClientRuntime();
-    
+
         sut.ApplyClientBehavior(WcfTestHelpers.CreateEndpoint(), clientRuntime);
-    
+
         clientRuntime
             .ClientMessageInspectors.Should()
             .ContainSingle()

@@ -1,10 +1,10 @@
+using TracesNT.WebServices;
 using Trade.Gateway.Api.Contract.ReferenceData;
 using ContractCertificateModelReference = Trade.Gateway.Api.Contract.ReferenceData.CertificateModelReference;
 using ContractLegislationReference = Trade.Gateway.Api.Contract.ReferenceData.LegislationReference;
 using SoapCertificateModelReference = TracesNT.WebServices.CertificateModelReference;
 using SoapClassificationSectionReference = TracesNT.WebServices.ClassificationSectionReference;
 using SoapLegislationReference = TracesNT.WebServices.LegislationReference;
-using TracesNT.WebServices;
 
 namespace Api.Mapping;
 
@@ -23,21 +23,12 @@ internal static class LegislationAttributeMapper
         {
             LegislationId = checked((int)source.legislationId),
             CelexIdentifiers = source.CelexIdentifier?.Select(GetIdValue).ToList().NullIfEmpty(),
-            CertificateModels = source.CertificateModel
-                ?.Select(Map)
-                .ToList()
-                .NullIfEmpty(),
+            CertificateModels = source.CertificateModel?.Select(Map).ToList().NullIfEmpty(),
             OriginCountries = source.OriginCountry?.Select(GetIdValue).ToList().NullIfEmpty(),
-            DestinationCountries = source.DestinationCountry
-                ?.Select(GetIdValue)
-                .ToList()
-                .NullIfEmpty(),
-            OriginClassificationSections = source.OriginClassificationSection
-                ?.Select(Map)
-                .ToList()
-                .NullIfEmpty(),
-            DestinationClassificationSections = source.DestinationClassificationSection
-                ?.Select(Map)
+            DestinationCountries = source.DestinationCountry?.Select(GetIdValue).ToList().NullIfEmpty(),
+            OriginClassificationSections = source.OriginClassificationSection?.Select(Map).ToList().NullIfEmpty(),
+            DestinationClassificationSections = source
+                .DestinationClassificationSection?.Select(Map)
                 .ToList()
                 .NullIfEmpty(),
         };

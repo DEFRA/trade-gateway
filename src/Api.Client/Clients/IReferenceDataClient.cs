@@ -11,17 +11,21 @@ public interface IReferenceDataClient
     );
 
     [Get("/reference-data/classifications/trees/{treeId}")]
-    Task<ApiResponse<DefraUNVTDProfileClassificationTreeResponse>> GetClassificationTree(string treeId,
+    Task<ApiResponse<DefraUNVTDProfileClassificationTreeResponse>> GetClassificationTree(
+        string treeId,
         CancellationToken cancellationToken
     );
 
     [Get("/reference-data/classifications/trees/{treeId}/nodes/{nodeId}")]
-    Task<ApiResponse<DefraUNVTDProfileClassificationTreeNodeDetailResponse>> GetClassificationTreeNodeDetail(string treeId, string nodeId,
+    Task<ApiResponse<DefraUNVTDProfileClassificationTreeNodeDetailResponse>> GetClassificationTreeNodeDetail(
+        string treeId,
+        string nodeId,
         CancellationToken cancellationToken
     );
 
     [Get("/reference-data/metadata/{metadataType}")]
-    Task<ApiResponse<DefraUNVTDProfileMetadataListResponse>> GetMetadatas(string metadataType,
+    Task<ApiResponse<DefraUNVTDProfileMetadataListResponse>> GetMetadatas(
+        string metadataType,
         CancellationToken cancellationToken
     );
 }

@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+using System.IdentityModel.Tokens.Jwt;
 using Api.Authorization;
 using Api.Config;
 using Api.Utils.Http;
@@ -6,8 +8,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System.Diagnostics.CodeAnalysis;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace Api.Utils;
 
@@ -22,8 +22,8 @@ public static class AuthenticationRegistration
     {
         var authConfig = builder.BindConfig<AuthenticationConfig>("Authentication");
 
-        builder.Services
-            .AddAuthentication(MultiScheme)
+        builder
+            .Services.AddAuthentication(MultiScheme)
             .AddIssuerRouter(authConfig.Sts.Authority)
             .AddIssuerBearer(CognitoScheme, authConfig.Cognito, builder.Environment.IsDevelopment())
             .AddIssuerBearer(StsScheme, authConfig.Sts, builder.Environment.IsDevelopment());
@@ -42,55 +42,58 @@ public static class AuthenticationRegistration
     private static T BindConfig<T>(this WebApplicationBuilder builder, string section)
         where T : class
     {
-        builder.Services
-            .AddOptions<T>()
-            .BindConfiguration(section)
-            .ValidateDataAnnotations()
-            .ValidateOnStart();
+        builder.Services.AddOptions<T>().BindConfiguration(section).ValidateDataAnnotations().ValidateOnStart();
         return builder.Configuration.GetRequiredSection(section).Get<T>()!;
     }
 
-    private static AuthenticationBuilder AddIssuerRouter(
-        this AuthenticationBuilder auth, string stsAuthority) =>
-        auth.AddPolicyScheme(MultiScheme, null, opts =>
-            opts.ForwardDefaultSelector = ctx =>
-            {
-                var parts = ctx.Request.Headers.Authorization.FirstOrDefault()?.Split(' ');
-                var token = parts is { Length: > 0 } ? parts[^1] : null;
-                if (token != null)
+    private static AuthenticationBuilder AddIssuerRouter(this AuthenticationBuilder auth, string stsAuthority) =>
+        auth.AddPolicyScheme(
+            MultiScheme,
+            null,
+            opts =>
+                opts.ForwardDefaultSelector = ctx =>
                 {
-                    var handler = new JwtSecurityTokenHandler();
-                    if (handler.CanReadToken(token) && handler.ReadJwtToken(token).Issuer == stsAuthority)
-                        return StsScheme;
+                    var parts = ctx.Request.Headers.Authorization.FirstOrDefault()?.Split(' ');
+                    var token = parts is { Length: > 0 } ? parts[^1] : null;
+                    if (token != null)
+                    {
+                        var handler = new JwtSecurityTokenHandler();
+                        if (handler.CanReadToken(token) && handler.ReadJwtToken(token).Issuer == stsAuthority)
+                            return StsScheme;
+                    }
+                    return CognitoScheme;
                 }
-                return CognitoScheme;
-            });
+        );
 
     private static AuthenticationBuilder AddIssuerBearer(
-        this AuthenticationBuilder auth, string scheme, IssuerAuthenticationConfig config, bool isDev) =>
-        auth.AddJwtBearer(scheme, opts =>
-        {
-            opts.Authority = config.Authority;
-            opts.RequireHttpsMetadata = config.Authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
-            opts.TokenValidationParameters = new TokenValidationParameters
+        this AuthenticationBuilder auth,
+        string scheme,
+        IssuerAuthenticationConfig config,
+        bool isDev
+    ) =>
+        auth.AddJwtBearer(
+            scheme,
+            opts =>
             {
-                ValidIssuer = config.Authority,
-                ValidateIssuer = !isDev,
-                ValidAudience = config.Audience,
-                ValidateAudience = config.Audience is not null,
-                AuthenticationType = scheme, // required so the ClaimsIdentity carries the scheme name for policy checks
-            };
-
-        });
+                opts.Authority = config.Authority;
+                opts.RequireHttpsMetadata = config.Authority.StartsWith("https://", StringComparison.OrdinalIgnoreCase);
+                opts.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = config.Authority,
+                    ValidateIssuer = !isDev,
+                    ValidAudience = config.Audience,
+                    ValidateAudience = config.Audience is not null,
+                    AuthenticationType = scheme, // required so the ClaimsIdentity carries the scheme name for policy checks
+                };
+            }
+        );
 
     private static void ConfigureProxyBackchannel(this IServiceCollection services, string scheme) =>
         services
             .AddOptions<JwtBearerOptions>(scheme)
             .Configure<ProxyHttpMessageHandler>((opts, proxy) => opts.BackchannelHttpHandler = proxy);
 
-    private static void AddApiAuthorization(
-        this IServiceCollection services,
-        IssuerAuthenticationConfig cognitoConfig)
+    private static void AddApiAuthorization(this IServiceCollection services, IssuerAuthenticationConfig cognitoConfig)
     {
         ArgumentNullException.ThrowIfNull(cognitoConfig.Scope);
 
@@ -99,12 +102,10 @@ public static class AuthenticationRegistration
             .RequireAuthenticatedUser()
             .RequireAssertion(ctx =>
             {
-                var scheme = ctx.User.Identities
-                    .FirstOrDefault(i => i.IsAuthenticated)?.AuthenticationType;
+                var scheme = ctx.User.Identities.FirstOrDefault(i => i.IsAuthenticated)?.AuthenticationType;
                 var scopes = (ctx.User.FindFirst("scope")?.Value ?? "").Split(' ');
 
-                return (scheme == CognitoScheme && scopes.Contains(cognitoConfig.Scope)) ||
-                       scheme == StsScheme; // STS tokens carry no scope claim — issuer/signature validation is sufficient
+                return (scheme == CognitoScheme && scopes.Contains(cognitoConfig.Scope)) || scheme == StsScheme; // STS tokens carry no scope claim — issuer/signature validation is sufficient
             })
             .Build();
 
@@ -115,9 +116,6 @@ public static class AuthenticationRegistration
             .AddRequirements(new ResourcePermissionRequirement())
             .Build();
 
-        services
-            .AddAuthorizationBuilder()
-            .AddPolicy("ApiAccess", apiAccess)
-            .SetFallbackPolicy(fallback);
+        services.AddAuthorizationBuilder().AddPolicy("ApiAccess", apiAccess).SetFallbackPolicy(fallback);
     }
 }

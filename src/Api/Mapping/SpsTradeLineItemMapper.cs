@@ -6,7 +6,7 @@ namespace Api.Mapping;
 internal static class SpsTradeLineItemMapper
 {
     private const string LatinLanguageId = "la";
-    
+
     internal static TradeLineItem Map(SPSTradeLineItemType source, MappingContext context) =>
         new()
         {
@@ -15,10 +15,7 @@ internal static class SpsTradeLineItemMapper
             ScientificName = source.ScientificName.ForLanguage(LatinLanguageId),
             NetWeight = SpsMeasureMapper.Map(source.NetWeightMeasure),
             GrossWeight = SpsMeasureMapper.Map(source.GrossWeightMeasure),
-            ApplicableClassification = SpsClassificationMapper.MapList(
-                source.ApplicableSPSClassification,
-                context
-            ),
+            ApplicableClassification = SpsClassificationMapper.MapList(source.ApplicableSPSClassification, context),
             PhysicalReferencedLogisticsPackage = SpsPackageMapper.MapList(source.PhysicalSPSPackage),
         };
 

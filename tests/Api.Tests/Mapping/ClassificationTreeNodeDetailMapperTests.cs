@@ -25,7 +25,8 @@ public class ClassificationTreeNodeDetailMapperTests
 
         var result = ClassificationTreeNodeDetailMapper.Map(source)!;
 
-        result.Should()
+        result
+            .Should()
             .BeEquivalentTo(
                 new
                 {
@@ -59,7 +60,8 @@ public class ClassificationTreeNodeDetailMapperTests
 
         var result = ClassificationTreeNodeDetailMapper.Map(source)!;
 
-        result.Should()
+        result
+            .Should()
             .BeEquivalentTo(
                 new
                 {
@@ -209,7 +211,9 @@ public class ClassificationTreeNodeDetailMapperTests
 
         result.Attributes.Should().BeNull();
         result.LegislationAttributes.Should().ContainSingle();
-        result.LegislationAttributes![0].Should()
+        result
+            .LegislationAttributes![0]
+            .Should()
             .BeEquivalentTo(
                 new
                 {

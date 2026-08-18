@@ -1,7 +1,7 @@
+using System.Net;
 using Api.Contract;
 using AwesomeAssertions;
 using Refit;
-using System.Net;
 using Trade.Gateway.Api.Contract.Customs;
 using WireMock.ResponseBuilders;
 
@@ -32,9 +32,7 @@ public class CustomsChedQuantityEndpointsTests(TradeGatewayWebApplicationFactory
         var response = await GetAsync($"{Ched}");
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
-        response
-            .ContentHeaders?.ContentType?.MediaType.Should()
-            .Be(MediaTypeAttribute.For<ChedQuantityLedger>());
+        response.ContentHeaders?.ContentType?.MediaType.Should().Be(MediaTypeAttribute.For<ChedQuantityLedger>());
         await Verify(response.Content);
     }
 

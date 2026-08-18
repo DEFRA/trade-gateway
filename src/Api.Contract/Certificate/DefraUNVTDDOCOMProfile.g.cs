@@ -5,15 +5,15 @@ using System.ComponentModel;
 using System.Collections.Generic;
 
 namespace Trade.Gateway.Api.Contract.Certificate;
-public partial record DefraUNVTDINTRAProfile
+public partial record DefraUNVTDDOCOMProfile
 {
     [JsonPropertyName("$model")]
     [ConstValue("defra/certificate-internal/1")]
     public string Model { get; init; } = "defra/certificate-internal/1";
 
     [JsonPropertyName("$type")]
-    [ConstValue("intra")]
-    public string Type { get; init; } = "intra";
+    [ConstValue("docom")]
+    public string Type { get; init; } = "docom";
 
     [JsonPropertyName("exchangedDocument")]
     public required ExchangedDocument ExchangedDocument { get; init; }

@@ -1,5 +1,5 @@
-using System.Text.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using Json.Schema;
 using JsonSchemaToCSharp;
 using Microsoft.CodeAnalysis;
@@ -115,9 +115,11 @@ foreach (var job in jobs)
 
                     var outputFile = Path.Combine(job.OutputPath, $"{typeName}.g.cs");
                     await using var writer = new StreamWriter(outputFile, false);
+                    // Roslyn's NormalizeWhitespace defaults to CRLF on every platform, so
+                    // the newline has to be stated explicitly to match the repo's LF.
                     syntax
-                        .NormalizeWhitespace()
-                        .WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)
+                        .NormalizeWhitespace(eol: "\n")
+                        .WithTrailingTrivia(SyntaxFactory.ElasticLineFeed)
                         .WriteTo(writer);
                     totalGenerated++;
                 }
@@ -137,9 +139,11 @@ foreach (var job in jobs)
                 {
                     var outputFile = Path.Combine(job.OutputPath, $"{rootTypeName}.g.cs");
                     await using var writer = new StreamWriter(outputFile, false);
+                    // Roslyn's NormalizeWhitespace defaults to CRLF on every platform, so
+                    // the newline has to be stated explicitly to match the repo's LF.
                     syntax
-                        .NormalizeWhitespace()
-                        .WithTrailingTrivia(SyntaxFactory.ElasticCarriageReturnLineFeed)
+                        .NormalizeWhitespace(eol: "\n")
+                        .WithTrailingTrivia(SyntaxFactory.ElasticLineFeed)
                         .WriteTo(writer);
                     totalGenerated++;
                     generatedTypes.Add(rootTypeName);
@@ -205,8 +209,11 @@ static string GetSchemaRootTypeName(string fileName, JsonSchema schema)
 
 static ControlConfig ParseConfiguration(string controlFile)
 {
-    var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-        .AddJsonFile(controlFile, optional: false, reloadOnChange: false);
+    var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder().AddJsonFile(
+        controlFile,
+        optional: false,
+        reloadOnChange: false
+    );
     var configuration = builder.Build();
     var config = configuration.Get<ControlConfig>();
     if (config == null)

@@ -19,7 +19,7 @@ public class MetricsMessageInspectorTests
     {
         _sut = new MetricsMessageInspector(_metricsService, _logger);
     }
-    
+
     [Fact]
     public void BeforeSendRequest_ShouldReturnRequestedActionAndStartActionTimer()
     {
@@ -28,12 +28,12 @@ public class MetricsMessageInspectorTests
         var result = _sut.BeforeSendRequest(ref request, _channel);
 
         result.Should().NotBeNull();
-        
+
         var stopWatch = result.GetType().GetProperty("Stopwatch")?.GetValue(result, null);
         stopWatch.Should().NotBeNull();
         stopWatch.Should().BeOfType<Stopwatch>();
         ((Stopwatch)stopWatch).IsRunning.Should().BeTrue();
-        
+
         var action = result.GetType().GetProperty("Action")?.GetValue(result, null);
         action.Should().Be("some-tracesnt-action");
     }
@@ -47,33 +47,42 @@ public class MetricsMessageInspectorTests
         var httpResponse = new HttpResponseMessageProperty();
         httpResponse.StatusCode = HttpStatusCode.OK;
         reply.Properties.Add("httpResponse", httpResponse);
-        
+
         _sut.AfterReceiveReply(ref reply, correlationState);
-        
+
         var stopWatch = correlationState.GetType().GetProperty("Stopwatch")?.GetValue(correlationState, null);
         ((Stopwatch)stopWatch!).IsRunning.Should().BeFalse();
-        
-        _metricsService.Received(1).RecordRequest(Arg.Is("some-tracesnt-action"), Arg.Any<long>(), Arg.Is(200), Arg.Any<string>());
+
+        _metricsService
+            .Received(1)
+            .RecordRequest(Arg.Is("some-tracesnt-action"), Arg.Any<long>(), Arg.Is(200), Arg.Any<string>());
     }
-    
+
     [Fact]
     public void AfterReceiveReply_WhenReplyIsFaulted_ShouldRecordRequest()
     {
         var request = Message.CreateMessage(MessageVersion.Soap11, "some-tracesnt-action");
         var correlationState = _sut.BeforeSendRequest(ref request, _channel);
-        var reply = Message.CreateMessage(MessageVersion.Soap11, new FaultCode("Sender"), "Some TracesNT error", "some-tracesnt-reply");
+        var reply = Message.CreateMessage(
+            MessageVersion.Soap11,
+            new FaultCode("Sender"),
+            "Some TracesNT error",
+            "some-tracesnt-reply"
+        );
         var httpResponse = new HttpResponseMessageProperty();
         httpResponse.StatusCode = HttpStatusCode.OK;
         reply.Properties.Add("httpResponse", httpResponse);
-        
+
         _sut.AfterReceiveReply(ref reply, correlationState);
-        
+
         var stopWatch = correlationState.GetType().GetProperty("Stopwatch")?.GetValue(correlationState, null);
         ((Stopwatch)stopWatch!).IsRunning.Should().BeFalse();
-        
-        _metricsService.Received(1).RecordRequest(Arg.Is("some-tracesnt-action"), Arg.Any<long>(), Arg.Is(200), Arg.Is("Client"));
+
+        _metricsService
+            .Received(1)
+            .RecordRequest(Arg.Is("some-tracesnt-action"), Arg.Any<long>(), Arg.Is(200), Arg.Is("Client"));
     }
-    
+
     [Fact]
     public void AfterReceiveReply_WhenExceptionOccurs_ShouldLogAnError()
     {
@@ -83,16 +92,16 @@ public class MetricsMessageInspectorTests
         var httpResponse = new HttpResponseMessageProperty();
         httpResponse.StatusCode = HttpStatusCode.OK;
         reply.Properties.Add("httpResponse", httpResponse);
-        _metricsService.When(x => x.RecordRequest(Arg.Any<string>(), Arg.Any<long>(), Arg.Any<int>(), Arg.Any<string>()))
+        _metricsService
+            .When(x => x.RecordRequest(Arg.Any<string>(), Arg.Any<long>(), Arg.Any<int>(), Arg.Any<string>()))
             .Throw(new Exception("A test exception"));
-        
+
         _sut.AfterReceiveReply(ref reply, correlationState);
-        
+
         ((TestLogger)_logger)
             .Entries.Should()
             .Contain(entry =>
-                entry.Level == LogLevel.Error
-                && entry.Message.Contains("Failed to publish TracesNT metrics")
+                entry.Level == LogLevel.Error && entry.Message.Contains("Failed to publish TracesNT metrics")
             );
     }
 }

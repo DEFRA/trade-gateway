@@ -64,7 +64,8 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
             DateTimeOffset.MaxValue,
             10,
             0,
-            TestContext.Current.CancellationToken);
+            TestContext.Current.CancellationToken
+        );
         collection.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
@@ -99,7 +100,10 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     {
         var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");
 
-        var response = await client.GetChedCertification("CHEDA.XI.2026.0000063", TestContext.Current.CancellationToken);
+        var response = await client.GetChedCertification(
+            "CHEDA.XI.2026.0000063",
+            TestContext.Current.CancellationToken
+        );
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -160,7 +164,9 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     [Fact]
     public async Task No_token_is_unauthorized()
     {
-        var response = await factory.CreateITracesGatewayClient().GetIntraCertification("AUTHZ1", TestContext.Current.CancellationToken);
+        var response = await factory
+            .CreateITracesGatewayClient()
+            .GetIntraCertification("AUTHZ1", TestContext.Current.CancellationToken);
 
         response.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
     }
@@ -174,14 +180,23 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     }
 
     private void StubIntraGet() =>
-        factory.WireMockServer
-            .Given(SoapUtilities.CreateSoapRequestInterceptor(
-                "\"getEuIntraCertificate\"",
-                "/*[local-name() = 'GetEuIntraCertificateRequest']/*[local-name() = 'ID' and text()]"))
-            .RespondWith(Response.Create().WithCallback(async _ =>
-                await SoapUtilities.CreateResponseFromResource(
-                    HttpStatusCode.OK,
-                    "Api.Tests.Samples.INTRA.GetEuIntraCertificateResponse.xml")));
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getEuIntraCertificate\"",
+                    "/*[local-name() = 'GetEuIntraCertificateRequest']/*[local-name() = 'ID' and text()]"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.INTRA.GetEuIntraCertificateResponse.xml"
+                        )
+                    )
+            );
 
     private static ChedReservationRequest ReservationRequest =>
         new()
@@ -210,22 +225,40 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
                     "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_Reserved.xml")));
 
     private void StubCustomsQuantities() =>
-        factory.WireMockServer
-            .Given(SoapUtilities.CreateSoapRequestInterceptor(
-                "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"",
-                "/*[local-name() = 'ProcessedChedRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"))
-            .RespondWith(Response.Create().WithCallback(async _ =>
-                await SoapUtilities.CreateResponseFromResource(
-                    HttpStatusCode.OK,
-                    "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_CHEDA.GB.2026.0000123.xml")));
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"",
+                    "/*[local-name() = 'ProcessedChedRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_CHEDA.GB.2026.0000123.xml"
+                        )
+                    )
+            );
 
     private void StubClassificationSections() =>
-        factory.WireMockServer
-            .Given(SoapUtilities.CreateSoapRequestInterceptor(
-                "\"getClassificationSections\"",
-                "/*[local-name() = 'GetClassificationSectionsRequest']"))
-            .RespondWith(Response.Create().WithCallback(async _ =>
-                await SoapUtilities.CreateResponseFromResource(
-                    HttpStatusCode.OK,
-                    "Api.Tests.Samples.REFERENCE_DATA.GetClassificationSectionsResponse.xml")));
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getClassificationSections\"",
+                    "/*[local-name() = 'GetClassificationSectionsRequest']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.REFERENCE_DATA.GetClassificationSectionsResponse.xml"
+                        )
+                    )
+            );
 }

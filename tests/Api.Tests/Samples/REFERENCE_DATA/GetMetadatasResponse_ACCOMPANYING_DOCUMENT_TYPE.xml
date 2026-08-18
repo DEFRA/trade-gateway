@@ -5,7 +5,10 @@
       <ID>WS_REQUEST_ID</ID>
       <Message>89df45a8-1e70-4bf8-b145-ce55f72cf515</Message>
     </Message>
-    <ns2:Security xmlns:ns1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns2="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+    <ns2:Security
+      xmlns:ns1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+      xmlns:ns2="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    >
       <ns1:Timestamp>
         <ns1:Created>2026-06-03T17:33:26.914+02:00</ns1:Created>
         <ns1:Expires>2026-06-03T17:33:31.914+02:00</ns1:Expires>
@@ -13,86 +16,420 @@
     </ns2:Security>
   </S:Header>
   <S:Body>
-    <ns13:GetMetadatasResponse xmlns:ns2="http://ec.europa.eu/sanco/tracesnt/base/v4" xmlns:ns3="http://ec.europa.eu/sanco/tracesnt/error/v01" xmlns:ns4="http://ec.europa.eu/sanco/tracesnt/message/v1" xmlns:ns5="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns6="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ns7="http://ec.europa.eu/tracesnt/referencedata/certificatemodel/v1" xmlns:ns8="http://ec.europa.eu/tracesnt/referencedata/classificationsection/v1" xmlns:ns9="http://ec.europa.eu/tracesnt/referencedata/classificationtree/v1" xmlns:ns10="http://ec.europa.eu/tracesnt/referencedata/nodeattribute/v1" xmlns:ns11="http://ec.europa.eu/tracesnt/referencedata/common/v1" xmlns:ns12="http://ec.europa.eu/tracesnt/referencedata/laboratorytest/v1" xmlns:ns13="http://ec.europa.eu/tracesnt/referencedata/v1" xmlns:ns14="http://www.w3.org/2000/09/xmldsig#" xmlns:ns15="http://ec.europa.eu/tracesnt/body/v3" xmlns:ns16="urn:un:unece:uncefact:codelist:standard:ISO:ISO2AlphaLanguageCode:2006-10-27">
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Air Waybill" languageID="en">AIRWAY_BILL</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Bill of lading" languageID="en">LANDING_BILL</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Cargo Manifest" languageID="en">CARGO_MANIFEST</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Commercial invoice" languageID="en">COMMERCIAL_INVOICE</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Contract" languageID="en">CONTRACT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Freight invoice" languageID="en">FREIGHT_INVOICE</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Negotiable maritime transport document" languageID="en">NEGOTIABLE_MARITIME_TRANSPORT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Proforma invoice" languageID="en">PROFORMA_INVOICE</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Purchase order" languageID="en">PURCHASE_ORDER</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Universal transport document" languageID="en">UNIVERSAL_TRANSPORT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Sea Waybill" languageID="en">SEAWAY_BILL</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Railway bill" languageID="en">RAILWAY_BILL</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Origin certificate" languageID="en">CERTIFICATE_ORIGIN</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Heat treatment certificate" languageID="en">CERTIFICATE_HEAT_TREATMENT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Inspection certificate" languageID="en">CERTIFICATE_INSPECTION</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Internal certificate" languageID="en">CERTIFICATE_INTERNAL</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Phytosanitary certificate" languageID="en">CERTIFICATE_PHYTOSANITARY</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Customs custody receipt" languageID="en">CUSTOMS_CUSTODY_RECEIPT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Customs declaration" languageID="en">CUSTOMS_DECLARATION</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Customs declaration (post parcels)" languageID="en">CUSTOMS_DECLARATION_POST_PARCELS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Customs invoice" languageID="en">CUSTOMS_INVOICE</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Internal customs declaration forms (TIF, TIR)" languageID="en">CUSTOMS_INTERNATIONAL_TIF_TIR</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Delivery notice" languageID="en">DELIVERY_NOTICE</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Import request" languageID="en">IMPORT_REQUEST</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Informal embassy attestation" languageID="en">INFORMAL_EMBASSY_ATTESTATION</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Letter of authority (Regulation (EU) 2019/829)" languageID="en">AUTHORITY_LETTER</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Order" languageID="en">ORDER</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Packing list" languageID="en">PACKING_LIST</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Plant health movement document" languageID="en">PLANT_HEALTH_MOVEMENT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Plant passport" languageID="en">PLANT_PASSPORT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Reforwarding phytosanitary certificate" languageID="en">REFORWARDING_PHYTOSANITARY</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Replacement customs declaration" languageID="en">REPLACEMENT_CUSTOMS_DECLARATION</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Delivery order" languageID="en">DELIVERY_ORDER</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Container manifest" languageID="en">CONTAINER_MANIFEST</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Other" languageID="en">OTHER</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Import permit" languageID="en">IMPORT_PERMIT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Health certificate" languageID="en">CERTIFICATE_HEALTH</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Veterinary certificate" languageID="en">CERTIFICATE_VETERINARY</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Catch certificate paper version" languageID="en">CATCH_CERTIFICATE</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Processing statement" languageID="en">CATCH_PROCESSING_STATEMENT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Catch non manipulation document" languageID="en">CATCH_NON_MANIPULATION_DOCUMENT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Documents under Art. 14(1) of IUU Regulation" languageID="en">CATCH_DOCUMENTS_UNDER_ARTICLE_14</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="RFMO statistical document" languageID="en">CATCH_RFMO_STATISTICAL_DOCUMENT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Laboratory report" languageID="en">LABORATORY_REPORT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Analytical Report" languageID="en">ANALYTICAL_REPORT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Private attestation" languageID="en">PRIVATE_ATTESTATION</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Experts appraisals" languageID="en">EXPERTS_APPRAISALS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Insurance documents" languageID="en">INSURANCE_DOCUMENTS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Condition reports" languageID="en">CONDITION_REPORTS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Declarations under oath of the exporter, the seller or other third party, testifying as to the date on which the cultural good has left the third country" languageID="en">DECLARATIONS_COUNTRY_EXIT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Declarations under oath of the exporter, the seller or other third party, testifying other events supporting cultural goods licit provenance" languageID="en">DECLARATIONS_OTHER_EVENTS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Property titles" languageID="en">PROPERTY_TITLES</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Notarised wills" languageID="en">NOTARISED_WILLS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Handwritten testaments" languageID="en">HANDWRITTEN_TESTAMENTS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Publications of museums" languageID="en">PUBLICATIONS_OF_MUSEUMS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Publications of exhibition catalogues" languageID="en">PUBLICATIONS_OF_EXHIBITION_CATALOGUES</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Articles in related periodicals" languageID="en">ARTICLES_IN_RELATED_PERIODICALS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Auction catalogues, advertisements and other promotional sales material" languageID="en">AUCTION_CATALOGUES_ADVERTISEMENTS_AND_OTHER</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="promotional sales material" languageID="en">PROMOTIONAL_SALES_MATERIAL</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Other document, which supports the legality of export of the cultural good from the third country of interest" languageID="en">OTHER_DOCUMENT_LEGALITY</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Other document, which demonstrates the export of the cultural good from the Union" languageID="en">OTHER_DOCUMENT_EXPORT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Customs documentation" languageID="en">CUSTOMS_DOCUMENTATIONS</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Other transport document" languageID="en">OTHER_TRANSPORT_DOCUMENT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Pre-export certificate" languageID="en">PRE_EXPORT_CERTIFICATE</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Northern Ireland Plant Health Label" languageID="en">NORTHERN_IRELAND_PLANT_HEALTH_LABEL</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Laboratory Report Reg. 2019/1793" languageID="en">LABORATORY_REPORT_2019_1793</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Analytical Report Reg. 2019/1793" languageID="en">ANALYTICAL_REPORT_2019_1793</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Official Certificate Reg. 2019/1793" languageID="en">OFFICIAL_CERTIFICATE_2019_1793</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Official Certificate Reg. 2020/1158" languageID="en">OFFICIAL_CERTIFICATE_2020_1158</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Laboratory Report Reg. 2020/1158" languageID="en">LABORATORY_REPORT_2020_1158</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Health Certificate 2011/884" languageID="en">HEALTH_CERTIFICATE_2011_884</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Analytical Report 2011/884" languageID="en">ANALYTICAL_REPORT_2011_884</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Laboratory report Reg. 2011/884" languageID="en">LABORATORY_REPORT_2011_884</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Statement 2011/884" languageID="en">STATEMENT_2011_884</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Laboratory report Reg. 284/2011" languageID="en">LABORATORY_REPORT_284_2011</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Operator authorisation to issue plant passports (for specified plants)" languageID="en">OPERATOR_AUTHORISATION_TO_ISSUE_PLANT_PASSPORT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Ante-mortem and post-mortem report (Art 39(6) of Reg. 2019/627)" languageID="en">ANTE_MORTEM_AND_POST_MORTEM_REPORT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="GB Certificate Logistics Pilot (CLP)" languageID="en">GB_CERTIFICATE_LOGISTICS_PILOT</ns13:MetadataCode>
-      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Declaration by the operator-EQUI" languageID="en">DECLARATION_BY_THE_OPERATOR_EQUI</ns13:MetadataCode>
+    <ns13:GetMetadatasResponse
+      xmlns:ns2="http://ec.europa.eu/sanco/tracesnt/base/v4"
+      xmlns:ns3="http://ec.europa.eu/sanco/tracesnt/error/v01"
+      xmlns:ns4="http://ec.europa.eu/sanco/tracesnt/message/v1"
+      xmlns:ns5="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+      xmlns:ns6="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+      xmlns:ns7="http://ec.europa.eu/tracesnt/referencedata/certificatemodel/v1"
+      xmlns:ns8="http://ec.europa.eu/tracesnt/referencedata/classificationsection/v1"
+      xmlns:ns9="http://ec.europa.eu/tracesnt/referencedata/classificationtree/v1"
+      xmlns:ns10="http://ec.europa.eu/tracesnt/referencedata/nodeattribute/v1"
+      xmlns:ns11="http://ec.europa.eu/tracesnt/referencedata/common/v1"
+      xmlns:ns12="http://ec.europa.eu/tracesnt/referencedata/laboratorytest/v1"
+      xmlns:ns13="http://ec.europa.eu/tracesnt/referencedata/v1"
+      xmlns:ns14="http://www.w3.org/2000/09/xmldsig#"
+      xmlns:ns15="http://ec.europa.eu/tracesnt/body/v3"
+      xmlns:ns16="urn:un:unece:uncefact:codelist:standard:ISO:ISO2AlphaLanguageCode:2006-10-27"
+    >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Air Waybill" languageID="en"
+        >AIRWAY_BILL</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Bill of lading" languageID="en"
+        >LANDING_BILL</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Cargo Manifest" languageID="en"
+        >CARGO_MANIFEST</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Commercial invoice" languageID="en"
+        >COMMERCIAL_INVOICE</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Contract" languageID="en"
+        >CONTRACT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Freight invoice" languageID="en"
+        >FREIGHT_INVOICE</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Negotiable maritime transport document"
+        languageID="en"
+        >NEGOTIABLE_MARITIME_TRANSPORT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Proforma invoice" languageID="en"
+        >PROFORMA_INVOICE</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Purchase order" languageID="en"
+        >PURCHASE_ORDER</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Universal transport document"
+        languageID="en"
+        >UNIVERSAL_TRANSPORT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Sea Waybill" languageID="en"
+        >SEAWAY_BILL</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Railway bill" languageID="en"
+        >RAILWAY_BILL</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Origin certificate" languageID="en"
+        >CERTIFICATE_ORIGIN</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Heat treatment certificate"
+        languageID="en"
+        >CERTIFICATE_HEAT_TREATMENT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Inspection certificate" languageID="en"
+        >CERTIFICATE_INSPECTION</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Internal certificate" languageID="en"
+        >CERTIFICATE_INTERNAL</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Phytosanitary certificate"
+        languageID="en"
+        >CERTIFICATE_PHYTOSANITARY</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Customs custody receipt"
+        languageID="en"
+        >CUSTOMS_CUSTODY_RECEIPT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Customs declaration" languageID="en"
+        >CUSTOMS_DECLARATION</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Customs declaration (post parcels)"
+        languageID="en"
+        >CUSTOMS_DECLARATION_POST_PARCELS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Customs invoice" languageID="en"
+        >CUSTOMS_INVOICE</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Internal customs declaration forms (TIF, TIR)"
+        languageID="en"
+        >CUSTOMS_INTERNATIONAL_TIF_TIR</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Delivery notice" languageID="en"
+        >DELIVERY_NOTICE</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Import request" languageID="en"
+        >IMPORT_REQUEST</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Informal embassy attestation"
+        languageID="en"
+        >INFORMAL_EMBASSY_ATTESTATION</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Letter of authority (Regulation (EU) 2019/829)"
+        languageID="en"
+        >AUTHORITY_LETTER</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Order" languageID="en"
+        >ORDER</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Packing list" languageID="en"
+        >PACKING_LIST</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Plant health movement document"
+        languageID="en"
+        >PLANT_HEALTH_MOVEMENT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Plant passport" languageID="en"
+        >PLANT_PASSPORT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Reforwarding phytosanitary certificate"
+        languageID="en"
+        >REFORWARDING_PHYTOSANITARY</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Replacement customs declaration"
+        languageID="en"
+        >REPLACEMENT_CUSTOMS_DECLARATION</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Delivery order" languageID="en"
+        >DELIVERY_ORDER</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Container manifest" languageID="en"
+        >CONTAINER_MANIFEST</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Other" languageID="en"
+        >OTHER</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Import permit" languageID="en"
+        >IMPORT_PERMIT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Health certificate" languageID="en"
+        >CERTIFICATE_HEALTH</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Veterinary certificate" languageID="en"
+        >CERTIFICATE_VETERINARY</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Catch certificate paper version"
+        languageID="en"
+        >CATCH_CERTIFICATE</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Processing statement" languageID="en"
+        >CATCH_PROCESSING_STATEMENT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Catch non manipulation document"
+        languageID="en"
+        >CATCH_NON_MANIPULATION_DOCUMENT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Documents under Art. 14(1) of IUU Regulation"
+        languageID="en"
+        >CATCH_DOCUMENTS_UNDER_ARTICLE_14</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="RFMO statistical document"
+        languageID="en"
+        >CATCH_RFMO_STATISTICAL_DOCUMENT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Laboratory report" languageID="en"
+        >LABORATORY_REPORT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Analytical Report" languageID="en"
+        >ANALYTICAL_REPORT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Private attestation" languageID="en"
+        >PRIVATE_ATTESTATION</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Experts appraisals" languageID="en"
+        >EXPERTS_APPRAISALS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Insurance documents" languageID="en"
+        >INSURANCE_DOCUMENTS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Condition reports" languageID="en"
+        >CONDITION_REPORTS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Declarations under oath of the exporter, the seller or other third party, testifying as to the date on which the cultural good has left the third country"
+        languageID="en"
+        >DECLARATIONS_COUNTRY_EXIT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Declarations under oath of the exporter, the seller or other third party, testifying other events supporting cultural goods licit provenance"
+        languageID="en"
+        >DECLARATIONS_OTHER_EVENTS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Property titles" languageID="en"
+        >PROPERTY_TITLES</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Notarised wills" languageID="en"
+        >NOTARISED_WILLS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Handwritten testaments" languageID="en"
+        >HANDWRITTEN_TESTAMENTS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Publications of museums"
+        languageID="en"
+        >PUBLICATIONS_OF_MUSEUMS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Publications of exhibition catalogues"
+        languageID="en"
+        >PUBLICATIONS_OF_EXHIBITION_CATALOGUES</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Articles in related periodicals"
+        languageID="en"
+        >ARTICLES_IN_RELATED_PERIODICALS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Auction catalogues, advertisements and other promotional sales material"
+        languageID="en"
+        >AUCTION_CATALOGUES_ADVERTISEMENTS_AND_OTHER</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="promotional sales material"
+        languageID="en"
+        >PROMOTIONAL_SALES_MATERIAL</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Other document, which supports the legality of export of the cultural good from the third country of interest"
+        languageID="en"
+        >OTHER_DOCUMENT_LEGALITY</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Other document, which demonstrates the export of the cultural good from the Union"
+        languageID="en"
+        >OTHER_DOCUMENT_EXPORT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Customs documentation" languageID="en"
+        >CUSTOMS_DOCUMENTATIONS</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Other transport document"
+        languageID="en"
+        >OTHER_TRANSPORT_DOCUMENT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Pre-export certificate" languageID="en"
+        >PRE_EXPORT_CERTIFICATE</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Northern Ireland Plant Health Label"
+        languageID="en"
+        >NORTHERN_IRELAND_PLANT_HEALTH_LABEL</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Laboratory Report Reg. 2019/1793"
+        languageID="en"
+        >LABORATORY_REPORT_2019_1793</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Analytical Report Reg. 2019/1793"
+        languageID="en"
+        >ANALYTICAL_REPORT_2019_1793</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Official Certificate Reg. 2019/1793"
+        languageID="en"
+        >OFFICIAL_CERTIFICATE_2019_1793</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Official Certificate Reg. 2020/1158"
+        languageID="en"
+        >OFFICIAL_CERTIFICATE_2020_1158</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Laboratory Report Reg. 2020/1158"
+        languageID="en"
+        >LABORATORY_REPORT_2020_1158</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Health Certificate 2011/884"
+        languageID="en"
+        >HEALTH_CERTIFICATE_2011_884</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Analytical Report 2011/884"
+        languageID="en"
+        >ANALYTICAL_REPORT_2011_884</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Laboratory report Reg. 2011/884"
+        languageID="en"
+        >LABORATORY_REPORT_2011_884</ns13:MetadataCode
+      >
+      <ns13:MetadataCode active="true" listID="ACCOMPANYING_DOCUMENT_TYPE" name="Statement 2011/884" languageID="en"
+        >STATEMENT_2011_884</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Laboratory report Reg. 284/2011"
+        languageID="en"
+        >LABORATORY_REPORT_284_2011</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Operator authorisation to issue plant passports (for specified plants)"
+        languageID="en"
+        >OPERATOR_AUTHORISATION_TO_ISSUE_PLANT_PASSPORT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Ante-mortem and post-mortem report (Art 39(6) of Reg. 2019/627)"
+        languageID="en"
+        >ANTE_MORTEM_AND_POST_MORTEM_REPORT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="GB Certificate Logistics Pilot (CLP)"
+        languageID="en"
+        >GB_CERTIFICATE_LOGISTICS_PILOT</ns13:MetadataCode
+      >
+      <ns13:MetadataCode
+        active="true"
+        listID="ACCOMPANYING_DOCUMENT_TYPE"
+        name="Declaration by the operator-EQUI"
+        languageID="en"
+        >DECLARATION_BY_THE_OPERATOR_EQUI</ns13:MetadataCode
+      >
     </ns13:GetMetadatasResponse>
   </S:Body>
 </S:Envelope>

@@ -15,7 +15,7 @@ namespace JsonSchemaToCSharp
         public required List<SchemaGroup> Schemas { get; init; }
     }
 
-    public record SchemaGroup 
+    public record SchemaGroup
     {
         [Required(ErrorMessage = "namespace is required for a schema group")]
         public required string Namespace { get; set; }
