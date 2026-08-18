@@ -4,7 +4,12 @@ namespace JsonSchemaToCSharp;
 
 internal static class JsonParser
 {
-    public static void ProcessElement(JsonElement el, string currentDir, HashSet<string> processedFiles, Queue<string> toProcess)
+    public static void ProcessElement(
+        JsonElement el,
+        string currentDir,
+        HashSet<string> processedFiles,
+        Queue<string> toProcess
+    )
     {
         switch (el.ValueKind)
         {
@@ -35,7 +40,12 @@ internal static class JsonParser
         }
     }
 
-    private static void EnqueueReference(string? rv, string currentDir, HashSet<string> processedFiles, Queue<string> toProcess)
+    private static void EnqueueReference(
+        string? rv,
+        string currentDir,
+        HashSet<string> processedFiles,
+        Queue<string> toProcess
+    )
     {
         if (string.IsNullOrWhiteSpace(rv) || rv.StartsWith('#'))
             return;

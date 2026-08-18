@@ -4,7 +4,12 @@ namespace JsonSchemaToCSharp
 {
     public static class JsonRefWalker
     {
-        public static void ProcessElement(JsonElement el, string currentDir, HashSet<string> processedFiles, Queue<string> toProcess)
+        public static void ProcessElement(
+            JsonElement el,
+            string currentDir,
+            HashSet<string> processedFiles,
+            Queue<string> toProcess
+        )
         {
             switch (el.ValueKind)
             {
@@ -35,7 +40,12 @@ namespace JsonSchemaToCSharp
             }
         }
 
-        private static void TryEnqueueRef(string? rv, string currentDir, HashSet<string> processedFiles, Queue<string> toProcess)
+        private static void TryEnqueueRef(
+            string? rv,
+            string currentDir,
+            HashSet<string> processedFiles,
+            Queue<string> toProcess
+        )
         {
             if (string.IsNullOrWhiteSpace(rv) || rv.StartsWith('#'))
                 return;

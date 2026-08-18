@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 
 namespace Trade.Gateway.Api.Contract.Certificate;
+
 #pragma warning disable S101
 public record DefraUNVTDCHEDSummaryProfileItem
 #pragma warning restore S101

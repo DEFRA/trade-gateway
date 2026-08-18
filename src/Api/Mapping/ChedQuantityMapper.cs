@@ -1,6 +1,6 @@
 using System.Globalization;
-using Trade.Gateway.Api.Contract.Customs;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.Customs;
 using ContractCommodityCode = Trade.Gateway.Api.Contract.Customs.CommodityCode;
 
 namespace Api.Mapping;
@@ -61,8 +61,8 @@ internal static class ChedQuantityMapper
                 ? null
                 : MapUnitOfMeasure(source.SwSupportingDocument.UnitOfMeasure),
             Quantity = source.SwSupportingDocument?.Quantity?.Value ?? 0m,
-            TechnicalRoundingQuantity = source.SwSupportingDocument?.Quantity is
-            { TechnicalRoundingQuantitySpecified: true } quantity
+            TechnicalRoundingQuantity = source.SwSupportingDocument?.Quantity
+                is { TechnicalRoundingQuantitySpecified: true } quantity
                 ? quantity.TechnicalRoundingQuantity
                 : null,
             EventDateTime = source.EventDateTimeSpecified ? ToOffset(source.EventDateTime) : null,
@@ -101,8 +101,7 @@ internal static class ChedQuantityMapper
         if (string.IsNullOrEmpty(item))
             return null;
 
-        var type =
-            itemElementName == ItemChoiceType2.MRN ? DeclarationReferenceType.Mrn : DeclarationReferenceType.Lrn;
+        var type = itemElementName == ItemChoiceType2.MRN ? DeclarationReferenceType.Mrn : DeclarationReferenceType.Lrn;
 
         return new DeclarationReference { Type = type, Value = item };
     }

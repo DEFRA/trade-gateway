@@ -1,3 +1,5 @@
+using System.Net.Http.Headers;
+using System.Text.Json;
 using Amazon.Runtime;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
@@ -11,8 +13,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Refit;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using Trade.Gateway.Api.Client.Clients;
 using Trade.Gateway.Api.Client.Extensions;
 using WireMock.Server;
@@ -52,11 +52,13 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                 )
         );
 
-        builder.ConfigureServices((context, services) =>
-        {
-            services.AddSingleton(server);
-            services.AddTracesGatewayApiClients(context.Configuration);
-        });
+        builder.ConfigureServices(
+            (context, services) =>
+            {
+                services.AddSingleton(server);
+                services.AddTracesGatewayApiClients(context.Configuration);
+            }
+        );
 
         builder.ConfigureTestServices(services =>
             services.PostConfigureAll<JwtBearerOptions>(opts =>
@@ -68,8 +70,6 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                 opts.ConfigurationManager = new StaticConfigurationManager<OpenIdConnectConfiguration>(oidcConfig);
             })
         );
-
-        
     }
 
     private const string CognitoTokenEndpoint = "/local/cognito/token";
@@ -155,31 +155,37 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
     public async Task<ITracesGatewayClient> CreateClientForPrincipalAsync(string sub)
     {
         var client = CreateClient();
-        
+
         var token = await GetCognitoTokenAsync(CognitoScope, sub);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-        return RestService.For<ITracesGatewayClient>(client, new RefitSettings(
-            new SystemTextJsonContentSerializer(
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never,
-                }
+        return RestService.For<ITracesGatewayClient>(
+            client,
+            new RefitSettings(
+                new SystemTextJsonContentSerializer(
+                    new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never,
+                    }
+                )
             )
-        ));
+        );
     }
 
     public ITracesGatewayClient CreateITracesGatewayClient()
     {
         var client = CreateClient();
-        return RestService.For<ITracesGatewayClient>(client, new RefitSettings(
-            new SystemTextJsonContentSerializer(
-                new JsonSerializerOptions(JsonSerializerDefaults.Web)
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never,
-                }
+        return RestService.For<ITracesGatewayClient>(
+            client,
+            new RefitSettings(
+                new SystemTextJsonContentSerializer(
+                    new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                    {
+                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.Never,
+                    }
+                )
             )
-        ));
+        );
     }
 }

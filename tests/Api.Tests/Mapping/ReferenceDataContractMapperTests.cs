@@ -1,7 +1,7 @@
 using Api.Mapping;
 using AwesomeAssertions;
-using Trade.Gateway.Api.Contract.ReferenceData;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 namespace Api.Tests.Mapping;
 
@@ -11,14 +11,15 @@ public class ReferenceDataContractMapperTests
     public void Map_ClassificationTrees_MapsSummaries()
     {
         ClassificationTreeDescription[] response =
-            [
-                new () { treeID = "intra_trade", Value = "EU Intra-trade" },
-                new() { treeID = "cheda", Value = "CHED-A" },
-            ];
+        [
+            new() { treeID = "intra_trade", Value = "EU Intra-trade" },
+            new() { treeID = "cheda", Value = "CHED-A" },
+        ];
 
         var result = response.Select(ClassificationTreeSummaryMapper.Map).ToList();
 
-        result.Should()
+        result
+            .Should()
             .BeEquivalentTo(
                 new List<ClassificationTreeSummary>
                 {
@@ -38,21 +39,42 @@ public class ReferenceDataContractMapperTests
     public void Map_MetadataList_MapsResponse()
     {
         MetadataCodeType[] response =
-            [
-                new() { Value = "A", mappedValue = "mapped-a", active = true },
-                new() { Value = "B", mappedValue = "mapped-b", active = false },
-            ];
+        [
+            new()
+            {
+                Value = "A",
+                mappedValue = "mapped-a",
+                active = true,
+            },
+            new()
+            {
+                Value = "B",
+                mappedValue = "mapped-b",
+                active = false,
+            },
+        ];
 
         var result = MetadataMapper.Map(response, "operatorActivityType");
 
         result.MetadataType.Should().Be("operatorActivityType");
         result.RetrievedAt.Should().NotBeNull();
-        result.Items.Should()
+        result
+            .Items.Should()
             .BeEquivalentTo(
                 new List<MetadataCode>
                 {
-                    new() { Value = "A", MappedValue = "mapped-a", Active = true },
-                    new() { Value = "B", MappedValue = "mapped-b", Active = false },
+                    new()
+                    {
+                        Value = "A",
+                        MappedValue = "mapped-a",
+                        Active = true,
+                    },
+                    new()
+                    {
+                        Value = "B",
+                        MappedValue = "mapped-b",
+                        Active = false,
+                    },
                 }
             );
     }

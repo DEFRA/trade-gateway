@@ -1,5 +1,5 @@
-using System.Text.Json;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using Json.Schema;
 using JsonSchemaToCSharp;
 using Microsoft.CodeAnalysis;
@@ -209,8 +209,11 @@ static string GetSchemaRootTypeName(string fileName, JsonSchema schema)
 
 static ControlConfig ParseConfiguration(string controlFile)
 {
-    var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder()
-        .AddJsonFile(controlFile, optional: false, reloadOnChange: false);
+    var builder = new Microsoft.Extensions.Configuration.ConfigurationBuilder().AddJsonFile(
+        controlFile,
+        optional: false,
+        reloadOnChange: false
+    );
     var configuration = builder.Build();
     var config = configuration.Get<ControlConfig>();
     if (config == null)

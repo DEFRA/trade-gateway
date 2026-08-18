@@ -18,6 +18,7 @@ namespace Api.Tests.Services;
 public class CustomsChedServiceTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string CustomsPath = "/CustomsCertexChedServiceV06";
+
     /// <summary>
     /// Distinct from every CHED id the endpoint tests stub — the WireMock server is shared across
     /// the collection, and their SOAPAction+XPath matchers outscore the path-only stub used here.
@@ -157,9 +158,7 @@ public class CustomsChedServiceTests(TradeGatewayWebApplicationFactory factory)
     private async Task InvokeAsync()
     {
         using var scope = factory.Services.CreateScope();
-        await scope
-            .ServiceProvider.GetRequiredService<ICustomsChedService>()
-            .GetChedQuantitySummary(ChedId, "en");
+        await scope.ServiceProvider.GetRequiredService<ICustomsChedService>().GetChedQuantitySummary(ChedId, "en");
     }
 
     /// <summary>

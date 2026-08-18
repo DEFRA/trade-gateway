@@ -24,7 +24,8 @@ public class LegislationAttributeMapperTests
 
         var result = LegislationAttributeMapper.Map(source);
 
-        result.Should()
+        result
+            .Should()
             .BeEquivalentTo(
                 new
                 {

@@ -10,11 +10,9 @@ internal static class SpsCountryMapper
         if (source is null)
             return null;
 
-        return new TradeCountry { Code = new CodedValue
-            {
-                Value = source.ID?.Value!,
-                Name = source.Name.ForLanguage(context.LanguageCode) 
-            }
+        return new TradeCountry
+        {
+            Code = new CodedValue { Value = source.ID?.Value!, Name = source.Name.ForLanguage(context.LanguageCode) },
         };
     }
 

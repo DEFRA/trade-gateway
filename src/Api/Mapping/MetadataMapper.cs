@@ -1,6 +1,6 @@
 using Api.Constants;
-using Trade.Gateway.Api.Contract.ReferenceData;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 namespace Api.Mapping;
 
@@ -13,7 +13,7 @@ internal static class MetadataMapper
             Source = ReferenceDataSource.Traces,
             MetadataType = metadataType,
             Items = source.Select(MetadataCodeMapper.Map).ToList(),
-            RetrievedAt = DateTimeOffset.UtcNow
+            RetrievedAt = DateTimeOffset.UtcNow,
         };
     }
 }

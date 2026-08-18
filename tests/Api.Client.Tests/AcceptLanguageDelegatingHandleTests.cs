@@ -19,10 +19,7 @@ namespace Api.Client.Tests
                 return new HttpResponseMessage(HttpStatusCode.OK);
             });
 
-            var handler = new AcceptLanguageDelegatingHandle
-            {
-                InnerHandler = innerHandler
-            };
+            var handler = new AcceptLanguageDelegatingHandle { InnerHandler = innerHandler };
 
             var client = new HttpClient(handler);
 
@@ -48,10 +45,7 @@ namespace Api.Client.Tests
                 return new HttpResponseMessage(HttpStatusCode.OK);
             });
 
-            var handler = new AcceptLanguageDelegatingHandle
-            {
-                InnerHandler = innerHandler
-            };
+            var handler = new AcceptLanguageDelegatingHandle { InnerHandler = innerHandler };
 
             var invoker = new HttpMessageInvoker(handler);
 
@@ -66,7 +60,5 @@ namespace Api.Client.Tests
             Assert.Single(capturedRequest!.Headers.AcceptLanguage);
             Assert.Equal("en", capturedRequest.Headers.AcceptLanguage.Single().Value);
         }
-
-       
     }
 }

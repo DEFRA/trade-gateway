@@ -36,7 +36,9 @@ public class ClassificationTreeNodeMapperTests
         result.Selectable.Should().BeFalse();
         result.CnCode.Should().BeNull();
         result.Children.Should().ContainSingle();
-        result.Children![0].Should()
+        result
+            .Children![0]
+            .Should()
             .BeEquivalentTo(
                 new
                 {

@@ -19,10 +19,7 @@ public class TracingDelegatingHandlerTests
             return new HttpResponseMessage(HttpStatusCode.OK);
         });
 
-        var handler = new TracingDelegatingHandler(_ => traceId, null!)
-        {
-            InnerHandler = innerHandler
-        };
+        var handler = new TracingDelegatingHandler(_ => traceId, null!) { InnerHandler = innerHandler };
 
         var client = new HttpClient(handler);
 
@@ -41,16 +38,18 @@ public class TracingDelegatingHandlerTests
         // Arrange
         var count = 0;
 
-        var innerHandler = new TestHttpMessageHandler(_ =>
-            new HttpResponseMessage(HttpStatusCode.OK));
+        var innerHandler = new TestHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
 
-        var handler = new TracingDelegatingHandler(_ =>
+        var handler = new TracingDelegatingHandler(
+            _ =>
+            {
+                count++;
+                return $"trace-{count}";
+            },
+            null!
+        )
         {
-            count++;
-            return $"trace-{count}";
-        }, null!)
-        {
-            InnerHandler = innerHandler
+            InnerHandler = innerHandler,
         };
 
         var client = new HttpClient(handler);
@@ -76,10 +75,7 @@ public class TracingDelegatingHandlerTests
         });
 
         var counter = 0;
-        var handler = new TracingDelegatingHandler(_ => $"trace-{++counter}", null!)
-        {
-            InnerHandler = innerHandler
-        };
+        var handler = new TracingDelegatingHandler(_ => $"trace-{++counter}", null!) { InnerHandler = innerHandler };
 
         var client = new HttpClient(handler);
 
@@ -90,6 +86,4 @@ public class TracingDelegatingHandlerTests
         // Assert
         Assert.Equal(new[] { "trace-1", "trace-2" }, traceIds);
     }
-
-       
 }

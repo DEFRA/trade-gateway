@@ -10,7 +10,7 @@ internal static class ChedMapper
         {
             ExchangedDocument = SpsExchangedDocumentMapper.Map(source.SPSCertificate.SPSExchangedDocument, context),
             SpecifiedConsignment = SpsConsignmentMapper.Map(source.SPSCertificate.SPSConsignment, context),
-            LaboratoryObservationResult = null
+            LaboratoryObservationResult = null,
         };
 
     internal static DefraUNVTDCHEDSummaryProfileItem Map(ChedCertificateQueryResultType source) =>

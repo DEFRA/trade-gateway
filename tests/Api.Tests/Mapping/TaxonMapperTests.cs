@@ -20,7 +20,8 @@ public class TaxonMapperTests
 
         var result = TaxonMapper.Map(source);
 
-        result.Should()
+        result
+            .Should()
             .BeEquivalentTo(
                 new
                 {

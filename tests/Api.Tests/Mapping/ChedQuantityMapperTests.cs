@@ -1,7 +1,7 @@
 using Api.Mapping;
 using AwesomeAssertions;
-using Trade.Gateway.Api.Contract.Customs;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.Customs;
 
 namespace Api.Tests.Mapping;
 
@@ -144,9 +144,7 @@ public class ChedQuantityMapperTests
         var withoutDate = Allocated(Mrn, ItemChoiceType2.MRN, 1m);
         withoutDate.EventDateTimeSpecified = false;
 
-        var reserved = ChedQuantityMapper.MapLedger(Summary(withDate, withoutDate))
-            .Allocations!
-            .Reserved;
+        var reserved = ChedQuantityMapper.MapLedger(Summary(withDate, withoutDate)).Allocations!.Reserved;
 
         reserved[0].EventDateTime.Should().Be(new DateTimeOffset(2026, 3, 4, 9, 15, 0, TimeSpan.Zero));
         reserved[1].EventDateTime.Should().BeNull();
@@ -186,7 +184,9 @@ public class ChedQuantityMapperTests
 
         var reserved = ChedQuantityMapper.MapLedger(summary).Allocations!.Reserved;
 
-        reserved[0].DeclarationReference.Should().Be(new DeclarationReference { Type = DeclarationReferenceType.Mrn, Value = Mrn });
+        reserved[0]
+            .DeclarationReference.Should()
+            .Be(new DeclarationReference { Type = DeclarationReferenceType.Mrn, Value = Mrn });
         reserved[1].DeclarationReference!.Type.Should().Be(DeclarationReferenceType.Lrn);
         reserved[2].DeclarationReference.Should().BeNull("there is no reference without a value");
     }
