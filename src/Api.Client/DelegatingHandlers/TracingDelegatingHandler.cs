@@ -1,8 +1,10 @@
 namespace Trade.Gateway.Api.Client.DelegatingHandlers;
 
-public class TracingDelegatingHandler(Func<IServiceProvider, string> traceIdAccessor, IServiceProvider serviceProvider) : DelegatingHandler
+public class TracingDelegatingHandler(Func<IServiceProvider, string> traceIdAccessor, IServiceProvider serviceProvider)
+    : DelegatingHandler
 {
-    private  const string TraceKey = "x-cdp-request-id";
+    private const string TraceKey = "x-cdp-request-id";
+
     protected override async Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
         CancellationToken cancellationToken

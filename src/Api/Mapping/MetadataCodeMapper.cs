@@ -1,5 +1,5 @@
-using Trade.Gateway.Api.Contract.ReferenceData;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 namespace Api.Mapping;
 
@@ -11,6 +11,6 @@ internal static class MetadataCodeMapper
             Value = source.Value,
             MappedValue = source.mappedValue,
             Active = source.active,
-            DisplayName = source.name
+            DisplayName = source.name,
         };
 }

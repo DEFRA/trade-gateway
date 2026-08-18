@@ -16,31 +16,34 @@ public class StsAuthDelegatingHandlerTests
         // Arrange
         var sts = Substitute.For<IAmazonSecurityTokenService>();
 
-        sts.GetWebIdentityTokenAsync(
-                Arg.Any<GetWebIdentityTokenRequest>(),
-                Arg.Any<CancellationToken>())
-            .Returns(new GetWebIdentityTokenResponse
-            {
-                WebIdentityToken = "token-123",
-                Expiration = DateTime.UtcNow.AddMinutes(10)
-            });
+        sts.GetWebIdentityTokenAsync(Arg.Any<GetWebIdentityTokenRequest>(), Arg.Any<CancellationToken>())
+            .Returns(
+                new GetWebIdentityTokenResponse
+                {
+                    WebIdentityToken = "token-123",
+                    Expiration = DateTime.UtcNow.AddMinutes(10),
+                }
+            );
 
         HttpRequestMessage? capturedRequest = null;
 
         var handler = new StsAuthDelegatingHandler(
             sts,
-            Options.Create(new TracesGatewayOptions
-            {
-                BaseUrl = "local",
-                Audience = "audience",
-                DurationSeconds = 900
-            }))
+            Options.Create(
+                new TracesGatewayOptions
+                {
+                    BaseUrl = "local",
+                    Audience = "audience",
+                    DurationSeconds = 900,
+                }
+            )
+        )
         {
             InnerHandler = new TestHttpMessageHandler(request =>
             {
                 capturedRequest = request;
                 return new HttpResponseMessage(HttpStatusCode.OK);
-            })
+            }),
         };
 
         var client = new HttpClient(handler);
@@ -60,26 +63,28 @@ public class StsAuthDelegatingHandlerTests
         // Arrange
         var sts = Substitute.For<IAmazonSecurityTokenService>();
 
-        sts.GetWebIdentityTokenAsync(
-                Arg.Any<GetWebIdentityTokenRequest>(),
-                Arg.Any<CancellationToken>())
-            .Returns(new GetWebIdentityTokenResponse
-            {
-                WebIdentityToken = "cached-token",
-                Expiration = DateTime.UtcNow.AddMinutes(10)
-            });
+        sts.GetWebIdentityTokenAsync(Arg.Any<GetWebIdentityTokenRequest>(), Arg.Any<CancellationToken>())
+            .Returns(
+                new GetWebIdentityTokenResponse
+                {
+                    WebIdentityToken = "cached-token",
+                    Expiration = DateTime.UtcNow.AddMinutes(10),
+                }
+            );
 
         var handler = new StsAuthDelegatingHandler(
             sts,
-            Options.Create(new TracesGatewayOptions
-            {
-                BaseUrl = "local",
-                Audience = "audience",
-                DurationSeconds = 900
-            }))
+            Options.Create(
+                new TracesGatewayOptions
+                {
+                    BaseUrl = "local",
+                    Audience = "audience",
+                    DurationSeconds = 900,
+                }
+            )
+        )
         {
-            InnerHandler = new TestHttpMessageHandler(_ =>
-                new HttpResponseMessage(HttpStatusCode.OK))
+            InnerHandler = new TestHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)),
         };
 
         var client = new HttpClient(handler);
@@ -89,9 +94,8 @@ public class StsAuthDelegatingHandlerTests
         await client.GetAsync("https://example.com");
 
         // Assert
-        await sts.Received(1).GetWebIdentityTokenAsync(
-            Arg.Any<GetWebIdentityTokenRequest>(),
-            Arg.Any<CancellationToken>());
+        await sts.Received(1)
+            .GetWebIdentityTokenAsync(Arg.Any<GetWebIdentityTokenRequest>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -100,32 +104,33 @@ public class StsAuthDelegatingHandlerTests
         // Arrange
         var sts = Substitute.For<IAmazonSecurityTokenService>();
 
-        sts.GetWebIdentityTokenAsync(
-                Arg.Any<GetWebIdentityTokenRequest>(),
-                Arg.Any<CancellationToken>())
+        sts.GetWebIdentityTokenAsync(Arg.Any<GetWebIdentityTokenRequest>(), Arg.Any<CancellationToken>())
             .Returns(
                 new GetWebIdentityTokenResponse
                 {
                     WebIdentityToken = "token-1",
-                    Expiration = DateTime.UtcNow.AddSeconds(5)
+                    Expiration = DateTime.UtcNow.AddSeconds(5),
                 },
                 new GetWebIdentityTokenResponse
                 {
                     WebIdentityToken = "token-2",
-                    Expiration = DateTime.UtcNow.AddMinutes(10)
-                });
+                    Expiration = DateTime.UtcNow.AddMinutes(10),
+                }
+            );
 
         var handler = new StsAuthDelegatingHandler(
             sts,
-            Options.Create(new TracesGatewayOptions
-            {
-                BaseUrl = "local",
-                Audience = "audience",
-                DurationSeconds = 900
-            }))
+            Options.Create(
+                new TracesGatewayOptions
+                {
+                    BaseUrl = "local",
+                    Audience = "audience",
+                    DurationSeconds = 900,
+                }
+            )
+        )
         {
-            InnerHandler = new TestHttpMessageHandler(_ =>
-                new HttpResponseMessage(HttpStatusCode.OK))
+            InnerHandler = new TestHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)),
         };
 
         var client = new HttpClient(handler);
@@ -135,9 +140,8 @@ public class StsAuthDelegatingHandlerTests
         await client.GetAsync("https://example.com");
 
         // Assert
-        await sts.Received(2).GetWebIdentityTokenAsync(
-            Arg.Any<GetWebIdentityTokenRequest>(),
-            Arg.Any<CancellationToken>());
+        await sts.Received(2)
+            .GetWebIdentityTokenAsync(Arg.Any<GetWebIdentityTokenRequest>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -146,26 +150,28 @@ public class StsAuthDelegatingHandlerTests
         // Arrange
         var sts = Substitute.For<IAmazonSecurityTokenService>();
 
-        sts.GetWebIdentityTokenAsync(
-                Arg.Any<GetWebIdentityTokenRequest>(),
-                Arg.Any<CancellationToken>())
-            .Returns(new GetWebIdentityTokenResponse
-            {
-                WebIdentityToken = "token",
-                Expiration = DateTime.UtcNow.AddMinutes(10)
-            });
+        sts.GetWebIdentityTokenAsync(Arg.Any<GetWebIdentityTokenRequest>(), Arg.Any<CancellationToken>())
+            .Returns(
+                new GetWebIdentityTokenResponse
+                {
+                    WebIdentityToken = "token",
+                    Expiration = DateTime.UtcNow.AddMinutes(10),
+                }
+            );
 
         var handler = new StsAuthDelegatingHandler(
             sts,
-            Options.Create(new TracesGatewayOptions
-            {
-                BaseUrl = "local",
-                Audience = "expected-audience",
-                DurationSeconds = 1234
-            }))
+            Options.Create(
+                new TracesGatewayOptions
+                {
+                    BaseUrl = "local",
+                    Audience = "expected-audience",
+                    DurationSeconds = 1234,
+                }
+            )
+        )
         {
-            InnerHandler = new TestHttpMessageHandler(_ =>
-                new HttpResponseMessage(HttpStatusCode.OK))
+            InnerHandler = new TestHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)),
         };
 
         var client = new HttpClient(handler);
@@ -174,13 +180,14 @@ public class StsAuthDelegatingHandlerTests
         await client.GetAsync("https://example.com");
 
         // Assert
-        await sts.Received(1).GetWebIdentityTokenAsync(
-            Arg.Is<GetWebIdentityTokenRequest>(r =>
-                r!.Audience.Single() == "expected-audience" &&
-                r.DurationSeconds == 1234 &&
-                r.SigningAlgorithm == "RS256"),
-            Arg.Any<CancellationToken>());
+        await sts.Received(1)
+            .GetWebIdentityTokenAsync(
+                Arg.Is<GetWebIdentityTokenRequest>(r =>
+                    r!.Audience.Single() == "expected-audience"
+                    && r.DurationSeconds == 1234
+                    && r.SigningAlgorithm == "RS256"
+                ),
+                Arg.Any<CancellationToken>()
+            );
     }
-
-    
 }

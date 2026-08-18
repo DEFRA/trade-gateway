@@ -31,8 +31,7 @@ public static class PathPattern
                 return false;
 
             // "*" matches any single segment; otherwise require a literal match.
-            if (segment != "*" &&
-                !string.Equals(segment, pathSegments[i], StringComparison.OrdinalIgnoreCase))
+            if (segment != "*" && !string.Equals(segment, pathSegments[i], StringComparison.OrdinalIgnoreCase))
                 return false;
         }
 
@@ -40,6 +39,5 @@ public static class PathPattern
         return patternSegments.Length == pathSegments.Length;
     }
 
-    private static string[] Split(string value) =>
-        value.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
+    private static string[] Split(string value) => value.Split(Separator, StringSplitOptions.RemoveEmptyEntries);
 }

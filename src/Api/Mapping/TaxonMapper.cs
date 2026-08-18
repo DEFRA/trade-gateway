@@ -1,5 +1,5 @@
-using Trade.Gateway.Api.Contract.ReferenceData;
 using TracesNT.WebServices;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 namespace Api.Mapping;
 
@@ -15,8 +15,11 @@ internal static class TaxonMapper
             LanguageId = source.languageID,
         };
 
-    internal static List<Taxon>? MapByNodeId(
-        IEnumerable<AbstractNodeAttribute>? source,
-        string nodeId
-    ) => source?.OfType<TaxonNodeAttribute>().FirstOrDefault(a => a.id == nodeId)?.TaxonReference?.Select(Map).ToList().NullIfEmpty();
+    internal static List<Taxon>? MapByNodeId(IEnumerable<AbstractNodeAttribute>? source, string nodeId) =>
+        source
+            ?.OfType<TaxonNodeAttribute>()
+            .FirstOrDefault(a => a.id == nodeId)
+            ?.TaxonReference?.Select(Map)
+            .ToList()
+            .NullIfEmpty();
 }

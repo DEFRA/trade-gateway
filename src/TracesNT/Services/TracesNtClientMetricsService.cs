@@ -6,37 +6,29 @@ namespace TracesNT.Services;
 public class TracesNtClientMetricsService : ITracesNtClientMetricsService
 {
     public const string MeterName = "TracesNTClient";
-    
+
     private readonly Histogram<long> _requestDuration;
-    
+
     public TracesNtClientMetricsService(IMeterFactory meterFactory)
     {
         var meter = meterFactory.Create(MeterName);
-        
-        _requestDuration = meter.CreateHistogram<long>(
-            "RequestDuration",
-            "MILLISECONDS",
-            "TracesNT request duration"
-        );
+
+        _requestDuration = meter.CreateHistogram<long>("RequestDuration", "MILLISECONDS", "TracesNT request duration");
     }
 
-    public void RecordRequest(
-        string action,
-        long requestDuration,
-        int? httpStatusCode,
-        string? soapFaultCode)
+    public void RecordRequest(string action, long requestDuration, int? httpStatusCode, string? soapFaultCode)
     {
         var tags = new TagList
         {
             { Constants.Tags.Service, Process.GetCurrentProcess().ProcessName },
             { Constants.Tags.Action, action },
             { Constants.Tags.ResponseStatusCode, httpStatusCode },
-            { Constants.Tags.FaultCode, soapFaultCode }
+            { Constants.Tags.FaultCode, soapFaultCode },
         };
-        
+
         _requestDuration.Record(requestDuration, tags);
     }
-    
+
     private static class Constants
     {
         public static class Tags

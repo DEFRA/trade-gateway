@@ -21,6 +21,8 @@ internal static class SpsConsignmentMapper
             TransitCountry = SpsCountryMapper.MapList(source.TransitSPSCountry, context),
             UnloadingBaseportLocation = SpsLocationMapper.Map(source.UnloadingBaseportSPSLocation, context),
             IncludedConsignmentItem = SpsConsignmentItemMapper.MapList(source.IncludedSPSConsignmentItem, context),
-            MainCarriageLogisticsTransportMovement = SpsTransportMovementMapper.MapList(source.MainCarriageSPSTransportMovement)
+            MainCarriageLogisticsTransportMovement = SpsTransportMovementMapper.MapList(
+                source.MainCarriageSPSTransportMovement
+            ),
         };
 }

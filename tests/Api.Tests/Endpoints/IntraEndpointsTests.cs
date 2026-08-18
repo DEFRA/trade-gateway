@@ -1,7 +1,7 @@
-using Api.Contract;
-using Refit;
 using System.Globalization;
 using System.Net;
+using Api.Contract;
+using Refit;
 using Trade.Gateway.Api.Contract.Certificate;
 using WireMock.ResponseBuilders;
 
@@ -193,12 +193,13 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
     public async Task Find_WhenUpdatedFromIsMissing_ReturnsBadRequest()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
-        var response = await client.FindIntraUpdates(new DateTime(2002,10,28, 0, 0, 0, DateTimeKind.Utc),
+        var response = await client.FindIntraUpdates(
+            new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
             5,
             5,
-            TestContext.Current.CancellationToken);
-        
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
@@ -227,11 +228,13 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
-        var response = await client.FindIntraUpdates(new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+        var response = await client.FindIntraUpdates(
+            new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
             10,
             0,
-            TestContext.Current.CancellationToken);
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(

@@ -26,7 +26,8 @@ public class ClassificationSectionMapperTests
 
         var result = ClassificationSectionMapper.Map(source);
 
-        result.Should()
+        result
+            .Should()
             .BeEquivalentTo(
                 new
                 {
@@ -49,16 +50,13 @@ public class ClassificationSectionMapperTests
             chapter = "veterinary",
             lms = false,
             Description = new TextType { Value = "Dealers" },
-            Scope =
-            [
-                new MetaCountryGroupReference { id = "EFTA" },
-                new MetaCountryGroupReference { id = "EU" },
-            ],
+            Scope = [new MetaCountryGroupReference { id = "EFTA" }, new MetaCountryGroupReference { id = "EU" }],
         };
 
         var result = ClassificationSectionMapper.Map(source);
 
-        result.Should()
+        result
+            .Should()
             .BeEquivalentTo(
                 new
                 {

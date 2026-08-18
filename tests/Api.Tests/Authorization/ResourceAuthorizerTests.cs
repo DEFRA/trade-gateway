@@ -10,25 +10,30 @@ public class ResourceAuthorizerTests
     private const string IntraSub = "sub-intra";
     private const string RefDataSub = "sub-ref";
 
-    private static ResourceAuthorizer Build() => new(Options.Create(new AuthorizationConfig
-    {
-        Principals = new Dictionary<string, string>
-        {
-            ["intra-reader"] = IntraSub,
-            ["reference-data-reader"] = RefDataSub,
-        },
-        Permissions = new Dictionary<string, List<PermissionGrant>>
-        {
-            ["intra-reader"] =
-            [
-                new PermissionGrant { Actions = ["READ", "WRITE"], Resource = "/certificates/intras/**" },
-            ],
-            ["reference-data-reader"] =
-            [
-                new PermissionGrant { Actions = ["READ"], Resource = "/reference-data/**" },
-            ],
-        },
-    }));
+    private static ResourceAuthorizer Build() =>
+        new(
+            Options.Create(
+                new AuthorizationConfig
+                {
+                    Principals = new Dictionary<string, string>
+                    {
+                        ["intra-reader"] = IntraSub,
+                        ["reference-data-reader"] = RefDataSub,
+                    },
+                    Permissions = new Dictionary<string, List<PermissionGrant>>
+                    {
+                        ["intra-reader"] =
+                        [
+                            new PermissionGrant { Actions = ["READ", "WRITE"], Resource = "/certificates/intras/**" },
+                        ],
+                        ["reference-data-reader"] =
+                        [
+                            new PermissionGrant { Actions = ["READ"], Resource = "/reference-data/**" },
+                        ],
+                    },
+                }
+            )
+        );
 
     [Fact]
     public void Allows_read_on_granted_resource() =>

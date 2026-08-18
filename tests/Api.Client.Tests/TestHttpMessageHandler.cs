@@ -1,11 +1,11 @@
 ﻿namespace Api.Client.Tests;
 
-internal sealed class TestHttpMessageHandler(Func<HttpRequestMessage, HttpResponseMessage> handler)
-    : HttpMessageHandler
+internal sealed class TestHttpMessageHandler(Func<HttpRequestMessage, HttpResponseMessage> handler) : HttpMessageHandler
 {
     protected override Task<HttpResponseMessage> SendAsync(
         HttpRequestMessage request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken
+    )
     {
         return Task.FromResult(handler(request));
     }

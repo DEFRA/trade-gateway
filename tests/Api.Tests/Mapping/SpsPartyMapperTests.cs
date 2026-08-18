@@ -53,7 +53,12 @@ public class SpsPartyMapperTests
         {
             TypeCode =
             [
-                new CodeType { Value = "AUTHORITY", name = "Authority", listID = "operator_activity_type" },
+                new CodeType
+                {
+                    Value = "AUTHORITY",
+                    name = "Authority",
+                    listID = "operator_activity_type",
+                },
             ],
         };
 

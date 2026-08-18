@@ -11,17 +11,16 @@ namespace Api.Tests.Endpoints;
 public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string SenderFault = """
-                               <?xml version='1.0' encoding='UTF-8'?>
-                               <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
-                                 <S:Body>
-                                   <S:Fault>
-                                     <faultcode>S:Client</faultcode>
-                                     <faultstring xml:lang="en">Bad request</faultstring>
-                                   </S:Fault>
-                                 </S:Body>
-                               </S:Envelope>
-                               """;
-
+        <?xml version='1.0' encoding='UTF-8'?>
+        <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+          <S:Body>
+            <S:Fault>
+              <faultcode>S:Client</faultcode>
+              <faultstring xml:lang="en">Bad request</faultstring>
+            </S:Fault>
+          </S:Body>
+        </S:Envelope>
+        """;
 
     [Fact]
     public async Task GetClassificationSections_ReturnsMappedResponse()
@@ -35,13 +34,14 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
                         await SoapUtilities.CreateResponseFromResource(
                             HttpStatusCode.OK,
                             "Api.Tests.Samples.REFERENCE_DATA.GetClassificationSectionsResponse.xml"
                         )
-                )
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
@@ -51,12 +51,21 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
             MediaTypeAttribute.For<DefraUNVTDProfileClassificationSectionListResponse>(),
             response.ContentHeaders?.ContentType?.MediaType
         );
-       
+
         Assert.Equal(ReferenceDataService.ReferenceDataServiceV1, response.Content!.Service);
         Assert.Contains(
             response.Content.Sections!,
             section =>
-                section is { ClassCode: "ACT", Chapter: "veterinary", Lms: true, Description: "Animal act", Active: true, Scopes: ["EFTA", "EU"], OperatorActivities: ["animal_act"] }
+                section
+                    is {
+                        ClassCode: "ACT",
+                        Chapter: "veterinary",
+                        Lms: true,
+                        Description: "Animal act",
+                        Active: true,
+                        Scopes: ["EFTA", "EU"],
+                        OperatorActivities: ["animal_act"]
+                    }
         );
     }
 
@@ -90,8 +99,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
                         SoapUtilities.StubResponseMessage(
                             HttpStatusCode.OK,
                             """
@@ -103,7 +113,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                             </S:Envelope>
                             """
                         )
-                )
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
@@ -123,20 +133,19 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
                         await SoapUtilities.CreateResponseFromResource(
                             HttpStatusCode.OK,
                             "Api.Tests.Samples.REFERENCE_DATA.GetClassificationTreeResponse_INTRA_TRADE.xml"
                         )
-                )
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
-        var response = await client.GetClassificationTree("intra_trade",
-            TestContext.Current.CancellationToken
-        );
-        
+        var response = await client.GetClassificationTree("intra_trade", TestContext.Current.CancellationToken);
+
         Assert.Equal(
             MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeResponse>(),
             response.ContentHeaders?.ContentType?.MediaType
@@ -145,8 +154,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
 
         // ensure that the certificates are correctly mapping - find cert with model id 11978
         IEnumerable<ClassificationTreeNode> Flatten(IEnumerable<ClassificationTreeNode>? nodes) =>
-            (nodes ?? Enumerable.Empty<ClassificationTreeNode>())
-                .SelectMany(n => new[] { n }.Concat(Flatten(n.Children)));
+            (nodes ?? Enumerable.Empty<ClassificationTreeNode>()).SelectMany(n =>
+                new[] { n }.Concat(Flatten(n.Children))
+            );
 
         var certNode = Flatten(response.Content!.Nodes).FirstOrDefault(n => n.Certificate?.ModelId == 11978);
 
@@ -175,8 +185,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
                         SoapUtilities.StubResponseMessage(
                             HttpStatusCode.OK,
                             """
@@ -195,7 +206,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                             </S:Envelope>
                             """
                         )
-                )
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
@@ -237,9 +248,11 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
-                )
+                Response
+                    .Create()
+                    .WithCallback(_ =>
+                        SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
@@ -262,17 +275,22 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
                         await SoapUtilities.CreateResponseFromResource(
                             HttpStatusCode.OK,
                             "Api.Tests.Samples.REFERENCE_DATA.GetClassificationTreeNodeDetailResponse_INTRA_TRADE.xml"
                         )
-                )
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
-        var response = await client.GetClassificationTreeNodeDetail("intra_trade", nodeId, TestContext.Current.CancellationToken);
+        var response = await client.GetClassificationTreeNodeDetail(
+            "intra_trade",
+            nodeId,
+            TestContext.Current.CancellationToken
+        );
 
         Assert.Equal(
             MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeNodeDetailResponse>(),
@@ -296,8 +314,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
                         SoapUtilities.StubResponseMessage(
                             HttpStatusCode.OK,
                             """
@@ -316,11 +335,15 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                             </S:Envelope>
                             """
                         )
-                )
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
-        var response = await client.GetClassificationTreeNodeDetail("intra_trade", nodeId, TestContext.Current.CancellationToken);
+        var response = await client.GetClassificationTreeNodeDetail(
+            "intra_trade",
+            nodeId,
+            TestContext.Current.CancellationToken
+        );
         await Verify((response.Error as ValidationApiException)?.Content);
     }
 
@@ -339,13 +362,19 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
-                )
+                Response
+                    .Create()
+                    .WithCallback(_ =>
+                        SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
-        var response = await client.GetClassificationTreeNodeDetail("intra_trade", nodeId, TestContext.Current.CancellationToken);
+        var response = await client.GetClassificationTreeNodeDetail(
+            "intra_trade",
+            nodeId,
+            TestContext.Current.CancellationToken
+        );
         await Verify((response.Error as ValidationApiException)?.Content);
     }
 
@@ -363,13 +392,14 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
                         await SoapUtilities.CreateResponseFromResource(
                             HttpStatusCode.OK,
                             "Api.Tests.Samples.REFERENCE_DATA.GetMetadatasResponse_ACCOMPANYING_DOCUMENT_TYPE.xml"
                         )
-                )
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
@@ -416,8 +446,9 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    async _ =>
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
                         SoapUtilities.StubResponseMessage(
                             HttpStatusCode.OK,
                             """
@@ -429,7 +460,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                             </S:Envelope>
                             """
                         )
-                )
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
@@ -451,9 +482,11 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
                 )
             )
             .RespondWith(
-                Response.Create().WithCallback(
-                    _ => SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
-                )
+                Response
+                    .Create()
+                    .WithCallback(_ =>
+                        SoapUtilities.StubResponseMessage(HttpStatusCode.InternalServerError, SenderFault)
+                    )
             );
 
         var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");

@@ -13,7 +13,7 @@ internal static class SpsClauseMapper
         return new Clause
         {
             Identifier = source.ID?.Value,
-            Content = source.Content.ForNeutralOrLanguage(context.LanguageCode)
+            Content = source.Content.ForNeutralOrLanguage(context.LanguageCode),
         };
     }
 }

@@ -94,7 +94,9 @@ public class SchemaLoader(string basePath)
                         current.GetKeyword<PropertiesKeyword>()?.Properties
                         ?? throw new InvalidOperationException($"Schema has no properties (reference: '{reference}')");
                     if (!props.TryGetValue(key, out var prop))
-                        throw new InvalidOperationException($"properties has no key '{key}' (reference: '{reference}')");
+                        throw new InvalidOperationException(
+                            $"properties has no key '{key}' (reference: '{reference}')"
+                        );
                     current = prop;
                     break;
                 }

@@ -10,25 +10,22 @@ public class ReferenceDataMapperTests
     public void Map_ClassificationSections_MapsSoapResponse()
     {
         ClassificationSectionType[] response =
-            [
-                new ClassificationSectionType
-                {
-                    code = "0101",
-                    lms = true,
-                    Description = new TextType { Value = "Live horses" },
-                    ClassificationSectionChapter = new CodeType { Value = "01" },
-                    MetaCountryGroupScope =
-                    [
-                        new CodeType { Value = "GB" },
-                        new CodeType { Value = "XI" },
-                    ],
-                },
-            ];
+        [
+            new ClassificationSectionType
+            {
+                code = "0101",
+                lms = true,
+                Description = new TextType { Value = "Live horses" },
+                ClassificationSectionChapter = new CodeType { Value = "01" },
+                MetaCountryGroupScope = [new CodeType { Value = "GB" }, new CodeType { Value = "XI" }],
+            },
+        ];
 
         var result = ClassificationSectionMapper.Map(response);
 
         result.RetrievedAt.Should().NotBeNull();
-        result.Sections.Should()
+        result
+            .Sections.Should()
             .ContainSingle()
             .Which.Should()
             .BeEquivalentTo(
@@ -48,26 +45,26 @@ public class ReferenceDataMapperTests
     public void Map_ClassificationTree_MapsSoapResponse()
     {
         TracesNT.WebServices.ClassificationTreeNode[] response =
-            [
-                new ClassificationTreeNode
-                {
-                    path = "intra_trade",
-                    type = ClassificationTreeNodeType.taxon,
-                    allowedForSelection = false,
-                    Description = new TextType { Value = "EU Intra-trade" },
-                    Node =
-                    [
-                        new ClassificationTreeNode
-                        {
-                            path = "intra_trade/0101",
-                            type = ClassificationTreeNodeType.nomenclature,
-                            allowedForSelection = true,
-                            Description = new TextType { Value = "Live horses" },
-                            Item = new CodeType { Value = "0101" },
-                        },
-                    ],
-                },
-            ];
+        [
+            new ClassificationTreeNode
+            {
+                path = "intra_trade",
+                type = ClassificationTreeNodeType.taxon,
+                allowedForSelection = false,
+                Description = new TextType { Value = "EU Intra-trade" },
+                Node =
+                [
+                    new ClassificationTreeNode
+                    {
+                        path = "intra_trade/0101",
+                        type = ClassificationTreeNodeType.nomenclature,
+                        allowedForSelection = true,
+                        Description = new TextType { Value = "Live horses" },
+                        Item = new CodeType { Value = "0101" },
+                    },
+                ],
+            },
+        ];
 
         var result = ClassificationTreeMapper.Map(response, "intra_trade");
 
@@ -172,13 +169,18 @@ public class ReferenceDataMapperTests
             }
         );
 
-        var result = ClassificationTreeNodeDetailMapper.Map(response.GetClassificationTreeNodeDetailResponse1.Node, "intra_trade", "R_N-10000_N-10065");
+        var result = ClassificationTreeNodeDetailMapper.Map(
+            response.GetClassificationTreeNodeDetailResponse1.Node,
+            "intra_trade",
+            "R_N-10000_N-10065"
+        );
 
         result.Source.Should().Be("traces");
         result.TreeId.Should().Be("intra_trade");
         result.NodePath.Should().Be("R/N-10000/N-10065");
         result.NodeId.Should().Be("R_N-10000_N-10065");
-        result.Node.Should()
+        result
+            .Node.Should()
             .BeEquivalentTo(
                 new
                 {
@@ -190,7 +192,8 @@ public class ReferenceDataMapperTests
             );
         result.Attributes.Should().ContainSingle(attribute => attribute.Key == "isActive");
         result.ClassificationSectionGroups.Should().ContainSingle();
-        result.Taxons.Should()
+        result
+            .Taxons.Should()
             .ContainSingle()
             .Which.Should()
             .BeEquivalentTo(
@@ -204,7 +207,8 @@ public class ReferenceDataMapperTests
                 }
             );
 
-        result.InvasiveTaxons.Should()
+        result
+            .InvasiveTaxons.Should()
             .ContainSingle()
             .Which.Should()
             .BeEquivalentTo(
@@ -219,7 +223,9 @@ public class ReferenceDataMapperTests
             );
 
         result.DocumentTypes.Should().ContainSingle();
-        result.DocumentTypes![0].Should()
+        result
+            .DocumentTypes![0]
+            .Should()
             .BeEquivalentTo(
                 new
                 {
@@ -231,7 +237,7 @@ public class ReferenceDataMapperTests
                         new { DocumentType = "ACCOMPANYING_DOCUMENT", LinkType = "ATTACHED_TO" },
                         new { DocumentType = "JOURNEY_LOG", LinkType = "ATTACHED_TO" },
                         new { DocumentType = "EU_EXPORT", LinkType = "ATTACHED_TO" },
-                    }
+                    },
                 }
             );
     }
@@ -262,7 +268,11 @@ public class ReferenceDataMapperTests
             }
         );
 
-        var result = ClassificationTreeNodeDetailMapper.Map(response.GetClassificationTreeNodeDetailResponse1.Node, "intra_trade", "R_N-10000_N-10065");
+        var result = ClassificationTreeNodeDetailMapper.Map(
+            response.GetClassificationTreeNodeDetailResponse1.Node,
+            "intra_trade",
+            "R_N-10000_N-10065"
+        );
 
         result.Node.Should().NotBeNull();
         result.Node!.CnCode.Should().BeNull();

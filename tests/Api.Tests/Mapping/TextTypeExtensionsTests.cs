@@ -33,7 +33,10 @@ public class TextTypeExtensionsTests
     [Fact]
     public void ForLanguage_NoMatchAndNoNull_ReturnsNull()
     {
-        var source = new[] { new TextType { languageID = "fr", Value = "Boeuf" } };
+        var source = new[]
+        {
+            new TextType { languageID = "fr", Value = "Boeuf" },
+        };
 
         source.ForLanguage("en").Should().BeNull();
     }
@@ -70,7 +73,10 @@ public class TextTypeExtensionsTests
     [Fact]
     public void ForLanguageList_NoMatchAndNoNull_ReturnsNull()
     {
-        var source = new[] { new TextType { languageID = "fr", Value = "Boeuf" } };
+        var source = new[]
+        {
+            new TextType { languageID = "fr", Value = "Boeuf" },
+        };
 
         source.ForLanguageList("en").Should().BeNull();
     }
@@ -93,7 +99,10 @@ public class TextTypeExtensionsTests
     [Fact]
     public void ForNeutralOrLanguage_FallsBackToContextLanguage()
     {
-        var source = new[] { new TextType { languageID = "en", Value = "English" } };
+        var source = new[]
+        {
+            new TextType { languageID = "en", Value = "English" },
+        };
 
         source.ForNeutralOrLanguage("en").Should().Be("English");
     }
@@ -101,7 +110,10 @@ public class TextTypeExtensionsTests
     [Fact]
     public void ForNeutralOrLanguage_FallsBackToFirstWhenNoNullOrContextLanguage()
     {
-        var source = new[] { new TextType { languageID = "fr", Value = "Français" } };
+        var source = new[]
+        {
+            new TextType { languageID = "fr", Value = "Français" },
+        };
 
         source.ForNeutralOrLanguage("en").Should().Be("Français");
     }

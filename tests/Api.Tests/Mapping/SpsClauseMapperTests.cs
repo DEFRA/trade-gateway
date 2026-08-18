@@ -48,10 +48,7 @@ public class SpsClauseMapperTests
     [Fact]
     public void Map_NoNullOrContextLanguage_FallsBackToAny()
     {
-        var source = new SPSClauseType
-        {
-            Content = [new TextType { languageID = "de", Value = "Inhalt" }],
-        };
+        var source = new SPSClauseType { Content = [new TextType { languageID = "de", Value = "Inhalt" }] };
 
         SpsClauseMapper.Map(source, Context)!.Content.Should().Be("Inhalt");
     }

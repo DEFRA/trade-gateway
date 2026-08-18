@@ -5,7 +5,10 @@
       <ID>WS_REQUEST_ID</ID>
       <Message>efd3a8f7-bb3e-4252-8c56-3164e9cf82df</Message>
     </Message>
-    <ns2:Security xmlns:ns1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns2="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+    <ns2:Security
+      xmlns:ns1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+      xmlns:ns2="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    >
       <ns1:Timestamp>
         <ns1:Created>2026-06-18T14:06:09.587+02:00</ns1:Created>
         <ns1:Expires>2026-06-18T14:06:14.587+02:00</ns1:Expires>
@@ -13,7 +16,38 @@
     </ns2:Security>
   </S:Header>
   <S:Body>
-    <ns7:GetChedCertificateResponse xmlns:ns2="http://ec.europa.eu/sanco/tracesnt/base/v4" xmlns:ns3="http://ec.europa.eu/tracesnt/certificate/ched/alert/noncompliance/v01" xmlns:ns4="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21" xmlns:ns5="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21" xmlns:ns6="http://ec.europa.eu/tracesnt/certificate/ched/followup/v01" xmlns:ns7="http://ec.europa.eu/tracesnt/certificate/ched/v2" xmlns:ns8="urn:un:unece:uncefact:data:standard:SPSCertificate:17" xmlns:ns9="http://ec.europa.eu/tracesnt/certificate/laboratorytest/v1" xmlns:ns10="http://ec.europa.eu/tracesnt/referencedata/laboratorytest/v1" xmlns:ns11="http://ec.europa.eu/tracesnt/certificate/base/v01" xmlns:ns12="http://ec.europa.eu/sanco/tracesnt/error/v01" xmlns:ns13="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:ns14="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:ns15="http://www.w3.org/2000/09/xmldsig#" xmlns:ns16="http://ec.europa.eu/tracesnt/body/v3" xmlns:ns17="urn:un:unece:uncefact:codelist:standard:EDIFICAS-EU:CertificateType:D11A" xmlns:ns18="urn:un:unece:uncefact:codelist:standard:ISO:ISO2AlphaLanguageCode:2006-10-27" xmlns:ns19="urn:un:unece:uncefact:codelist:standard:UNECE:AddressType:D16B" xmlns:ns20="urn:un:unece:uncefact:codelist:standard:UNECE:CargoTypeClassificationCode:D16B" xmlns:ns21="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentNameCode:D16B" xmlns:ns22="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentStatusCode:D16B" xmlns:ns23="urn:un:unece:uncefact:codelist:standard:UNECE:GovernmentActionCode:D16B" xmlns:ns24="urn:un:unece:uncefact:codelist:standard:UNECE:LocationFunctionCode:D16B" xmlns:ns25="urn:un:unece:uncefact:codelist:standard:UNECE:PackageTypeCode:2006" xmlns:ns26="urn:un:unece:uncefact:codelist:standard:UNECE:PackagingLevelCode:D16B" xmlns:ns27="urn:un:unece:uncefact:codelist:standard:UNECE:ProcessTypeCode:D16B" xmlns:ns28="urn:un:unece:uncefact:codelist:standard:UNECE:StatusCode:D16B" xmlns:ns29="urn:un:unece:uncefact:codelist:standard:UNECE:TemperatureTypeCode:D16B" xmlns:ns30="urn:un:unece:uncefact:codelist:standard:UNECE:TransportMeansTypeCode:2007" xmlns:ns31="urn:un:unece:uncefact:codelist:standard:UNECE:TransportModeCode:2">
+    <ns7:GetChedCertificateResponse
+      xmlns:ns2="http://ec.europa.eu/sanco/tracesnt/base/v4"
+      xmlns:ns3="http://ec.europa.eu/tracesnt/certificate/ched/alert/noncompliance/v01"
+      xmlns:ns4="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21"
+      xmlns:ns5="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21"
+      xmlns:ns6="http://ec.europa.eu/tracesnt/certificate/ched/followup/v01"
+      xmlns:ns7="http://ec.europa.eu/tracesnt/certificate/ched/v2"
+      xmlns:ns8="urn:un:unece:uncefact:data:standard:SPSCertificate:17"
+      xmlns:ns9="http://ec.europa.eu/tracesnt/certificate/laboratorytest/v1"
+      xmlns:ns10="http://ec.europa.eu/tracesnt/referencedata/laboratorytest/v1"
+      xmlns:ns11="http://ec.europa.eu/tracesnt/certificate/base/v01"
+      xmlns:ns12="http://ec.europa.eu/sanco/tracesnt/error/v01"
+      xmlns:ns13="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+      xmlns:ns14="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+      xmlns:ns15="http://www.w3.org/2000/09/xmldsig#"
+      xmlns:ns16="http://ec.europa.eu/tracesnt/body/v3"
+      xmlns:ns17="urn:un:unece:uncefact:codelist:standard:EDIFICAS-EU:CertificateType:D11A"
+      xmlns:ns18="urn:un:unece:uncefact:codelist:standard:ISO:ISO2AlphaLanguageCode:2006-10-27"
+      xmlns:ns19="urn:un:unece:uncefact:codelist:standard:UNECE:AddressType:D16B"
+      xmlns:ns20="urn:un:unece:uncefact:codelist:standard:UNECE:CargoTypeClassificationCode:D16B"
+      xmlns:ns21="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentNameCode:D16B"
+      xmlns:ns22="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentStatusCode:D16B"
+      xmlns:ns23="urn:un:unece:uncefact:codelist:standard:UNECE:GovernmentActionCode:D16B"
+      xmlns:ns24="urn:un:unece:uncefact:codelist:standard:UNECE:LocationFunctionCode:D16B"
+      xmlns:ns25="urn:un:unece:uncefact:codelist:standard:UNECE:PackageTypeCode:2006"
+      xmlns:ns26="urn:un:unece:uncefact:codelist:standard:UNECE:PackagingLevelCode:D16B"
+      xmlns:ns27="urn:un:unece:uncefact:codelist:standard:UNECE:ProcessTypeCode:D16B"
+      xmlns:ns28="urn:un:unece:uncefact:codelist:standard:UNECE:StatusCode:D16B"
+      xmlns:ns29="urn:un:unece:uncefact:codelist:standard:UNECE:TemperatureTypeCode:D16B"
+      xmlns:ns30="urn:un:unece:uncefact:codelist:standard:UNECE:TransportMeansTypeCode:2007"
+      xmlns:ns31="urn:un:unece:uncefact:codelist:standard:UNECE:TransportModeCode:2"
+    >
       <ns8:SPSCertificate>
         <ns8:SPSExchangedDocument>
           <ns4:Name languageID="en">CHED-A - Common Health Entry Document for Animal</ns4:Name>
@@ -24,7 +58,13 @@
             <ns5:DateTime>2026-06-12T16:54:14.000+02:00</ns5:DateTime>
           </ns4:IssueDateTime>
           <ns4:IssuerSPSParty>
-            <ns4:ID schemeID="authority_activity_id" schemeName="Authority activity ID" schemeAgencyID="ec_sante_traces" schemeAgencyName="European commission - DG SANTE - Traces">XIXXX1</ns4:ID>
+            <ns4:ID
+              schemeID="authority_activity_id"
+              schemeName="Authority activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >XIXXX1</ns4:ID
+            >
             <ns4:Name>Belfast Port</ns4:Name>
             <ns4:RoleCode name="Officer (Identification of Applicant)">VJ</ns4:RoleCode>
             <ns4:TypeCode listID="user_body_role" listName="User body role" name="Authority">AUTHORITY</ns4:TypeCode>
@@ -45,23 +85,42 @@
             </ns4:SpecifiedSPSPerson>
           </ns4:IssuerSPSParty>
           <ns4:IncludedSPSNote>
-            <ns4:ContentCode listID="ched_type" listName="CHED type" name="CHED-A - Common Health Entry Document for Animal">A</ns4:ContentCode>
+            <ns4:ContentCode
+              listID="ched_type"
+              listName="CHED type"
+              name="CHED-A - Common Health Entry Document for Animal"
+              >A</ns4:ContentCode
+            >
             <ns4:Content></ns4:Content>
-            <ns4:SubjectCode listID="ched_note_subject_code" listName="CHED Note SubjectCode list" name="Type of CHED">CHED_TYPE</ns4:SubjectCode>
+            <ns4:SubjectCode listID="ched_note_subject_code" listName="CHED Note SubjectCode list" name="Type of CHED"
+              >CHED_TYPE</ns4:SubjectCode
+            >
           </ns4:IncludedSPSNote>
           <ns4:IncludedSPSNote>
             <ns4:Content>2026-06-12T16:54:14.000+02:00</ns4:Content>
-            <ns4:SubjectCode listID="ched_note_subject_code" listName="CHED Note SubjectCode list" name="Last updated">LAST_UPDATE_DATETIME</ns4:SubjectCode>
+            <ns4:SubjectCode listID="ched_note_subject_code" listName="CHED Note SubjectCode list" name="Last updated"
+              >LAST_UPDATE_DATETIME</ns4:SubjectCode
+            >
           </ns4:IncludedSPSNote>
           <ns4:ReferenceSPSReferencedDocument>
             <ns4:TypeCode name="Health certificate (CHED - Common Health Entry Document)">636</ns4:TypeCode>
-            <ns4:RelationshipTypeCode name="Document reference, internal (Document reference, internal)">CAW</ns4:RelationshipTypeCode>
+            <ns4:RelationshipTypeCode name="Document reference, internal (Document reference, internal)"
+              >CAW</ns4:RelationshipTypeCode
+            >
             <ns4:ID>CHEDA.XI.2026.0000063</ns4:ID>
-            <ns4:AttachmentBinaryObject format="url" mimeCode="text/url" uri="https://webgate.acceptance.ec.europa.eu/tracesnt/certificate/ched/CHEDA.XI.2026.0000063"/>
+            <ns4:AttachmentBinaryObject
+              format="url"
+              mimeCode="text/url"
+              uri="https://webgate.acceptance.ec.europa.eu/tracesnt/certificate/ched/CHEDA.XI.2026.0000063"
+            />
           </ns4:ReferenceSPSReferencedDocument>
           <ns4:ReferenceSPSReferencedDocument>
-            <ns4:TypeCode name="Special requirements permit related to the transport of cargo (Import permit)">521</ns4:TypeCode>
-            <ns4:RelationshipTypeCode name="Mutually defined reference number (Supporting document)">ZZZ</ns4:RelationshipTypeCode>
+            <ns4:TypeCode name="Special requirements permit related to the transport of cargo (Import permit)"
+              >521</ns4:TypeCode
+            >
+            <ns4:RelationshipTypeCode name="Mutually defined reference number (Supporting document)"
+              >ZZZ</ns4:RelationshipTypeCode
+            >
             <ns4:ID schemeAgencyID="GB">455645665566</ns4:ID>
           </ns4:ReferenceSPSReferencedDocument>
           <ns4:SignatorySPSAuthentication>
@@ -73,17 +132,35 @@
               <ns4:Name></ns4:Name>
             </ns4:ProviderSPSParty>
             <ns4:IncludedSPSClause>
-              <ns4:ID schemeID="ched_consignment_clause" schemeName="CHED consignment's clauses" schemeAgencyID="ec_sante_traces" schemeAgencyName="European commission - DG SANTE - Traces">PURPOSE</ns4:ID>
+              <ns4:ID
+                schemeID="ched_consignment_clause"
+                schemeName="CHED consignment's clauses"
+                schemeAgencyID="ec_sante_traces"
+                schemeAgencyName="European commission - DG SANTE - Traces"
+                >PURPOSE</ns4:ID
+              >
               <ns4:Content>FREE_CIRCULATION</ns4:Content>
               <ns4:Content languageID="en">For free circulation</ns4:Content>
             </ns4:IncludedSPSClause>
             <ns4:IncludedSPSClause>
-              <ns4:ID schemeID="ched_consignment_clause" schemeName="CHED consignment's clauses" schemeAgencyID="ec_sante_traces" schemeAgencyName="European commission - DG SANTE - Traces">GOODS_CERTIFIED_AS</ns4:ID>
+              <ns4:ID
+                schemeID="ched_consignment_clause"
+                schemeName="CHED consignment's clauses"
+                schemeAgencyID="ec_sante_traces"
+                schemeAgencyName="European commission - DG SANTE - Traces"
+                >GOODS_CERTIFIED_AS</ns4:ID
+              >
               <ns4:Content>BREEDING_PRODUCTION</ns4:Content>
               <ns4:Content languageID="en">Breeding/production</ns4:Content>
             </ns4:IncludedSPSClause>
             <ns4:IncludedSPSClause>
-              <ns4:ID schemeID="ched_consignment_clause" schemeName="CHED consignment's clauses" schemeAgencyID="ec_sante_traces" schemeAgencyName="European commission - DG SANTE - Traces">SIGNATORY_PERSON_EMAIL</ns4:ID>
+              <ns4:ID
+                schemeID="ched_consignment_clause"
+                schemeName="CHED consignment's clauses"
+                schemeAgencyID="ec_sante_traces"
+                schemeAgencyName="European commission - DG SANTE - Traces"
+                >SIGNATORY_PERSON_EMAIL</ns4:ID
+              >
               <ns4:Content>email.address.redacted@domain.redacted.uk</ns4:Content>
             </ns4:IncludedSPSClause>
           </ns4:SignatorySPSAuthentication>
@@ -93,11 +170,24 @@
             <ns5:DateTime>2026-06-12T15:54:00.000+01:00</ns5:DateTime>
           </ns4:AvailabilityDueDateTime>
           <ns4:ConsignorSPSParty>
-            <ns4:ID schemeID="national_registry_number" schemeName="National registry number" schemeAgencyID="ec_sante_traces" schemeAgencyName="European commission - DG SANTE - Traces">123434567890</ns4:ID>
+            <ns4:ID
+              schemeID="national_registry_number"
+              schemeName="National registry number"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >123434567890</ns4:ID
+            >
             <ns4:Name>Defra Test</ns4:Name>
             <ns4:RoleCode name="Exporter">EX</ns4:RoleCode>
-            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Animal exporter">ANIMAL_EXPORTER</ns4:TypeCode>
-            <ns4:TypeCode listID="classification_section_code" listName="Operator classification section code" name="Animal exporter">EXP</ns4:TypeCode>
+            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Animal exporter"
+              >ANIMAL_EXPORTER</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="Animal exporter"
+              >EXP</ns4:TypeCode
+            >
             <ns4:SpecifiedSPSAddress>
               <ns4:PostcodeCode>CW1</ns4:PostcodeCode>
               <ns4:LineOne>Test</ns4:LineOne>
@@ -108,11 +198,24 @@
             </ns4:SpecifiedSPSAddress>
           </ns4:ConsignorSPSParty>
           <ns4:ConsigneeSPSParty>
-            <ns4:ID schemeID="national_registry_number" schemeName="National registry number" schemeAgencyID="ec_sante_traces" schemeAgencyName="European commission - DG SANTE - Traces">NL0000000001</ns4:ID>
+            <ns4:ID
+              schemeID="national_registry_number"
+              schemeName="National registry number"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >NL0000000001</ns4:ID
+            >
             <ns4:Name>Company Name Redacted LTD</ns4:Name>
             <ns4:RoleCode name="Consignee (Importer)">CN</ns4:RoleCode>
-            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Animal establishment">ANIMAL_ESTABLISHMENT</ns4:TypeCode>
-            <ns4:TypeCode listID="classification_section_code" listName="Operator classification section code" name="Other operators">OTH-OPER</ns4:TypeCode>
+            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Animal establishment"
+              >ANIMAL_ESTABLISHMENT</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="Other operators"
+              >OTH-OPER</ns4:TypeCode
+            >
             <ns4:SpecifiedSPSAddress>
               <ns4:PostcodeCode>BT38</ns4:PostcodeCode>
               <ns4:LineOne>KILROOT BUSINESS PARK COUNTY .ANTRIM</ns4:LineOne>
@@ -131,7 +234,14 @@
             <ns4:Name></ns4:Name>
           </ns4:ImportSPSCountry>
           <ns4:UnloadingBaseportSPSLocation>
-            <ns4:ID schemeID="un_locode" schemeName="UN/LOCODE" schemeAgencyID="un" schemeAgencyName="United Nations" schemeDataURI="authority_activity">GBBEL</ns4:ID>
+            <ns4:ID
+              schemeID="un_locode"
+              schemeName="UN/LOCODE"
+              schemeAgencyID="un"
+              schemeAgencyName="United Nations"
+              schemeDataURI="authority_activity"
+              >GBBEL</ns4:ID
+            >
             <ns4:Name>XI</ns4:Name>
             <ns4:Name languageID="en">County Down</ns4:Name>
             <ns4:Name>XIXXX1-DAERA</ns4:Name>
@@ -150,11 +260,24 @@
             </ns4:OccurrenceSPSLocation>
           </ns4:ExaminationSPSEvent>
           <ns4:DeliverySPSParty>
-            <ns4:ID schemeID="operator_activity_id" schemeName="Operator activity ID" schemeAgencyID="ec_sante_traces" schemeAgencyName="European commission - DG SANTE - Traces">DAERA-12345</ns4:ID>
+            <ns4:ID
+              schemeID="operator_activity_id"
+              schemeName="Operator activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >DAERA-12345</ns4:ID
+            >
             <ns4:Name>COOPERATIVEtx26 Ltd</ns4:Name>
             <ns4:RoleCode name="Delivery party (Place of destination)">DP</ns4:RoleCode>
-            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Importer">IMPORTER</ns4:TypeCode>
-            <ns4:TypeCode listID="classification_section_code" listName="Operator classification section code" name="General activity establishment - EU">GEN</ns4:TypeCode>
+            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Importer"
+              >IMPORTER</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="General activity establishment - EU"
+              >GEN</ns4:TypeCode
+            >
             <ns4:SpecifiedSPSAddress>
               <ns4:PostcodeCode>BT5</ns4:PostcodeCode>
               <ns4:LineOne>Address 1</ns4:LineOne>
@@ -165,11 +288,27 @@
             </ns4:SpecifiedSPSAddress>
           </ns4:DeliverySPSParty>
           <ns4:CustomsTransitAgentSPSParty>
-            <ns4:ID schemeID="operator_internal_activity_id" schemeName="Operator internal activity ID" schemeAgencyID="ec_sante_traces" schemeAgencyName="European commission - DG SANTE - Traces">78557</ns4:ID>
+            <ns4:ID
+              schemeID="operator_internal_activity_id"
+              schemeName="Operator internal activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >78557</ns4:ID
+            >
             <ns4:Name>ABP EU TEST</ns4:Name>
             <ns4:RoleCode name="Customs broker (Responsible for consignment)">CB</ns4:RoleCode>
-            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Responsible for the load">RESPONSIBLE_FOR_THE_LOAD</ns4:TypeCode>
-            <ns4:TypeCode listID="classification_section_code" listName="Operator classification section code" name="Responsible For the Load (Freight Forwarder)">RFL</ns4:TypeCode>
+            <ns4:TypeCode
+              listID="operator_activity_type"
+              listName="Operator activity type"
+              name="Responsible for the load"
+              >RESPONSIBLE_FOR_THE_LOAD</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="Responsible For the Load (Freight Forwarder)"
+              >RFL</ns4:TypeCode
+            >
             <ns4:SpecifiedSPSAddress>
               <ns4:PostcodeCode>13700</ns4:PostcodeCode>
               <ns4:LineOne>Address a</ns4:LineOne>
@@ -180,7 +319,13 @@
             </ns4:SpecifiedSPSAddress>
           </ns4:CustomsTransitAgentSPSParty>
           <ns4:MainCarriageSPSTransportMovement>
-            <ns4:ID schemeID="road_vehicle_registration_before_bcp" schemeName="Road vehicle registration (before BCP)" schemeAgencyID="GB" schemeAgencyName="United Kingdom">N1 CKP</ns4:ID>
+            <ns4:ID
+              schemeID="road_vehicle_registration_before_bcp"
+              schemeName="Road vehicle registration (before BCP)"
+              schemeAgencyID="GB"
+              schemeAgencyName="United Kingdom"
+              >N1 CKP</ns4:ID
+            >
             <ns4:ModeCode name="Road transport">3</ns4:ModeCode>
           </ns4:MainCarriageSPSTransportMovement>
           <ns4:IncludedSPSConsignmentItem>
@@ -206,7 +351,12 @@
               <ns4:NetVolumeMeasure unitCode="H87">5</ns4:NetVolumeMeasure>
               <ns4:AdditionalInformationSPSNote>
                 <ns4:Content>GB0987645768734</ns4:Content>
-                <ns4:SubjectCode listID="ched_commodity_note_subject_code" listName="CHED Commodity Note SubjectCode list" name="Individual identification number">INDIVIDUAL_IDENTIFICATION_NUMBER</ns4:SubjectCode>
+                <ns4:SubjectCode
+                  listID="ched_commodity_note_subject_code"
+                  listName="CHED Commodity Note SubjectCode list"
+                  name="Individual identification number"
+                  >INDIVIDUAL_IDENTIFICATION_NUMBER</ns4:SubjectCode
+                >
               </ns4:AdditionalInformationSPSNote>
               <ns4:ApplicableSPSClassification>
                 <ns4:SystemID>CN</ns4:SystemID>
