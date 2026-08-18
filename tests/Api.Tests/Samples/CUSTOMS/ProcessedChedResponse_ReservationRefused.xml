@@ -5,7 +5,9 @@
       <ChedCertificate>
         <SPSCertificate xmlns="urn:un:unece:uncefact:data:standard:SPSCertificate:17">
           <SPSExchangedDocument>
-            <ID xmlns="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21">CHEDA.GB.2026.0000123</ID>
+            <ID xmlns="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21"
+              >CHEDA.GB.2026.0000123</ID
+            >
           </SPSExchangedDocument>
         </SPSCertificate>
       </ChedCertificate>
@@ -14,7 +16,9 @@
       <ReservationFailureReason>INTERNAL UPSTREAM REFUSAL TEXT THAT MUST NOT BE PUBLISHED</ReservationFailureReason>
       <ReservationFailureConsignmentItem>
         <GoodsItemNumber xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">1</GoodsItemNumber>
-        <DocumentLineItemNumber xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">2</DocumentLineItemNumber>
+        <DocumentLineItemNumber xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03"
+          >2</DocumentLineItemNumber
+        >
       </ReservationFailureConsignmentItem>
       <PushActive>false</PushActive>
     </ProcessedChedInformationResponse>

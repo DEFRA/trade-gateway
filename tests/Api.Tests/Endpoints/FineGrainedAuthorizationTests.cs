@@ -117,7 +117,8 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
             "CHEDA.GB.2026.0000123",
             "26GB16RF3TDPZE7AR2",
             ReservationRequest,
-            TestContext.Current.CancellationToken);
+            TestContext.Current.CancellationToken
+        );
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -132,7 +133,8 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
             "CHEDA.GB.2026.0000123",
             "26GB16RF3TDPZE7AR2",
             ReservationRequest,
-            TestContext.Current.CancellationToken);
+            TestContext.Current.CancellationToken
+        );
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
@@ -146,7 +148,8 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
             "CHEDA.GB.2026.0000123",
             "26GB16RF3TDPZE7AR2",
             ReservationRequest,
-            TestContext.Current.CancellationToken);
+            TestContext.Current.CancellationToken
+        );
 
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
@@ -215,14 +218,23 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         };
 
     private void StubCustomsReservation() =>
-        factory.WireMockServer
-            .Given(SoapUtilities.CreateSoapRequestInterceptor(
-                "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"",
-                "/*[local-name() = 'ProcessedChedRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"))
-            .RespondWith(Response.Create().WithCallback(async _ =>
-                await SoapUtilities.CreateResponseFromResource(
-                    HttpStatusCode.OK,
-                    "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_Reserved.xml")));
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"",
+                    "/*[local-name() = 'ProcessedChedRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_Reserved.xml"
+                        )
+                    )
+            );
 
     private void StubCustomsQuantities() =>
         factory
