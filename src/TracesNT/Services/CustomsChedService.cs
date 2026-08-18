@@ -54,9 +54,11 @@ namespace TracesNT.Services
             // Correlates our logs with the MessageId the customs port echoes on responses and faults, which is
             // what DG SANTE ask for when a call is queried. 32 chars, inside the 1-48 token limit.
             var messageId = Guid.NewGuid().ToString("N");
+            var operation = ToOperationName(mode);
 
             logger.LogInformation(
-                "Requesting customs quantity summary for CHED {ChedId} as message {UpstreamMessageId}",
+                "Customs {Operation} for CHED {ChedId} as message {UpstreamMessageId}",
+                operation,
                 chedId,
                 messageId
             );
