@@ -141,11 +141,11 @@ public static class CustomsChedQuantityEndpoints
     }
 
     private static async Task<IResult> Release(
-       string chedId,
-       string mrn,
-       ICustomsChedService customsChedService,
-       [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
-   )
+        string chedId,
+        string mrn,
+        ICustomsChedService customsChedService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
     {
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
         var response = await customsChedService.Release(chedId, mrn, languageCode);

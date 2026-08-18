@@ -37,7 +37,7 @@ public class GlobalExceptionHandler(
             new ProblemDetailsContext { HttpContext = httpContext, ProblemDetails = problemDetails }
         );
     }
-    
+
     private static ProblemDetails BadRequest(Exception ex) =>
         new() { Status = StatusCodes.Status400BadRequest, Detail = ex.Message };
 
