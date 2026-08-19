@@ -24,4 +24,8 @@ public partial record DefraUNVTDDOCOMProfile
     [JsonPropertyName("laboratoryObservationResult")]
     [Description("UN vocabulary-aligned laboratory observations/results collection.")]
     public List<LaboratoryObservationResult>? LaboratoryObservationResult { get; init; }
+
+    [JsonPropertyName("followUp")]
+    [Description("Part III follow-up records in the order TRACES returned them (TRACES DocomFollowUp). TRACES appends one record per follow-up action over the certificate's life, each carrying redispatch details, control outcomes, or both. Absent until the first follow-up is recorded.")]
+    public List<FollowUpRecord>? FollowUp { get; init; }
 }

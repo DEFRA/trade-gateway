@@ -87,4 +87,35 @@ public class SpsDateTimeMapperTests
 
         act.Should().Throw<FormatException>();
     }
+
+    [Fact]
+    public void Map_BareUnspecifiedKindDateTime_IsTreatedAsUtc()
+    {
+        var result = SpsDateTimeMapper.Map(new DateTime(2024, 3, 1, 12, 0, 0, DateTimeKind.Unspecified));
+
+        result.Offset.Should().Be(TimeSpan.Zero);
+        result.UtcDateTime.Should().Be(new DateTime(2024, 3, 1, 12, 0, 0, DateTimeKind.Utc));
+    }
+
+    [Fact]
+    public void Map_BareLocalDateTime_UsesLocalOffset()
+    {
+        var local = new DateTime(2024, 3, 1, 12, 0, 0, DateTimeKind.Local);
+
+        var result = SpsDateTimeMapper.Map(local);
+
+        result.Offset.Should().Be(TimeZoneInfo.Local.GetUtcOffset(local));
+        result.UtcDateTime.Should().Be(local.ToUniversalTime());
+    }
+
+    [Fact]
+    public void Map_BareDateTimeNotSpecified_ReturnsNull() =>
+        SpsDateTimeMapper.Map(new DateTime(2024, 3, 1, 12, 0, 0, DateTimeKind.Utc), specified: false).Should().BeNull();
+
+    [Fact]
+    public void Map_BareDateTimeSpecified_ReturnsValue() =>
+        SpsDateTimeMapper
+            .Map(new DateTime(2024, 3, 1, 12, 0, 0, DateTimeKind.Utc), specified: true)
+            .Should()
+            .Be(new DateTimeOffset(2024, 3, 1, 12, 0, 0, TimeSpan.Zero));
 }

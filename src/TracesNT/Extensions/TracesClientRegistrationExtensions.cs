@@ -20,6 +20,12 @@ namespace TracesNT.Extensions
                 (binding, endpoint) => new EuIntraCertificatePortClient(binding, endpoint)
             );
 
+            services.AddTracesNtClient<DocomCertificateRetrievalPortClient, DocomCertificateRetrievalPort>(
+                "DocomCertificateRetrievalServiceV1",
+                TracesNtCredentialKeys.Default,
+                (binding, endpoint) => new DocomCertificateRetrievalPortClient(binding, endpoint)
+            );
+
             services.AddTracesNtClient<ReferenceDataPortClient, ReferenceDataPort>(
                 "ReferenceDataServiceV1",
                 TracesNtCredentialKeys.Default,
@@ -35,6 +41,8 @@ namespace TracesNT.Extensions
             services.AddTransient<IChedCertificateService, ChedCertificateService>();
 
             services.AddTransient<IEuIntraCertificateService, EuIntraCertificateService>();
+
+            services.AddTransient<IDocomCertificateService, DocomCertificateService>();
 
             services.AddTransient<IReferenceDataService, ReferenceDataService>();
 

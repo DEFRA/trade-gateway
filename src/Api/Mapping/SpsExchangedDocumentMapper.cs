@@ -14,7 +14,7 @@ internal static class SpsExchangedDocumentMapper
             DocumentStatusCode = source.StatusCode?.Value.XmlEnumCode(),
             Issuer = SpsPartyMapper.Map(source.IssuerSPSParty),
             IssueDateTime = SpsDateTimeMapper.Map(source.IssueDateTime),
-            IncludedNote = source.IncludedSPSNote?.Select(SpsNoteMapper.Map).ToList().NullIfEmpty(),
+            IncludedNote = SpsNoteMapper.MapList(source.IncludedSPSNote),
             ReferenceDocument = source
                 .ReferenceSPSReferencedDocument?.Select(SpsReferencedDocumentMapper.Map)
                 .ToList()
