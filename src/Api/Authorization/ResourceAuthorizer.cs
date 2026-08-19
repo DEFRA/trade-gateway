@@ -46,7 +46,7 @@ public class ResourceAuthorizer : IResourceAuthorizer
         httpMethod.ToUpperInvariant() switch
         {
             "GET" => Read,
-            "POST" or "PUT" => Write,
+            "POST" or "PUT" or "DELETE" => Write,
             _ => null,
         };
 }
