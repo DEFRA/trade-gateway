@@ -23,6 +23,12 @@ namespace TracesNT.Services
             Reserve,
         }
 
+        private enum QuantityManagementReservationMode
+        {
+            Release,
+            Cancel,
+        }
+
         private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.Customs);
         private readonly string _customsOffice = config.Value.CustomsOfficeReferenceNumber;
 
@@ -65,30 +71,63 @@ namespace TracesNT.Services
                 chedId,
                 messageId,
                 $"releasing CHED quantity for MRN {mrn}",
-                async () =>
-                {
-                    var response = await customsChedPort.chedClearanceRequestAsync(
-                        new SecurityHeaderType(),
-                        _credentials.WebServiceClientId,
-                        languageCode.ToIso2AlphaLanguageCodeContentType(),
-                        _customsOffice,
-                        new CertexHeaderType { MessageId = messageId, UniqRequesterPrefix = _customsOffice },
-                        new ChedClearanceRequestType
-                        {
-                            CompetentCustomsOffice = new CompetentCustomsOfficeType
-                            {
-                                ReferenceNumber = _customsOffice,
-                            },
-                            SendingDate = DateTime.UtcNow,
-                            CustomsDocumentReference = mrn,
-                            ChedCertificateId = chedId,
-                            GoodsClearanceInformation = GoodsClearanceInformationType.Item01,
-                        }
-                    );
+                () => SendChedClearanceRequest(chedId, mrn, languageCode, QuantityManagementReservationMode.Release)
+            );
+        }
 
-                    return response?.ChedClearanceResponse1;
+        public async Task<ChedQuantityManagementOutcomeType?> DeleteReservation(
+            string chedId,
+            string mrn,
+            string languageCode
+        )
+        {
+            // Correlates our logs with the MessageId the customs port echoes on responses and faults, which is
+            // what DG SANTE ask for when a call is queried. 32 chars, inside the 1-48 token limit.
+            var messageId = Guid.NewGuid().ToString("N");
+
+            logger.LogInformation(
+                "Customs Delete Reservation for CHED {ChedId} as message {UpstreamMessageId}",
+                chedId,
+                messageId
+            );
+
+            return await ExecuteCustomsCall(
+                chedId,
+                messageId,
+                $"Deleting CHED reservation for MRN {mrn}",
+                () => SendChedClearanceRequest(chedId, mrn, languageCode, QuantityManagementReservationMode.Cancel)
+            );
+        }
+
+        private async Task<ChedQuantityManagementOutcomeType?> SendChedClearanceRequest(
+            string chedId,
+            string mrn,
+            string languageCode,
+            QuantityManagementReservationMode mode
+        )
+        {
+            var messageId = Guid.NewGuid().ToString("N");
+
+            var response = await customsChedPort.chedClearanceRequestAsync(
+                new SecurityHeaderType(),
+                _credentials.WebServiceClientId,
+                languageCode.ToIso2AlphaLanguageCodeContentType(),
+                _customsOffice,
+                new CertexHeaderType { MessageId = messageId, UniqRequesterPrefix = _customsOffice },
+                new ChedClearanceRequestType
+                {
+                    CompetentCustomsOffice = new CompetentCustomsOfficeType { ReferenceNumber = _customsOffice },
+                    SendingDate = DateTime.UtcNow,
+                    CustomsDocumentReference = mrn,
+                    ChedCertificateId = chedId,
+                    GoodsClearanceInformation =
+                        mode == QuantityManagementReservationMode.Release
+                            ? GoodsClearanceInformationType.Item01
+                            : GoodsClearanceInformationType.Item02,
                 }
             );
+
+            return response?.ChedClearanceResponse1;
         }
 
         private async Task<ProcessedChedInformationResponseType?> SendProcessedChedRequest(
