@@ -1,0 +1,49 @@
+### Trade Gateway — DOCOM endpoints (Local Development environment)
+
+@host = http://localhost:5000
+@scope = trade-gateway-resource-srv/access
+
+### Token — DOCOM reader (get)
+# @name docomToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-docom-reader
+
+### Token — DOCOM instance reader (single certificate only, no collection)
+# @name docomInstanceToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-docom-instance-reader
+
+###############################################################################
+# DOCOM
+###############################################################################
+
+### Get a single DOCOM certificate by id
+GET {{host}}/certificates/docoms/DOCOM.GB.2026.0000123
+Accept-Language: en
+Authorization: Bearer {{docomToken.response.body.access_token}}
+
+### Get a DOCOM certificate as the instance reader (same certificate, narrower grant)
+GET {{host}}/certificates/docoms/DOCOM.GB.2026.0000123
+Accept-Language: en
+Authorization: Bearer {{docomInstanceToken.response.body.access_token}}
+
+### Get DOCOM — unknown id returns 404
+GET {{host}}/certificates/docoms/DOCOM.GB.2026.9999999
+Accept-Language: en
+Authorization: Bearer {{docomToken.response.body.access_token}}
+
+### Get DOCOM — INTRA reader has no DOCOM grant, returns 403
+# @name intraToken
+POST {{host}}/local/cognito/token
+Content-Type: application/x-www-form-urlencoded
+
+scope={{scope}}&sub=test-intra-reader
+
+###
+GET {{host}}/certificates/docoms/DOCOM.GB.2026.0000123
+Accept-Language: en
+Authorization: Bearer {{intraToken.response.body.access_token}}

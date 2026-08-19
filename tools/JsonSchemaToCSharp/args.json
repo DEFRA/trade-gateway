@@ -7,7 +7,8 @@
       "schemaItems": [
         "schemas/profiles/imports/international/defra-unvtd-profile-ched-v1.schema.json",
         "schemas/profiles/imports/eu/defra-unvtd-profile-intra-v1.schema.json",
-        "schemas/profiles/imports/eu/defra-unvtd-profile-docom-v1.schema.json"
+        "schemas/profiles/imports/eu/defra-unvtd-profile-docom-v1.schema.json",
+        "schemas/profiles/imports/eu/defra-unvtd-profile-docom-followup-v1.schema.json"
       ]
     },
     {

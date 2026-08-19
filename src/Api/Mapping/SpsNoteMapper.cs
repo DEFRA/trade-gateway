@@ -18,4 +18,10 @@ internal static class SpsNoteMapper
                 ? source.ContentCode.Select(c => new CodedValue { UrlId = c.listID, Value = c.Value }).ToList()
                 : null,
         };
+
+    /// <summary>
+    /// Maps every note in the SPS array. Unlike the other list mappers this keeps an empty list
+    /// rather than collapsing to null, so a note collection is always present on the contract.
+    /// </summary>
+    internal static List<IncludedNote> MapList(SPSNoteType[]? source) => source?.Select(Map).ToList() ?? [];
 }
