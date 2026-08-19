@@ -31,4 +31,7 @@ public interface ITracesGatewayChedClient
 
     [Put("/customs/cheds/{id}/declarations/{mrn}/reservation/release")]
     Task<HttpResponseMessage> ReleaseChedReservation(string id, string mrn, CancellationToken cancellationToken);
+
+    [Delete("/customs/cheds/{id}/declarations/{mrn}/reservation")]
+    Task<HttpResponseMessage> DeleteChedReservation(string id, string mrn, CancellationToken cancellationToken);
 }
