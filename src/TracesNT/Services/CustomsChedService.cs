@@ -71,7 +71,14 @@ namespace TracesNT.Services
                 chedId,
                 messageId,
                 $"releasing CHED quantity for MRN {mrn}",
-                () => SendChedClearanceRequest(chedId, mrn, languageCode, QuantityManagementReservationMode.Release)
+                () =>
+                    SendChedClearanceRequest(
+                        chedId,
+                        mrn,
+                        languageCode,
+                        messageId,
+                        QuantityManagementReservationMode.Release
+                    )
             );
         }
 
@@ -95,7 +102,14 @@ namespace TracesNT.Services
                 chedId,
                 messageId,
                 $"Deleting CHED reservation for MRN {mrn}",
-                () => SendChedClearanceRequest(chedId, mrn, languageCode, QuantityManagementReservationMode.Cancel)
+                () =>
+                    SendChedClearanceRequest(
+                        chedId,
+                        mrn,
+                        languageCode,
+                        messageId,
+                        QuantityManagementReservationMode.Cancel
+                    )
             );
         }
 
@@ -103,11 +117,10 @@ namespace TracesNT.Services
             string chedId,
             string mrn,
             string languageCode,
+            string messageId,
             QuantityManagementReservationMode mode
         )
         {
-            var messageId = Guid.NewGuid().ToString("N");
-
             var response = await customsChedPort.chedClearanceRequestAsync(
                 new SecurityHeaderType(),
                 _credentials.WebServiceClientId,
