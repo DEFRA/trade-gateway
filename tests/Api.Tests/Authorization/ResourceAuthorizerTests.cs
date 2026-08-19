@@ -57,7 +57,6 @@ public class ResourceAuthorizerTests
 
     [Theory]
     [InlineData("PATCH")]
-    [InlineData("DELETE")]
     [InlineData("HEAD")]
     [InlineData("OPTIONS")]
     public void Denies_unmapped_methods(string method) =>

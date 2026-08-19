@@ -155,6 +155,21 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     }
 
     [Fact]
+    public async Task CustomsQuantityManager_can_delete_reservation()
+    {
+        StubCustomsReleaseReservation();
+        var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-manager");
+
+        var response = await client.DeleteChedReservation(
+            "CHEDA.GB.2026.0000123",
+            "26GB16RF3TDPZE7AR2",
+            TestContext.Current.CancellationToken
+        );
+
+        response.StatusCode.Should().Be(HttpStatusCode.NoContent);
+    }
+
+    [Fact]
     public async Task ChedReader_cannot_write_customs_reservation()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");

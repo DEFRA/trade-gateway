@@ -39,4 +39,13 @@ public interface ICustomsChedService
     /// <param name="languageCode"></param>
     /// <returns></returns>
     Task<ChedQuantityManagementOutcomeType?> Release(string chedId, string mrn, string languageCode);
+
+    /// <summary>
+    /// Deletes any reserved quantities against a declaration (<c>QuantityManagementIndication = "2"</c>).
+    /// </summary>
+    /// <param name="chedId"></param>
+    /// <param name="mrn"></param>
+    /// <param name="languageCode"></param>
+    /// <returns></returns>
+    Task<ChedQuantityManagementOutcomeType?> DeleteReservation(string chedId, string mrn, string languageCode);
 }

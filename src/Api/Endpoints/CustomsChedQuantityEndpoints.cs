@@ -45,6 +45,14 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation", DeleteReservation)
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
     }
 
     private static async Task<IResult> GetQuantities(
@@ -156,6 +164,39 @@ public static class CustomsChedQuantityEndpoints
         if (QuantityManagementOutcomes.IsSuccess(outcome))
         {
             return Results.Ok();
+        }
+
+        return Results.Problem(
+            title: "Quantity management request not executed",
+            detail: QuantityManagementOutcomes.Describe(outcome),
+            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
+            extensions: new Dictionary<string, object?>
+            {
+                ["chedId"] = chedId,
+                ["mrn"] = mrn,
+                ["outcome"] = outcome,
+                ["chedStatus"] = response?.StatusCode,
+            }
+        );
+    }
+
+    private static async Task<IResult> DeleteReservation(
+        string chedId,
+        string mrn,
+        ICustomsChedService customsChedService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
+    {
+        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
+        var response = await customsChedService.DeleteReservation(chedId, mrn, languageCode);
+
+        var outcome = response?.QuantityManagementOutcome;
+
+        // A clean cancellation has nothing to report. Outcome 04 does — the CHED status
+        // changed mid-clearance — so it always comes back with a body.
+        if (QuantityManagementOutcomes.IsSuccess(outcome))
+        {
+            return Results.NoContent();
         }
 
         return Results.Problem(
