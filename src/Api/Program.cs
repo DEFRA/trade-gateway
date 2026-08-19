@@ -7,6 +7,7 @@ using Api.Utils;
 using Api.Utils.Http;
 using Api.Utils.Logging;
 using Api.Utils.Mongo;
+using Defra.TradeImports.Api.Metrics;
 using Defra.TradeImports.EmfExporter;
 using FluentValidation;
 using Microsoft.Extensions.Options;
@@ -91,6 +92,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
 
     builder.Services.AddValidation();
     builder.AddApiAuthentication();
+    builder.Services.AddApiMetrics();
 }
 
 [ExcludeFromCodeCoverage]
@@ -112,6 +114,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
+    app.UseMiddleware<ApiMetricsMiddleware>();
     app.MapHealthChecks("/health").AllowAnonymous();
     app.MapLocalTokenEndpoints();
     app.UseChedEndpoints();
