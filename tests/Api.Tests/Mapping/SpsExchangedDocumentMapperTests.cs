@@ -111,18 +111,18 @@ public class SpsExchangedDocumentMapperTests
     }
 
     [Fact]
-    public void Map_NullNotes_ReturnsNullIncludedNote()
+    public void Map_NullNotes_ReturnsEmptyIncludedNote()
     {
-        SpsExchangedDocumentMapper.Map(MinimalDocument(), Context).IncludedNote.Should().BeNull();
+        SpsExchangedDocumentMapper.Map(MinimalDocument(), Context).IncludedNote.Should().BeEmpty();
     }
 
     [Fact]
-    public void Map_EmptyNotes_ReturnsNullIncludedNote()
+    public void Map_EmptyNotes_ReturnsEmptyIncludedNote()
     {
         var source = MinimalDocument();
         source.IncludedSPSNote = [];
 
-        SpsExchangedDocumentMapper.Map(source, Context).IncludedNote.Should().BeNull();
+        SpsExchangedDocumentMapper.Map(source, Context).IncludedNote.Should().BeEmpty();
     }
 
     private static SPSExchangedDocumentType MinimalDocument() =>

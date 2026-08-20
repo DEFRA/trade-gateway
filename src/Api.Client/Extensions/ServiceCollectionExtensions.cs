@@ -31,6 +31,7 @@ public static class ServiceCollectionExtensions
         builder.AddClient<IReferenceDataClient>();
         builder.AddClient<ITracesGatewayChedClient>();
         builder.AddClient<ITracesGatewayIntraClient>();
+        builder.AddClient<ITracesGatewayDocomClient>();
 
         return builder;
     }

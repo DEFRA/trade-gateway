@@ -38,7 +38,7 @@ TRACESNT__BASEURL=traces_base_url
 # 1-8 alphanumeric characters; the app will not start without it.
 TRACESNT__CUSTOMSOFFICEREFERENCENUMBER=traces_customs_office_reference_number
 
-# The default TracesNT account, used by the CHED, EU-INTRA and reference-data ports
+# The default TracesNT account, used by the CHED, EU-INTRA, DOCOM and reference-data ports
 TRACESNT__CREDENTIALS__DEFAULT__USERNAME=traces_username
 TRACESNT__CREDENTIALS__DEFAULT__AUTHENTICATIONKEY=traces_authentication_key
 TRACESNT__CREDENTIALS__DEFAULT__WEBSERVICECLIENTID=traces_client_id

@@ -1,0 +1,399 @@
+﻿{
+  Model: defra/certificate-internal/1,
+  Type: docom,
+  ExchangedDocument: {
+    Name: Commercial document for the movement between Member States of animal by-products not intended for human consumption,
+    Identifier: DOCOM.GB.2026.0000123,
+    DocumentTypeCode: 332,
+    DocumentStatusCode: 1,
+    IssueDateTime: DateTimeOffset_1,
+    IncludedNote: [
+      {
+        Type: Note,
+        SubjectCode: {
+          Value: LAST_UPDATE_DATETIME,
+          UrlId: docom_note_subject_code
+        },
+        Content: [
+          DateTimeOffset_2
+        ]
+      },
+      {
+        Type: Note,
+        SubjectCode: {
+          Value: JOURNEY_LOG,
+          UrlId: docom_note_subject_code
+        },
+        Content: [
+          null
+        ],
+        ContentCode: [
+          {
+            Value: NO,
+            UrlId: boolean
+          }
+        ]
+      }
+    ],
+    ReferenceDocument: [
+      {
+        TypeCode: 332,
+        RelationshipTypeCode: CAW,
+        Identifier: DOCOM.GB.2026.0000123
+      },
+      {
+        TypeCode: 784,
+        RelationshipTypeCode: ZZZ,
+        Identifier: wer
+      }
+    ],
+    FirstSignatoryAuthentication: {
+      TypeCode: 4,
+      ActualDateTime: DateTimeOffset_3,
+      GovernmentActionTypeCode: Inspection (Identification of Applicant),
+      Provider: {
+        Identifier: XI0000,
+        UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+        Name: Department of Agriculture, Environment and Rural Affairs (DAERA),
+        PartyRoleCode: {
+          Value: VJ,
+          UrlId: https://traces-codelists.ec.europa.eu/3035,
+          Name: Officer (Identification of Applicant)
+        },
+        PartyTypeCode: [
+          {
+            Value: AUTHORITY,
+            UrlId: https://traces-codelists.ec.europa.eu/user_body_role,
+            Name: Authority
+          }
+        ],
+        PostalAddress: {
+          PostcodeCode: BT1,
+          LineOne: DAERA main office,
+          CityName: Belfast,
+          CountryId: XI,
+          CountryName: United Kingdom (Northern Ireland),
+          CountrySubDivisionName: County Antrim
+        },
+        DefinedContact: [
+          {
+            PersonName: Daniel Klemm
+          }
+        ]
+      },
+      IncludedClause: [
+        {
+          Identifier: PURPOSE,
+          Content: FOR_TRANSIT_THROUGH_MEMBER_STATE
+        },
+        {
+          Identifier: CERTIFIED_AS_OR_FOR,
+          Content: FURTHER_KEEPING
+        },
+        {
+          Identifier: SIGNATORY_PERSON_EMAIL,
+          Content: info@b.c
+        }
+      ]
+    }
+  },
+  SpecifiedConsignment: {
+    ExportExitDateTime: DateTimeOffset_4,
+    ConsignorParty: {
+      Identifier: 899361,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
+      Name: DK Test,
+      PartyRoleCode: {
+        Value: CZ,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Consignor
+      },
+      PartyTypeCode: [
+        {
+          Value: IMPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Importer
+        },
+        {
+          Value: OTH-OPER,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Other operators
+        }
+      ],
+      PostalAddress: {
+        PostcodeCode: BT9,
+        LineOne: Test Street 876,
+        CityName: Belfast,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: County Antrim
+      }
+    },
+    ConsigneeParty: {
+      Identifier: 899361,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
+      Name: DK Test,
+      PartyRoleCode: {
+        Value: CN,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Consignee
+      },
+      PartyTypeCode: [
+        {
+          Value: IMPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Importer
+        },
+        {
+          Value: OTH-OPER,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Other operators
+        }
+      ],
+      PostalAddress: {
+        PostcodeCode: BT9,
+        LineOne: Test Street 876,
+        CityName: Belfast,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: County Antrim
+      }
+    },
+    DespatchParty: {
+      Identifier: TEST-01-01,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: Test Quarantaine,
+      PartyRoleCode: {
+        Value: PW,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Despatch party (Place of dispatch)
+      },
+      PartyTypeCode: [
+        {
+          Value: QUARANTINE,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Quarantine establishment
+        },
+        {
+          Value: QUR,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Quarantine establishments
+        }
+      ],
+      PostalAddress: {
+        PostcodeCode: 01000,
+        LineOne: zdafazartaretaretrtatrrart,
+        CityName: Bourg-en-Bresse,
+        CountryId: FR,
+        CountryName: France,
+        CountrySubDivisionName: Ain.
+      }
+    },
+    DeliveryParty: {
+      Identifier: 899361,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_internal_activity_id,
+      Name: DK Test,
+      PartyRoleCode: {
+        Value: DP,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Delivery party (Place of destination)
+      },
+      PartyTypeCode: [
+        {
+          Value: IMPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Importer
+        },
+        {
+          Value: OTH-OPER,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Other operators
+        }
+      ],
+      PostalAddress: {
+        PostcodeCode: BT9,
+        LineOne: Test Street 876,
+        CityName: Belfast,
+        CountryId: XI,
+        CountryName: United Kingdom (Northern Ireland),
+        CountrySubDivisionName: County Antrim
+      }
+    },
+    ExportCountry: {
+      Code: {}
+    },
+    ImportCountry: {
+      Code: {
+        Value: XI,
+        Name: United Kingdom (Northern Ireland)
+      }
+    },
+    TransitCountry: [
+      {
+        Code: {
+          Value: AT,
+          Name: Austria
+        }
+      }
+    ],
+    MainCarriageLogisticsTransportMovement: [
+      {
+        Identifier: R5434FGD,
+        ModeCode: 3
+      }
+    ],
+    IncludedConsignmentItem: [
+      {
+        NatureIdCargo: [
+          {
+            TypeCode: 12
+          }
+        ],
+        IncludedTradeLineItem: [
+          {
+            SequenceNumeric: 0,
+            Description: [
+              Consignment totals and summary
+            ],
+            NetWeight: {
+              Content: 0
+            },
+            GrossWeight: {
+              Content: 1
+            },
+            PhysicalReferencedLogisticsPackage: [
+              {
+                LevelCode: 4,
+                TypeCode: NA,
+                ItemQuantity: 0
+              }
+            ]
+          },
+          {
+            SequenceNumeric: 1,
+            Description: [
+              null
+            ],
+            ScientificName: Equus asinus,
+            ApplicableClassification: [
+              {
+                SystemId: CN,
+                SystemName: CN Code (Combined Nomenclature),
+                ClassCode: {
+                  Value: 0101,
+                  UrlId: https://traces-codelists.ec.europa.eu/class_code_system/CN
+                },
+                ClassName: [
+                  LIVE ANIMALS,
+                  Live horses, asses, mules and hinnies
+                ]
+              },
+              {
+                SystemId: IDENTIFICATION_SYSTEM,
+                SystemName: Identification system,
+                ClassCode: {
+                  Value: TATTOO,
+                  UrlId: https://traces-codelists.ec.europa.eu/class_code_system/IDENTIFICATION_SYSTEM
+                },
+                ClassName: [
+                  Tattoo
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  FollowUp: [
+    {
+      CreationDateTime: DateTimeOffset_5,
+      RevisionDateTime: DateTimeOffset_6,
+      RedispatchDetails: {
+        RedispatchDateTime: DateTimeOffset_5,
+        ExitAuthorityParty: {
+          Identifier: XI0001,
+          UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+          Name: Belfast Border Control Post
+        },
+        DestinationCountry: {
+          Code: {
+            Value: FR,
+            Name: France
+          }
+        },
+        MeansOfTransport: [
+          {
+            SpecifiedLogisticsTransportMovement: {
+              Identifier: BX21 ABC,
+              ModeCode: 3
+            },
+            InternationalTransportDocument: CMR-2026-000421
+          }
+        ],
+        PlaceOfDestinationParty: {
+          Identifier: FR00042,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+          Name: Ferme des Trois Chenes
+        }
+      },
+      CertifyingOfficerAuthentication: {
+        TypeCode: 7,
+        ActualDateTime: DateTimeOffset_7,
+        GovernmentActionTypeCode: Redispatch decision,
+        Provider: {
+          Identifier: XI0001,
+          UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+          Name: Belfast Border Control Post,
+          DefinedContact: [
+            {
+              PersonName: Aoife Byrne
+            }
+          ]
+        }
+      }
+    },
+    {
+      CreationDateTime: DateTimeOffset_8,
+      ControlDetails: {
+        ConsignmentArrivedIndicator: true,
+        ConsignmentCompliantIndicator: false,
+        IncludedNote: [
+          {
+            Type: Note,
+            SubjectCode: {
+              Value: TYPE_OF_CONTROL,
+              UrlId: ched_follow_up_note_subject_code
+            },
+            ContentCode: [
+              {
+                Value: DOCUMENTARY,
+                UrlId: docom_follow_up_type_of_control
+              }
+            ]
+          },
+          {
+            Type: Note,
+            SubjectCode: {
+              Value: REASON_OF_NON_COMPLIANCE,
+              UrlId: ched_follow_up_note_subject_code
+            },
+            Content: [
+              Ear tag numbers did not match the accompanying document.
+            ],
+            ContentCode: [
+              {
+                Value: IDENTIFICATION,
+                UrlId: docom_follow_up_reason_of_non_compliance
+              },
+              {
+                Value: DOCUMENTS_MISSING,
+                UrlId: docom_follow_up_reason_of_non_compliance
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,513 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
+  <S:Header>
+    <Message xmlns="http://ec.europa.eu/sanco/tracesnt/message/v1" severity="debugging">
+      <ID>WS_REQUEST_ID</ID>
+      <Message>fb60884b-4e2a-4235-8606-e5e59a0fb481</Message>
+    </Message>
+    <ns2:Security
+      xmlns:ns1="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+      xmlns:ns2="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+    >
+      <ns1:Timestamp>
+        <ns1:Created>2026-05-18T14:48:27.333+02:00</ns1:Created>
+        <ns1:Expires>2026-05-18T14:48:32.333+02:00</ns1:Expires>
+      </ns1:Timestamp>
+    </ns2:Security>
+  </S:Header>
+  <S:Body>
+    <ns3:GetDocomCertificateResponse
+      xmlns:ns2="http://ec.europa.eu/sanco/tracesnt/base/v4"
+      xmlns:ns3="http://ec.europa.eu/tracesnt/certificate/docom/retrieval/v1"
+      xmlns:ns4="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:21"
+      xmlns:ns5="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:21"
+      xmlns:ns6="urn:un:unece:uncefact:data:standard:SPSCertificate:17"
+      xmlns:ns7="http://ec.europa.eu/tracesnt/certificate/laboratorytest/v1"
+      xmlns:ns8="http://ec.europa.eu/tracesnt/referencedata/laboratorytest/v1"
+      xmlns:ns9="http://ec.europa.eu/tracesnt/certificate/base/v01"
+      xmlns:ns10="http://ec.europa.eu/sanco/tracesnt/error/v01"
+      xmlns:ns11="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd"
+      xmlns:ns12="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"
+      xmlns:ns13="http://www.w3.org/2000/09/xmldsig#"
+      xmlns:ns14="http://ec.europa.eu/tracesnt/body/v3"
+      xmlns:ns15="urn:un:unece:uncefact:codelist:standard:EDIFICAS-EU:CertificateType:D11A"
+      xmlns:ns16="urn:un:unece:uncefact:codelist:standard:ISO:ISO2AlphaLanguageCode:2006-10-27"
+      xmlns:ns17="urn:un:unece:uncefact:codelist:standard:UNECE:AddressType:D16B"
+      xmlns:ns18="urn:un:unece:uncefact:codelist:standard:UNECE:CargoTypeClassificationCode:D16B"
+      xmlns:ns19="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentNameCode:D16B"
+      xmlns:ns20="urn:un:unece:uncefact:codelist:standard:UNECE:DocumentStatusCode:D16B"
+      xmlns:ns21="urn:un:unece:uncefact:codelist:standard:UNECE:GovernmentActionCode:D16B"
+      xmlns:ns22="urn:un:unece:uncefact:codelist:standard:UNECE:LocationFunctionCode:D16B"
+      xmlns:ns23="urn:un:unece:uncefact:codelist:standard:UNECE:PackageTypeCode:2006"
+      xmlns:ns24="urn:un:unece:uncefact:codelist:standard:UNECE:PackagingLevelCode:D16B"
+      xmlns:ns25="urn:un:unece:uncefact:codelist:standard:UNECE:ProcessTypeCode:D16B"
+      xmlns:ns26="urn:un:unece:uncefact:codelist:standard:UNECE:StatusCode:D16B"
+      xmlns:ns27="urn:un:unece:uncefact:codelist:standard:UNECE:TemperatureTypeCode:D16B"
+      xmlns:ns28="urn:un:unece:uncefact:codelist:standard:UNECE:TransportMeansTypeCode:2007"
+      xmlns:ns29="urn:un:unece:uncefact:codelist:standard:UNECE:TransportModeCode:2"
+      xmlns:ns30="http://ec.europa.eu/tracesnt/certificate/docom/followup/v1"
+    >
+      <ns3:SPSCertificate>
+        <ns6:SPSExchangedDocument>
+          <ns4:Name>Commercial document for the movement between Member States of animal by-products not intended for human consumption</ns4:Name>
+          <ns4:ID>DOCOM.GB.2026.0000123</ns4:ID>
+          <ns4:TypeCode name="Commercial document (DOCOM)">332</ns4:TypeCode>
+          <ns4:StatusCode name="To be done (New)">1</ns4:StatusCode>
+          <ns4:IssueDateTime>
+            <ns5:DateTime>2026-03-23T16:13:59.000+01:00</ns5:DateTime>
+          </ns4:IssueDateTime>
+          <ns4:IncludedSPSNote>
+            <ns4:Content>2026-04-17T11:39:17.000+02:00</ns4:Content>
+            <ns4:SubjectCode listID="docom_note_subject_code" listName="DOCOM Note SubjectCode list" name="Last updated"
+              >LAST_UPDATE_DATETIME</ns4:SubjectCode
+            >
+          </ns4:IncludedSPSNote>
+          <ns4:IncludedSPSNote>
+            <ns4:ContentCode listID="boolean" listName="Boolean (yes/no)">NO</ns4:ContentCode>
+            <ns4:Content></ns4:Content>
+            <ns4:SubjectCode listID="docom_note_subject_code" listName="DOCOM Note SubjectCode list" name="Journey log"
+              >JOURNEY_LOG</ns4:SubjectCode
+            >
+          </ns4:IncludedSPSNote>
+          <ns4:ReferenceSPSReferencedDocument>
+            <ns4:TypeCode name="Commercial document (DOCOM)">332</ns4:TypeCode>
+            <ns4:RelationshipTypeCode name="Document reference, internal (Document reference, internal)"
+              >CAW</ns4:RelationshipTypeCode
+            >
+            <ns4:ID>DOCOM.GB.2026.0000123</ns4:ID>
+            <ns4:AttachmentBinaryObject
+              format="url"
+              mimeCode="text/url"
+              uri="https://webgate.acceptance.ec.europa.eu/tracesnt/certificate/docom/DOCOM.GB.2026.0000123"
+            />
+          </ns4:ReferenceSPSReferencedDocument>
+          <ns4:ReferenceSPSReferencedDocument>
+            <ns4:TypeCode name="Delivery notice (goods) (Delivery notice)">784</ns4:TypeCode>
+            <ns4:RelationshipTypeCode name="Mutually defined reference number (Accompanying document)"
+              >ZZZ</ns4:RelationshipTypeCode
+            >
+            <ns4:ID schemeAgencyID="AF">wer</ns4:ID>
+            <ns4:AttachmentBinaryObject uri="uri:documentid:774766" filename="blank.pdf" />
+          </ns4:ReferenceSPSReferencedDocument>
+          <ns4:SignatorySPSAuthentication>
+            <ns4:TypeCode name="Inspection (Identification of Applicant)">4</ns4:TypeCode>
+            <ns4:ActualDateTime>
+              <ns5:DateTime>2026-04-17T11:39:17.000+02:00</ns5:DateTime>
+            </ns4:ActualDateTime>
+            <ns4:ProviderSPSParty>
+              <ns4:ID
+                schemeID="authority_activity_id"
+                schemeName="Authority activity ID"
+                schemeAgencyID="ec_sante_traces"
+                schemeAgencyName="European commission - DG SANTE - Traces"
+                >XI0000</ns4:ID
+              >
+              <ns4:Name>Department of Agriculture, Environment and Rural Affairs (DAERA)</ns4:Name>
+              <ns4:RoleCode name="Officer (Identification of Applicant)">VJ</ns4:RoleCode>
+              <ns4:TypeCode listID="user_body_role" listName="User body role" name="Authority">AUTHORITY</ns4:TypeCode>
+              <ns4:SpecifiedSPSAddress>
+                <ns4:PostcodeCode>BT1</ns4:PostcodeCode>
+                <ns4:LineOne>DAERA main office</ns4:LineOne>
+                <ns4:CityName languageID="en">Belfast</ns4:CityName>
+                <ns4:CountryID>XI</ns4:CountryID>
+                <ns4:CountryName languageID="en">United Kingdom (Northern Ireland)</ns4:CountryName>
+                <ns4:CountrySubDivisionName languageID="en">County Antrim</ns4:CountrySubDivisionName>
+              </ns4:SpecifiedSPSAddress>
+              <ns4:SpecifiedSPSPerson>
+                <ns4:Name>Daniel Klemm</ns4:Name>
+              </ns4:SpecifiedSPSPerson>
+            </ns4:ProviderSPSParty>
+            <ns4:IncludedSPSClause>
+              <ns4:ID
+                schemeID="docom_consignment_clause"
+                schemeName="DOCOM consignment's clauses"
+                schemeAgencyID="ec_sante_traces"
+                schemeAgencyName="European commission - DG SANTE - Traces"
+                >PURPOSE</ns4:ID
+              >
+              <ns4:Content>FOR_TRANSIT_THROUGH_MEMBER_STATE</ns4:Content>
+              <ns4:Content languageID="en">For transit through Member State(s)</ns4:Content>
+            </ns4:IncludedSPSClause>
+            <ns4:IncludedSPSClause>
+              <ns4:ID
+                schemeID="docom_consignment_clause"
+                schemeName="DOCOM consignment's clauses"
+                schemeAgencyID="ec_sante_traces"
+                schemeAgencyName="European commission - DG SANTE - Traces"
+                >CERTIFIED_AS_OR_FOR</ns4:ID
+              >
+              <ns4:Content>FURTHER_KEEPING</ns4:Content>
+              <ns4:Content languageID="en">Further keeping</ns4:Content>
+            </ns4:IncludedSPSClause>
+            <ns4:IncludedSPSClause>
+              <ns4:ID
+                schemeID="docom_consignment_clause"
+                schemeName="DOCOM consignment's clauses"
+                schemeAgencyID="ec_sante_traces"
+                schemeAgencyName="European commission - DG SANTE - Traces"
+                >SIGNATORY_PERSON_EMAIL</ns4:ID
+              >
+              <ns4:Content>info@b.c</ns4:Content>
+            </ns4:IncludedSPSClause>
+          </ns4:SignatorySPSAuthentication>
+        </ns6:SPSExchangedDocument>
+        <ns6:SPSConsignment>
+          <ns4:AvailabilityDueDateTime>
+            <ns5:DateTimeString />
+          </ns4:AvailabilityDueDateTime>
+          <ns4:ExportExitDateTime>
+            <ns5:DateTime>2026-03-24T00:00:00.000+01:00</ns5:DateTime>
+          </ns4:ExportExitDateTime>
+          <ns4:ConsignorSPSParty>
+            <ns4:ID
+              schemeID="operator_internal_activity_id"
+              schemeName="Operator internal activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >899361</ns4:ID
+            >
+            <ns4:Name>DK Test</ns4:Name>
+            <ns4:RoleCode name="Consignor">CZ</ns4:RoleCode>
+            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Importer"
+              >IMPORTER</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="Other operators"
+              >OTH-OPER</ns4:TypeCode
+            >
+            <ns4:SpecifiedSPSAddress>
+              <ns4:PostcodeCode>BT9</ns4:PostcodeCode>
+              <ns4:LineOne>Test Street 876</ns4:LineOne>
+              <ns4:CityName languageID="en">Belfast</ns4:CityName>
+              <ns4:CountryID>XI</ns4:CountryID>
+              <ns4:CountryName languageID="en">United Kingdom (Northern Ireland)</ns4:CountryName>
+              <ns4:CountrySubDivisionName languageID="en">County Antrim</ns4:CountrySubDivisionName>
+            </ns4:SpecifiedSPSAddress>
+          </ns4:ConsignorSPSParty>
+          <ns4:ConsigneeSPSParty>
+            <ns4:ID
+              schemeID="operator_internal_activity_id"
+              schemeName="Operator internal activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >899361</ns4:ID
+            >
+            <ns4:Name>DK Test</ns4:Name>
+            <ns4:RoleCode name="Consignee">CN</ns4:RoleCode>
+            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Importer"
+              >IMPORTER</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="Other operators"
+              >OTH-OPER</ns4:TypeCode
+            >
+            <ns4:SpecifiedSPSAddress>
+              <ns4:PostcodeCode>BT9</ns4:PostcodeCode>
+              <ns4:LineOne>Test Street 876</ns4:LineOne>
+              <ns4:CityName languageID="en">Belfast</ns4:CityName>
+              <ns4:CountryID>XI</ns4:CountryID>
+              <ns4:CountryName languageID="en">United Kingdom (Northern Ireland)</ns4:CountryName>
+              <ns4:CountrySubDivisionName languageID="en">County Antrim</ns4:CountrySubDivisionName>
+            </ns4:SpecifiedSPSAddress>
+          </ns4:ConsigneeSPSParty>
+          <ns4:ExportSPSCountry>
+            <ns4:ID></ns4:ID>
+            <ns4:Name></ns4:Name>
+          </ns4:ExportSPSCountry>
+          <ns4:LoadingBaseportSPSLocation>
+            <ns4:ID
+              schemeID="operator_activity_id"
+              schemeName="Operator activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              schemeDataURI="operator_activity"
+              >TEST-01-01</ns4:ID
+            >
+            <ns4:Name>FR</ns4:Name>
+            <ns4:Name>Test Quarantaine</ns4:Name>
+            <ns4:Name languageID="en">Bourg-en-Bresse</ns4:Name>
+            <ns4:Name>01000</ns4:Name>
+            <ns4:Name>zdafazartaretaretrtatrrart</ns4:Name>
+          </ns4:LoadingBaseportSPSLocation>
+          <ns4:ImportSPSCountry>
+            <ns4:ID>XI</ns4:ID>
+            <ns4:Name languageID="en">United Kingdom (Northern Ireland)</ns4:Name>
+          </ns4:ImportSPSCountry>
+          <ns4:TransitSPSCountry>
+            <ns4:ID>AT</ns4:ID>
+            <ns4:Name languageID="en">Austria</ns4:Name>
+          </ns4:TransitSPSCountry>
+          <ns4:ExaminationSPSEvent>
+            <ns4:OccurrenceSPSLocation>
+              <ns4:Name></ns4:Name>
+            </ns4:OccurrenceSPSLocation>
+          </ns4:ExaminationSPSEvent>
+          <ns4:CarrierSPSParty>
+            <ns4:ID
+              schemeID="operator_activity_id"
+              schemeName="Operator activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >Type I</ns4:ID
+            >
+            <ns4:Name>Test type I</ns4:Name>
+            <ns4:RoleCode name="Carrier (Transporter)">CA</ns4:RoleCode>
+            <ns4:TypeCode
+              listID="operator_activity_type"
+              listName="Operator activity type"
+              name="Registered transporter"
+              >REGISTERED_TRANSPORTER</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="Registered transporter"
+              >REG-TRANS</ns4:TypeCode
+            >
+            <ns4:SpecifiedSPSAddress>
+              <ns4:PostcodeCode>91744</ns4:PostcodeCode>
+              <ns4:LineOne>rue I</ns4:LineOne>
+              <ns4:CityName languageID="en">Paris</ns4:CityName>
+              <ns4:CountryID>FR</ns4:CountryID>
+              <ns4:CountryName languageID="en">France</ns4:CountryName>
+              <ns4:CountrySubDivisionName languageID="en">Paris</ns4:CountrySubDivisionName>
+            </ns4:SpecifiedSPSAddress>
+          </ns4:CarrierSPSParty>
+          <ns4:DespatchSPSParty>
+            <ns4:ID
+              schemeID="operator_activity_id"
+              schemeName="Operator activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >TEST-01-01</ns4:ID
+            >
+            <ns4:Name>Test Quarantaine</ns4:Name>
+            <ns4:RoleCode name="Despatch party (Place of dispatch)">PW</ns4:RoleCode>
+            <ns4:TypeCode
+              listID="operator_activity_type"
+              listName="Operator activity type"
+              name="Quarantine establishment"
+              >QUARANTINE</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="Quarantine establishments"
+              >QUR</ns4:TypeCode
+            >
+            <ns4:SpecifiedSPSAddress>
+              <ns4:PostcodeCode>01000</ns4:PostcodeCode>
+              <ns4:LineOne>zdafazartaretaretrtatrrart</ns4:LineOne>
+              <ns4:CityName languageID="en">Bourg-en-Bresse</ns4:CityName>
+              <ns4:CountryID>FR</ns4:CountryID>
+              <ns4:CountryName languageID="en">France</ns4:CountryName>
+              <ns4:CountrySubDivisionName languageID="en">Ain.</ns4:CountrySubDivisionName>
+            </ns4:SpecifiedSPSAddress>
+          </ns4:DespatchSPSParty>
+          <ns4:DeliverySPSParty>
+            <ns4:ID
+              schemeID="operator_internal_activity_id"
+              schemeName="Operator internal activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >899361</ns4:ID
+            >
+            <ns4:Name>DK Test</ns4:Name>
+            <ns4:RoleCode name="Delivery party (Place of destination)">DP</ns4:RoleCode>
+            <ns4:TypeCode listID="operator_activity_type" listName="Operator activity type" name="Importer"
+              >IMPORTER</ns4:TypeCode
+            >
+            <ns4:TypeCode
+              listID="classification_section_code"
+              listName="Operator classification section code"
+              name="Other operators"
+              >OTH-OPER</ns4:TypeCode
+            >
+            <ns4:SpecifiedSPSAddress>
+              <ns4:PostcodeCode>BT9</ns4:PostcodeCode>
+              <ns4:LineOne>Test Street 876</ns4:LineOne>
+              <ns4:CityName languageID="en">Belfast</ns4:CityName>
+              <ns4:CountryID>XI</ns4:CountryID>
+              <ns4:CountryName languageID="en">United Kingdom (Northern Ireland)</ns4:CountryName>
+              <ns4:CountrySubDivisionName languageID="en">County Antrim</ns4:CountrySubDivisionName>
+            </ns4:SpecifiedSPSAddress>
+          </ns4:DeliverySPSParty>
+          <ns4:MainCarriageSPSTransportMovement>
+            <ns4:ID
+              schemeID="road_vehicle_registration"
+              schemeName="Road vehicle registration"
+              schemeAgencyID="GB"
+              schemeAgencyName="United Kingdom"
+              >R5434FGD</ns4:ID
+            >
+            <ns4:ModeCode name="Road transport">3</ns4:ModeCode>
+          </ns4:MainCarriageSPSTransportMovement>
+          <ns4:IncludedSPSConsignmentItem>
+            <ns4:NatureIdentificationSPSCargo>
+              <ns4:TypeCode name="General cargo (Commodities)">12</ns4:TypeCode>
+            </ns4:NatureIdentificationSPSCargo>
+            <ns4:IncludedSPSTradeLineItem>
+              <ns4:SequenceNumeric>0</ns4:SequenceNumeric>
+              <ns4:Description>Consignment totals and summary</ns4:Description>
+              <ns4:NetWeightMeasure>0</ns4:NetWeightMeasure>
+              <ns4:GrossWeightMeasure>1</ns4:GrossWeightMeasure>
+              <ns4:NetVolumeMeasure unitCode="H87">1</ns4:NetVolumeMeasure>
+              <ns4:PhysicalSPSPackage>
+                <ns4:LevelCode name="No packaging hierarchy">4</ns4:LevelCode>
+                <ns4:TypeCode>NA</ns4:TypeCode>
+                <ns4:ItemQuantity>0.0</ns4:ItemQuantity>
+              </ns4:PhysicalSPSPackage>
+              <ns4:AppliedSPSProcess>
+                <ns4:TypeCode name="Transferring (Transferring)">44</ns4:TypeCode>
+                <ns4:OperatorSPSParty>
+                  <ns4:ID
+                    schemeID="operator_activity_id"
+                    schemeName="Operator activity ID"
+                    schemeAgencyID="ec_sante_traces"
+                    schemeAgencyName="European commission - DG SANTE - Traces"
+                    >Type I</ns4:ID
+                  >
+                  <ns4:Name>Test type I</ns4:Name>
+                  <ns4:TypeCode
+                    listID="operator_activity_type"
+                    listName="Operator activity type"
+                    name="Registered transporter"
+                    >REGISTERED_TRANSPORTER</ns4:TypeCode
+                  >
+                  <ns4:TypeCode
+                    listID="classification_section_code"
+                    listName="Operator classification section code"
+                    name="Registered transporter"
+                    >REG-TRANS</ns4:TypeCode
+                  >
+                  <ns4:SpecifiedSPSAddress>
+                    <ns4:PostcodeCode>91744</ns4:PostcodeCode>
+                    <ns4:LineOne>rue I</ns4:LineOne>
+                    <ns4:CityName languageID="en">Paris</ns4:CityName>
+                    <ns4:CountryID>FR</ns4:CountryID>
+                    <ns4:CountryName languageID="en">France</ns4:CountryName>
+                    <ns4:CountrySubDivisionName languageID="en">Paris</ns4:CountrySubDivisionName>
+                  </ns4:SpecifiedSPSAddress>
+                </ns4:OperatorSPSParty>
+              </ns4:AppliedSPSProcess>
+            </ns4:IncludedSPSTradeLineItem>
+            <ns4:IncludedSPSTradeLineItem>
+              <ns4:SequenceNumeric>1</ns4:SequenceNumeric>
+              <ns4:Description></ns4:Description>
+              <ns4:ScientificName languageID="la">Equus asinus</ns4:ScientificName>
+              <ns4:NetVolumeMeasure unitCode="H87">1</ns4:NetVolumeMeasure>
+              <ns4:AdditionalInformationSPSNote>
+                <ns4:Content>NEW</ns4:Content>
+                <ns4:SubjectCode
+                  listID="docom_commodity_note_subject_code"
+                  listName="DOCOM Commodity Note SubjectCode list"
+                  name="Individual identification number"
+                  >IDENTIFICATION_NUMBER</ns4:SubjectCode
+                >
+              </ns4:AdditionalInformationSPSNote>
+              <ns4:ApplicableSPSClassification>
+                <ns4:SystemID>CN</ns4:SystemID>
+                <ns4:SystemName>CN Code (Combined Nomenclature)</ns4:SystemName>
+                <ns4:ClassCode>0101</ns4:ClassCode>
+                <ns4:ClassName languageID="en">LIVE ANIMALS</ns4:ClassName>
+                <ns4:ClassName languageID="en">Live horses, asses, mules and hinnies</ns4:ClassName>
+              </ns4:ApplicableSPSClassification>
+              <ns4:ApplicableSPSClassification>
+                <ns4:SystemID>IDENTIFICATION_SYSTEM</ns4:SystemID>
+                <ns4:SystemName>Identification system</ns4:SystemName>
+                <ns4:ClassCode>TATTOO</ns4:ClassCode>
+                <ns4:ClassName languageID="en">Tattoo</ns4:ClassName>
+              </ns4:ApplicableSPSClassification>
+            </ns4:IncludedSPSTradeLineItem>
+          </ns4:IncludedSPSConsignmentItem>
+        </ns6:SPSConsignment>
+      </ns3:SPSCertificate>
+      <ns3:DocomFollowUp>
+        <ns30:RedispatchDetails>
+          <ns30:RedispatchDateTime>2026-04-22T09:15:00.000+02:00</ns30:RedispatchDateTime>
+          <ns30:ExitAuthoritySPSParty>
+            <ns4:ID
+              schemeID="authority_activity_id"
+              schemeName="Authority activity ID"
+              schemeAgencyID="ec_sante_traces"
+              schemeAgencyName="European commission - DG SANTE - Traces"
+              >XI0001</ns4:ID
+            >
+            <ns4:Name>Belfast Border Control Post</ns4:Name>
+          </ns30:ExitAuthoritySPSParty>
+          <ns30:CountryOfDestination>
+            <ns4:ID>FR</ns4:ID>
+            <ns4:Name languageID="en">France</ns4:Name>
+          </ns30:CountryOfDestination>
+          <ns30:MeansOfTransport>
+            <ns30:SPSTransportMovement>
+              <ns4:ID schemeID="road_vehicle_registration_after_bcp">BX21 ABC</ns4:ID>
+              <ns4:ModeCode>3</ns4:ModeCode>
+            </ns30:SPSTransportMovement>
+            <ns30:InternationalTrasportDocument>CMR-2026-000421</ns30:InternationalTrasportDocument>
+          </ns30:MeansOfTransport>
+          <ns30:PlaceOfDestinationSPSParty>
+            <ns4:ID schemeID="operator_activity_id" schemeName="Operator activity ID">FR00042</ns4:ID>
+            <ns4:Name>Ferme des Trois Chenes</ns4:Name>
+          </ns30:PlaceOfDestinationSPSParty>
+        </ns30:RedispatchDetails>
+        <ns30:CertifyingOfficerSPSAuthentication>
+          <ns4:TypeCode name="Redispatch decision">7</ns4:TypeCode>
+          <ns4:ActualDateTime>
+            <ns5:DateTime>2026-04-22T09:20:00.000+02:00</ns5:DateTime>
+          </ns4:ActualDateTime>
+          <ns4:ProviderSPSParty>
+            <ns4:ID schemeID="authority_activity_id" schemeName="Authority activity ID">XI0001</ns4:ID>
+            <ns4:Name>Belfast Border Control Post</ns4:Name>
+            <ns4:SpecifiedSPSPerson>
+              <ns4:Name>Aoife Byrne</ns4:Name>
+            </ns4:SpecifiedSPSPerson>
+          </ns4:ProviderSPSParty>
+        </ns30:CertifyingOfficerSPSAuthentication>
+        <ns30:UpdatedOn>2026-04-22T10:00:00.000+02:00</ns30:UpdatedOn>
+        <ns30:CreatedOn>2026-04-22T09:15:00.000+02:00</ns30:CreatedOn>
+      </ns3:DocomFollowUp>
+      <ns3:DocomFollowUp>
+        <ns30:ControlDetails>
+          <ns30:ArrivalOfTheConsignment>true</ns30:ArrivalOfTheConsignment>
+          <ns30:ComplianceOfTheConsignment>false</ns30:ComplianceOfTheConsignment>
+          <ns30:IncludedSPSNote>
+            <ns4:ContentCode listID="docom_follow_up_type_of_control" listName="DOCOM follow-up type of control"
+              >DOCUMENTARY</ns4:ContentCode
+            >
+            <ns4:SubjectCode
+              listID="ched_follow_up_note_subject_code"
+              listName="Follow-up Note SubjectCode list"
+              name="Type of control"
+              >TYPE_OF_CONTROL</ns4:SubjectCode
+            >
+          </ns30:IncludedSPSNote>
+          <ns30:IncludedSPSNote>
+            <ns4:ContentCode
+              listID="docom_follow_up_reason_of_non_compliance"
+              listName="DOCOM follow-up reason of non compliance"
+              >IDENTIFICATION</ns4:ContentCode
+            >
+            <ns4:ContentCode
+              listID="docom_follow_up_reason_of_non_compliance"
+              listName="DOCOM follow-up reason of non compliance"
+              >DOCUMENTS_MISSING</ns4:ContentCode
+            >
+            <ns4:Content>Ear tag numbers did not match the accompanying document.</ns4:Content>
+            <ns4:SubjectCode
+              listID="ched_follow_up_note_subject_code"
+              listName="Follow-up Note SubjectCode list"
+              name="Reason of non compliance"
+              >REASON_OF_NON_COMPLIANCE</ns4:SubjectCode
+            >
+          </ns30:IncludedSPSNote>
+        </ns30:ControlDetails>
+        <ns30:CreatedOn>2026-04-24T14:05:00.000+02:00</ns30:CreatedOn>
+      </ns3:DocomFollowUp>
+    </ns3:GetDocomCertificateResponse>
+  </S:Body>
+</S:Envelope>

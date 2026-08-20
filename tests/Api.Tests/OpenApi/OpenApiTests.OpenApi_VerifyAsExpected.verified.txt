@@ -547,6 +547,82 @@
         }
       }
     },
+    /certificates/docoms/{id}: {
+      get: {
+        tags: [
+          DocomEndpoints
+        ],
+        parameters: [
+          {
+            name: id,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.docom.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDDOCOMProfile
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     /certificates/intras/{id}: {
       get: {
         tags: [
@@ -1564,6 +1640,30 @@
         },
         additionalProperties: false
       },
+      ControlDetails: {
+        type: object,
+        properties: {
+          consignmentArrivedIndicator: {
+            type: boolean,
+            description: Whether the consignment arrived at its declared destination (TRACES ArrivalOfTheConsignment).,
+            nullable: true
+          },
+          consignmentCompliantIndicator: {
+            type: boolean,
+            description: Whether the consignment was found compliant at the control (TRACES ComplianceOfTheConsignment). When false, the reasons are carried as includedNote entries with subject code REASON_OF_NON_COMPLIANCE.,
+            nullable: true
+          },
+          includedNote: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/IncludedNote
+            },
+            description: Coded control detail. Subject codes are drawn from the TRACES ched_follow_up_note_subject_code list — TYPE_OF_CONTROL (contentCode from docom_follow_up_type_of_control) and REASON_OF_NON_COMPLIANCE (contentCode from docom_follow_up_reason_of_non_compliance, which can carry several codes on one note).,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       DeclarationReference: {
         required: [
           type,
@@ -1681,6 +1781,52 @@
           updated: {
             type: string,
             format: date-time
+          }
+        },
+        additionalProperties: false
+      },
+      DefraUNVTDDOCOMProfile: {
+        required: [
+          exchangedDocument,
+          specifiedConsignment
+        ],
+        type: object,
+        properties: {
+          $model: {
+            enum: [
+              defra/certificate-internal/1
+            ],
+            type: string,
+            nullable: true
+          },
+          $type: {
+            enum: [
+              docom
+            ],
+            type: string,
+            nullable: true
+          },
+          exchangedDocument: {
+            $ref: #/components/schemas/ExchangedDocument
+          },
+          specifiedConsignment: {
+            $ref: #/components/schemas/Consignment
+          },
+          laboratoryObservationResult: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/LaboratoryObservationResult
+            },
+            description: UN vocabulary-aligned laboratory observations/results collection.,
+            nullable: true
+          },
+          followUp: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/FollowUpRecord
+            },
+            description: Part III follow-up records in the order TRACES returned them (TRACES DocomFollowUp). TRACES appends one record per follow-up action over the certificate's life, each carrying redispatch details, control outcomes, or both. Absent until the first follow-up is recorded.,
+            nullable: true
           }
         },
         additionalProperties: false
@@ -2081,6 +2227,33 @@
         },
         additionalProperties: false
       },
+      FollowUpRecord: {
+        type: object,
+        properties: {
+          creationDateTime: {
+            type: string,
+            description: When the follow-up record was created (TRACES CreatedOn, unece:creationDateTime).,
+            format: date-time,
+            nullable: true
+          },
+          revisionDateTime: {
+            type: string,
+            description: When the follow-up record was last revised (TRACES UpdatedOn, unece:revisionDateTime). Same term as the certificate's revisionDateTime, scoped to this record.,
+            format: date-time,
+            nullable: true
+          },
+          redispatchDetails: {
+            $ref: #/components/schemas/RedispatchDetails
+          },
+          controlDetails: {
+            $ref: #/components/schemas/ControlDetails
+          },
+          certifyingOfficerAuthentication: {
+            $ref: #/components/schemas/Authentication
+          }
+        },
+        additionalProperties: false
+      },
       HttpValidationProblemDetails: {
         type: object,
         properties: {
@@ -2397,6 +2570,20 @@
         },
         additionalProperties: false
       },
+      MeansOfTransport: {
+        type: object,
+        properties: {
+          specifiedLogisticsTransportMovement: {
+            $ref: #/components/schemas/LogisticsTransportMovement
+          },
+          internationalTransportDocument: {
+            type: string,
+            description: Reference of the international transport document covering this leg (TRACES InternationalTrasportDocument — the TRACES element name carries a spelling error that is corrected here).,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       MetadataCode: {
         required: [
           value
@@ -2503,6 +2690,35 @@
             },
             description: Quantities written off against a declaration when goods were cleared.,
             nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      RedispatchDetails: {
+        type: object,
+        properties: {
+          redispatchDateTime: {
+            type: string,
+            description: When the consignment was redispatched.,
+            format: date-time,
+            nullable: true
+          },
+          exitAuthorityParty: {
+            $ref: #/components/schemas/TradeParty
+          },
+          destinationCountry: {
+            $ref: #/components/schemas/TradeCountry
+          },
+          meansOfTransport: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/MeansOfTransport
+            },
+            description: The transport used for the redispatch, one entry per leg (TRACES MeansOfTransport).,
+            nullable: true
+          },
+          placeOfDestinationParty: {
+            $ref: #/components/schemas/TradeParty
           }
         },
         additionalProperties: false
@@ -2918,6 +3134,9 @@
     },
     {
       name: CustomsChedQuantityEndpoints
+    },
+    {
+      name: DocomEndpoints
     },
     {
       name: IntraEndpoints

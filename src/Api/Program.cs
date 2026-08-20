@@ -120,6 +120,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseChedEndpoints();
     app.UseCustomsChedQuantityEndpoints();
     app.UseIntraEndpoints();
+    app.UseDocomEndpoints();
     app.UseAuthTestEndpoints();
     app.UseReferenceDataEndpoints();
     app.UseEmfExporter(TracesNtClientMetricsService.MeterName);

@@ -103,4 +103,22 @@ public class SpsNoteMapperTests
         result.ContentCode.Should().HaveCount(1);
         result.ContentCode![0].Value.Should().Be("NON_APPROVED_ESTABLISHMENT");
     }
+
+    [Fact]
+    public void MapList_NullSource_ReturnsEmptyList() => SpsNoteMapper.MapList(null).Should().BeEmpty();
+
+    [Fact]
+    public void MapList_EmptySource_ReturnsEmptyList() => SpsNoteMapper.MapList([]).Should().BeEmpty();
+
+    [Fact]
+    public void MapList_MapsEveryNoteInOrder()
+    {
+        SPSNoteType[] source =
+        [
+            new() { Subject = new TextType { Value = "first" } },
+            new() { Subject = new TextType { Value = "second" } },
+        ];
+
+        SpsNoteMapper.MapList(source).Select(n => n.Subject).Should().Equal("first", "second");
+    }
 }
