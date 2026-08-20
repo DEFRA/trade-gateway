@@ -109,12 +109,12 @@ static WebApplication SetupApplication(WebApplication app)
         options.SpecUrl("/.well-known/openapi/v1/openapi.json");
     });
 
+    app.UseMiddleware<ApiMetricsMiddleware>();
     app.UseExceptionHandler();
     app.UseHeaderPropagation();
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
-    app.UseMiddleware<ApiMetricsMiddleware>();
     app.MapHealthChecks("/health").AllowAnonymous();
     app.MapLocalTokenEndpoints();
     app.UseChedEndpoints();
