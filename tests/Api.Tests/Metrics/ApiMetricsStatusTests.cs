@@ -25,7 +25,7 @@ public class ApiMetricsStatusTests(TradeGatewayWebApplicationFactory factory)
                 {
                     if (t.Key == "RequestPath")
                         requestPaths.Add(t.Value);
-                    
+
                     if (t.Key == "StatusCode")
                         statusCodes.Add(t.Value);
                 }
@@ -80,7 +80,7 @@ public class ApiMetricsStatusTests(TradeGatewayWebApplicationFactory factory)
                 {
                     if (t.Key == "RequestPath")
                         requestPaths.Add(t.Value);
-                    
+
                     if (t.Key == "StatusCode")
                         statusCodes.Add(t.Value);
                 }
