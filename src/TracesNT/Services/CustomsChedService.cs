@@ -113,6 +113,43 @@ namespace TracesNT.Services
             );
         }
 
+        public async Task<ChedQuantityManagementOutcomeType?> ReservationIntervention(
+            string chedId,
+            string mrn,
+            ChedInterventionRequestType request,
+            string languageCode
+        )
+        {
+            // Correlates our logs with the MessageId the customs port echoes on responses and faults, which is
+            // what DG SANTE ask for when a call is queried. 32 chars, inside the 1-48 token limit.
+            var messageId = Guid.NewGuid().ToString("N");
+
+            logger.LogInformation(
+                "Customs Reservation Intervention for CHED {ChedId} as message {UpstreamMessageId}",
+                chedId,
+                messageId
+            );
+
+            return await ExecuteCustomsCall(
+                chedId,
+                messageId,
+                $"CHED Reservation Intervention for MRN {mrn}",
+                async () =>
+                {
+                    var response = await customsChedPort.chedInterventionRequestAsync(
+                        new SecurityHeaderType(),
+                        _credentials.WebServiceClientId,
+                        languageCode.ToIso2AlphaLanguageCodeContentType(),
+                        _customsOffice,
+                        new CertexHeaderType { MessageId = messageId, UniqRequesterPrefix = _customsOffice },
+                        request
+                    );
+
+                    return response?.ChedInterventionResponse1;
+                }
+            );
+        }
+
         private async Task<ChedQuantityManagementOutcomeType?> SendChedClearanceRequest(
             string chedId,
             string mrn,

@@ -170,6 +170,42 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     }
 
     [Fact]
+    public async Task CustomsQuantityManager_can_intervene_with_reservation()
+    {
+        string ched = "CHEDA.GB.2026.0000123";
+        StubCustomsReservationIntervention();
+        var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-manager");
+
+        var response = await client.ChedReservationIntervention(
+            ched,
+            "26GB16RF3TDPZE7AR2",
+            new ChedReservationInterventionRequest
+            {
+                ChedCertificateId = ched,
+                CompetentCustomsOffice = new CompetentCustomsOffice() { ReferenceNumber = "GBTEST01" },
+                CustomsDocumentReference = "GB12345678901234567890",
+                InterventionType = InterventionType.PhysicalCheck,
+                SendingDate = DateTime.Now,
+                TaricDocument = "GB12345678901234567890",
+                ConsignmentItems =
+                [
+                    new CustomsConsignmentItem()
+                    {
+                        CertificateLineNumber = 1,
+                        ClassCode = "P1",
+                        GoodsItemNumber = 1,
+                        NetVolumeQuantity = 100m,
+                        NetVolumeUnitOfMeasure = UnitOfMeasureType.LTR,
+                    },
+                ],
+            },
+            TestContext.Current.CancellationToken
+        );
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
     public async Task ChedReader_cannot_write_customs_reservation()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
@@ -262,6 +298,25 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
                         await SoapUtilities.CreateResponseFromResource(
                             HttpStatusCode.OK,
                             "Api.Tests.Samples.CUSTOMS.ProcessedChedResponse_Reserved.xml"
+                        )
+                    )
+            );
+
+    private void StubCustomsReservationIntervention() =>
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ChedInterventionRequest\"",
+                    "/*[local-name() = 'ChedInterventionRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.CUSTOMS.ReservationInterventionResponse_Success.xml"
                         )
                     )
             );

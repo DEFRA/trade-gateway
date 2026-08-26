@@ -6,7 +6,7 @@
     <RootNamespace>Trade.Gateway.Api.Client</RootNamespace>
     <IsPackable>true</IsPackable>
     <PackageId>Defra.Trade.Gateway.Api.Client</PackageId>
-    <VersionPrefix>0.2.0</VersionPrefix>
+    <VersionPrefix>0.3.0</VersionPrefix>
     <PackageDescription>Defra Trade Gateway Api Client</PackageDescription>
     <Company>DEFRA</Company>
     <RepositoryUrl>https://github.com/DEFRA/trade-gateway</RepositoryUrl>

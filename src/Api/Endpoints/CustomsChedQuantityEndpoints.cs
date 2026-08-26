@@ -1,8 +1,7 @@
-using Amazon.Runtime.Internal;
 using Api.Contract;
+using Api.Filters;
 using Api.Mapping;
 using Api.Utils.Http;
-using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
 using TracesNT.WebServices;
@@ -30,7 +29,17 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation", PutReservation)
+            .Validates<ChedReservationRequest>()
             .Produces<ChedDeclarationReservation>(200, MediaTypeAttribute.For<ChedDeclarationReservation>())
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/intervene", ReservationIntervention)
+            .Validates<ChedReservationInterventionRequest>()
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -93,18 +102,10 @@ public static class CustomsChedQuantityEndpoints
         string mrn,
         ChedReservationRequest request,
         ICustomsChedService customsChedService,
-        IValidator<ChedReservationRequest> validator,
         ILoggerFactory loggerFactory,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
-        // Run explicitly: the minimal API validation pipeline validates the request object without
-        // descending into items[], so the item rules would otherwise go unenforced.
-        var validation = await validator.ValidateAsync(request);
-
-        if (!validation.IsValid)
-            return Results.ValidationProblem(validation.ToDictionary());
-
         var items = ChedQuantityMapper.MapReservationItems(request.Items);
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
         var response = await customsChedService.ReserveChedQuantities(chedId, mrn, items, languageCode);
@@ -145,6 +146,40 @@ public static class CustomsChedQuantityEndpoints
             );
 
         return Results.Json(reservation, contentType: MediaTypeAttribute.For<ChedDeclarationReservation>());
+    }
+
+    private static async Task<IResult> ReservationIntervention(
+        string chedId,
+        string mrn,
+        ChedReservationInterventionRequest request,
+        ICustomsChedService customsChedService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
+    {
+        var tracesRequest = request.ToChedInterventionRequestType();
+        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
+        var response = await customsChedService.ReservationIntervention(chedId, mrn, tracesRequest, languageCode);
+        var outcome = response?.QuantityManagementOutcome;
+
+        // A clean cancellation has nothing to report. Outcome 04 does — the CHED status
+        // changed mid-clearance — so it always comes back with a body.
+        if (QuantityManagementOutcomes.IsSuccess(outcome))
+        {
+            return Results.Ok();
+        }
+
+        return Results.Problem(
+            title: "Quantity management request not executed",
+            detail: QuantityManagementOutcomes.Describe(outcome),
+            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
+            extensions: new Dictionary<string, object?>
+            {
+                ["chedId"] = chedId,
+                ["mrn"] = mrn,
+                ["outcome"] = outcome,
+                ["chedStatus"] = response?.StatusCode,
+            }
+        );
     }
 
     private static async Task<IResult> Release(

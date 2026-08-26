@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Trade.Gateway.Api.Contract.Certificate;
 
 namespace Trade.Gateway.Api.Contract.Customs;
 
