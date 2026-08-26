@@ -15,6 +15,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
         "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ChedInterventionRequest\"";
 
     private const string Ched = "CHEDA.GB.2026.0000123";
+    private const string UnsuccessfulChed = "UNSUCCESSFUL";
     private const string Mrn = "26GB16RF3TDPZE7AR2";
     private const string Manager = "test-customs-quantity-manager";
 
@@ -57,9 +58,9 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     [Fact]
     public async Task Put_ReservationInterventionUnsuccessful()
     {
-        StubSample(Ched, UnsuccessfulSample);
+        StubSample(UnsuccessfulChed, UnsuccessfulSample);
 
-        var response = await PutAsync(Ched, Mrn, Request);
+        var response = await PutAsync(UnsuccessfulChed, Mrn, Request with { ChedCertificateId = UnsuccessfulChed });
 
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
     }
@@ -67,7 +68,6 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     [Fact]
     public async Task Put_ReservationIntervention_WhenRequestIsNotValid_ReturnsBadRequest()
     {
-        StubSample(Ched, UnsuccessfulSample);
         var request = Request with { ConsignmentItems = [] };
 
         var response = await PutAsync(Ched, Mrn, request);
@@ -81,8 +81,9 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     {
         const string upstreamError = "internal upstream detail that must not be published";
         StubFault("FAULTY", upstreamError);
+        var request = Request with { ChedCertificateId = "FAULTY" };
 
-        var response = await PutAsync("FAULTY", "mrn", Request);
+        var response = await PutAsync("FAULTY", "mrn", request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadGateway);
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
