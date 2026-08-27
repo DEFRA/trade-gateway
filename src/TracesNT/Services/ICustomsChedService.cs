@@ -48,4 +48,19 @@ public interface ICustomsChedService
     /// <param name="languageCode"></param>
     /// <returns></returns>
     Task<ChedQuantityManagementOutcomeType?> DeleteReservation(string chedId, string mrn, string languageCode);
+
+    /// <summary>
+    /// Intervenes in a reservation for a declaration (<c>QuantityManagementIndication = "3"</c>).
+    /// </summary>
+    /// <param name="chedId"></param>
+    /// <param name="mrn"></param>
+    /// <param name="request"></param>
+    /// <param name="languageCode"></param>
+    /// <returns></returns>
+    Task<ChedQuantityManagementOutcomeType?> ReservationIntervention(
+        string chedId,
+        string mrn,
+        ChedInterventionRequestType request,
+        string languageCode
+    );
 }
