@@ -211,19 +211,6 @@ public class ChedReservationInterventionRequestValidatorTests
     }
 
     [Fact]
-    public void AllowsWeightToBeOmitted()
-    {
-        var request = ValidRequest with
-        {
-            ConsignmentItems = [ValidItem with { NetWeightQuantity = null, NetWeightUnitOfMeasure = null }],
-        };
-
-        var result = Validator.Validate(request);
-
-        result.IsValid.Should().BeTrue();
-    }
-
-    [Fact]
     public void RejectsAWeightWithNoUnitOfMeasure()
     {
         var request = ValidRequest with { ConsignmentItems = [ValidItem with { NetWeightUnitOfMeasure = null }] };
@@ -236,7 +223,18 @@ public class ChedReservationInterventionRequestValidatorTests
     [Fact]
     public void RejectsAUnitOfMeasureWithNoWeight()
     {
-        var request = ValidRequest with { ConsignmentItems = [ValidItem with { NetWeightQuantity = null }] };
+        var request = ValidRequest with
+        {
+            ConsignmentItems =
+            [
+                ValidItem with
+                {
+                    NetWeightQuantity = null,
+                    NetVolumeQuantity = 100m,
+                    NetVolumeUnitOfMeasure = UnitOfMeasureType.ASV,
+                },
+            ],
+        };
 
         var result = Validator.Validate(request);
 
@@ -337,5 +335,71 @@ public class ChedReservationInterventionRequestValidatorTests
         var result = Validator.Validate(request);
 
         result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("ConsignmentItems[1].ClassCode");
+    }
+
+    [Fact]
+    public void RejectsAnItemWithNoNetVolumeOrNetWeight()
+    {
+        var request = ValidRequest with
+        {
+            ConsignmentItems =
+            [
+                ValidItem with
+                {
+                    NetWeightQuantity = null,
+                    NetWeightUnitOfMeasure = null,
+                    NetVolumeQuantity = null,
+                    NetVolumeUnitOfMeasure = null,
+                },
+            ],
+        };
+
+        var result = Validator.Validate(request);
+
+        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("ConsignmentItems[0]");
+    }
+
+    [Fact]
+    public void AllowsAnItemWithNetVolumeAndNoNetWeight()
+    {
+        var request = ValidRequest with
+        {
+            ConsignmentItems =
+            [
+                ValidItem with
+                {
+                    NetWeightQuantity = null,
+                    NetWeightUnitOfMeasure = null,
+                    NetVolumeQuantity = 100m,
+                    NetVolumeUnitOfMeasure = UnitOfMeasureType.ASV,
+                },
+            ],
+        };
+
+        var result = Validator.Validate(request);
+
+        result.IsValid.Should().BeTrue();
+    }
+
+    [Fact]
+    public void AllowsAnItemWithNetWeightAndNoNetVolume()
+    {
+        var request = ValidRequest with
+        {
+            ConsignmentItems =
+            [
+                ValidItem with
+                {
+                    NetWeightQuantity = 300m,
+                    NetWeightUnitOfMeasure = UnitOfMeasureType.ASV,
+                    NetVolumeQuantity = null,
+                    NetVolumeUnitOfMeasure = null,
+                },
+            ],
+        };
+
+        var result = Validator.Validate(request);
+
+        result.IsValid.Should().BeTrue();
     }
 }

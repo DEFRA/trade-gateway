@@ -47,6 +47,10 @@ public sealed class ChedReservationInterventionRequestValidator : AbstractValida
                     .WithMessage(
                         "Net volume quantity and unit of measure must either both be specified or both be omitted."
                     );
+
+                item.RuleFor(x => x)
+                    .Must(x => x.NetVolumeQuantity.HasValue || x.NetWeightQuantity.HasValue)
+                    .WithMessage("Net volume quantity or Net weight quantity must be set.");
             });
     }
 }

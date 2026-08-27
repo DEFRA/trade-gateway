@@ -40,6 +40,7 @@ public static class CustomsChedQuantityEndpoints
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/intervene", ReservationIntervention)
             .Validates<ChedReservationInterventionRequest>()
+            .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
