@@ -1,3 +1,4 @@
+using System.Globalization;
 using Api.Mapping;
 using AwesomeAssertions;
 using TracesNT.WebServices;
@@ -16,6 +17,41 @@ public class ChedMapperTests
 
         result.Model.Should().Be("defra/certificate-internal/1");
         result.Type.Should().Be("ched");
+    }
+
+    [Fact]
+    public void Map_SetsLastUpdatedDateTime()
+    {
+        var result = ChedMapper.Map(MinimalCertificate(), Context);
+
+        result.LastUpdated.HasValue.Should().BeTrue();
+        result
+            .LastUpdated!.Value.Should()
+            .Be(DateTimeOffset.Parse("2024-01-01T00:00:00Z", CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public void Map_WhenNotesEmpty_SetsLastUpdatedDateTimeToNull()
+    {
+        var result = ChedMapper.Map(MinimalCertificateNoNotes(), Context);
+
+        result.LastUpdated.HasValue.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Map_WhenNotesExists_ButLastUpdatedIsMissing_SetsLastUpdatedDateTimeToNull()
+    {
+        var result = ChedMapper.Map(MinimalCertificateWithNotesButNotLastUpdated(), Context);
+
+        result.LastUpdated.HasValue.Should().BeFalse();
+    }
+
+    [Fact]
+    public void Map_WhenNotesExists_ButLastUpdatedIsInvalid_SetsLastUpdatedDateTimeToNull()
+    {
+        var result = ChedMapper.Map(MinimalCertificateWithInvalidTimestamp(), Context);
+
+        result.LastUpdated.HasValue.Should().BeFalse();
     }
 
     [Fact]
@@ -94,6 +130,72 @@ public class ChedMapperTests
                 {
                     ID = new IDType { Value = "DOC-1" },
                     TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 },
+                    IncludedSPSNote =
+                    [
+                        new SPSNoteType()
+                        {
+                            SubjectCode = new CodeType() { Value = "LAST_UPDATE_DATETIME" },
+                            Content = [new TextType() { Value = "2024-01-01T00:00:00Z" }],
+                        },
+                    ],
+                },
+                SPSConsignment = new SPSConsignmentType(),
+            },
+        };
+
+    private static ChedCertificateType MinimalCertificateWithInvalidTimestamp() =>
+        new()
+        {
+            SPSCertificate = new SPSCertificateType
+            {
+                SPSExchangedDocument = new SPSExchangedDocumentType
+                {
+                    ID = new IDType { Value = "DOC-1" },
+                    TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 },
+                    IncludedSPSNote =
+                    [
+                        new SPSNoteType()
+                        {
+                            SubjectCode = new CodeType() { Value = "LAST_UPDATE_DATETIME" },
+                            Content = [new TextType() { Value = "202401XX01T00:00:00Z" }],
+                        },
+                    ],
+                },
+                SPSConsignment = new SPSConsignmentType(),
+            },
+        };
+
+    private static ChedCertificateType MinimalCertificateNoNotes() =>
+        new()
+        {
+            SPSCertificate = new SPSCertificateType
+            {
+                SPSExchangedDocument = new SPSExchangedDocumentType
+                {
+                    ID = new IDType { Value = "DOC-1" },
+                    TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 },
+                },
+                SPSConsignment = new SPSConsignmentType(),
+            },
+        };
+
+    private static ChedCertificateType MinimalCertificateWithNotesButNotLastUpdated() =>
+        new()
+        {
+            SPSCertificate = new SPSCertificateType
+            {
+                SPSExchangedDocument = new SPSExchangedDocumentType
+                {
+                    ID = new IDType { Value = "DOC-1" },
+                    TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 },
+                    IncludedSPSNote =
+                    [
+                        new SPSNoteType()
+                        {
+                            SubjectCode = new CodeType() { Value = "SOME_OTHER_DATETIME" },
+                            Content = [new TextType() { Value = "2024-01-01T00:00:00Z" }],
+                        },
+                    ],
                 },
                 SPSConsignment = new SPSConsignmentType(),
             },
