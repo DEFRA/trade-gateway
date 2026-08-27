@@ -25,6 +25,10 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
+        // Without this the underlying MetricsLogger used in the EmfExporter will try to probe for the environment
+        // when AWS_EMF_ENABLED is set to true, which takes a long time
+        Environment.SetEnvironmentVariable("AWS_EMF_ENVIRONMENT", "Local");
+
         builder.UseEnvironment("Development");
 
         var server = WireMockServer.Start();
