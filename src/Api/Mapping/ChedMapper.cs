@@ -45,7 +45,7 @@ internal static class ChedMapper
     internal static DateTimeOffset? GetLatestLastUpdateDateTime(this ExchangedDocument exchangedDocument)
     {
         var notes = exchangedDocument.IncludedNote;
-        if (notes == null)
+        if (notes == null || notes.Count == 0)
         {
             return null;
         }

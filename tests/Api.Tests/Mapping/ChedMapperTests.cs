@@ -47,6 +47,14 @@ public class ChedMapperTests
     }
 
     [Fact]
+    public void Map_WhenNotesExists_ButLastUpdatedIsInvalid_SetsLastUpdatedDateTimeToNull()
+    {
+        var result = ChedMapper.Map(MinimalCertificateWithInvalidTimestamp(), Context);
+
+        result.LastUpdated.HasValue.Should().BeFalse();
+    }
+
+    [Fact]
     public void Map_LaboratoryObservationResult_IsNull()
     {
         ChedMapper.Map(MinimalCertificate(), Context).LaboratoryObservationResult.Should().BeNull();
@@ -128,6 +136,28 @@ public class ChedMapperTests
                         {
                             SubjectCode = new CodeType() { Value = "LAST_UPDATE_DATETIME" },
                             Content = [new TextType() { Value = "2024-01-01T00:00:00Z" }],
+                        },
+                    ],
+                },
+                SPSConsignment = new SPSConsignmentType(),
+            },
+        };
+
+    private static ChedCertificateType MinimalCertificateWithInvalidTimestamp() =>
+        new()
+        {
+            SPSCertificate = new SPSCertificateType
+            {
+                SPSExchangedDocument = new SPSExchangedDocumentType
+                {
+                    ID = new IDType { Value = "DOC-1" },
+                    TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856 },
+                    IncludedSPSNote =
+                    [
+                        new SPSNoteType()
+                        {
+                            SubjectCode = new CodeType() { Value = "LAST_UPDATE_DATETIME" },
+                            Content = [new TextType() { Value = "202401XX01T00:00:00Z" }],
                         },
                     ],
                 },
