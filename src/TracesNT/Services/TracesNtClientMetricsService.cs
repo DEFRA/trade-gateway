@@ -5,7 +5,7 @@ namespace TracesNT.Services;
 
 public class TracesNtClientMetricsService : ITracesNtClientMetricsService
 {
-    public const string MeterName = "TracesNTClient";
+    public const string MeterName = "Defra.TradeGateway.Api";
 
     private readonly Histogram<long> _requestDuration;
 
