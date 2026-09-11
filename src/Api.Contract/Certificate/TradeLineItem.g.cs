@@ -23,6 +23,9 @@ public partial record TradeLineItem
     [JsonPropertyName("grossWeight")]
     public UneceWeightMeasure? GrossWeight { get; init; }
 
+    [JsonPropertyName("netVolume")]
+    public UneceMeasure? NetVolume { get; init; }
+
     [JsonPropertyName("applicableClassification")]
     public List<ApplicableClassification>? ApplicableClassification { get; init; }
 

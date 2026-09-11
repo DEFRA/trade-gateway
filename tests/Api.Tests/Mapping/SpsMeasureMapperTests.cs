@@ -26,4 +26,25 @@ public class SpsMeasureMapperTests
         result.UnitCodeListVersionId.Should().Be("rec20");
         result.Value.Should().BeNull();
     }
+
+    [Fact]
+    public void MapVolume_NullSource_ReturnsNull() => SpsMeasureMapper.MapVolume(null).Should().BeNull();
+
+    [Fact]
+    public void MapVolume_AllFields_MapCorrectly()
+    {
+        var source = new MeasureType
+        {
+            Value = 25.5m,
+            unitCode = "LTR",
+            unitCodeListVersionID = "rec20",
+        };
+
+        var result = SpsMeasureMapper.MapVolume(source)!;
+
+        result.Content.Should().Be("25.5");
+        result.UnitCode.Should().Be("LTR");
+        result.UnitCodeListVersionId.Should().Be("rec20");
+        result.Value.Should().BeNull();
+    }
 }

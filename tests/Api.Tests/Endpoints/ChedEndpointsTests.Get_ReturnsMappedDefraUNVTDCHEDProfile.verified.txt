@@ -262,6 +262,10 @@ DAERA Plant Health Inspection Branch
               Content: 2000,
               UnitCode: KGM
             },
+            NetVolume: {
+              Content: 5,
+              UnitCode: H87
+            },
             PhysicalReferencedLogisticsPackage: [
               {
                 LevelCode: 4,
@@ -276,6 +280,10 @@ DAERA Plant Health Inspection Branch
               null
             ],
             ScientificName: Babyrousa,
+            NetVolume: {
+              Content: 5,
+              UnitCode: H87
+            },
             ApplicableClassification: [
               {
                 SystemId: CN,

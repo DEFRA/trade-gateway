@@ -81,6 +81,21 @@ public class SpsTradeLineItemMapperTests
     }
 
     [Fact]
+    public void Map_NetVolume_MapsViaSpsMeasureMapper()
+    {
+        var source = new SPSTradeLineItemType
+        {
+            NetVolumeMeasure = new MeasureType { Value = 25.5m, unitCode = "LTR" },
+        };
+
+        var result = SpsTradeLineItemMapper.Map(source, Context);
+
+        result.NetVolume!.Content.Should().Be("25.5");
+        result.NetVolume.UnitCode.Should().Be("LTR");
+        result.NetVolume.Value.Should().BeNull();
+    }
+
+    [Fact]
     public void Map_NullProperties_ReturnNullFields()
     {
         var result = SpsTradeLineItemMapper.Map(new SPSTradeLineItemType(), Context);
@@ -90,6 +105,7 @@ public class SpsTradeLineItemMapperTests
         result.ScientificName.Should().BeNull();
         result.NetWeight.Should().BeNull();
         result.GrossWeight.Should().BeNull();
+        result.NetVolume.Should().BeNull();
         result.ApplicableClassification.Should().BeNull();
         result.PhysicalReferencedLogisticsPackage.Should().BeNull();
     }

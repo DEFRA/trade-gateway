@@ -15,6 +15,7 @@ internal static class SpsTradeLineItemMapper
             ScientificName = source.ScientificName.ForLanguage(LatinLanguageId),
             NetWeight = SpsMeasureMapper.Map(source.NetWeightMeasure),
             GrossWeight = SpsMeasureMapper.Map(source.GrossWeightMeasure),
+            NetVolume = SpsMeasureMapper.MapVolume(source.NetVolumeMeasure),
             ApplicableClassification = SpsClassificationMapper.MapList(source.ApplicableSPSClassification, context),
             PhysicalReferencedLogisticsPackage = SpsPackageMapper.MapList(source.PhysicalSPSPackage),
         };
