@@ -194,6 +194,7 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `scientificName` | `ScientificName.Value` | [language-preferred](#language-selection) with fixed Latin (`la`); omitted if none present |
 | `netWeight` | `NetWeightMeasure` | see [UneceWeightMeasure](#uneceweightmeasure--measuretype) |
 | `grossWeight` | `GrossWeightMeasure` | |
+| `netVolume` | `NetVolumeMeasure` | see [UneceMeasure](#unecemeasure--measuretype) |
 | `applicableClassification` | `ApplicableSPSClassification[]` | see [ApplicableClassification](#applicableclassification--spsclassificationtype); omitted if empty |
 | `physicalReferencedLogisticsPackage` | `PhysicalSPSPackage[]` | see [LogisticsPackage](#logisticspackage--spspackagetype); omitted if empty |
 
@@ -252,6 +253,14 @@ entry per carriage leg). Every element is mapped; an empty or absent array maps 
 |---|---|---|
 | `content` | `Value` | decimal value expressed as string |
 | `unitCode` | `unitCode` | UN/CEFACT Rec 20 unit e.g. `"KGM"` |
+| `unitCodeListVersionId` | `unitCodeListVersionID` | e.g. `"rec20"` |
+
+### `UneceMeasure` ← `MeasureType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `content` | `Value` | decimal value expressed as string |
+| `unitCode` | `unitCode` | open UN/CEFACT Rec 20 unit e.g. `"LTR"` |
 | `unitCodeListVersionId` | `unitCodeListVersionID` | e.g. `"rec20"` |
 
 ---

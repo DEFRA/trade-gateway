@@ -3167,6 +3167,9 @@
           grossWeight: {
             $ref: #/components/schemas/UneceWeightMeasure
           },
+          netVolume: {
+            $ref: #/components/schemas/UneceMeasure
+          },
           applicableClassification: {
             type: array,
             items: {
@@ -3315,6 +3318,29 @@
           },
           occurrenceLogisticsLocation: {
             $ref: #/components/schemas/LogisticsLocation
+          }
+        },
+        additionalProperties: false
+      },
+      UneceMeasure: {
+        type: object,
+        properties: {
+          content: {
+            type: string,
+            nullable: true
+          },
+          value: {
+            type: string,
+            nullable: true
+          },
+          unitCode: {
+            type: string,
+            description: Measurement unit code token.,
+            nullable: true
+          },
+          unitCodeListVersionId: {
+            type: string,
+            nullable: true
           }
         },
         additionalProperties: false

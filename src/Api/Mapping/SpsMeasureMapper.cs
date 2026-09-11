@@ -17,4 +17,17 @@ internal static class SpsMeasureMapper
             UnitCodeListVersionId = source.unitCodeListVersionID,
         };
     }
+
+    internal static UneceMeasure? MapVolume(MeasureType? source)
+    {
+        if (source is null)
+            return null;
+
+        return new UneceMeasure
+        {
+            Content = source.Value.ToString(),
+            UnitCode = source.unitCode,
+            UnitCodeListVersionId = source.unitCodeListVersionID,
+        };
+    }
 }

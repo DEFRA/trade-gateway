@@ -526,6 +526,9 @@
         "grossWeight": {
           "$ref": "#/$defs/UneceWeightMeasureType"
         },
+        "netVolume": {
+          "$ref": "#/$defs/UneceMeasureType"
+        },
         "applicableClassification": {
           "type": "array",
           "items": {
