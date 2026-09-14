@@ -29,7 +29,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
             ChedCertificateId = Ched,
             CompetentCustomsOffice = new CompetentCustomsOffice() { ReferenceNumber = "GBTEST01" },
             CustomsDocumentReference = "GB12345678901234567890",
-            InterventionType = InterventionType.PhysicalCheck,
+            InterventionType = InterventionType.DeleteWriteOff,
             SendingDate = DateTime.Now,
             TaricDocument = "GB12345678901234567890",
             ConsignmentItems =

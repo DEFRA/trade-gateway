@@ -14,7 +14,7 @@ public class ChedReservationInterventionMapperTests
             CustomsDocumentReference = "CUSTOMS-REF-123",
             TaricDocument = "TARIC-123",
             ChedCertificateId = "CHED-123",
-            InterventionType = InterventionType.PhysicalCheck,
+            InterventionType = InterventionType.DeleteWriteOff,
             ConsignmentItems =
             [
                 new CustomsConsignmentItem
@@ -72,9 +72,9 @@ public class ChedReservationInterventionMapperTests
     }
 
     [Theory]
-    [InlineData(InterventionType.DocumentCheck, TracesNT.WebServices.InterventionMessageInformationType.Item01)]
-    [InlineData(InterventionType.IdentityCheck, TracesNT.WebServices.InterventionMessageInformationType.Item02)]
-    [InlineData(InterventionType.PhysicalCheck, TracesNT.WebServices.InterventionMessageInformationType.Item03)]
+    [InlineData(InterventionType.ForceWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item01)]
+    [InlineData(InterventionType.AmendWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item02)]
+    [InlineData(InterventionType.DeleteWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item03)]
     public void MapsInterventionType(
         InterventionType source,
         TracesNT.WebServices.InterventionMessageInformationType expected
@@ -320,9 +320,9 @@ public class ChedReservationInterventionMapperTests
     }
 
     [Theory]
-    [InlineData(InterventionType.DocumentCheck, TracesNT.WebServices.InterventionMessageInformationType.Item01)]
-    [InlineData(InterventionType.IdentityCheck, TracesNT.WebServices.InterventionMessageInformationType.Item02)]
-    [InlineData(InterventionType.PhysicalCheck, TracesNT.WebServices.InterventionMessageInformationType.Item03)]
+    [InlineData(InterventionType.ForceWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item01)]
+    [InlineData(InterventionType.AmendWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item02)]
+    [InlineData(InterventionType.DeleteWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item03)]
     public void MapsEverySupportedInterventionType(
         InterventionType interventionType,
         TracesNT.WebServices.InterventionMessageInformationType expected

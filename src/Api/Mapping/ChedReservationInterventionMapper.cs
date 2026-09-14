@@ -73,11 +73,11 @@ public static class ChedReservationInterventionMapper
     {
         return source switch
         {
-            InterventionType.DocumentCheck => TracesNT.WebServices.InterventionMessageInformationType.Item01,
+            InterventionType.ForceWriteOff => TracesNT.WebServices.InterventionMessageInformationType.Item01,
 
-            InterventionType.IdentityCheck => TracesNT.WebServices.InterventionMessageInformationType.Item02,
+            InterventionType.AmendWriteOff => TracesNT.WebServices.InterventionMessageInformationType.Item02,
 
-            InterventionType.PhysicalCheck => TracesNT.WebServices.InterventionMessageInformationType.Item03,
+            InterventionType.DeleteWriteOff => TracesNT.WebServices.InterventionMessageInformationType.Item03,
 
             _ => throw new ArgumentOutOfRangeException(nameof(source), source, null),
         };

@@ -2558,9 +2558,9 @@
       },
       InterventionType: {
         enum: [
-          DocumentCheck,
-          IdentityCheck,
-          PhysicalCheck
+          ForceWriteOff,
+          AmendWriteOff,
+          DeleteWriteOff
         ],
         type: string
       },

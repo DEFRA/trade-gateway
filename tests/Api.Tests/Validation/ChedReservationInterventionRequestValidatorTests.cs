@@ -1,6 +1,5 @@
 using Api.Validation;
 using AwesomeAssertions;
-using Trade.Gateway.Api.Contract.Certificate;
 using Trade.Gateway.Api.Contract.Customs;
 
 namespace Api.Tests.Validation;
@@ -17,7 +16,7 @@ public class ChedReservationInterventionRequestValidatorTests
             CustomsDocumentReference = "CUSTOMS-REF-123",
             TaricDocument = "TARIC-123",
             ChedCertificateId = "CHED-123",
-            InterventionType = InterventionType.PhysicalCheck,
+            InterventionType = InterventionType.DeleteWriteOff,
             ConsignmentItems = [ValidItem],
         };
 

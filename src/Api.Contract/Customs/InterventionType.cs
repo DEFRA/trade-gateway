@@ -5,7 +5,7 @@ namespace Trade.Gateway.Api.Contract.Customs;
 [JsonConverter(typeof(JsonStringEnumConverter<InterventionType>))]
 public enum InterventionType
 {
-    DocumentCheck,
-    IdentityCheck,
-    PhysicalCheck,
+    ForceWriteOff,
+    AmendWriteOff,
+    DeleteWriteOff,
 }
