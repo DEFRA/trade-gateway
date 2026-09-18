@@ -86,7 +86,10 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     {
         MongoClientSettings.Extensions.AddAWSAuthentication();
     }
-    catch (ArgumentException ex) when (ex.ParamName == "mechanismName" || (ex.Message != null && ex.Message.IndexOf("already registered", StringComparison.OrdinalIgnoreCase) >= 0))
+    catch (ArgumentException ex)
+        when (ex.ParamName == "mechanismName"
+            || (ex.Message != null && ex.Message.IndexOf("already registered", StringComparison.OrdinalIgnoreCase) >= 0)
+        )
     {
         // The MONGODB-AWS mechanism may already be registered (e.g. when tests/startup run multiple times). Ignore this specific error.
     }

@@ -65,5 +65,6 @@ public interface ICustomsChedService
         ConsignmentItemR6ForInterventionType[] items,
         InterventionMessageInformationType interventionMessageInformationType,
         string languageCode,
-        string taricDocument);
+        string taricDocument
+    );
 }

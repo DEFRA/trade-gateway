@@ -12,7 +12,9 @@ public static class ChedReservationInterventionMapper
         return source.Select(ToCertexConsignmentItem);
     }
 
-    internal static TracesNT.WebServices.InterventionMessageInformationType ToCertexInterventionType(this InterventionType source)
+    internal static TracesNT.WebServices.InterventionMessageInformationType ToCertexInterventionType(
+        this InterventionType source
+    )
     {
         return source switch
         {

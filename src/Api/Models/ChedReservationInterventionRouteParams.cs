@@ -18,10 +18,16 @@ namespace Api.Models
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             if (string.IsNullOrWhiteSpace(ChedCertificateId))
-                yield return new ValidationResult("Ched certificate id is required.", new[] { nameof(ChedCertificateId) });
+                yield return new ValidationResult(
+                    "Ched certificate id is required.",
+                    new[] { nameof(ChedCertificateId) }
+                );
 
             if (string.IsNullOrWhiteSpace(CustomsDocumentReference))
-                yield return new ValidationResult("MRN (customs document reference) is required.", new[] { nameof(CustomsDocumentReference) });
+                yield return new ValidationResult(
+                    "MRN (customs document reference) is required.",
+                    new[] { nameof(CustomsDocumentReference) }
+                );
         }
     }
 }

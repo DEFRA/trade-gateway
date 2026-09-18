@@ -1,17 +1,13 @@
+using System.ComponentModel.DataAnnotations;
 using Amazon.Runtime.Internal;
-
 using Api.Contract;
 using Api.Filters;
 using Api.Mapping;
 using Api.Models;
 using Api.Utils.Http;
-
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
-
 using TracesNT.Services;
 using TracesNT.WebServices;
-
 using Trade.Gateway.Api.Contract.Customs;
 
 namespace Api.Endpoints;
@@ -275,12 +271,13 @@ public static class CustomsChedQuantityEndpoints
 
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
         var response = await customsChedService.ReservationIntervention(
-            routeModel.ChedCertificateId!, 
+            routeModel.ChedCertificateId!,
             routeModel.CustomsDocumentReference!,
             request.ConsignmentItems.ToCertexConsignmentItems().ToArray(),
             interventionType.ToCertexInterventionType(),
             languageCode,
-            request.TaricDocument);
+            request.TaricDocument
+        );
 
         var outcome = response?.QuantityManagementOutcome;
 

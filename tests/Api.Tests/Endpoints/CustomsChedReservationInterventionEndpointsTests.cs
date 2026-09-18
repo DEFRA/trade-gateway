@@ -63,11 +63,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
             new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
         );
 
-        var response = await ForceWriteOffAsync(
-            UnsuccessfulChed,
-            Mrn,
-            Request
-        );
+        var response = await ForceWriteOffAsync(UnsuccessfulChed, Mrn, Request);
 
         response.StatusCode.Should().Be(expectedStatusCode);
     }
@@ -98,11 +94,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
             new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
         );
 
-        var response = await UpdateWriteOff(
-            UnsuccessfulChed,
-            Mrn,
-            Request
-        );
+        var response = await UpdateWriteOff(UnsuccessfulChed, Mrn, Request);
 
         response.StatusCode.Should().Be(expectedStatusCode);
     }
@@ -133,11 +125,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
             new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
         );
 
-        var response = await DeleteWriteOffAsync(
-            UnsuccessfulChed,
-            Mrn,
-            Request
-        );
+        var response = await DeleteWriteOffAsync(UnsuccessfulChed, Mrn, Request);
 
         response.StatusCode.Should().Be(expectedStatusCode);
     }

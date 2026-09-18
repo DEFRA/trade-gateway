@@ -150,12 +150,12 @@ namespace TracesNT.Services
                             CustomsDocumentReference = mrn,
                             CompetentCustomsOffice = new CompetentCustomsOfficeType
                             {
-                                ReferenceNumber = _customsOffice
+                                ReferenceNumber = _customsOffice,
                             },
                             ConsignmentItem = items,
                             InterventionType = interventionMessageInformationType,
                             SendingDate = DateTime.UtcNow,
-                            TARICDocument = taricDocument
+                            TARICDocument = taricDocument,
                         }
                     );
 

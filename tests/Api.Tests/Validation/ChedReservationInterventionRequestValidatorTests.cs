@@ -10,11 +10,7 @@ public class ChedReservationInterventionRequestValidatorTests
     private static readonly ChedReservationInterventionRequestValidator Validator = new();
 
     private static ChedReservationInterventionRequest ValidRequest =>
-        new()
-        {
-            TaricDocument = "TARIC-123",
-            ConsignmentItems = [ValidItem],
-        };
+        new() { TaricDocument = "TARIC-123", ConsignmentItems = [ValidItem] };
 
     private static CustomsConsignmentItem ValidItem =>
         new()
@@ -55,7 +51,6 @@ public class ChedReservationInterventionRequestValidatorTests
 
         result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("TaricDocument");
     }
-
 
     [Fact]
     public void RejectsAnEmptyConsignmentItemsArray()
