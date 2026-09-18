@@ -35,8 +35,24 @@ public interface ITracesGatewayChedClient
     [Delete("/customs/cheds/{id}/declarations/{mrn}/reservation")]
     Task<HttpResponseMessage> DeleteChedReservation(string id, string mrn, CancellationToken cancellationToken);
 
-    [Put("/customs/cheds/{id}/declarations/{mrn}/reservation/intervene")]
-    Task<HttpResponseMessage> ChedReservationIntervention(
+    [Post("/customs/cheds/{id}/declarations/{mrn}/reservation/manual-release")] // ForceWriteOff
+    Task<HttpResponseMessage> ForceReleaseChed(
+        string id,
+        string mrn,
+        [Body] ChedReservationInterventionRequest request,
+        CancellationToken cancellationToken
+    );
+
+    [Put("/customs/cheds/{id}/declarations/{mrn}/reservation/manual-release")] // AmendWriteOff
+    Task<HttpResponseMessage> UpdateForceReleaseChed(
+        string id,
+        string mrn,
+        [Body] ChedReservationInterventionRequest request,
+        CancellationToken cancellationToken
+    );
+
+    [Delete("/customs/cheds/{id}/declarations/{mrn}/reservation/manual-release")] // DeleteWriteOff
+    Task<HttpResponseMessage> DeleteForceReleaseChed(
         string id,
         string mrn,
         [Body] ChedReservationInterventionRequest request,

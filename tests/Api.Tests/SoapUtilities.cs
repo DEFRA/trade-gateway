@@ -25,10 +25,22 @@ namespace Api.Tests
 
         public static async Task<ResponseMessage> CreateResponseFromResource(
             HttpStatusCode statusCode,
-            string resourceName
+            string resourceName,
+            params TokenSubstitution[] resourceTokenSubstitutions
         )
         {
             var resourceContent = await GetEmbeddedResource(resourceName);
+
+            if (resourceContent == null)
+            {
+                throw new FileNotFoundException("Resource not found", resourceName);
+            }
+
+            foreach (var substitution in resourceTokenSubstitutions)
+            {
+                resourceContent = resourceContent.Replace(substitution.Token, substitution.Substitution);
+            }
+
             return StubResponseMessage(statusCode, resourceContent);
         }
 

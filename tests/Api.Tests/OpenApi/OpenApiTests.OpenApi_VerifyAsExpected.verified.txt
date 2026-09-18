@@ -1,4 +1,4 @@
-﻿{
+{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -460,7 +460,114 @@
         }
       }
     },
-    /customs/cheds/{chedId}/declarations/{mrn}/reservation/intervene: {
+    /customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release: {
+      post: {
+        tags: [
+          CustomsChedQuantityEndpoints
+        ],
+        parameters: [
+          {
+            name: chedId,
+            in: path,
+            required: true,
+            schema: {
+              maxLength: 50,
+              type: string
+            }
+          },
+          {
+            name: mrn,
+            in: path,
+            required: true,
+            schema: {
+              maxLength: 100,
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        requestBody: {
+          content: {
+            application/json: {
+              schema: {
+                $ref: #/components/schemas/ChedReservationInterventionRequest
+              }
+            }
+          },
+          required: true
+        },
+        responses: {
+          200: {
+            description: OK
+          },
+          400: {
+            description: Bad Request,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          409: {
+            description: Conflict,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      },
       put: {
         tags: [
           CustomsChedQuantityEndpoints
@@ -471,6 +578,7 @@
             in: path,
             required: true,
             schema: {
+              maxLength: 50,
               type: string
             }
           },
@@ -479,6 +587,114 @@
             in: path,
             required: true,
             schema: {
+              maxLength: 100,
+              type: string
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        requestBody: {
+          content: {
+            application/json: {
+              schema: {
+                $ref: #/components/schemas/ChedReservationInterventionRequest
+              }
+            }
+          },
+          required: true
+        },
+        responses: {
+          200: {
+            description: OK
+          },
+          400: {
+            description: Bad Request,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          409: {
+            description: Conflict,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      },
+      delete: {
+        tags: [
+          CustomsChedQuantityEndpoints
+        ],
+        parameters: [
+          {
+            name: chedId,
+            in: path,
+            required: true,
+            schema: {
+              maxLength: 50,
+              type: string
+            }
+          },
+          {
+            name: mrn,
+            in: path,
+            required: true,
+            schema: {
+              maxLength: 100,
               type: string
             }
           },
@@ -1427,32 +1643,12 @@
       },
       ChedReservationInterventionRequest: {
         required: [
-          chedCertificateId,
-          competentCustomsOffice,
           consignmentItems,
-          customsDocumentReference,
-          interventionType,
-          sendingDate,
           taricDocument
         ],
         type: object,
         properties: {
-          competentCustomsOffice: {
-            $ref: #/components/schemas/CompetentCustomsOffice
-          },
-          sendingDate: {
-            type: string,
-            format: date-time
-          },
-          customsDocumentReference: {
-            type: string,
-            nullable: true
-          },
           taricDocument: {
-            type: string,
-            nullable: true
-          },
-          chedCertificateId: {
             type: string,
             nullable: true
           },
@@ -1462,9 +1658,6 @@
               $ref: #/components/schemas/CustomsConsignmentItem
             },
             nullable: true
-          },
-          interventionType: {
-            $ref: #/components/schemas/InterventionType
           }
         },
         additionalProperties: false
@@ -1661,19 +1854,6 @@
           taricCode: {
             type: string,
             description: TARIC code, extending the Combined Nomenclature code to 10 digits.,
-            nullable: true
-          }
-        },
-        additionalProperties: false
-      },
-      CompetentCustomsOffice: {
-        required: [
-          referenceNumber
-        ],
-        type: object,
-        properties: {
-          referenceNumber: {
-            type: string,
             nullable: true
           }
         },
@@ -2555,14 +2735,6 @@
           }
         },
         additionalProperties: false
-      },
-      InterventionType: {
-        enum: [
-          ForceWriteOff,
-          AmendWriteOff,
-          DeleteWriteOff
-        ],
-        type: string
       },
       LaboratoryObservationResult: {
         type: object,

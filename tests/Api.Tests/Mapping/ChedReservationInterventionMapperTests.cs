@@ -1,4 +1,5 @@
 using Api.Mapping;
+using Api.Models;
 using AwesomeAssertions;
 using Trade.Gateway.Api.Contract.Customs;
 
@@ -9,12 +10,7 @@ public class ChedReservationInterventionMapperTests
     private static ChedReservationInterventionRequest ValidRequest =>
         new()
         {
-            CompetentCustomsOffice = new() { ReferenceNumber = "GB123456" },
-            SendingDate = new DateTime(2026, 8, 26, 8, 0, 0, DateTimeKind.Utc),
-            CustomsDocumentReference = "CUSTOMS-REF-123",
             TaricDocument = "TARIC-123",
-            ChedCertificateId = "CHED-123",
-            InterventionType = InterventionType.DeleteWriteOff,
             ConsignmentItems =
             [
                 new CustomsConsignmentItem
@@ -30,47 +26,6 @@ public class ChedReservationInterventionMapperTests
             ],
         };
 
-    [Fact]
-    public void MapsCompetentCustomsOffice()
-    {
-        var result = ValidRequest.ToChedInterventionRequestType();
-
-        result.CompetentCustomsOffice.Should().NotBeNull();
-        result.CompetentCustomsOffice.ReferenceNumber.Should().Be("GB123456");
-    }
-
-    [Fact]
-    public void MapsSendingDate()
-    {
-        var result = ValidRequest.ToChedInterventionRequestType();
-
-        result.SendingDate.Should().Be(ValidRequest.SendingDate);
-    }
-
-    [Fact]
-    public void MapsCustomsDocumentReference()
-    {
-        var result = ValidRequest.ToChedInterventionRequestType();
-
-        result.CustomsDocumentReference.Should().Be(ValidRequest.CustomsDocumentReference);
-    }
-
-    [Fact]
-    public void MapsTaricDocument()
-    {
-        var result = ValidRequest.ToChedInterventionRequestType();
-
-        result.TARICDocument.Should().Be(ValidRequest.TaricDocument);
-    }
-
-    [Fact]
-    public void MapsChedCertificateId()
-    {
-        var result = ValidRequest.ToChedInterventionRequestType();
-
-        result.ChedCertificateId.Should().Be(ValidRequest.ChedCertificateId);
-    }
-
     [Theory]
     [InlineData(InterventionType.ForceWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item01)]
     [InlineData(InterventionType.AmendWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item02)]
@@ -80,25 +35,9 @@ public class ChedReservationInterventionMapperTests
         TracesNT.WebServices.InterventionMessageInformationType expected
     )
     {
-        var request = ValidRequest with { InterventionType = source };
+        var result = source.ToCertexInterventionType();
 
-        var result = request.ToChedInterventionRequestType();
-
-        result.InterventionType.Should().Be(expected);
-    }
-
-    [Fact]
-    public void MapsConsignmentItems()
-    {
-        var result = ValidRequest.ToChedInterventionRequestType();
-
-        result.ConsignmentItem.Should().ContainSingle();
-
-        var item = result.ConsignmentItem[0];
-
-        item.GoodsItemNumber.Should().Be("1");
-        item.CertificateLineNumber.Should().Be("2");
-        item.ClassCode.Should().Be("101000110");
+        result.Should().Be(expected);
     }
 
     [Fact]
@@ -118,63 +57,55 @@ public class ChedReservationInterventionMapperTests
             ],
         };
 
-        var result = request.ToChedInterventionRequestType();
+        var consignmentItems = request.ConsignmentItems.ToCertexConsignmentItems().ToArray();
 
-        result.ConsignmentItem.Should().HaveCount(2);
+        consignmentItems.Should().HaveCount(2);
 
-        result.ConsignmentItem[0].GoodsItemNumber.Should().Be("1");
-        result.ConsignmentItem[0].CertificateLineNumber.Should().Be("2");
-        result.ConsignmentItem[0].ClassCode.Should().Be("101000110");
+        consignmentItems[0].GoodsItemNumber.Should().Be("1");
+        consignmentItems[0].CertificateLineNumber.Should().Be("2");
+        consignmentItems[0].ClassCode.Should().Be("101000110");
 
-        result.ConsignmentItem[1].GoodsItemNumber.Should().Be("3");
-        result.ConsignmentItem[1].CertificateLineNumber.Should().Be("4");
-        result.ConsignmentItem[1].ClassCode.Should().Be("02000000");
+        consignmentItems[1].GoodsItemNumber.Should().Be("3");
+        consignmentItems[1].CertificateLineNumber.Should().Be("4");
+        consignmentItems[1].ClassCode.Should().Be("02000000");
     }
 
     [Fact]
     public void MapsNetWeightQuantity()
     {
-        var result = ValidRequest.ToChedInterventionRequestType();
+        var firstConsignmentItem = ValidRequest.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
-
-        item.NetWeightQuantity.Should().Be(300m);
-        item.NetWeightQuantitySpecified.Should().BeTrue();
+        firstConsignmentItem.NetWeightQuantity.Should().Be(300m);
+        firstConsignmentItem.NetWeightQuantitySpecified.Should().BeTrue();
     }
 
     [Fact]
     public void MapsNetWeightUnitOfMeasure()
     {
-        var result = ValidRequest.ToChedInterventionRequestType();
+        var firstConsignmentItem = ValidRequest.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
+        firstConsignmentItem.NetWeightUnitOfMeasure.Should().Be(TracesNT.WebServices.UniversalUnitOfMeasureType.KGM);
 
-        item.NetWeightUnitOfMeasure.Should().Be(TracesNT.WebServices.UniversalUnitOfMeasureType.KGM);
-
-        item.NetWeightUnitOfMeasureSpecified.Should().BeTrue();
+        firstConsignmentItem.NetWeightUnitOfMeasureSpecified.Should().BeTrue();
     }
 
     [Fact]
     public void MapsNetVolumeQuantity()
     {
-        var result = ValidRequest.ToChedInterventionRequestType();
+        var firstConsignmentItem = ValidRequest.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
-
-        item.NetVolumeQuantity.Should().Be(10m);
-        item.NetVolumeQuantitySpecified.Should().BeTrue();
+        firstConsignmentItem.NetVolumeQuantity.Should().Be(10m);
+        firstConsignmentItem.NetVolumeQuantitySpecified.Should().BeTrue();
     }
 
     [Fact]
     public void MapsNetVolumeUnitOfMeasure()
     {
-        var result = ValidRequest.ToChedInterventionRequestType();
+        var firstConsignmentItem = ValidRequest.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
+        firstConsignmentItem.NetVolumeUnitOfMeasure.Should().Be(TracesNT.WebServices.UniversalUnitOfMeasureType.LTR);
 
-        item.NetVolumeUnitOfMeasure.Should().Be(TracesNT.WebServices.UniversalUnitOfMeasureType.LTR);
-
-        item.NetVolumeUnitOfMeasureSpecified.Should().BeTrue();
+        firstConsignmentItem.NetVolumeUnitOfMeasureSpecified.Should().BeTrue();
     }
 
     [Fact]
@@ -192,12 +123,10 @@ public class ChedReservationInterventionMapperTests
             ],
         };
 
-        var result = request.ToChedInterventionRequestType();
+        var firstConsignmentItem = request.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
-
-        item.NetWeightQuantitySpecified.Should().BeFalse();
-        item.NetWeightUnitOfMeasureSpecified.Should().BeFalse();
+        firstConsignmentItem.NetWeightQuantitySpecified.Should().BeFalse();
+        firstConsignmentItem.NetWeightUnitOfMeasureSpecified.Should().BeFalse();
     }
 
     [Fact]
@@ -215,12 +144,10 @@ public class ChedReservationInterventionMapperTests
             ],
         };
 
-        var result = request.ToChedInterventionRequestType();
+        var firstConsignmentItem = request.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
-
-        item.NetVolumeQuantitySpecified.Should().BeFalse();
-        item.NetVolumeUnitOfMeasureSpecified.Should().BeFalse();
+        firstConsignmentItem.NetVolumeQuantitySpecified.Should().BeFalse();
+        firstConsignmentItem.NetVolumeUnitOfMeasureSpecified.Should().BeFalse();
     }
 
     [Fact]
@@ -238,12 +165,10 @@ public class ChedReservationInterventionMapperTests
             ],
         };
 
-        var result = request.ToChedInterventionRequestType();
+        var firstConsignmentItem = request.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
-
-        item.NetWeightQuantitySpecified.Should().BeFalse();
-        item.NetWeightUnitOfMeasureSpecified.Should().BeTrue();
+        firstConsignmentItem.NetWeightQuantitySpecified.Should().BeFalse();
+        firstConsignmentItem.NetWeightUnitOfMeasureSpecified.Should().BeTrue();
     }
 
     [Fact]
@@ -261,12 +186,10 @@ public class ChedReservationInterventionMapperTests
             ],
         };
 
-        var result = request.ToChedInterventionRequestType();
+        var firstConsignmentItem = request.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
-
-        item.NetVolumeQuantitySpecified.Should().BeFalse();
-        item.NetVolumeUnitOfMeasureSpecified.Should().BeTrue();
+        firstConsignmentItem.NetVolumeQuantitySpecified.Should().BeFalse();
+        firstConsignmentItem.NetVolumeUnitOfMeasureSpecified.Should().BeTrue();
     }
 
     [Fact]
@@ -277,12 +200,10 @@ public class ChedReservationInterventionMapperTests
             ConsignmentItems = [ValidRequest.ConsignmentItems[0] with { NetWeightUnitOfMeasure = null }],
         };
 
-        var result = request.ToChedInterventionRequestType();
+        var firstConsignmentItem = request.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
-
-        item.NetWeightQuantitySpecified.Should().BeTrue();
-        item.NetWeightUnitOfMeasureSpecified.Should().BeFalse();
+        firstConsignmentItem.NetWeightQuantitySpecified.Should().BeTrue();
+        firstConsignmentItem.NetWeightUnitOfMeasureSpecified.Should().BeFalse();
     }
 
     [Fact]
@@ -293,55 +214,25 @@ public class ChedReservationInterventionMapperTests
             ConsignmentItems = [ValidRequest.ConsignmentItems[0] with { NetVolumeUnitOfMeasure = null }],
         };
 
-        var result = request.ToChedInterventionRequestType();
+        var firstConsignmentItem = request.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
-
-        item.NetVolumeQuantitySpecified.Should().BeTrue();
-        item.NetVolumeUnitOfMeasureSpecified.Should().BeFalse();
+        firstConsignmentItem.NetVolumeQuantitySpecified.Should().BeTrue();
+        firstConsignmentItem.NetVolumeUnitOfMeasureSpecified.Should().BeFalse();
     }
 
     [Fact]
     public void MapsAllOptionalValuesWhenPresent()
     {
-        var result = ValidRequest.ToChedInterventionRequestType();
+        var firstConsignmentItem = ValidRequest.ConsignmentItems.ToCertexConsignmentItems().Single();
 
-        var item = result.ConsignmentItem[0];
+        firstConsignmentItem.NetWeightQuantity.Should().Be(300m);
+        firstConsignmentItem.NetWeightQuantitySpecified.Should().BeTrue();
+        firstConsignmentItem.NetWeightUnitOfMeasure.Should().Be(TracesNT.WebServices.UniversalUnitOfMeasureType.KGM);
+        firstConsignmentItem.NetWeightUnitOfMeasureSpecified.Should().BeTrue();
 
-        item.NetWeightQuantity.Should().Be(300m);
-        item.NetWeightQuantitySpecified.Should().BeTrue();
-        item.NetWeightUnitOfMeasure.Should().Be(TracesNT.WebServices.UniversalUnitOfMeasureType.KGM);
-        item.NetWeightUnitOfMeasureSpecified.Should().BeTrue();
-
-        item.NetVolumeQuantity.Should().Be(10m);
-        item.NetVolumeQuantitySpecified.Should().BeTrue();
-        item.NetVolumeUnitOfMeasure.Should().Be(TracesNT.WebServices.UniversalUnitOfMeasureType.LTR);
-        item.NetVolumeUnitOfMeasureSpecified.Should().BeTrue();
-    }
-
-    [Theory]
-    [InlineData(InterventionType.ForceWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item01)]
-    [InlineData(InterventionType.AmendWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item02)]
-    [InlineData(InterventionType.DeleteWriteOff, TracesNT.WebServices.InterventionMessageInformationType.Item03)]
-    public void MapsEverySupportedInterventionType(
-        InterventionType interventionType,
-        TracesNT.WebServices.InterventionMessageInformationType expected
-    )
-    {
-        var request = ValidRequest with { InterventionType = interventionType };
-
-        var result = request.ToChedInterventionRequestType();
-
-        result.InterventionType.Should().Be(expected);
-    }
-
-    [Fact]
-    public void ThrowsForAnUnsupportedInterventionType()
-    {
-        var request = ValidRequest with { InterventionType = (InterventionType)999 };
-
-        var action = () => request.ToChedInterventionRequestType();
-
-        action.Should().Throw<ArgumentOutOfRangeException>().And.ParamName.Should().Be("source");
+        firstConsignmentItem.NetVolumeQuantity.Should().Be(10m);
+        firstConsignmentItem.NetVolumeQuantitySpecified.Should().BeTrue();
+        firstConsignmentItem.NetVolumeUnitOfMeasure.Should().Be(TracesNT.WebServices.UniversalUnitOfMeasureType.LTR);
+        firstConsignmentItem.NetVolumeUnitOfMeasureSpecified.Should().BeTrue();
     }
 }

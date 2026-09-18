@@ -176,16 +176,11 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         StubCustomsReservationIntervention();
         var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-manager");
 
-        var response = await client.ChedReservationIntervention(
+        var response = await client.DeleteForceReleaseChed(
             ched,
             "26GB16RF3TDPZE7AR2",
             new ChedReservationInterventionRequest
             {
-                ChedCertificateId = ched,
-                CompetentCustomsOffice = new CompetentCustomsOffice() { ReferenceNumber = "GBTEST01" },
-                CustomsDocumentReference = "GB12345678901234567890",
-                InterventionType = InterventionType.DeleteWriteOff,
-                SendingDate = DateTime.Now,
                 TaricDocument = "GB12345678901234567890",
                 ConsignmentItems =
                 [

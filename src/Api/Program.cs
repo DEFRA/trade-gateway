@@ -82,7 +82,14 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     builder.Services.AddTracesNtClients();
 
     // Set up the MongoDB client. Config and credentials are injected automatically at runtime.
-    MongoClientSettings.Extensions.AddAWSAuthentication();
+    try
+    {
+        MongoClientSettings.Extensions.AddAWSAuthentication();
+    }
+    catch (ArgumentException ex) when (ex.ParamName == "mechanismName" || (ex.Message != null && ex.Message.IndexOf("already registered", StringComparison.OrdinalIgnoreCase) >= 0))
+    {
+        // The MONGODB-AWS mechanism may already be registered (e.g. when tests/startup run multiple times). Ignore this specific error.
+    }
     builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));
     builder.Services.AddSingleton<IMongoDbClientFactory, MongoDbClientFactory>();
 

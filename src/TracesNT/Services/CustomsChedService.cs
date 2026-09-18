@@ -116,8 +116,10 @@ namespace TracesNT.Services
         public async Task<ChedQuantityManagementOutcomeType?> ReservationIntervention(
             string chedId,
             string mrn,
-            ChedInterventionRequestType request,
-            string languageCode
+            ConsignmentItemR6ForInterventionType[] items,
+            InterventionMessageInformationType interventionMessageInformationType,
+            string languageCode,
+            string taricDocument
         )
         {
             // Correlates our logs with the MessageId the customs port echoes on responses and faults, which is
@@ -142,7 +144,19 @@ namespace TracesNT.Services
                         languageCode.ToIso2AlphaLanguageCodeContentType(),
                         _customsOffice,
                         new CertexHeaderType { MessageId = messageId, UniqRequesterPrefix = _customsOffice },
-                        request
+                        new ChedInterventionRequestType()
+                        {
+                            ChedCertificateId = chedId,
+                            CustomsDocumentReference = mrn,
+                            CompetentCustomsOffice = new CompetentCustomsOfficeType
+                            {
+                                ReferenceNumber = _customsOffice
+                            },
+                            ConsignmentItem = items,
+                            InterventionType = interventionMessageInformationType,
+                            SendingDate = DateTime.UtcNow,
+                            TARICDocument = taricDocument
+                        }
                     );
 
                     return response?.ChedInterventionResponse1;

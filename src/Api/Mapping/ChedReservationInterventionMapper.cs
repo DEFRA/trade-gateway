@@ -1,32 +1,32 @@
+using TracesNT.WebServices;
 using Trade.Gateway.Api.Contract.Customs;
 
 namespace Api.Mapping;
 
 public static class ChedReservationInterventionMapper
 {
-    public static TracesNT.WebServices.ChedInterventionRequestType ToChedInterventionRequestType(
-        this ChedReservationInterventionRequest source
+    internal static IEnumerable<ConsignmentItemR6ForInterventionType> ToCertexConsignmentItems(
+        this CustomsConsignmentItem[] source
     )
     {
-        return new TracesNT.WebServices.ChedInterventionRequestType
+        return source.Select(ToCertexConsignmentItem);
+    }
+
+    internal static TracesNT.WebServices.InterventionMessageInformationType ToCertexInterventionType(this InterventionType source)
+    {
+        return source switch
         {
-            CompetentCustomsOffice = new TracesNT.WebServices.CompetentCustomsOfficeType
-            {
-                ReferenceNumber = source.CompetentCustomsOffice.ReferenceNumber,
-            },
+            InterventionType.ForceWriteOff => InterventionMessageInformationType.Item01,
 
-            SendingDate = source.SendingDate,
-            CustomsDocumentReference = source.CustomsDocumentReference,
-            TARICDocument = source.TaricDocument,
-            ChedCertificateId = source.ChedCertificateId,
+            InterventionType.AmendWriteOff => InterventionMessageInformationType.Item02,
 
-            ConsignmentItem = source.ConsignmentItems.Select(x => x.ToCertex()).ToArray(),
+            InterventionType.DeleteWriteOff => InterventionMessageInformationType.Item03,
 
-            InterventionType = source.InterventionType.ToCertex(),
+            _ => throw new ArgumentOutOfRangeException(nameof(source), source, null),
         };
     }
 
-    private static TracesNT.WebServices.ConsignmentItemR6ForInterventionType ToCertex(
+    private static TracesNT.WebServices.ConsignmentItemR6ForInterventionType ToCertexConsignmentItem(
         this CustomsConsignmentItem source
     )
     {
@@ -64,22 +64,8 @@ public static class ChedReservationInterventionMapper
         return result;
     }
 
-    private static TracesNT.WebServices.UniversalUnitOfMeasureType ToCertex(this UnitOfMeasureType source)
+    private static UniversalUnitOfMeasureType ToCertex(this UnitOfMeasureType source)
     {
-        return Enum.Parse<TracesNT.WebServices.UniversalUnitOfMeasureType>(source.ToString());
-    }
-
-    private static TracesNT.WebServices.InterventionMessageInformationType ToCertex(this InterventionType source)
-    {
-        return source switch
-        {
-            InterventionType.ForceWriteOff => TracesNT.WebServices.InterventionMessageInformationType.Item01,
-
-            InterventionType.AmendWriteOff => TracesNT.WebServices.InterventionMessageInformationType.Item02,
-
-            InterventionType.DeleteWriteOff => TracesNT.WebServices.InterventionMessageInformationType.Item03,
-
-            _ => throw new ArgumentOutOfRangeException(nameof(source), source, null),
-        };
+        return Enum.Parse<UniversalUnitOfMeasureType>(source.ToString());
     }
 }
