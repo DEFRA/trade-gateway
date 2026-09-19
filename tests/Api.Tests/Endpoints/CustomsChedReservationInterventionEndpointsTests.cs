@@ -1,8 +1,5 @@
 using System.Net;
-using System.Xml.Linq;
-using Api.Contract;
 using AwesomeAssertions;
-using Refit;
 using Trade.Gateway.Api.Contract.Customs;
 using WireMock.ResponseBuilders;
 
@@ -21,16 +18,11 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
 
     private const string SuccessSample = "Api.Tests.Samples.CUSTOMS.ReservationInterventionResponse_Success.xml";
     private const string UnsuccessfulSample =
-        "Api.Tests.Samples.CUSTOMS.ReservationInterventionResponse_Unsuccessful.xml";
+        "Api.Tests.Samples.CUSTOMS.ReservationInterventionResponse_Unsuccessful_{{OutcomeCode}}.xml";
 
     private static ChedReservationInterventionRequest Request =>
         new()
         {
-            ChedCertificateId = Ched,
-            CompetentCustomsOffice = new CompetentCustomsOffice() { ReferenceNumber = "GBTEST01" },
-            CustomsDocumentReference = "GB12345678901234567890",
-            InterventionType = InterventionType.PhysicalCheck,
-            SendingDate = DateTime.Now,
             TaricDocument = "GB12345678901234567890",
             ConsignmentItems =
             [
@@ -46,71 +38,162 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
         };
 
     [Fact]
-    public async Task Put_ReservationInterventionSuccess()
+    public async Task ForceWriteOff_ReservationInterventionSuccess()
     {
         StubSample(Ched, SuccessSample);
 
-        var response = await PutAsync(Ched, Mrn, Request);
+        var response = await ForceWriteOffAsync(Ched, Mrn, Request);
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
     }
 
-    [Fact]
-    public async Task Put_ReservationInterventionUnsuccessful()
+    [Theory]
+    [InlineData("02", HttpStatusCode.NotFound)]
+    [InlineData("03", HttpStatusCode.Conflict)]
+    [InlineData("05", HttpStatusCode.Conflict)]
+    [InlineData("06", HttpStatusCode.BadGateway)]
+    public async Task ForceWriteOff_ReservationInterventionUnsuccessful(
+        string outcomeCode,
+        HttpStatusCode expectedStatusCode
+    )
     {
-        StubSample(UnsuccessfulChed, UnsuccessfulSample);
+        StubSample(
+            UnsuccessfulChed,
+            UnsuccessfulSample,
+            new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
+        );
 
-        var response = await PutAsync(UnsuccessfulChed, Mrn, Request with { ChedCertificateId = UnsuccessfulChed });
+        var response = await ForceWriteOffAsync(UnsuccessfulChed, Mrn, Request);
 
-        response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        response.StatusCode.Should().Be(expectedStatusCode);
     }
 
     [Fact]
-    public async Task Put_ReservationIntervention_WhenRequestIsNotValid_ReturnsBadRequest()
+    public async Task UpdateWriteOff_ReservationInterventionSuccess()
+    {
+        StubSample(Ched, SuccessSample);
+
+        var response = await UpdateWriteOff(Ched, Mrn, Request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Theory]
+    [InlineData("02", HttpStatusCode.NotFound)]
+    [InlineData("03", HttpStatusCode.Conflict)]
+    [InlineData("05", HttpStatusCode.Conflict)]
+    [InlineData("06", HttpStatusCode.BadGateway)]
+    public async Task UpdateWriteOff_ReservationInterventionUnsuccessful(
+        string outcomeCode,
+        HttpStatusCode expectedStatusCode
+    )
+    {
+        StubSample(
+            UnsuccessfulChed,
+            UnsuccessfulSample,
+            new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
+        );
+
+        var response = await UpdateWriteOff(UnsuccessfulChed, Mrn, Request);
+
+        response.StatusCode.Should().Be(expectedStatusCode);
+    }
+
+    [Fact]
+    public async Task DeleteWriteOff_ReservationInterventionSuccess()
+    {
+        StubSample(Ched, SuccessSample);
+
+        var response = await DeleteWriteOffAsync(Ched, Mrn, Request);
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Theory]
+    [InlineData("02", HttpStatusCode.NotFound)]
+    [InlineData("03", HttpStatusCode.Conflict)]
+    [InlineData("05", HttpStatusCode.Conflict)]
+    [InlineData("06", HttpStatusCode.BadGateway)]
+    public async Task DeleteWriteOff_ReservationInterventionUnsuccessful(
+        string outcomeCode,
+        HttpStatusCode expectedStatusCode
+    )
+    {
+        StubSample(
+            UnsuccessfulChed,
+            UnsuccessfulSample,
+            new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
+        );
+
+        var response = await DeleteWriteOffAsync(UnsuccessfulChed, Mrn, Request);
+
+        response.StatusCode.Should().Be(expectedStatusCode);
+    }
+
+    [Fact]
+    public async Task ForceWriteOff_WhenRequestIsNotValid_ReturnsBadRequest()
     {
         var request = Request with { ConsignmentItems = [] };
 
-        var response = await PutAsync(Ched, Mrn, request);
+        var response = await ForceWriteOffAsync(Ched, Mrn, request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
-    public async Task Put_ReservationIntervention_WhenUpstreamFault_ReturnsBadGatewayWithoutTheUpstreamMessage()
+    public async Task ForceWriteOff_WhenUpstreamFault_ReturnsBadGatewayWithoutTheUpstreamMessage()
     {
         const string upstreamError = "internal upstream detail that must not be published";
         StubFault("FAULTY", upstreamError);
-        var request = Request with { ChedCertificateId = "FAULTY" };
 
-        var response = await PutAsync("FAULTY", "mrn", request);
+        var response = await ForceWriteOffAsync("FAULTY", "mrn", Request);
 
         response.StatusCode.Should().Be(HttpStatusCode.BadGateway);
         await VerifyJson(await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken));
     }
 
     [Fact]
-    public async Task Put_ReservationIntervention_WhenSenderSaxFault_ReturnsInternalServerError()
+    public async Task ForceWriteOff_WhenSenderSaxFault_ReturnsInternalServerError()
     {
         StubSaxFault("BADSOAP");
-        var request = Request with { ChedCertificateId = "BADSOAP" };
 
-        var response = await PutAsync("BADSOAP", "mrn", request);
+        var response = await ForceWriteOffAsync("BADSOAP", "mrn", Request);
 
         response.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
     }
 
-    private async Task<HttpResponseMessage> PutAsync(
+    private async Task<HttpResponseMessage> ForceWriteOffAsync(
         string chedId,
         string mrn,
         ChedReservationInterventionRequest request
     )
     {
         var client = await factory.CreateClientForPrincipalAsync(Manager);
-        return await client.ChedReservationIntervention(chedId, mrn, request, TestContext.Current.CancellationToken);
+        return await client.ForceReleaseChed(chedId, mrn, request, TestContext.Current.CancellationToken);
     }
 
-    private void StubSample(string chedId, string resourceName) =>
+    private async Task<HttpResponseMessage> UpdateWriteOff(
+        string chedId,
+        string mrn,
+        ChedReservationInterventionRequest request
+    )
+    {
+        var client = await factory.CreateClientForPrincipalAsync(Manager);
+        return await client.UpdateForceReleaseChed(chedId, mrn, request, TestContext.Current.CancellationToken);
+    }
+
+    private async Task<HttpResponseMessage> DeleteWriteOffAsync(
+        string chedId,
+        string mrn,
+        ChedReservationInterventionRequest request
+    )
+    {
+        var client = await factory.CreateClientForPrincipalAsync(Manager);
+        return await client.DeleteForceReleaseChed(chedId, mrn, request, TestContext.Current.CancellationToken);
+    }
+
+    private void StubSample(string chedId, string resourceName, params TokenSubstitution[] resourceSubstitutions) =>
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
@@ -122,7 +205,11 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
                 Response
                     .Create()
                     .WithCallback(async _ =>
-                        await SoapUtilities.CreateResponseFromResource(HttpStatusCode.OK, resourceName)
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            resourceName,
+                            resourceSubstitutions
+                        )
                     )
             );
 

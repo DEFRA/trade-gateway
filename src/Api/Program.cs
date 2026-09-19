@@ -82,7 +82,17 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     builder.Services.AddTracesNtClients();
 
     // Set up the MongoDB client. Config and credentials are injected automatically at runtime.
-    MongoClientSettings.Extensions.AddAWSAuthentication();
+    try
+    {
+        MongoClientSettings.Extensions.AddAWSAuthentication();
+    }
+    catch (ArgumentException ex)
+        when (ex.ParamName == "mechanismName"
+            || (ex.Message != null && ex.Message.IndexOf("already registered", StringComparison.OrdinalIgnoreCase) >= 0)
+        )
+    {
+        // The MONGODB-AWS mechanism may already be registered (e.g. when tests/startup run multiple times). Ignore this specific error.
+    }
     builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));
     builder.Services.AddSingleton<IMongoDbClientFactory, MongoDbClientFactory>();
 
@@ -115,6 +125,26 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
+
+    // Temporary debug middleware: log response status for CHED manual-release endpoints
+    app.Use(async (context, next) =>
+    {
+        await next();
+        try
+        {
+            var path = context.Request.Path.Value ?? string.Empty;
+            if (path.Contains("manual-release", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"[DEBUG-MIDDLEWARE] Path: {path} => Status after pipeline: {context.Response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log and continue - this is only temporary debugging middleware.
+            Console.WriteLine($"[DEBUG-MIDDLEWARE] Exception while logging response status: {ex}");
+        }
+    });
+
     app.MapHealthChecks("/health").AllowAnonymous();
     app.MapLocalTokenEndpoints();
     app.UseChedEndpoints();

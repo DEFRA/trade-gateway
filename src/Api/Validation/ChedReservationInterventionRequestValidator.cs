@@ -1,3 +1,4 @@
+using Api.Models;
 using FluentValidation;
 using Trade.Gateway.Api.Contract.Customs;
 
@@ -7,19 +8,7 @@ public sealed class ChedReservationInterventionRequestValidator : AbstractValida
 {
     public ChedReservationInterventionRequestValidator()
     {
-        RuleFor(x => x.CompetentCustomsOffice).NotNull();
-
-        RuleFor(x => x.CompetentCustomsOffice.ReferenceNumber).NotEmpty().MaximumLength(50);
-
-        RuleFor(x => x.SendingDate).NotEmpty();
-
-        RuleFor(x => x.CustomsDocumentReference).NotEmpty().MaximumLength(100);
-
         RuleFor(x => x.TaricDocument).NotEmpty().MaximumLength(100);
-
-        RuleFor(x => x.ChedCertificateId).NotEmpty().MaximumLength(50);
-
-        RuleFor(x => x.InterventionType).IsInEnum();
 
         RuleFor(x => x.ConsignmentItems).NotEmpty().WithMessage("At least one item is required.");
 

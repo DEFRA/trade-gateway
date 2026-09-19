@@ -1,6 +1,6 @@
+using Api.Models;
 using Api.Validation;
 using AwesomeAssertions;
-using Trade.Gateway.Api.Contract.Certificate;
 using Trade.Gateway.Api.Contract.Customs;
 
 namespace Api.Tests.Validation;
@@ -10,16 +10,7 @@ public class ChedReservationInterventionRequestValidatorTests
     private static readonly ChedReservationInterventionRequestValidator Validator = new();
 
     private static ChedReservationInterventionRequest ValidRequest =>
-        new()
-        {
-            CompetentCustomsOffice = new() { ReferenceNumber = "GB123456" },
-            SendingDate = DateTime.UtcNow,
-            CustomsDocumentReference = "CUSTOMS-REF-123",
-            TaricDocument = "TARIC-123",
-            ChedCertificateId = "CHED-123",
-            InterventionType = InterventionType.PhysicalCheck,
-            ConsignmentItems = [ValidItem],
-        };
+        new() { TaricDocument = "TARIC-123", ConsignmentItems = [ValidItem] };
 
     private static CustomsConsignmentItem ValidItem =>
         new()
@@ -42,69 +33,6 @@ public class ChedReservationInterventionRequestValidatorTests
     [Theory]
     [InlineData("")]
     [InlineData("  ")]
-    public void RejectsAnEmptyCompetentCustomsOfficeReferenceNumber(string referenceNumber)
-    {
-        var request = ValidRequest with
-        {
-            CompetentCustomsOffice = ValidRequest.CompetentCustomsOffice! with { ReferenceNumber = referenceNumber },
-        };
-
-        var result = Validator.Validate(request);
-
-        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("CompetentCustomsOffice.ReferenceNumber");
-    }
-
-    [Fact]
-    public void RejectsACompetentCustomsOfficeReferenceNumberLongerThan50Characters()
-    {
-        var request = ValidRequest with
-        {
-            CompetentCustomsOffice = ValidRequest.CompetentCustomsOffice! with
-            {
-                ReferenceNumber = new string('A', 51),
-            },
-        };
-
-        var result = Validator.Validate(request);
-
-        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("CompetentCustomsOffice.ReferenceNumber");
-    }
-
-    [Fact]
-    public void RejectsAnEmptySendingDate()
-    {
-        var request = ValidRequest with { SendingDate = default };
-
-        var result = Validator.Validate(request);
-
-        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("SendingDate");
-    }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("  ")]
-    public void RejectsAnEmptyCustomsDocumentReference(string value)
-    {
-        var request = ValidRequest with { CustomsDocumentReference = value };
-
-        var result = Validator.Validate(request);
-
-        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("CustomsDocumentReference");
-    }
-
-    [Fact]
-    public void RejectsACustomsDocumentReferenceLongerThan100Characters()
-    {
-        var request = ValidRequest with { CustomsDocumentReference = new string('A', 101) };
-
-        var result = Validator.Validate(request);
-
-        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("CustomsDocumentReference");
-    }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("  ")]
     public void RejectsAnEmptyTaricDocument(string value)
     {
         var request = ValidRequest with { TaricDocument = value };
@@ -122,38 +50,6 @@ public class ChedReservationInterventionRequestValidatorTests
         var result = Validator.Validate(request);
 
         result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("TaricDocument");
-    }
-
-    [Theory]
-    [InlineData("")]
-    [InlineData("  ")]
-    public void RejectsAnEmptyChedCertificateId(string value)
-    {
-        var request = ValidRequest with { ChedCertificateId = value };
-
-        var result = Validator.Validate(request);
-
-        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("ChedCertificateId");
-    }
-
-    [Fact]
-    public void RejectsAChedCertificateIdLongerThan50Characters()
-    {
-        var request = ValidRequest with { ChedCertificateId = new string('A', 51) };
-
-        var result = Validator.Validate(request);
-
-        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("ChedCertificateId");
-    }
-
-    [Fact]
-    public void RejectsAnUndefinedInterventionType()
-    {
-        var request = ValidRequest with { InterventionType = (InterventionType)999 };
-
-        var result = Validator.Validate(request);
-
-        result.Errors.Should().ContainSingle().Which.PropertyName.Should().Be("InterventionType");
     }
 
     [Fact]

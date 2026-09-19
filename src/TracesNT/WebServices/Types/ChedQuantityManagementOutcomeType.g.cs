@@ -23,7 +23,7 @@ namespace TracesNT.WebServices
         {
             get
             {
-                return this.quantityManagementOutcomeField;
+                return this.quantityManagementOutcomeField; 
             }
 
             set

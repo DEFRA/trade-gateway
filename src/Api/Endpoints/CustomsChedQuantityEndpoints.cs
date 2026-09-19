@@ -1,6 +1,9 @@
+using System.ComponentModel.DataAnnotations;
+using Amazon.Runtime.Internal;
 using Api.Contract;
 using Api.Filters;
 using Api.Mapping;
+using Api.Models;
 using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
@@ -30,6 +33,7 @@ public static class CustomsChedQuantityEndpoints
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation", PutReservation)
             .Validates<ChedReservationRequest>()
+            .ValidatesRoute<ChedReservationInterventionRouteParams>()
             .Produces<ChedDeclarationReservation>(200, MediaTypeAttribute.For<ChedDeclarationReservation>())
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -38,8 +42,31 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
-        app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/intervene", ReservationIntervention)
+        app.MapPost("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", ForceWriteOff)
             .Validates<ChedReservationInterventionRequest>()
+            .ValidatesRoute<ChedReservationInterventionRouteParams>()
+            .Produces(StatusCodes.Status200OK)
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", AmendWriteOff)
+            .Validates<ChedReservationInterventionRequest>()
+            .ValidatesRoute<ChedReservationInterventionRouteParams>()
+            .Produces(StatusCodes.Status200OK)
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", DeleteWriteOff)
+            .Validates<ChedReservationInterventionRequest>()
+            .ValidatesRoute<ChedReservationInterventionRouteParams>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -101,7 +128,7 @@ public static class CustomsChedQuantityEndpoints
     private static async Task<IResult> PutReservation(
         string chedId,
         string mrn,
-        ChedReservationRequest request,
+        [FromBody] ChedReservationRequest request,
         ICustomsChedService customsChedService,
         ILoggerFactory loggerFactory,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
@@ -149,37 +176,51 @@ public static class CustomsChedQuantityEndpoints
         return Results.Json(reservation, contentType: MediaTypeAttribute.For<ChedDeclarationReservation>());
     }
 
-    private static async Task<IResult> ReservationIntervention(
-        string chedId,
-        string mrn,
-        ChedReservationInterventionRequest request,
+    private static async Task<IResult> ForceWriteOff(
+        [AsParameters] ChedReservationInterventionRouteParams routeModel,
+        [FromBody] ChedReservationInterventionRequest request,
         ICustomsChedService customsChedService,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
-        var tracesRequest = request.ToChedInterventionRequestType();
-        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
-        var response = await customsChedService.ReservationIntervention(chedId, mrn, tracesRequest, languageCode);
-        var outcome = response?.QuantityManagementOutcome;
+        return await ProcessWriteIntervention(
+            routeModel,
+            request,
+            customsChedService,
+            InterventionType.ForceWriteOff,
+            acceptLanguage
+        );
+    }
 
-        // A clean cancellation has nothing to report. Outcome 04 does — the CHED status
-        // changed mid-clearance — so it always comes back with a body.
-        if (QuantityManagementOutcomes.IsSuccess(outcome))
-        {
-            return Results.Ok();
-        }
+    private static async Task<IResult> AmendWriteOff(
+        [AsParameters] ChedReservationInterventionRouteParams routeModel,
+        [FromBody] ChedReservationInterventionRequest request,
+        ICustomsChedService customsChedService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
+    {
+        return await ProcessWriteIntervention(
+            routeModel,
+            request,
+            customsChedService,
+            InterventionType.DeleteWriteOff,
+            acceptLanguage
+        );
+    }
 
-        return Results.Problem(
-            title: "Quantity management request not executed",
-            detail: QuantityManagementOutcomes.Describe(outcome),
-            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
-            extensions: new Dictionary<string, object?>
-            {
-                ["chedId"] = chedId,
-                ["mrn"] = mrn,
-                ["outcome"] = outcome,
-                ["chedStatus"] = response?.StatusCode,
-            }
+    private static async Task<IResult> DeleteWriteOff(
+        [AsParameters] ChedReservationInterventionRouteParams routeModel,
+        [FromBody] ChedReservationInterventionRequest request,
+        ICustomsChedService customsChedService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
+    {
+        return await ProcessWriteIntervention(
+            routeModel,
+            request,
+            customsChedService,
+            InterventionType.DeleteWriteOff,
+            acceptLanguage
         );
     }
 
@@ -215,6 +256,48 @@ public static class CustomsChedQuantityEndpoints
             }
         );
     }
+
+    private static async Task<IResult> ProcessWriteIntervention(
+        ChedReservationInterventionRouteParams routeModel,
+        ChedReservationInterventionRequest request,
+        ICustomsChedService customsChedService,
+        InterventionType interventionType,
+        string? acceptLanguage = null
+    )
+    {
+        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
+        var response = await customsChedService.ReservationIntervention(
+            routeModel.ChedCertificateId!,
+            routeModel.CustomsDocumentReference!,
+            request.ConsignmentItems.ToCertexConsignmentItems().ToArray(),
+            interventionType.ToCertexInterventionType(),
+            languageCode,
+            request.TaricDocument
+        );
+
+        var outcome = response?.QuantityManagementOutcome;
+
+        // If successful there is nothing to report
+        if (QuantityManagementOutcomes.IsSuccess(outcome))
+        {
+            return Results.Ok();
+        }
+
+        // interpret the issue and report accordingly
+        return Results.Problem(
+            title: "Quantity management request not executed",
+            detail: QuantityManagementOutcomes.Describe(outcome),
+            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
+            extensions: new Dictionary<string, object?>
+            {
+                ["chedId"] = routeModel.ChedCertificateId,
+                ["mrn"] = routeModel.CustomsDocumentReference,
+                ["outcome"] = outcome,
+                ["chedStatus"] = response?.StatusCode,
+            }
+        );
+    }
+
 
     private static async Task<IResult> DeleteReservation(
         string chedId,

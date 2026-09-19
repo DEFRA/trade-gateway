@@ -54,13 +54,17 @@ public interface ICustomsChedService
     /// </summary>
     /// <param name="chedId"></param>
     /// <param name="mrn"></param>
-    /// <param name="request"></param>
+    /// <param name="items"></param>
+    /// <param name="interventionMessageInformationType"></param>
     /// <param name="languageCode"></param>
+    /// <param name="taricDocument"></param>
     /// <returns></returns>
     Task<ChedQuantityManagementOutcomeType?> ReservationIntervention(
         string chedId,
         string mrn,
-        ChedInterventionRequestType request,
-        string languageCode
+        ConsignmentItemR6ForInterventionType[] items,
+        InterventionMessageInformationType interventionMessageInformationType,
+        string languageCode,
+        string taricDocument
     );
 }
