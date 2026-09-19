@@ -33,6 +33,7 @@ public static class CustomsChedQuantityEndpoints
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation", PutReservation)
             .Validates<ChedReservationRequest>()
+            .ValidatesRoute<ChedReservationInterventionRouteParams>()
             .Produces<ChedDeclarationReservation>(200, MediaTypeAttribute.For<ChedDeclarationReservation>())
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -43,6 +44,7 @@ public static class CustomsChedQuantityEndpoints
 
         app.MapPost("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", ForceWriteOff)
             .Validates<ChedReservationInterventionRequest>()
+            .ValidatesRoute<ChedReservationInterventionRouteParams>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -53,6 +55,7 @@ public static class CustomsChedQuantityEndpoints
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", AmendWriteOff)
             .Validates<ChedReservationInterventionRequest>()
+            .ValidatesRoute<ChedReservationInterventionRouteParams>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -63,6 +66,7 @@ public static class CustomsChedQuantityEndpoints
 
         app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", DeleteWriteOff)
             .Validates<ChedReservationInterventionRequest>()
+            .ValidatesRoute<ChedReservationInterventionRouteParams>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -261,14 +265,6 @@ public static class CustomsChedQuantityEndpoints
         string? acceptLanguage = null
     )
     {
-        // Validate route params using a small route model so we can return structured validation problems like other endpoints.
-        var validationResults = new List<ValidationResult>();
-        var validationContext = new ValidationContext(routeModel);
-        if (!Validator.TryValidateObject(routeModel, validationContext, validationResults, validateAllProperties: true))
-        {
-            return Results.ValidationProblem(ConvertValidationResults(validationResults));
-        }
-
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
         var response = await customsChedService.ReservationIntervention(
             routeModel.ChedCertificateId!,
@@ -302,28 +298,6 @@ public static class CustomsChedQuantityEndpoints
         );
     }
 
-    private static IDictionary<string, string[]> ConvertValidationResults(IEnumerable<ValidationResult> results)
-    {
-        var dict = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
-
-        foreach (var r in results)
-        {
-            var memberNames = r.MemberNames.Any() ? r.MemberNames : new[] { string.Empty };
-
-            foreach (var m in memberNames)
-            {
-                if (!dict.TryGetValue(m ?? string.Empty, out var list))
-                {
-                    list = new List<string>();
-                    dict[m ?? string.Empty] = list;
-                }
-
-                list.Add(r.ErrorMessage ?? "");
-            }
-        }
-
-        return dict.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.ToArray());
-    }
 
     private static async Task<IResult> DeleteReservation(
         string chedId,

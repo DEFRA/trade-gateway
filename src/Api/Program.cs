@@ -125,6 +125,26 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
+
+    // Temporary debug middleware: log response status for CHED manual-release endpoints
+    app.Use(async (context, next) =>
+    {
+        await next();
+        try
+        {
+            var path = context.Request.Path.Value ?? string.Empty;
+            if (path.Contains("manual-release", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine($"[DEBUG-MIDDLEWARE] Path: {path} => Status after pipeline: {context.Response.StatusCode}");
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log and continue - this is only temporary debugging middleware.
+            Console.WriteLine($"[DEBUG-MIDDLEWARE] Exception while logging response status: {ex}");
+        }
+    });
+
     app.MapHealthChecks("/health").AllowAnonymous();
     app.MapLocalTokenEndpoints();
     app.UseChedEndpoints();

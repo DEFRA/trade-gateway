@@ -9,4 +9,12 @@ public static class FilterExtensions
 
         return builder;
     }
+
+    public static RouteHandlerBuilder ValidatesRoute<T>(this RouteHandlerBuilder builder)
+        where T : class, new()
+    {
+        builder.AddEndpointFilter((context, next) => new DataAnnotationsRouteValidationFilter<T>().InvokeAsync(context, next));
+
+        return builder;
+    }
 }
