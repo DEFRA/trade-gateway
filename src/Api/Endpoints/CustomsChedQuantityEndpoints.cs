@@ -267,7 +267,7 @@ public static class CustomsChedQuantityEndpoints
     {
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
         var response = await customsChedService.ReservationIntervention(
-           chedId,
+            chedId,
             mrn,
             request.ConsignmentItems.ToCertexConsignmentItems().ToArray(),
             interventionType.ToCertexInterventionType(),
@@ -297,7 +297,6 @@ public static class CustomsChedQuantityEndpoints
             }
         );
     }
-
 
     private static async Task<IResult> DeleteReservation(
         string chedId,
