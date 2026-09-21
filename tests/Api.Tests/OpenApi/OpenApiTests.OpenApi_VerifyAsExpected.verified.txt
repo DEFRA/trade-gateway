@@ -1,4 +1,4 @@
-{
+﻿{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -471,7 +471,6 @@
             in: path,
             required: true,
             schema: {
-              maxLength: 50,
               type: string
             }
           },
@@ -480,7 +479,6 @@
             in: path,
             required: true,
             schema: {
-              maxLength: 100,
               type: string
             }
           },
@@ -578,7 +576,6 @@
             in: path,
             required: true,
             schema: {
-              maxLength: 50,
               type: string
             }
           },
@@ -587,7 +584,6 @@
             in: path,
             required: true,
             schema: {
-              maxLength: 100,
               type: string
             }
           },
@@ -685,7 +681,6 @@
             in: path,
             required: true,
             schema: {
-              maxLength: 50,
               type: string
             }
           },
@@ -694,7 +689,6 @@
             in: path,
             required: true,
             schema: {
-              maxLength: 100,
               type: string
             }
           },
