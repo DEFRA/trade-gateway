@@ -10,41 +10,38 @@ namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class CustomsDeclarationReferenceNumber4CoiChedR51InputType
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/tracesnt/certificate/attachments/v1")]
+    public partial class SubmitCertificateAttachmentResponseType
     {
-        private string itemField;
-        private ItemChoiceType2 itemElementNameField;
+        private string fileNameField;
+        private long documentIdField;
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("LRN", typeof(string), Order = 0)]
-        [System.Xml.Serialization.XmlElementAttribute("MRN", typeof(string), Order = 0)]
-        [System.Xml.Serialization.XmlChoiceIdentifierAttribute("ItemElementName")]
-        public string Item
+        [System.Xml.Serialization.XmlElementAttribute(Order = 0)]
+        public string FileName
         {
             get
             {
-                return this.itemField;
+                return this.fileNameField;
             }
 
             set
             {
-                this.itemField = value;
+                this.fileNameField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 1)]
-        [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType2 ItemElementName
+        public long DocumentId
         {
             get
             {
-                return this.itemElementNameField;
+                return this.documentIdField;
             }
 
             set
             {
-                this.itemElementNameField = value;
+                this.documentIdField = value;
             }
         }
     }

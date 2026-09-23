@@ -19,6 +19,13 @@ public static class ChedEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
+        app.MapGet("certificates/cheds/{id}/attachments/{attachmentId}/{filename}", GetAttachment)
+            .Produces<Stream>(StatusCodes.Status200OK, "application/octet-stream")
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
         app.MapGet("certificates/cheds", Find)
             .Produces<DefraUNVTDCHEDSummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>())
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -44,6 +51,23 @@ public static class ChedEndpoints
             ChedMapper.Map(certificate, context),
             contentType: MediaTypeAttribute.For<DefraUNVTDCHEDProfile>()
         );
+    }
+
+    private static async Task<IResult> GetAttachment(
+        string id,
+        long attachmentId,
+        string filename,
+        IChedCertificateService chedCertificateService
+    )
+    {
+        var attachment = await chedCertificateService.GetChedCertificateAttachment(id, attachmentId, filename);
+        if (attachment?.Attachment == null)
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                detail: $"Ched certificate attachment '{id} - {attachmentId}' was not found."
+            );
+
+        return Results.Bytes(attachment.Attachment, attachment.contentType, attachment.fileName);
     }
 
     private static async Task<IResult> Find(
