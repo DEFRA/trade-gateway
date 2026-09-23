@@ -38,7 +38,27 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
-        app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/intervene", ReservationIntervention)
+        app.MapPost("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", ForceWriteOff)
+            .Validates<ChedReservationInterventionRequest>()
+            .Produces(StatusCodes.Status200OK)
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", AmendWriteOff)
+            .Validates<ChedReservationInterventionRequest>()
+            .Produces(StatusCodes.Status200OK)
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", DeleteWriteOff)
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
@@ -101,7 +121,7 @@ public static class CustomsChedQuantityEndpoints
     private static async Task<IResult> PutReservation(
         string chedId,
         string mrn,
-        ChedReservationRequest request,
+        [FromBody] ChedReservationRequest request,
         ICustomsChedService customsChedService,
         ILoggerFactory loggerFactory,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
@@ -149,17 +169,70 @@ public static class CustomsChedQuantityEndpoints
         return Results.Json(reservation, contentType: MediaTypeAttribute.For<ChedDeclarationReservation>());
     }
 
-    private static async Task<IResult> ReservationIntervention(
+    private static Task<IResult> ForceWriteOff(
         string chedId,
         string mrn,
-        ChedReservationInterventionRequest request,
+        [FromBody] ChedReservationInterventionRequest request,
         ICustomsChedService customsChedService,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
-        var tracesRequest = request.ToChedInterventionRequestType();
+        return ProcessWriteIntervention(
+            chedId,
+            mrn,
+            request,
+            customsChedService,
+            InterventionType.ForceWriteOff,
+            acceptLanguage
+        );
+    }
+
+    private static Task<IResult> AmendWriteOff(
+        string chedId,
+        string mrn,
+        [FromBody] ChedReservationInterventionRequest request,
+        ICustomsChedService customsChedService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
+    {
+        return ProcessWriteIntervention(
+            chedId,
+            mrn,
+            request,
+            customsChedService,
+            InterventionType.DeleteWriteOff,
+            acceptLanguage
+        );
+    }
+
+    private static Task<IResult> DeleteWriteOff(
+        string chedId,
+        string mrn,
+        [FromBody] ChedReservationInterventionRequest request,
+        ICustomsChedService customsChedService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
+    {
+        return ProcessWriteIntervention(
+            chedId,
+            mrn,
+            request,
+            customsChedService,
+            InterventionType.DeleteWriteOff,
+            acceptLanguage
+        );
+    }
+
+    private static async Task<IResult> Release(
+        string chedId,
+        string mrn,
+        ICustomsChedService customsChedService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
+    {
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
-        var response = await customsChedService.ReservationIntervention(chedId, mrn, tracesRequest, languageCode);
+        var response = await customsChedService.Release(chedId, mrn, languageCode);
+
         var outcome = response?.QuantityManagementOutcome;
 
         // A clean cancellation has nothing to report. Outcome 04 does — the CHED status
@@ -183,25 +256,34 @@ public static class CustomsChedQuantityEndpoints
         );
     }
 
-    private static async Task<IResult> Release(
+    private static async Task<IResult> ProcessWriteIntervention(
         string chedId,
         string mrn,
+        ChedReservationInterventionRequest request,
         ICustomsChedService customsChedService,
-        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+        InterventionType interventionType,
+        string? acceptLanguage = null
     )
     {
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
-        var response = await customsChedService.Release(chedId, mrn, languageCode);
+        var response = await customsChedService.ReservationIntervention(
+            chedId,
+            mrn,
+            request.ConsignmentItems.ToCertexConsignmentItems().ToArray(),
+            interventionType.ToCertexInterventionType(),
+            languageCode,
+            request.TaricDocument
+        );
 
         var outcome = response?.QuantityManagementOutcome;
 
-        // A clean cancellation has nothing to report. Outcome 04 does — the CHED status
-        // changed mid-clearance — so it always comes back with a body.
+        // If successful there is nothing to report
         if (QuantityManagementOutcomes.IsSuccess(outcome))
         {
             return Results.Ok();
         }
 
+        // interpret the issue and report accordingly
         return Results.Problem(
             title: "Quantity management request not executed",
             detail: QuantityManagementOutcomes.Describe(outcome),
