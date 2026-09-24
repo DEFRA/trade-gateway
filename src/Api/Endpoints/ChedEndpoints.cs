@@ -13,14 +13,27 @@ public static class ChedEndpoints
     public static void UseChedEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("certificates/cheds/{id}", Get)
+            .WithName("GetChed")
+            .WithSummary("Fetch a single CHED certificate by its reference.")
+            .WithDescription("Returns the full CHED profile.")
             .Produces<DefraUNVTDCHEDProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDProfile>())
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet("certificates/cheds", Find)
+            .WithName("FindCheds")
+            .WithSummary("Search CHED certificates updated in a time window.")
+            .WithDescription(
+                "Returns a paged summary of CHED certificates updated between updatedFrom and "
+                    + "updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates "
+                    + "whether there are more pages to follow."
+            )
             .Produces<DefraUNVTDCHEDSummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>())
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);

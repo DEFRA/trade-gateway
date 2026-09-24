@@ -2,14 +2,32 @@
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
+    description: REST API for TRACES: read access to TRACES certificates (CHED, INTRA and DOCOMs) and customs quantity management for CHEDs.,
+    contact: {
+      name: Defra Trade,
+      email: tbc@defra.gov.uk
+    },
+    license: {
+      name: Open Government Licence v3.0,
+      url: https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+    },
     version: v1
   },
+  servers: [
+    {
+      url: /,
+      description: The service as reached through the CDP API Gateway.
+    }
+  ],
   paths: {
     /certificates/cheds/{id}: {
       get: {
         tags: [
           ChedEndpoints
         ],
+        summary: Fetch a single CHED certificate by its reference.,
+        description: Returns the full CHED profile.,
+        operationId: GetChed,
         parameters: [
           {
             name: id,
@@ -22,6 +40,7 @@
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -34,6 +53,16 @@
               application/vnd.defra.trade.ched.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDCHEDProfile
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -86,58 +115,60 @@
         tags: [
           ChedEndpoints
         ],
+        summary: Search CHED certificates updated in a time window.,
+        description: Returns a paged summary of CHED certificates updated between updatedFrom and updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates whether there are more pages to follow.,
+        operationId: FindCheds,
         parameters: [
           {
             name: pageSize,
             in: query,
-            description: The number of records to return,
+            description: Number of summary records to return per page, between 10 and 200.,
             schema: {
               maximum: 200,
               minimum: 10,
               type: integer,
-              description: The number of records to return,
-              format: int32
+              format: int32,
+              default: 10
             }
           },
           {
             name: offset,
             in: query,
-            description: Number of records to offset,
+            description: Number of records to skip before this page.,
             schema: {
               maximum: 9990,
               minimum: 0,
               type: integer,
-              description: Number of records to offset,
-              format: int32
+              format: int32,
+              default: 0
             }
           },
           {
             name: updatedFrom,
             in: query,
-            description: Start of the range,
+            description: Inclusive start of the update window, as a UTC timestamp.,
             schema: {
               type: string,
-              description: Start of the range,
               format: date-time
             }
           },
           {
             name: updatedBefore,
             in: query,
-            description: End of the range,
+            description: Exclusive end of the update window, as a UTC timestamp.,
             schema: {
               type: string,
-              description: End of the range,
               format: date-time
             }
           },
           {
             name: Accept-Language,
             in: header,
-            description: End of the range,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string,
-              description: End of the range
+              description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en.,
+              default: en
             }
           }
         ],
@@ -148,6 +179,26 @@
               application/vnd.defra.trade.ched.summary.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDCHEDSummaryProfile
+                }
+              }
+            }
+          },
+          400: {
+            description: Bad Request,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -190,18 +241,24 @@
         tags: [
           CustomsChedQuantityEndpoints
         ],
+        summary: Read the quantity position of a CHED.,
+        description: Returns what remains available on the CHED and, when declarations hold quantities, what they reserve and have consumed.,
+        operationId: GetChedQuantities,
         parameters: [
           {
             name: chedId,
             in: path,
+            description: CHED reference whose quantity position is read.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -214,6 +271,16 @@
               application/vnd.defra.trade.ched-quantities.v1+json: {
                 schema: {
                   $ref: #/components/schemas/ChedQuantityLedger
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -266,18 +333,24 @@
         tags: [
           CustomsChedQuantityEndpoints
         ],
+        summary: Reserve quantities of a CHED against a customs declaration.,
+        description: Creates a reservation against the declaration's MRN for the supplied consignment items. Returns the allocation result or an error from TRACES indicating why it failed.,
+        operationId: ReserveChedQuantities,
         parameters: [
           {
             name: chedId,
             in: path,
+            description: CHED reference the reservation is made against.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: mrn,
             in: path,
+            description: Movement Reference Number of the customs declaration holding the reservation.,
             required: true,
             schema: {
               type: string
@@ -286,12 +359,14 @@
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
           }
         ],
         requestBody: {
+          description: Consignment items to reserve.,
           content: {
             application/json: {
               schema: {
@@ -318,6 +393,16 @@
               application/problem+json: {
                 schema: {
                   $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -378,18 +463,24 @@
         tags: [
           CustomsChedQuantityEndpoints
         ],
+        summary: Delete a CHED reservation.,
+        description: Cancels the reservation held against the declaration's MRN. If successful, returns a 200, if not then it will respond with the TRACES error code.,
+        operationId: DeleteReservation,
         parameters: [
           {
             name: chedId,
             in: path,
+            description: CHED reference whose reservation is deleted.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: mrn,
             in: path,
+            description: Movement Reference Number of the customs declaration holding the reservation.,
             required: true,
             schema: {
               type: string
@@ -398,6 +489,7 @@
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -406,6 +498,16 @@
         responses: {
           204: {
             description: No Content
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
           },
           403: {
             description: Forbidden,
@@ -465,18 +567,24 @@
         tags: [
           CustomsChedQuantityEndpoints
         ],
+        summary: Force a customs write-off against a declaration.,
+        description: Creates a customs write-off against the declaration's MRN for the supplied consignment items, without waiting for the declaration to clear. Returns 200 when TRACES executes it, or the upstream failure as a problem response.,
+        operationId: ForceWriteOff,
         parameters: [
           {
             name: chedId,
             in: path,
+            description: CHED reference the write-off applies to.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: mrn,
             in: path,
+            description: Movement Reference Number of the customs declaration.,
             required: true,
             schema: {
               type: string
@@ -485,12 +593,14 @@
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
           }
         ],
         requestBody: {
+          description: Consignment items to write off.,
           content: {
             application/json: {
               schema: {
@@ -510,6 +620,16 @@
               application/problem+json: {
                 schema: {
                   $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -570,18 +690,24 @@
         tags: [
           CustomsChedQuantityEndpoints
         ],
+        summary: Amend an existing customs write-off.,
+        description: Replaces the quantities written off against the declaration's MRN with the supplied consignment items. Returns 200 when TRACES executes the amendment, or the upstream failure.,
+        operationId: AmendWriteOff,
         parameters: [
           {
             name: chedId,
             in: path,
+            description: CHED reference the write-off applies to.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: mrn,
             in: path,
+            description: Movement Reference Number of the customs declaration.,
             required: true,
             schema: {
               type: string
@@ -590,12 +716,14 @@
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
           }
         ],
         requestBody: {
+          description: Consignment items to write off.,
           content: {
             application/json: {
               schema: {
@@ -615,6 +743,16 @@
               application/problem+json: {
                 schema: {
                   $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -675,18 +813,24 @@
         tags: [
           CustomsChedQuantityEndpoints
         ],
+        summary: Delete a customs write-off.,
+        description: Removes the write-off held against the declaration's MRN. Returns 200 when TRACES executes the deletion, or the upstream failure.,
+        operationId: DeleteWriteOff,
         parameters: [
           {
             name: chedId,
             in: path,
+            description: CHED reference the write-off applies to.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: mrn,
             in: path,
+            description: Movement Reference Number of the customs declaration.,
             required: true,
             schema: {
               type: string
@@ -695,12 +839,14 @@
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
           }
         ],
         requestBody: {
+          description: Consignment items identifying the write-off to delete.,
           content: {
             application/json: {
               schema: {
@@ -720,6 +866,16 @@
               application/problem+json: {
                 schema: {
                   $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -782,18 +938,24 @@
         tags: [
           CustomsChedQuantityEndpoints
         ],
+        summary: Release a CHED reservation.,
+        description: Releases the quantities reserved against the declaration's MRN. If successful, returns a 200, if not then it will respond with the TRACES error code.,
+        operationId: ReleaseReservation,
         parameters: [
           {
             name: chedId,
             in: path,
+            description: CHED reference whose reservation is released.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: mrn,
             in: path,
+            description: Movement Reference Number of the customs declaration holding the reservation.,
             required: true,
             schema: {
               type: string
@@ -802,6 +964,7 @@
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -810,6 +973,16 @@
         responses: {
           200: {
             description: OK
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
           },
           403: {
             description: Forbidden,
@@ -869,18 +1042,24 @@
         tags: [
           DocomEndpoints
         ],
+        summary: Fetch a single DOCOM certificate by its identifier.,
+        description: Returns the full DOCOM profile: consignment, parties and supporting documents.,
+        operationId: GetDocom,
         parameters: [
           {
             name: id,
             in: path,
+            description: Certificate reference of the DOCOM to fetch.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -893,6 +1072,16 @@
               application/vnd.defra.trade.docom.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDDOCOMProfile
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -945,18 +1134,24 @@
         tags: [
           IntraEndpoints
         ],
+        summary: Fetch a single INTRA certificate by its identifier.,
+        description: Returns the full INTRA profile: consignment, parties, classification and notes.,
+        operationId: GetIntra,
         parameters: [
           {
             name: id,
             in: path,
+            description: Certificate reference of the INTRA to fetch.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: CHEDA.GB.2024.1020304
           },
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -969,6 +1164,16 @@
               application/vnd.defra.trade.intra.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDINTRAProfile
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -1021,58 +1226,60 @@
         tags: [
           IntraEndpoints
         ],
+        summary: Search INTRA certificates updated in a time window.,
+        description: Returns a paged summary of INTRA certificates updated between updatedFrom and updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates whether there are more pages to follow.,
+        operationId: FindIntras,
         parameters: [
           {
             name: pageSize,
             in: query,
-            description: The number of records to return,
+            description: Number of summary records to return per page, between 10 and 200.,
             schema: {
               maximum: 200,
               minimum: 10,
               type: integer,
-              description: The number of records to return,
-              format: int32
+              format: int32,
+              default: 10
             }
           },
           {
             name: offset,
             in: query,
-            description: Number of records to offset,
+            description: Number of records to skip before this page.,
             schema: {
               maximum: 9990,
               minimum: 0,
               type: integer,
-              description: Number of records to offset,
-              format: int32
+              format: int32,
+              default: 0
             }
           },
           {
             name: updatedFrom,
             in: query,
-            description: Start of the range,
+            description: Inclusive start of the update window, as a UTC timestamp.,
             schema: {
               type: string,
-              description: Start of the range,
               format: date-time
             }
           },
           {
             name: updatedBefore,
             in: query,
-            description: End of the range,
+            description: Exclusive end of the update window, as a UTC timestamp.,
             schema: {
               type: string,
-              description: End of the range,
               format: date-time
             }
           },
           {
             name: Accept-Language,
             in: header,
-            description: End of the range,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string,
-              description: End of the range
+              description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en.,
+              default: en
             }
           }
         ],
@@ -1083,6 +1290,26 @@
               application/vnd.defra.trade.intra-list.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDINTRASummaryProfile
+                }
+              }
+            }
+          },
+          400: {
+            description: Bad Request,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -1125,10 +1352,14 @@
         tags: [
           ReferenceDataEndpoints
         ],
+        summary: List classification sections.,
+        description: Returns every classification section with its groups and the sections each group holds.,
+        operationId: GetClassificationSections,
         parameters: [
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -1141,6 +1372,16 @@
               application/vnd.defra.trade.classificationsectionlist.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDProfileClassificationSectionListResponse
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -1183,18 +1424,24 @@
         tags: [
           ReferenceDataEndpoints
         ],
+        summary: Fetch a classification tree.,
+        description: Returns the full node tree for one classification tree identifier.,
+        operationId: GetClassificationTree,
         parameters: [
           {
             name: treeId,
             in: path,
+            description: Identifier of the classification tree to fetch.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: intra_trade
           },
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -1207,6 +1454,16 @@
               application/vnd.defra.trade.classificationtree.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeResponse
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -1249,26 +1506,34 @@
         tags: [
           ReferenceDataEndpoints
         ],
+        summary: Fetch a node of a classification tree.,
+        description: Returns one node's detail within the tree identified by treeId: attributes, legislation references and child nodes.,
+        operationId: GetClassificationTreeNodeDetail,
         parameters: [
           {
             name: treeId,
             in: path,
+            description: Identifier of the classification tree the node belongs to.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: intra_trade
           },
           {
             name: nodeId,
             in: path,
+            description: Node path of the node to fetch, as returned by the tree response.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: R_N-10000_N-10065_L-10121_L-10301_C-11978
           },
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -1281,6 +1546,16 @@
               application/vnd.defra.trade.classificationtreenodedetail.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeNodeDetailResponse
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -1323,18 +1598,24 @@
         tags: [
           ReferenceDataEndpoints
         ],
+        summary: List reference metadata of one type.,
+        description: Returns the metadata entries of the requested type, such as the qualifier and measurement lists used when composing certificate data.,
+        operationId: GetMetadata,
         parameters: [
           {
             name: metadataType,
             in: path,
+            description: Type of reference metadata list to return.,
             required: true,
             schema: {
               type: string
-            }
+            },
+            example: ACCOMPANYING_DOCUMENT_TYPE
           },
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
@@ -1347,6 +1628,16 @@
               application/vnd.defra.trade.metadatalist.v1+json: {
                 schema: {
                   $ref: #/components/schemas/DefraUNVTDProfileMetadataListResponse
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
                 }
               }
             }
@@ -1601,16 +1892,14 @@
             items: {
               $ref: #/components/schemas/AllocatedCommodityQuantity
             },
-            description: Quantities this declaration holds against the CHED but has not yet consumed.,
-            nullable: true
+            description: Quantities this declaration holds against the CHED but has not yet consumed.
           },
           consumed: {
             type: array,
             items: {
               $ref: #/components/schemas/AllocatedCommodityQuantity
             },
-            description: Quantities this declaration has written off against the CHED.,
-            nullable: true
+            description: Quantities this declaration has written off against the CHED.
           }
         },
         additionalProperties: false
@@ -1626,8 +1915,7 @@
             items: {
               $ref: #/components/schemas/AvailableCommodityQuantity
             },
-            description: Quantities not yet reserved or consumed by any declaration.,
-            nullable: true
+            description: Quantities not yet reserved or consumed by any declaration.
           },
           allocations: {
             $ref: #/components/schemas/QuantityAllocations
@@ -1643,15 +1931,13 @@
         type: object,
         properties: {
           taricDocument: {
-            type: string,
-            nullable: true
+            type: string
           },
           consignmentItems: {
             type: array,
             items: {
               $ref: #/components/schemas/CustomsConsignmentItem
-            },
-            nullable: true
+            }
           }
         },
         additionalProperties: false
@@ -1683,8 +1969,7 @@
         type: object,
         properties: {
           classCode: {
-            type: string,
-            nullable: true
+            type: string
           },
           chapter: {
             type: string,
@@ -1694,8 +1979,7 @@
             type: boolean
           },
           description: {
-            type: string,
-            nullable: true
+            type: string
           },
           active: {
             type: boolean,
@@ -1705,8 +1989,7 @@
             type: array,
             items: {
               type: string
-            },
-            nullable: true
+            }
           },
           operatorActivities: {
             type: array,
@@ -1727,19 +2010,16 @@
         type: object,
         properties: {
           id: {
-            type: string,
-            nullable: true
+            type: string
           },
           description: {
-            type: string,
-            nullable: true
+            type: string
           },
           sections: {
             type: array,
             items: {
               $ref: #/components/schemas/ClassificationSection
-            },
-            nullable: true
+            }
           }
         },
         additionalProperties: false
@@ -1755,20 +2035,16 @@
         type: object,
         properties: {
           nodeId: {
-            type: string,
-            nullable: true
+            type: string
           },
           path: {
-            type: string,
-            nullable: true
+            type: string
           },
           label: {
-            type: string,
-            nullable: true
+            type: string
           },
           nodeType: {
-            type: string,
-            nullable: true
+            type: string
           },
           certificate: {
             $ref: #/components/schemas/CertificateModelReference
@@ -1816,12 +2092,11 @@
         type: object,
         properties: {
           value: {
-            type: string,
-            nullable: true
+            type: string
           },
           urlId: {
             type: string,
-            description: Codelist URI. EU TRACES: https://traces-codelists.ec.europa.eu/{listId}. Defra: https://codelists.tbc.defra.gov.uk/...,
+            description: Codelist URI. EU TRACES codelists use https://traces-codelists.ec.europa.eu/{listId}; Defra-owned codelists use a Defra codelist URI defined per codelist.,
             nullable: true
           },
           name: {
@@ -2019,8 +2294,7 @@
             format: int32
           },
           classCode: {
-            type: string,
-            nullable: true
+            type: string
           },
           netWeightQuantity: {
             type: number,
@@ -2053,8 +2327,7 @@
           },
           value: {
             type: string,
-            description: The declaration reference itself.,
-            nullable: true
+            description: The declaration reference itself.
           }
         },
         additionalProperties: false
@@ -2082,15 +2355,13 @@
             enum: [
               defra/certificate-internal/1
             ],
-            type: string,
-            nullable: true
+            type: string
           },
           $type: {
             enum: [
               ched
             ],
-            type: string,
-            nullable: true
+            type: string
           },
           exchangedDocument: {
             $ref: #/components/schemas/ExchangedDocument
@@ -2122,8 +2393,7 @@
             type: array,
             items: {
               $ref: #/components/schemas/DefraUNVTDCHEDSummaryProfileItem
-            },
-            nullable: true
+            }
           },
           offset: {
             type: integer,
@@ -2149,12 +2419,10 @@
         type: object,
         properties: {
           id: {
-            type: string,
-            nullable: true
+            type: string
           },
           origin: {
-            type: string,
-            nullable: true
+            type: string
           },
           created: {
             type: string,
@@ -2178,15 +2446,13 @@
             enum: [
               defra/certificate-internal/1
             ],
-            type: string,
-            nullable: true
+            type: string
           },
           $type: {
             enum: [
               docom
             ],
-            type: string,
-            nullable: true
+            type: string
           },
           exchangedDocument: {
             $ref: #/components/schemas/ExchangedDocument
@@ -2224,15 +2490,13 @@
             enum: [
               defra/certificate-internal/1
             ],
-            type: string,
-            nullable: true
+            type: string
           },
           $type: {
             enum: [
               intra
             ],
-            type: string,
-            nullable: true
+            type: string
           },
           exchangedDocument: {
             $ref: #/components/schemas/ExchangedDocument
@@ -2261,8 +2525,7 @@
             type: array,
             items: {
               $ref: #/components/schemas/DefraUNVTDINTRASummaryProfileItem
-            },
-            nullable: true
+            }
           },
           offset: {
             type: integer,
@@ -2288,12 +2551,10 @@
         type: object,
         properties: {
           id: {
-            type: string,
-            nullable: true
+            type: string
           },
           origin: {
-            type: string,
-            nullable: true
+            type: string
           },
           created: {
             type: string,
@@ -2491,8 +2752,7 @@
         type: object,
         properties: {
           key: {
-            type: string,
-            nullable: true
+            type: string
           },
           description: {
             type: string,
@@ -2516,12 +2776,10 @@
         type: object,
         properties: {
           documentType: {
-            type: string,
-            nullable: true
+            type: string
           },
           linkType: {
-            type: string,
-            nullable: true
+            type: string
           }
         },
         additionalProperties: false
@@ -2538,8 +2796,7 @@
             nullable: true
           },
           identifier: {
-            type: string,
-            nullable: true
+            type: string
           },
           traderAssignedId: {
             type: string,
@@ -2667,8 +2924,7 @@
               items: {
                 type: string
               }
-            },
-            nullable: true
+            }
           }
         }
       },
@@ -2680,8 +2936,7 @@
               Note
             ],
             type: string,
-            description: JSON-LD @type for unece:Note when using unece-context-D23B.jsonld (type aliases to @type).,
-            nullable: true
+            description: JSON-LD @type for unece:Note when using unece-context-D23B.jsonld (type aliases to @type).
           },
           identifier: {
             type: string,
@@ -2754,8 +3009,7 @@
         type: object,
         properties: {
           key: {
-            type: string,
-            nullable: true
+            type: string
           },
           description: {
             type: string,
@@ -2973,8 +3227,7 @@
         type: object,
         properties: {
           value: {
-            type: string,
-            nullable: true
+            type: string
           },
           mappedValue: {
             type: string,
@@ -2998,8 +3251,7 @@
         type: object,
         properties: {
           key: {
-            type: string,
-            nullable: true
+            type: string
           },
           description: {
             type: string,
@@ -3062,16 +3314,14 @@
             items: {
               $ref: #/components/schemas/AllocatedCommodityQuantity
             },
-            description: Quantities held for a declaration but not yet written off.,
-            nullable: true
+            description: Quantities held for a declaration but not yet written off.
           },
           consumed: {
             type: array,
             items: {
               $ref: #/components/schemas/AllocatedCommodityQuantity
             },
-            description: Quantities written off against a declaration when goods were cleared.,
-            nullable: true
+            description: Quantities written off against a declaration when goods were cleared.
           }
         },
         additionalProperties: false
@@ -3214,8 +3464,7 @@
             nullable: true
           },
           name: {
-            type: string,
-            nullable: true
+            type: string
           },
           languageId: {
             type: string,
@@ -3280,8 +3529,7 @@
         type: object,
         properties: {
           identifier: {
-            type: string,
-            nullable: true
+            type: string
           },
           urlId: {
             type: string,
@@ -3301,8 +3549,7 @@
             enum: [
               106
             ],
-            type: string,
-            nullable: true
+            type: string
           }
         },
         additionalProperties: false
@@ -3613,23 +3860,43 @@
         ],
         type: string
       }
+    },
+    securitySchemes: {
+      Bearer: {
+        type: http,
+        description: Cognito or STS-issued JWT. Send as: Authorization: Bearer <token>,
+        scheme: bearer,
+        bearerFormat: JWT
+      }
     }
   },
+  security: [
+    {}
+  ],
   tags: [
     {
-      name: ChedEndpoints
+      name: ChedEndpoints,
+      description: CHED certificates. Fetch a single certificate by its identifier, or search by update window.
     },
     {
-      name: CustomsChedQuantityEndpoints
+      name: CustomsChedQuantityEndpoints,
+      description: Customs quantity management for a CHED: the quantity position available, the reservations held against declarations, and manual write-offs.
     },
     {
-      name: DocomEndpoints
+      name: DocomEndpoints,
+      description: DOCOM certificates. Fetch a single certificate by its identifier.
     },
     {
-      name: IntraEndpoints
+      name: IntraEndpoints,
+      description: INTRA certificates. Fetch a single certificate by its identifier, or search by update window.
     },
     {
-      name: ReferenceDataEndpoints
+      name: ReferenceDataEndpoints,
+      description: Reference data: classification sections, classification trees and their nodes, and metadata lists.
     }
-  ]
+  ],
+  externalDocs: {
+    description: Source, README and the API decision records.,
+    url: https://github.com/DEFRA/trade-gateway
+  }
 }
