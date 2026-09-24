@@ -4,6 +4,7 @@ using Api.Models;
 using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
+using TracesNT.WebServices;
 using Trade.Gateway.Api.Contract.Certificate;
 
 namespace Api.Endpoints;
@@ -19,7 +20,7 @@ public static class ChedEndpoints
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
-        app.MapGet("certificates/cheds/{id}/attachments/{attachmentId}/{filename}", GetAttachment)
+        app.MapGet("certificates/cheds/{id}/attachments/{attachmentId}", GetAttachment)
             .Produces<Stream>(StatusCodes.Status200OK, "application/octet-stream")
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -56,10 +57,25 @@ public static class ChedEndpoints
     private static async Task<IResult> GetAttachment(
         string id,
         long attachmentId,
-        string filename,
-        IChedCertificateService chedCertificateService
+        IChedCertificateService chedCertificateService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
+        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
+        var ched = await chedCertificateService.GetChedCertificate(id, languageCode);
+        if (ched?.SPSCertificate == null)
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                detail: $"Ched certificate '{id}' was not found."
+            );
+
+        var filename = FindAttachmentFileName(ched.SPSCertificate, attachmentId);
+        if (filename == null)
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                detail: $"Ched certificate attachment '{id} - {attachmentId}' was not found."
+            );
+
         var attachment = await chedCertificateService.GetChedCertificateAttachment(id, attachmentId, filename);
         if (attachment?.Attachment == null)
             return Results.Problem(
@@ -68,6 +84,23 @@ public static class ChedEndpoints
             );
 
         return Results.Bytes(attachment.Attachment, attachment.contentType, attachment.fileName);
+    }
+
+    // TracesNT identifies attachments by a uri of the form "uri:documentid:{documentId}", with the
+    // filename alongside it on the same BinaryObjectType.
+    private static string? FindAttachmentFileName(SPSCertificateType certificate, long attachmentId)
+    {
+        var tradeLineItemDocuments =
+            certificate
+                .SPSConsignment?.IncludedSPSConsignmentItem?.SelectMany(item => item.IncludedSPSTradeLineItem ?? [])
+                .SelectMany(lineItem => lineItem.ReferenceSPSReferencedDocument ?? [])
+            ?? [];
+
+        return (certificate.SPSExchangedDocument?.ReferenceSPSReferencedDocument ?? [])
+            .Concat(tradeLineItemDocuments)
+            .SelectMany(document => document.AttachmentBinaryObject ?? [])
+            .FirstOrDefault(binaryObject => binaryObject.uri == $"uri:documentid:{attachmentId}")
+            ?.filename;
     }
 
     private static async Task<IResult> Find(

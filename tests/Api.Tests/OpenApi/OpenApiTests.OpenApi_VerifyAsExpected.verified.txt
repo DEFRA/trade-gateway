@@ -81,7 +81,7 @@
         }
       }
     },
-    /certificates/cheds/{id}/attachments/{attachmentId}/{filename}: {
+    /certificates/cheds/{id}/attachments/{attachmentId}: {
       get: {
         tags: [
           ChedEndpoints
@@ -105,9 +105,8 @@
             }
           },
           {
-            name: filename,
-            in: path,
-            required: true,
+            name: Accept-Language,
+            in: header,
             schema: {
               type: string
             }

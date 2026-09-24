@@ -116,7 +116,6 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         var response = await client.GetChedCertificationAttachment(
             "CHEDA.XI.2026.0000063",
             1001,
-            "health-certificate.pdf",
             TestContext.Current.CancellationToken
         );
 

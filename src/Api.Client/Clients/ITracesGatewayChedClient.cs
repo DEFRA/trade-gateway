@@ -18,11 +18,10 @@ public interface ITracesGatewayChedClient
     [Get("/certificates/cheds/{id}")]
     Task<ApiResponse<DefraUNVTDCHEDProfile>> GetChedCertification(string id, CancellationToken cancellationToken);
 
-    [Get("/certificates/cheds/{id}/attachments/{attachmentId}/{filename}")]
+    [Get("/certificates/cheds/{id}/attachments/{attachmentId}")]
     Task<HttpResponseMessage> GetChedCertificationAttachment(
         string id,
         long attachmentId,
-        string filename,
         CancellationToken cancellationToken
     );
 

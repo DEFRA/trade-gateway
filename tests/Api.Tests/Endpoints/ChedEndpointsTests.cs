@@ -23,15 +23,38 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
         + $" and *[local-name() = 'DocumentId' and text() = '{documentId}']"
         + $" and *[local-name() = 'FileName' and text() = '{fileName}']]";
 
-    [Fact]
-    public async Task Get_ReturnsMappedDefraUNVTDCHEDProfile()
+    private static string ChedRequestXPath(string chedId) =>
+        $"/*[local-name() = 'GetChedCertificateRequest']/*[local-name() = 'ID' and text() = '{chedId}']";
+
+    private const string ChedSampleResource = "Api.Tests.Samples.CHED.GetChedResponse_CHEDA.XI.2026.0000063.xml";
+
+    // The last element of the sample's exchanged-document ReferenceSPSReferencedDocument, which
+    // AttachmentBinaryObject must follow to keep the schema's element order.
+    private const string SampleSupportingDocumentId = """<ns4:ID schemeAgencyID="GB">455645665566</ns4:ID>""";
+
+    private const string TradeLineItemEnd = "</ns4:IncludedSPSTradeLineItem>";
+
+    private static string AttachmentBinaryObject(long documentId, string fileName) =>
+        $"""<ns4:AttachmentBinaryObject uri="uri:documentid:{documentId}" filename="{fileName}" />""";
+
+    /// <summary>
+    /// Stubs getChedCertificate for <paramref name="chedId"/> with the sample CHED, adding the given
+    /// AttachmentBinaryObject elements to the exchanged document and/or every trade line item.
+    /// </summary>
+    private void StubChedWithAttachments(
+        string chedId,
+        string exchangedDocumentAttachments = "",
+        string tradeLineItemAttachments = ""
+    )
     {
+        var tradeLineItemDocument =
+            tradeLineItemAttachments.Length == 0
+                ? ""
+                : $"<ns4:ReferenceSPSReferencedDocument>{tradeLineItemAttachments}</ns4:ReferenceSPSReferencedDocument>";
+
         factory
             .WireMockServer.Given(
-                SoapUtilities.CreateSoapRequestInterceptor(
-                    GetChedCertificateSoapAction,
-                    "/*[local-name() = 'GetChedCertificateRequest']/*[local-name() = 'ID' and text()]"
-                )
+                SoapUtilities.CreateSoapRequestInterceptor(GetChedCertificateSoapAction, ChedRequestXPath(chedId))
             )
             .RespondWith(
                 Response
@@ -39,8 +62,37 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     .WithCallback(async _ =>
                         await SoapUtilities.CreateResponseFromResource(
                             HttpStatusCode.OK,
-                            "Api.Tests.Samples.CHED.GetChedResponse_CHEDA.XI.2026.0000063.xml"
+                            ChedSampleResource,
+                            new TokenSubstitution
+                            {
+                                Token = SampleSupportingDocumentId,
+                                Substitution = SampleSupportingDocumentId + exchangedDocumentAttachments,
+                            },
+                            new TokenSubstitution
+                            {
+                                Token = TradeLineItemEnd,
+                                Substitution = tradeLineItemDocument + TradeLineItemEnd,
+                            }
                         )
+                    )
+            );
+    }
+
+    [Fact]
+    public async Task Get_ReturnsMappedDefraUNVTDCHEDProfile()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    GetChedCertificateSoapAction,
+                    ChedRequestXPath("CHEDA.XI.2026.0000063")
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(HttpStatusCode.OK, ChedSampleResource)
                     )
             );
 
@@ -207,13 +259,117 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
     [Fact]
     public async Task GetAttachment_ReturnsTheFileWithItsContentTypeAndFileName()
     {
+        const string chedId = "CHEDA.XI.2026.0001001";
         var fileBytes = "%PDF-1.4 attachment"u8.ToArray();
 
+        StubChedWithAttachments(
+            chedId,
+            exchangedDocumentAttachments: AttachmentBinaryObject(1000, "other.pdf")
+                + AttachmentBinaryObject(1001, "health-certificate.pdf")
+        );
+        StubAttachment(chedId, 1001, "health-certificate.pdf", fileBytes);
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetChedCertificationAttachment(chedId, 1001, TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal("application/pdf", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("health-certificate.pdf", response.Content.Headers.ContentDisposition?.FileName);
+        Assert.Equal(fileBytes, await response.Content.ReadAsByteArrayAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task GetAttachment_WhenAttachmentIsOnATradeLineItem_RequestsItByItsFileName()
+    {
+        const string chedId = "CHEDA.XI.2026.0001002";
+        var fileBytes = "%PDF-1.4 line item attachment"u8.ToArray();
+
+        StubChedWithAttachments(chedId, tradeLineItemAttachments: AttachmentBinaryObject(2002, "lab-report.pdf"));
+        StubAttachment(chedId, 2002, "lab-report.pdf", fileBytes);
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetChedCertificationAttachment(chedId, 2002, TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(fileBytes, await response.Content.ReadAsByteArrayAsync(TestContext.Current.CancellationToken));
+    }
+
+    [Fact]
+    public async Task GetAttachment_WhenCertificateHasNoMatchingAttachment_ReturnsNotFound()
+    {
+        const string chedId = "CHEDA.XI.2026.0001003";
+
+        StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(3000, "other.pdf"));
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetChedCertificationAttachment(chedId, 3001, TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+        Assert.Equal($"Ched certificate attachment '{chedId} - 3001' was not found.", problem?.Detail);
+        Assert.DoesNotContain(
+            factory.WireMockServer.LogEntries,
+            entry =>
+                entry.RequestMessage?.Body is { } body
+                && body.Contains("GetCertificateAttachmentRequest")
+                && body.Contains(chedId)
+        );
+    }
+
+    [Fact]
+    public async Task GetAttachment_WhenCertificateIsNotFound_ReturnsNotFound()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    GetChedCertificateSoapAction,
+                    ChedRequestXPath("ATTACHMENT-CHED-MISSING")
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(_ =>
+                        SoapUtilities.StubResponseMessage(
+                            HttpStatusCode.InternalServerError,
+                            """
+                            <?xml version="1.0" encoding="utf-8"?>
+                            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+                              <s:Body>
+                                <s:Fault>
+                                  <faultcode>s:Client</faultcode>
+                                  <faultstring>Certificate not found</faultstring>
+                                  <detail>
+                                    <ChedCertificateNotFoundException xmlns="http://ec.europa.eu/tracesnt/certificate/ched/v2">
+                                      <CertificateIdentifier>ATTACHMENT-CHED-MISSING</CertificateIdentifier>
+                                    </ChedCertificateNotFoundException>
+                                  </detail>
+                                </s:Fault>
+                              </s:Body>
+                            </s:Envelope>
+                            """
+                        )
+                    )
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetChedCertificationAttachment(
+            "ATTACHMENT-CHED-MISSING",
+            1,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+        Assert.Equal("Ched certificate 'ATTACHMENT-CHED-MISSING' was not found.", problem?.Detail);
+    }
+
+    private void StubAttachment(string chedId, long documentId, string fileName, byte[] fileBytes) =>
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
-                    AttachmentRequestXPath("CHEDA.XI.2026.0000063", 1001, "health-certificate.pdf")
+                    AttachmentRequestXPath(chedId, documentId, fileName)
                 )
             )
             .RespondWith(
@@ -229,7 +385,7 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                                 <GetCertificateAttachmentResponse
                                     xmlns="http://ec.europa.eu/tracesnt/certificate/attachments/v1"
                                     xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
-                                    fileName="health-certificate.pdf"
+                                    fileName="{fileName}"
                                     xmime:contentType="application/pdf">
                                   <Attachment>{Convert.ToBase64String(fileBytes)}</Attachment>
                                 </GetCertificateAttachmentResponse>
@@ -240,28 +396,19 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                     )
             );
 
-        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
-        var response = await client.GetChedCertificationAttachment(
-            "CHEDA.XI.2026.0000063",
-            1001,
-            "health-certificate.pdf",
-            TestContext.Current.CancellationToken
-        );
-
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal("application/pdf", response.Content.Headers.ContentType?.MediaType);
-        Assert.Equal("health-certificate.pdf", response.Content.Headers.ContentDisposition?.FileName);
-        Assert.Equal(fileBytes, await response.Content.ReadAsByteArrayAsync(TestContext.Current.CancellationToken));
-    }
-
     [Fact]
     public async Task GetAttachment_WhenTracesReturnsInvalidSoapFault_ReturnsInternalServerError()
     {
+        StubChedWithAttachments(
+            "ATTACHMENT-BADSOAP",
+            exchangedDocumentAttachments: AttachmentBinaryObject(1, "file.pdf")
+        );
+
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
-                    AttachmentRequestXPath("BADSOAP")
+                    AttachmentRequestXPath("ATTACHMENT-BADSOAP")
                 )
             )
             .RespondWith(
@@ -287,9 +434,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
         var response = await client.GetChedCertificationAttachment(
-            "BADSOAP",
+            "ATTACHMENT-BADSOAP",
             1,
-            "file.pdf",
             TestContext.Current.CancellationToken
         );
 
@@ -300,11 +446,16 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
     [Fact]
     public async Task GetAttachment_WhenTracesCommunicationFails_ReturnsBadGateway()
     {
+        StubChedWithAttachments(
+            "ATTACHMENT-COMMFAIL",
+            exchangedDocumentAttachments: AttachmentBinaryObject(1, "file.pdf")
+        );
+
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
-                    AttachmentRequestXPath("COMMFAIL")
+                    AttachmentRequestXPath("ATTACHMENT-COMMFAIL")
                 )
             )
             .RespondWith(
@@ -317,9 +468,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
         var response = await client.GetChedCertificationAttachment(
-            "COMMFAIL",
+            "ATTACHMENT-COMMFAIL",
             1,
-            "file.pdf",
             TestContext.Current.CancellationToken
         );
 
@@ -330,11 +480,16 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
     [Fact]
     public async Task GetAttachment_WhenTracesReturnsNotFoundFault_ReturnsNotFound()
     {
+        StubChedWithAttachments(
+            "ATTACHMENT-MISSING",
+            exchangedDocumentAttachments: AttachmentBinaryObject(42, "file.pdf")
+        );
+
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
-                    AttachmentRequestXPath("MISSING")
+                    AttachmentRequestXPath("ATTACHMENT-MISSING")
                 )
             )
             .RespondWith(
@@ -363,9 +518,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
         var response = await client.GetChedCertificationAttachment(
-            "MISSING",
+            "ATTACHMENT-MISSING",
             42,
-            "file.pdf",
             TestContext.Current.CancellationToken
         );
 
@@ -377,11 +531,16 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
     [Fact]
     public async Task GetAttachment_WhenTracesReturnsPermissionDeniedFault_ReturnsForbidden()
     {
+        StubChedWithAttachments(
+            "ATTACHMENT-FORBIDDEN",
+            exchangedDocumentAttachments: AttachmentBinaryObject(1, "file.pdf")
+        );
+
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
-                    AttachmentRequestXPath("FORBIDDEN")
+                    AttachmentRequestXPath("ATTACHMENT-FORBIDDEN")
                 )
             )
             .RespondWith(
@@ -410,9 +569,8 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
         var response = await client.GetChedCertificationAttachment(
-            "FORBIDDEN",
+            "ATTACHMENT-FORBIDDEN",
             1,
-            "file.pdf",
             TestContext.Current.CancellationToken
         );
 
