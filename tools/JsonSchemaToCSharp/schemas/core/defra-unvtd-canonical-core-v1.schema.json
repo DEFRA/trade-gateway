@@ -12,7 +12,7 @@
         "urlId": {
           "type": "string",
           "format": "uri",
-          "description": "Codelist URI. EU TRACES: https://traces-codelists.ec.europa.eu/{listId}. Defra: https://codelists.tbc.defra.gov.uk/..."
+          "description": "Codelist URI. EU TRACES codelists use https://traces-codelists.ec.europa.eu/{listId}; Defra-owned codelists use a Defra codelist URI defined per codelist."
         },
         "name": {
           "type": "string",

@@ -11,7 +11,7 @@ public partial record CodedValue
     public required string Value { get; init; }
 
     [JsonPropertyName("urlId")]
-    [Description("Codelist URI. EU TRACES: https://traces-codelists.ec.europa.eu/{listId}. Defra: https://codelists.tbc.defra.gov.uk/...")]
+    [Description("Codelist URI. EU TRACES codelists use https://traces-codelists.ec.europa.eu/{listId}; Defra-owned codelists use a Defra codelist URI defined per codelist.")]
     public string? UrlId { get; init; }
 
     [JsonPropertyName("name")]
