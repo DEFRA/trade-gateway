@@ -14,6 +14,12 @@ public static class ChedEndpoints
     public static void UseChedEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("certificates/cheds/{id}", Get)
+            .WithName("GetChedCertificate")
+            .WithSummary("Get a CHED certificate")
+            .WithDescription(
+                "Retrieves the CHED certificate with the given reference from TRACES NT, mapped to the "
+                    + "DEFRA UN/CEFACT CHED profile. Text is localised using the Accept-Language header."
+            )
             .Produces<DefraUNVTDCHEDProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDProfile>())
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -21,6 +27,14 @@ public static class ChedEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet("certificates/cheds/{id}/attachments/{attachmentId}", GetAttachment)
+            .WithName("GetChedCertificateAttachment")
+            .WithSummary("Get a CHED certificate attachment")
+            .WithDescription(
+                "Downloads a supporting document attached to the CHED certificate. The attachment id is the "
+                    + "document id from the certificate's referenced document attachment "
+                    + "(uri:documentid:{attachmentId}); the file is returned with its original content type "
+                    + "and file name."
+            )
             .Produces<Stream>(StatusCodes.Status200OK, "application/octet-stream")
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -28,6 +42,12 @@ public static class ChedEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet("certificates/cheds", Find)
+            .WithName("FindChedCertificates")
+            .WithSummary("Find updated CHED certificates")
+            .WithDescription(
+                "Returns a page of summaries of CHED certificates updated between updatedFrom and "
+                    + "updatedBefore. Use offset and pageSize to page through the results."
+            )
             .Produces<DefraUNVTDCHEDSummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>())
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
