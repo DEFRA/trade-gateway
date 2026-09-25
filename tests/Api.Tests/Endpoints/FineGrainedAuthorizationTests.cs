@@ -109,6 +109,20 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
     }
 
     [Fact]
+    public async Task CustomsQuantityReader_cannot_read_ched_attachment()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");
+
+        var response = await client.GetChedCertificationAttachment(
+            "CHEDA.XI.2026.0000063",
+            1001,
+            TestContext.Current.CancellationToken
+        );
+
+        response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
+    }
+
+    [Fact]
     public async Task CustomsQuantityReader_cannot_write_reservation()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");

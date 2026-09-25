@@ -9,14 +9,9 @@
 namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/tracesnt/certificate/attachments/v1", IncludeInSchema = false)]
-    public enum ItemChoiceType1
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/tracesnt/certificate/attachments/v1")]
+    public partial class CertificateAttachmentNotFoundExceptionType
     {
-        /// <remarks/>
-        CertificateReference,
-        /// <remarks/>
-        ChedCertificateReference,
-        /// <remarks/>
-        CoiCertificateReference,
     }
 }
