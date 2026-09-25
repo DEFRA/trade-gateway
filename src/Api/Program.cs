@@ -63,7 +63,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
                     Url = new Uri("https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"),
 #pragma warning restore S1075
                 },
-                Contact = new OpenApiContact { Name = "Defra Trade", Email = "tbc@defra.gov.uk" },
+                Contact = new OpenApiContact { Name = "Nexus Team", Email = "#eudp-traces-integration-questions" },
             }
         );
         options.AddServer(

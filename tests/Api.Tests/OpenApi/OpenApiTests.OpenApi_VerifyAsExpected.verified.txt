@@ -4,8 +4,8 @@
     title: Trade Gateway,
     description: REST API for TRACES: read access to TRACES certificates (CHED, INTRA and DOCOMs) and customs quantity management for CHEDs.,
     contact: {
-      name: Defra Trade,
-      email: tbc@defra.gov.uk
+      name: Nexus Team,
+      email: #eudp-traces-integration-questions
     },
     license: {
       name: Open Government Licence v3.0,
