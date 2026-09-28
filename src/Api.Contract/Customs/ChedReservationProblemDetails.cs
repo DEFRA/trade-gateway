@@ -12,13 +12,32 @@ public sealed class ChedReservationProblemDetails
     public int? Status { get; init; }
 
     [JsonExtensionData]
-    public Dictionary<string, JsonElement>? Extensions { get; init; }
+    public Dictionary<string, object>? Extensions { get; init; }
 
-    public ReservationFailureReason? Reason =>
-        Extensions is not null
-        && Extensions.TryGetValue("reason", out var value)
-        && value.ValueKind == JsonValueKind.String
-        && Enum.TryParse<ReservationFailureReason>(value.GetString(), out var reason)
-            ? reason
-            : null;
+    public ReservationFailureReason? Reason
+    {
+        get
+        {
+            if (Extensions is null || !Extensions.TryGetValue("reason", out var value))
+            {
+                return null;
+            }
+
+            var reasonString = value switch
+            {
+                JsonElement { ValueKind: JsonValueKind.String } element => element.GetString(),
+
+                string str => str,
+
+                _ => null,
+            };
+
+            if (Enum.TryParse<ReservationFailureReason>(reasonString, out var reason))
+            {
+                return reason;
+            }
+
+            return null;
+        }
+    }
 }
