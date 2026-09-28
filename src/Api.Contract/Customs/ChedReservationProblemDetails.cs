@@ -14,6 +14,11 @@ public sealed class ChedReservationProblemDetails
     [JsonExtensionData]
     public Dictionary<string, object>? Extensions { get; init; }
 
+    // Decoded from Extensions["reason"]. System.Text.Json still claims an ignored property's JSON
+    // name, so it is renamed off "reason" — otherwise a case-insensitive (web) reader swallows the
+    // member here and it never reaches Extensions.
+    [JsonIgnore]
+    [JsonPropertyName("$computedReason")]
     public ReservationFailureReason? Reason
     {
         get
