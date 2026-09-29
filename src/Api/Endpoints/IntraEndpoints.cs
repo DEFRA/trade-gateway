@@ -13,6 +13,12 @@ public static class IntraEndpoints
     public static void UseIntraEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("certificates/intras/{id}", Get)
+            .WithName("GetIntraCertificate")
+            .WithSummary("Get an INTRA certificate")
+            .WithDescription(
+                "Retrieves the EU INTRA trade certificate with the given reference from TRACES NT, mapped to "
+                    + "the DEFRA UN/CEFACT INTRA profile. Text is localised using the Accept-Language header."
+            )
             .Produces<DefraUNVTDINTRAProfile>(200, MediaTypeAttribute.For<DefraUNVTDINTRAProfile>())
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)
@@ -20,6 +26,12 @@ public static class IntraEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet("certificates/intras", Find)
+            .WithName("FindIntraCertificates")
+            .WithSummary("Find updated INTRA certificates")
+            .WithDescription(
+                "Returns a page of summaries of EU INTRA trade certificates updated between updatedFrom and "
+                    + "updatedBefore. Use offset and pageSize to page through the results."
+            )
             .Produces<DefraUNVTDINTRASummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDINTRASummaryProfile>())
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)

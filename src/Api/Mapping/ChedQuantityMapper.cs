@@ -153,12 +153,12 @@ internal static class ChedQuantityMapper
     /// The choice element is only an MRN when TracesNT said so. Both enums default to <c>LRN</c> at
     /// index 0, so a present value with no discriminator is read as the LRN it claims to be.
     /// </summary>
-    private static DeclarationReference? MapDeclarationReference(string? item, ItemChoiceType2 itemElementName)
+    private static DeclarationReference? MapDeclarationReference(string? item, ItemChoiceType3 itemElementName)
     {
         if (string.IsNullOrEmpty(item))
             return null;
 
-        var type = itemElementName == ItemChoiceType2.MRN ? DeclarationReferenceType.Mrn : DeclarationReferenceType.Lrn;
+        var type = itemElementName == ItemChoiceType3.MRN ? DeclarationReferenceType.Mrn : DeclarationReferenceType.Lrn;
 
         return new DeclarationReference { Type = type, Value = item };
     }

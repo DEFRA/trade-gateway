@@ -290,11 +290,11 @@ namespace TracesNT.Services
         private static CustomsDeclarationReferenceNumber4CoiChedR51InputType EmptyDeclarationReference() => new();
 
         /// <summary>
-        /// Sets the <c>MRN</c> discriminator explicitly: <see cref="ItemChoiceType1"/> defaults to
+        /// Sets the <c>MRN</c> discriminator explicitly: <see cref="ItemChoiceType2"/> defaults to
         /// <c>LRN</c>, which would reserve against a different declaration carrying the same reference.
         /// </summary>
         private static CustomsDeclarationReferenceNumber4CoiChedR51InputType DeclarationReferenceFor(string mrn) =>
-            new() { Item = mrn, ItemElementName = ItemChoiceType1.MRN };
+            new() { Item = mrn, ItemElementName = ItemChoiceType2.MRN };
 
         private static string ToIndication(QuantityManagementMode mode) =>
             mode switch

@@ -8,10 +8,11 @@
 //------------------------------------------------------------------------------
 namespace TracesNT.WebServices
 {
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(BusinessRulesValidationExceptionType))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CertificateAttachmentSubmitExceptionType))]
+    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CertificatePermissionDeniedExceptionType))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(InvalidParametersExceptionType))]
     [System.Xml.Serialization.XmlIncludeAttribute(typeof(PermissionDeniedExceptionType))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(BusinessRulesValidationExceptionType))]
-    [System.Xml.Serialization.XmlIncludeAttribute(typeof(CertificatePermissionDeniedExceptionType))]
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/error/v01")]

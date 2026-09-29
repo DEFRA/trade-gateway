@@ -22,6 +22,13 @@ public static class CustomsChedQuantityEndpoints
     public static void UseCustomsChedQuantityEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("customs/cheds/{chedId}/quantities", GetQuantities)
+            .WithName("GetChedQuantities")
+            .WithSummary("Get a CHED's quantity ledger")
+            .WithDescription(
+                "Returns the quantity management position of the CHED from TRACES NT: the quantities still "
+                    + "available, and those reserved and consumed by customs declarations. Read only; "
+                    + "nothing is reserved."
+            )
             .Produces<ChedQuantityLedger>(200, MediaTypeAttribute.For<ChedQuantityLedger>())
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -29,6 +36,13 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation", PutReservation)
+            .WithName("PutChedReservation")
+            .WithSummary("Reserve CHED quantities against a declaration")
+            .WithDescription(
+                "Reserves quantities of the CHED's consignment items against the customs declaration "
+                    + "identified by the MRN. Returns the quantities reserved and consumed for that "
+                    + "declaration, or 409 Conflict with the failure reason if TRACES NT refuses the reservation."
+            )
             .Validates<ChedReservationRequest>()
             .Produces<ChedDeclarationReservation>(200, MediaTypeAttribute.For<ChedDeclarationReservation>())
             .ProducesValidationProblem()
@@ -39,6 +53,12 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPost("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", ForceWriteOff)
+            .WithName("ForceWriteOffChedReservation")
+            .WithSummary("Force a write-off of a CHED reservation")
+            .WithDescription(
+                "Manually releases (force writes off) quantities of the CHED reserved against the customs "
+                    + "declaration identified by the MRN, for the given consignment items."
+            )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
@@ -49,6 +69,12 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", AmendWriteOff)
+            .WithName("AmendWriteOffChedReservation")
+            .WithSummary("Amend a forced write-off of a CHED reservation")
+            .WithDescription(
+                "Amends a previous manual release (forced write-off) of quantities of the CHED against the "
+                    + "customs declaration identified by the MRN, for the given consignment items."
+            )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
@@ -59,6 +85,12 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", DeleteWriteOff)
+            .WithName("DeleteWriteOffChedReservation")
+            .WithSummary("Delete a forced write-off of a CHED reservation")
+            .WithDescription(
+                "Deletes a previous manual release (forced write-off) of quantities of the CHED against the "
+                    + "customs declaration identified by the MRN, for the given consignment items."
+            )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
@@ -69,6 +101,13 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/release", Release)
+            .WithName("ReleaseChedReservation")
+            .WithSummary("Release a CHED reservation")
+            .WithDescription(
+                "Releases the quantities of the CHED reserved against the customs declaration identified by "
+                    + "the MRN. Returns 200 with no body on success; otherwise a problem describing the "
+                    + "TRACES NT quantity management outcome."
+            )
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -77,6 +116,13 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation", DeleteReservation)
+            .WithName("DeleteChedReservation")
+            .WithSummary("Delete a CHED reservation")
+            .WithDescription(
+                "Cancels the reservation of the CHED's quantities against the customs declaration identified "
+                    + "by the MRN. Returns 204 on success; otherwise a problem describing the TRACES NT "
+                    + "quantity management outcome."
+            )
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)

@@ -24,6 +24,7 @@ public class TracesNtCredentialsTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string CustomsPath = "/CustomsCertexChedServiceV06";
     private const string ChedPath = "/ChedCertificateServiceV2";
+    private const string AttachmentsPath = "/CertificateAttachmentsServiceV1";
 
     private static readonly XNamespace s_wsse =
         "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd";
@@ -63,6 +64,29 @@ public class TracesNtCredentialsTests(TradeGatewayWebApplicationFactory factory)
                     ISO2AlphaLanguageCodeContentType.en,
                     [],
                     new GetChedCertificateRequestType { ID = "CHEDA.GB.2026.0000001" }
+                )
+        );
+
+        token.Username.Should().Be("test-user");
+        token.DigestMatchesKey("test-auth-key").Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task AttachmentsClient_AuthenticatesAsTheDefaultAccount()
+    {
+        var token = await CaptureUsernameToken<CertificateAttachmentsPortClient>(
+            AttachmentsPath,
+            client =>
+                client.getCertificateAttachmentAsync(
+                    new SecurityHeaderType(),
+                    "irrelevant",
+                    new GetCertificateAttachmentRequestType
+                    {
+                        ItemElementName = ItemChoiceType1.ChedCertificateReference,
+                        Item = "CHEDA.GB.2026.0000001",
+                        DocumentId = 1,
+                        FileName = "file.pdf",
+                    }
                 )
         );
 
