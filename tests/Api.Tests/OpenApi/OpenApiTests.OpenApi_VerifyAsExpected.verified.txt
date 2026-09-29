@@ -1,4 +1,4 @@
-﻿{
+{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -365,7 +365,7 @@
           CustomsChedQuantityEndpoints
         ],
         summary: Reserve CHED quantities against a declaration,
-        description: Reserves quantities of the CHED's consignment items against the customs declaration identified by the MRN. Returns the quantities reserved and consumed for that declaration, or 409 Conflict with the failure reason if TRACES NT refuses the reservation.,
+        description: Reserves quantities of the CHED's consignment items against the customs declaration identified by the MRN. Returns the quantities reserved and consumed for that declaration, or 409 Conflict if TRACES NT refuses the reservation, whose `failureReason` is one of Unrecognised, CnCodesMismatch, InappropriateStatus, QuantitiesInsufficient, WriteOffExists, LineNumbersMismatch, MeasurementUnitMismatch or QuantitiesCannotBeValidated, and `failedItem` the goods item and document line refused.,
         operationId: PutChedReservation,
         parameters: [
           {

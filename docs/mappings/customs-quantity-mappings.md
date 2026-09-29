@@ -92,7 +92,7 @@ The filter matches `declarationReference.type == MRN`
 |---|---|
 | no `ChedCertificate` | **404** |
 | `ReservationResultSpecified` and `ReservationResult` true | **200** |
-| `ReservationResultSpecified` and `ReservationResult` false | **409** — `failureReason` carries the decoded `{code, description}`, `failedItem` the goods item and document line numbers |
+| `ReservationResultSpecified` and `ReservationResult` false | **409** — `failureReason` carries the decoded `ReservationFailureReason` enum value (the upstream code is never published), `failedItem` the goods item and document line numbers |
 | `ReservationResultSpecified` false | **502** |
 | reserved, but no `QuantityManagementSummary` | **502** |
 | reserved, but nothing matches the MRN | **502** |

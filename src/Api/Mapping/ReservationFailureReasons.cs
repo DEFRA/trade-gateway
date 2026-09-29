@@ -1,43 +1,40 @@
+using Trade.Gateway.Api.Contract.Customs;
+
 namespace Api.Mapping;
 
 /// <summary>
-/// Decodes the <c>ReservationFailureReason</c> that TracesNT returns alongside a negative
-/// <c>ReservationResult</c>.
+/// Decodes the <c>ReservationFailureReason</c> code that TracesNT returns alongside a negative
+/// <c>ReservationResult</c>. Only the decoded enum is published; the upstream value is free text on
+/// the wire, so it is never echoed (ADR-0002 §4).
 /// </summary>
 internal static class ReservationFailureReasons
 {
-    private const string Unrecognised = "Unrecognised reservation failure reason";
-
-    private static readonly Dictionary<string, string> Reasons = new()
+    private static readonly Dictionary<string, ReservationFailureReason> s_reasons = new()
     {
-        ["01"] = "Base for extract",
-        ["02"] = "PCA document used",
-        ["03"] = "CN codes mismatch",
-        ["04"] = "Inappropriate status",
-        ["05"] = "Quantities insufficient",
-        ["06"] = "Write-off for this MRN and PCA document ID exists",
-        ["07"] = "Line numbers mismatch",
-        ["08"] = "Country of destination mismatch",
-        ["09"] = "Licence holder mismatch",
-        ["10"] = "Measurement unit mismatch",
-        ["11"] = "Quantities cannot be validated",
+        ["01"] = ReservationFailureReason.BaseForExtract,
+        ["02"] = ReservationFailureReason.PcaDocumentUsed,
+        ["08"] = ReservationFailureReason.CountryOfDestinationMismatch,
+        ["09"] = ReservationFailureReason.LicenceHolderMismatch,
+        ["03"] = ReservationFailureReason.CnCodesMismatch,
+        ["04"] = ReservationFailureReason.InappropriateStatus,
+        ["05"] = ReservationFailureReason.QuantitiesInsufficient,
+        ["06"] = ReservationFailureReason.WriteOffExists,
+        ["07"] = ReservationFailureReason.LineNumbersMismatch,
+        ["10"] = ReservationFailureReason.MeasurementUnitMismatch,
+        ["11"] = ReservationFailureReason.QuantitiesCannotBeValidated,
     };
 
     /// <summary>
     /// The decoded reason, or <c>null</c> when there is none — the element arrives empty rather than
-    /// absent, so an empty value is not a reason.
+    /// absent, so an empty value is not a reason. Anything outside the table is
+    /// <see cref="ReservationFailureReason.Unrecognised"/>.
     /// </summary>
-    internal static ReservationFailureReason? Decode(string? reason)
+    internal static ReservationFailureReason Decode(string? reason)
     {
         var code = reason?.Trim();
 
-        if (string.IsNullOrEmpty(code))
-            return null;
-
-        return Reasons.TryGetValue(code, out var description)
-            ? new ReservationFailureReason(code, description)
-            : new ReservationFailureReason(null, Unrecognised);
+        return string.IsNullOrEmpty(code)
+            ? ReservationFailureReason.Unrecognised
+            : s_reasons.GetValueOrDefault(code, ReservationFailureReason.Unrecognised);
     }
 }
-
-internal readonly record struct ReservationFailureReason(string? Code, string Description);
