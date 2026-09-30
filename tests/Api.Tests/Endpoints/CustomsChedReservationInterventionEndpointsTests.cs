@@ -20,6 +20,13 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     private const string UnsuccessfulSample =
         "Api.Tests.Samples.CUSTOMS.ReservationInterventionResponse_Unsuccessful_{{OutcomeCode}}.xml";
 
+    private static class InterventionTypeSoapValues
+    {
+        public static string ForceWriteOff => "01";
+        public static string AmendWriteOff => "02";
+        public static string DeleteWriteOff => "03";
+    }
+
     private static ChedReservationInterventionRequest Request =>
         new()
         {
@@ -40,7 +47,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     [Fact]
     public async Task ForceWriteOff_ReservationInterventionSuccess()
     {
-        StubSample(Ched, SuccessSample);
+        StubSample(Ched, InterventionTypeSoapValues.ForceWriteOff, SuccessSample);
 
         var response = await ForceWriteOffAsync(Ched, Mrn, Request);
 
@@ -59,6 +66,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     {
         StubSample(
             UnsuccessfulChed,
+            InterventionTypeSoapValues.ForceWriteOff,
             UnsuccessfulSample,
             new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
         );
@@ -71,7 +79,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     [Fact]
     public async Task UpdateWriteOff_ReservationInterventionSuccess()
     {
-        StubSample(Ched, SuccessSample);
+        StubSample(Ched, InterventionTypeSoapValues.AmendWriteOff, SuccessSample);
 
         var response = await UpdateWriteOff(Ched, Mrn, Request);
 
@@ -90,6 +98,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     {
         StubSample(
             UnsuccessfulChed,
+            InterventionTypeSoapValues.AmendWriteOff,
             UnsuccessfulSample,
             new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
         );
@@ -102,7 +111,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     [Fact]
     public async Task DeleteWriteOff_ReservationInterventionSuccess()
     {
-        StubSample(Ched, SuccessSample);
+        StubSample(Ched, InterventionTypeSoapValues.DeleteWriteOff, SuccessSample);
 
         var response = await DeleteWriteOffAsync(Ched, Mrn, Request);
 
@@ -121,6 +130,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
     {
         StubSample(
             UnsuccessfulChed,
+            InterventionTypeSoapValues.DeleteWriteOff,
             UnsuccessfulSample,
             new TokenSubstitution { Token = "{{OutcomeCode}}", Substitution = outcomeCode }
         );
@@ -193,12 +203,17 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
         return await client.DeleteForceReleaseChed(chedId, mrn, request, TestContext.Current.CancellationToken);
     }
 
-    private void StubSample(string chedId, string resourceName, params TokenSubstitution[] resourceSubstitutions) =>
+    private void StubSample(
+        string chedId,
+        string interventionType,
+        string resourceName,
+        params TokenSubstitution[] resourceSubstitutions
+    ) =>
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
                     ProcessedChedSoapAction,
-                    $"/*[local-name() = 'ChedInterventionRequest']/*[local-name() = 'ChedCertificateId' and text() = '{chedId}']"
+                    $"/*[local-name() = 'ChedInterventionRequest'][*[local-name() = 'ChedCertificateId' and text() = '{chedId}'] and *[local-name() = 'InterventionType' and text() ='{interventionType}']]"
                 )
             )
             .RespondWith(
