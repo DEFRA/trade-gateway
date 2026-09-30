@@ -85,7 +85,7 @@ In practice we expect customs to send only one of the two, so the permissive rul
 
 The upstream fault's only content is free text of unknown provenance, so it is logged and mapped to a fixed 502 problem detail ([ADR-0002 §4](./0002-rest-api-conventions.md)).
 
-On a 409, `ReservationFailureReason` carries a code. **Only a code in the known table is published**, as `{ code, description }` beside the failed item; anything else is reported as `code: null` with a generic description, so the caller learns a reason was given and could not be decoded. The raw value is logged with the CHED, the MRN and the upstream `MessageId`, which is how a missing code gets found. The no-echo rule is the one to preserve if the table is extended.
+On a 409, `ReservationFailureReason` carries a code. **The code itself is never published**: a code in the known table is published as the contract's `ReservationFailureReason` enum (e.g. `QuantitiesInsufficient`) beside the failed item; anything else is `Unrecognised`, so the caller learns a reason was given and could not be decoded. The raw value is logged with the CHED, the MRN and the upstream `MessageId`, which is how a missing code gets found. The no-echo rule is the one to preserve if the table is extended.
 
 Every outbound request carries a fresh `MessageId`, logged with the CHED id. DG SANTE ask for it when a call is queried, and it is the only correlation handle that exists.
 

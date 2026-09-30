@@ -321,18 +321,7 @@ public static class CustomsChedQuantityEndpoints
             return Results.Ok();
         }
 
-        return Results.Problem(
-            title: "Quantity management request not executed",
-            detail: QuantityManagementOutcomes.Describe(outcome),
-            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
-            extensions: new Dictionary<string, object?>
-            {
-                ["chedId"] = chedId,
-                ["mrn"] = mrn,
-                ["outcome"] = outcome,
-                ["chedStatus"] = response?.StatusCode,
-            }
-        );
+        return Problem(chedQuantityManagementOutcomeType: response, chedId: chedId, mrn: mrn);
     }
 
     private static async Task<IResult> ProcessWriteIntervention(
@@ -362,19 +351,7 @@ public static class CustomsChedQuantityEndpoints
             return Results.Ok();
         }
 
-        // interpret the issue and report accordingly
-        return Results.Problem(
-            title: "Quantity management request not executed",
-            detail: QuantityManagementOutcomes.Describe(outcome),
-            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
-            extensions: new Dictionary<string, object?>
-            {
-                ["chedId"] = chedId,
-                ["mrn"] = mrn,
-                ["outcome"] = outcome,
-                ["chedStatus"] = response?.StatusCode,
-            }
-        );
+        return Problem(chedQuantityManagementOutcomeType: response, chedId: chedId, mrn: mrn);
     }
 
     /// <param name="chedId" example="CHEDA.GB.2024.1020304">CHED reference whose reservation is deleted.</param>
@@ -400,24 +377,14 @@ public static class CustomsChedQuantityEndpoints
             return Results.NoContent();
         }
 
-        return Results.Problem(
-            title: "Quantity management request not executed",
-            detail: QuantityManagementOutcomes.Describe(outcome),
-            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
-            extensions: new Dictionary<string, object?>
-            {
-                ["chedId"] = chedId,
-                ["mrn"] = mrn,
-                ["outcome"] = outcome,
-                ["chedStatus"] = response?.StatusCode,
-            }
-        );
+        return Problem(chedQuantityManagementOutcomeType: response, chedId: chedId, mrn: mrn);
     }
 
     /// <summary>
-    /// The upstream <c>ReservationFailureReason</c> is a code, published only once decoded against
-    /// the gateway's own table — a value outside it is reported as unrecognised rather than echoed,
-    /// since the element is free text on the wire (ADR-0002 §4). The raw value is always logged.
+    /// The upstream <c>ReservationFailureReason</c> is a code, published only as a
+    /// <see cref="ReservationFailureReason"/> decoded against the gateway's own table — a value
+    /// outside it is <see cref="ReservationFailureReason.Unrecognised"/> rather than echoed, since
+    /// the element is free text on the wire (ADR-0002 §4). The raw value is only ever logged.
     /// </summary>
     private static IResult Refused(
         string chedId,
@@ -435,24 +402,51 @@ public static class CustomsChedQuantityEndpoints
                 response.ReservationFailureReason
             );
 
-        var failedItem = response.ReservationFailureConsignmentItem;
-        var reason = ReservationFailureReasons.Decode(response.ReservationFailureReason);
-
-        return Results.Problem(
-            statusCode: StatusCodes.Status409Conflict,
+        return Problem(
             detail: $"TracesNT refused the reservation of CHED '{chedId}' against declaration '{mrn}'.",
+            chedId: chedId,
+            mrn: mrn,
+            statusCode: StatusCodes.Status409Conflict,
+            reason: ReservationFailureReasons.Decode(response.ReservationFailureReason)
+        );
+    }
+
+    private static IResult Problem(
+        ChedQuantityManagementOutcomeType? chedQuantityManagementOutcomeType,
+        string chedId,
+        string mrn
+    )
+    {
+        var outcome = chedQuantityManagementOutcomeType?.QuantityManagementOutcome;
+        return Problem(
+            detail: QuantityManagementOutcomes.Describe(outcome),
+            chedId: chedId,
+            mrn: mrn,
+            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
+            reason: ReservationFailureReasons.Decode(outcome),
+            chedStatus: chedQuantityManagementOutcomeType?.StatusCode
+        );
+    }
+
+    private static IResult Problem(
+        string detail,
+        string chedId,
+        string mrn,
+        int statusCode,
+        ReservationFailureReason reason,
+        string? chedStatus = null
+    )
+    {
+        return Results.Problem(
+            title: "Quantity management request not executed",
+            detail: detail,
+            statusCode: statusCode,
             extensions: new Dictionary<string, object?>
             {
-                ["failureReason"] = reason is null
-                    ? null
-                    : new { code = reason.Value.Code, description = reason.Value.Description },
-                ["failedItem"] = failedItem is null
-                    ? null
-                    : new
-                    {
-                        goodsItemNumber = failedItem.GoodsItemNumber,
-                        documentLineItemNumber = failedItem.DocumentLineItemNumber,
-                    },
+                ["chedId"] = chedId,
+                ["mrn"] = mrn,
+                ["reason"] = reason,
+                ["chedStatus"] = chedStatus,
             }
         );
     }

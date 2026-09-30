@@ -1,4 +1,4 @@
-﻿{
+{
   openapi: 3.0.4,
   info: {
     title: Trade Gateway,
@@ -63,6 +63,95 @@
               application/problem+json: {
                 schema: {
                   $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    /certificates/cheds/{id}/attachments/{attachmentId}: {
+      get: {
+        tags: [
+          ChedEndpoints
+        ],
+        summary: Get a CHED certificate attachment,
+        description: Downloads a supporting document attached to the CHED certificate. The attachment id is the document id from the certificate's referenced document attachment (uri:documentid:{attachmentId}); the file is returned with its original content type and file name.,
+        operationId: GetChedCertificateAttachment,
+        parameters: [
+          {
+            name: id,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: attachmentId,
+            in: path,
+            required: true,
+            schema: {
+              type: integer,
+              format: int64
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            schema: {
+              type: string
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/octet-stream: {
+                schema: {
+                  type: string,
+                  format: binary
                 }
               }
             }

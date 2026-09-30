@@ -4,6 +4,7 @@ using Api.Models;
 using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
+using TracesNT.WebServices;
 using Trade.Gateway.Api.Contract.Certificate;
 
 namespace Api.Endpoints;
@@ -18,6 +19,21 @@ public static class ChedEndpoints
             .WithDescription("Returns the full CHED profile.")
             .Produces<DefraUNVTDCHEDProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDProfile>())
             .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapGet("certificates/cheds/{id}/attachments/{attachmentId}", GetAttachment)
+            .WithName("GetChedCertificateAttachment")
+            .WithSummary("Get a CHED certificate attachment")
+            .WithDescription(
+                "Downloads a supporting document attached to the CHED certificate. The attachment id is the "
+                    + "document id from the certificate's referenced document attachment "
+                    + "(uri:documentid:{attachmentId}); the file is returned with its original content type "
+                    + "and file name."
+            )
+            .Produces<Stream>(StatusCodes.Status200OK, "application/octet-stream")
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
@@ -57,6 +73,55 @@ public static class ChedEndpoints
             ChedMapper.Map(certificate, context),
             contentType: MediaTypeAttribute.For<DefraUNVTDCHEDProfile>()
         );
+    }
+
+    private static async Task<IResult> GetAttachment(
+        string id,
+        long attachmentId,
+        IChedCertificateService chedCertificateService,
+        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+    )
+    {
+        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
+        var ched = await chedCertificateService.GetChedCertificate(id, languageCode);
+        if (ched?.SPSCertificate == null)
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                detail: $"Ched certificate '{id}' was not found."
+            );
+
+        var filename = FindAttachmentFileName(ched.SPSCertificate, attachmentId);
+        if (filename == null)
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                detail: $"Ched certificate attachment '{id} - {attachmentId}' was not found."
+            );
+
+        var attachment = await chedCertificateService.GetChedCertificateAttachment(id, attachmentId, filename);
+        if (attachment?.Attachment == null)
+            return Results.Problem(
+                statusCode: StatusCodes.Status404NotFound,
+                detail: $"Ched certificate attachment '{id} - {attachmentId}' was not found."
+            );
+
+        return Results.Bytes(attachment.Attachment, attachment.contentType, attachment.fileName);
+    }
+
+    // TracesNT identifies attachments by a uri of the form "uri:documentid:{documentId}", with the
+    // filename alongside it on the same BinaryObjectType.
+    private static string? FindAttachmentFileName(SPSCertificateType certificate, long attachmentId)
+    {
+        var tradeLineItemDocuments =
+            certificate
+                .SPSConsignment?.IncludedSPSConsignmentItem?.SelectMany(item => item.IncludedSPSTradeLineItem ?? [])
+                .SelectMany(lineItem => lineItem.ReferenceSPSReferencedDocument ?? [])
+            ?? [];
+
+        return (certificate.SPSExchangedDocument?.ReferenceSPSReferencedDocument ?? [])
+            .Concat(tradeLineItemDocuments)
+            .SelectMany(document => document.AttachmentBinaryObject ?? [])
+            .FirstOrDefault(binaryObject => binaryObject.uri == $"uri:documentid:{attachmentId}")
+            ?.filename;
     }
 
     private static async Task<IResult> Find(
