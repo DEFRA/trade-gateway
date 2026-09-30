@@ -139,6 +139,7 @@
           {
             name: Accept-Language,
             in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
             schema: {
               type: string
             }
