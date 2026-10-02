@@ -14,6 +14,12 @@ namespace TracesNT.Extensions
                 (binding, endpoint) => new ChedCertificatePortClient(binding, endpoint)
             );
 
+            services.AddTracesNtClient<CertificateAttachmentsPortClient, CertificateAttachmentsPort>(
+                "CertificateAttachmentsServiceV1",
+                TracesNtCredentialKeys.Default,
+                (binding, endpoint) => new CertificateAttachmentsPortClient(binding, endpoint)
+            );
+
             services.AddTracesNtClient<EuIntraCertificatePortClient, EuIntraCertificatePort>(
                 "EuIntraCertificateServiceV1",
                 TracesNtCredentialKeys.Default,

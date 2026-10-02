@@ -20,7 +20,7 @@ namespace TracesNT.WebServices
         private bool eventDateTimeFieldSpecified;
         private CompetentCustomsOfficeType competentCustomsOfficeField;
         private string itemField;
-        private ItemChoiceType2 itemElementNameField;
+        private ItemChoiceType3 itemElementNameField;
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(DataType = "integer", Order = 0)]
         public string GoodsItemNumber
@@ -131,7 +131,7 @@ namespace TracesNT.WebServices
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Order = 6)]
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public ItemChoiceType2 ItemElementName
+        public ItemChoiceType3 ItemElementName
         {
             get
             {

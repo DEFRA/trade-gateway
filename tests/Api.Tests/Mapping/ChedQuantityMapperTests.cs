@@ -127,8 +127,8 @@ public class ChedQuantityMapperTests
     public void MapLedger_HonoursTheTechnicalRoundingSpecifiedCompanion()
     {
         var summary = Summary(
-            Allocated(Mrn, ItemChoiceType2.MRN, 300m, rounding: 0.25m),
-            Allocated(Mrn, ItemChoiceType2.MRN, 100m)
+            Allocated(Mrn, ItemChoiceType3.MRN, 300m, rounding: 0.25m),
+            Allocated(Mrn, ItemChoiceType3.MRN, 100m)
         );
 
         var reserved = ChedQuantityMapper.MapLedger(summary).Allocations!.Reserved;
@@ -140,8 +140,8 @@ public class ChedQuantityMapperTests
     [Fact]
     public void MapLedger_HonoursTheEventDateTimeSpecifiedCompanion()
     {
-        var withDate = Allocated(Mrn, ItemChoiceType2.MRN, 1m);
-        var withoutDate = Allocated(Mrn, ItemChoiceType2.MRN, 1m);
+        var withDate = Allocated(Mrn, ItemChoiceType3.MRN, 1m);
+        var withoutDate = Allocated(Mrn, ItemChoiceType3.MRN, 1m);
         withoutDate.EventDateTimeSpecified = false;
 
         var reserved = ChedQuantityMapper.MapLedger(Summary(withDate, withoutDate)).Allocations!.Reserved;
@@ -159,7 +159,7 @@ public class ChedQuantityMapperTests
     [InlineData("99999999999999999999", null)]
     public void MapLedger_ParsesXsIntegerStringsWithoutThrowing(string? source, int? expected)
     {
-        var allocation = Allocated(Mrn, ItemChoiceType2.MRN, 1m);
+        var allocation = Allocated(Mrn, ItemChoiceType3.MRN, 1m);
         allocation.GoodsItemNumber = source;
 
         var reserved = ChedQuantityMapper.MapLedger(Summary(allocation)).Allocations!.Reserved;
@@ -177,9 +177,9 @@ public class ChedQuantityMapperTests
     public void MapLedger_DiscriminatesMrnFromLrn()
     {
         var summary = Summary(
-            Allocated(Mrn, ItemChoiceType2.MRN, 1m),
-            Allocated(Mrn, ItemChoiceType2.LRN, 2m),
-            Allocated(null, ItemChoiceType2.MRN, 3m)
+            Allocated(Mrn, ItemChoiceType3.MRN, 1m),
+            Allocated(Mrn, ItemChoiceType3.LRN, 2m),
+            Allocated(null, ItemChoiceType3.MRN, 3m)
         );
 
         var reserved = ChedQuantityMapper.MapLedger(summary).Allocations!.Reserved;
@@ -203,10 +203,10 @@ public class ChedQuantityMapperTests
         {
             ReservedQuantity =
             [
-                Allocated(Mrn, ItemChoiceType2.MRN, 300m),
-                Allocated("26GB99WTYXQ2LM5BC7", ItemChoiceType2.MRN, 90m),
+                Allocated(Mrn, ItemChoiceType3.MRN, 300m),
+                Allocated("26GB99WTYXQ2LM5BC7", ItemChoiceType3.MRN, 90m),
             ],
-            ConsumedQuantity = [Allocated(Mrn, ItemChoiceType2.MRN, 120m)],
+            ConsumedQuantity = [Allocated(Mrn, ItemChoiceType3.MRN, 120m)],
         };
 
         var allocations = ChedQuantityMapper.MapLedger(summary).Allocations!;
@@ -219,8 +219,8 @@ public class ChedQuantityMapperTests
     public void MapDeclarationReservation_KeepsOnlyTheRequestedDeclaration()
     {
         var summary = Summary(
-            Allocated(Mrn, ItemChoiceType2.MRN, 300m),
-            Allocated("26GB99WTYXQ2LM5BC7", ItemChoiceType2.MRN, 90m)
+            Allocated(Mrn, ItemChoiceType3.MRN, 300m),
+            Allocated("26GB99WTYXQ2LM5BC7", ItemChoiceType3.MRN, 90m)
         );
 
         var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn);
@@ -231,7 +231,7 @@ public class ChedQuantityMapperTests
     [Fact]
     public void MapDeclarationReservation_DoesNotMatchAnLrnWithTheSameValue()
     {
-        var summary = Summary(Allocated(Mrn, ItemChoiceType2.LRN, 777m));
+        var summary = Summary(Allocated(Mrn, ItemChoiceType3.LRN, 777m));
 
         var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn);
 
@@ -241,7 +241,7 @@ public class ChedQuantityMapperTests
     [Fact]
     public void MapDeclarationReservation_MatchesRegardlessOfCase()
     {
-        var summary = Summary(Allocated(Mrn, ItemChoiceType2.MRN, 300m));
+        var summary = Summary(Allocated(Mrn, ItemChoiceType3.MRN, 300m));
 
         var reservation = ChedQuantityMapper.MapDeclarationReservation(summary, Mrn.ToLowerInvariant());
 
@@ -284,7 +284,7 @@ public class ChedQuantityMapperTests
 
     private static AllocatedProductQuantityByCustomsOfficeEnhanced4ChedR51Type Allocated(
         string? reference,
-        ItemChoiceType2 referenceType,
+        ItemChoiceType3 referenceType,
         decimal quantity,
         decimal? rounding = null
     ) =>

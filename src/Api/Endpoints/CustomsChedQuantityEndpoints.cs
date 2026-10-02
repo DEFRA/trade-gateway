@@ -22,6 +22,13 @@ public static class CustomsChedQuantityEndpoints
     public static void UseCustomsChedQuantityEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("customs/cheds/{chedId}/quantities", GetQuantities)
+            .WithName("GetChedQuantities")
+            .WithSummary("Get a CHED's quantity ledger")
+            .WithDescription(
+                "Returns the quantity management position of the CHED from TRACES NT: the quantities still "
+                    + "available, and those reserved and consumed by customs declarations. Read only; "
+                    + "nothing is reserved."
+            )
             .Produces<ChedQuantityLedger>(200, MediaTypeAttribute.For<ChedQuantityLedger>())
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -29,6 +36,16 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation", PutReservation)
+            .WithName("PutChedReservation")
+            .WithSummary("Reserve CHED quantities against a declaration")
+            .WithDescription(
+                "Reserves quantities of the CHED's consignment items against the customs declaration "
+                    + "identified by the MRN. Returns the quantities reserved and consumed for that "
+                    + "declaration, or 409 Conflict if TRACES NT refuses the reservation, whose `failureReason` is one of "
+                    + "Unrecognised, CnCodesMismatch, InappropriateStatus, QuantitiesInsufficient, WriteOffExists, "
+                    + "LineNumbersMismatch, MeasurementUnitMismatch or QuantitiesCannotBeValidated, and `failedItem` "
+                    + "the goods item and document line refused."
+            )
             .Validates<ChedReservationRequest>()
             .Produces<ChedDeclarationReservation>(200, MediaTypeAttribute.For<ChedDeclarationReservation>())
             .ProducesValidationProblem()
@@ -39,6 +56,12 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPost("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", ForceWriteOff)
+            .WithName("ForceWriteOffChedReservation")
+            .WithSummary("Force a write-off of a CHED reservation")
+            .WithDescription(
+                "Manually releases (force writes off) quantities of the CHED reserved against the customs "
+                    + "declaration identified by the MRN, for the given consignment items."
+            )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
@@ -49,6 +72,12 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", AmendWriteOff)
+            .WithName("AmendWriteOffChedReservation")
+            .WithSummary("Amend a forced write-off of a CHED reservation")
+            .WithDescription(
+                "Amends a previous manual release (forced write-off) of quantities of the CHED against the "
+                    + "customs declaration identified by the MRN, for the given consignment items."
+            )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
@@ -59,6 +88,12 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", DeleteWriteOff)
+            .WithName("DeleteWriteOffChedReservation")
+            .WithSummary("Delete a forced write-off of a CHED reservation")
+            .WithDescription(
+                "Deletes a previous manual release (forced write-off) of quantities of the CHED against the "
+                    + "customs declaration identified by the MRN, for the given consignment items."
+            )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
@@ -69,6 +104,13 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/release", Release)
+            .WithName("ReleaseChedReservation")
+            .WithSummary("Release a CHED reservation")
+            .WithDescription(
+                "Releases the quantities of the CHED reserved against the customs declaration identified by "
+                    + "the MRN. Returns 200 with no body on success; otherwise a problem describing the "
+                    + "TRACES NT quantity management outcome."
+            )
             .Produces(StatusCodes.Status200OK)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -77,6 +119,13 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation", DeleteReservation)
+            .WithName("DeleteChedReservation")
+            .WithSummary("Delete a CHED reservation")
+            .WithDescription(
+                "Cancels the reservation of the CHED's quantities against the customs declaration identified "
+                    + "by the MRN. Returns 204 on success; otherwise a problem describing the TRACES NT "
+                    + "quantity management outcome."
+            )
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -200,7 +249,7 @@ public static class CustomsChedQuantityEndpoints
             mrn,
             request,
             customsChedService,
-            InterventionType.DeleteWriteOff,
+            InterventionType.AmendWriteOff,
             acceptLanguage
         );
     }
@@ -242,18 +291,7 @@ public static class CustomsChedQuantityEndpoints
             return Results.Ok();
         }
 
-        return Results.Problem(
-            title: "Quantity management request not executed",
-            detail: QuantityManagementOutcomes.Describe(outcome),
-            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
-            extensions: new Dictionary<string, object?>
-            {
-                ["chedId"] = chedId,
-                ["mrn"] = mrn,
-                ["outcome"] = outcome,
-                ["chedStatus"] = response?.StatusCode,
-            }
-        );
+        return Problem(chedQuantityManagementOutcomeType: response, chedId: chedId, mrn: mrn);
     }
 
     private static async Task<IResult> ProcessWriteIntervention(
@@ -283,19 +321,7 @@ public static class CustomsChedQuantityEndpoints
             return Results.Ok();
         }
 
-        // interpret the issue and report accordingly
-        return Results.Problem(
-            title: "Quantity management request not executed",
-            detail: QuantityManagementOutcomes.Describe(outcome),
-            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
-            extensions: new Dictionary<string, object?>
-            {
-                ["chedId"] = chedId,
-                ["mrn"] = mrn,
-                ["outcome"] = outcome,
-                ["chedStatus"] = response?.StatusCode,
-            }
-        );
+        return Problem(chedQuantityManagementOutcomeType: response, chedId: chedId, mrn: mrn);
     }
 
     private static async Task<IResult> DeleteReservation(
@@ -317,24 +343,14 @@ public static class CustomsChedQuantityEndpoints
             return Results.NoContent();
         }
 
-        return Results.Problem(
-            title: "Quantity management request not executed",
-            detail: QuantityManagementOutcomes.Describe(outcome),
-            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
-            extensions: new Dictionary<string, object?>
-            {
-                ["chedId"] = chedId,
-                ["mrn"] = mrn,
-                ["outcome"] = outcome,
-                ["chedStatus"] = response?.StatusCode,
-            }
-        );
+        return Problem(chedQuantityManagementOutcomeType: response, chedId: chedId, mrn: mrn);
     }
 
     /// <summary>
-    /// The upstream <c>ReservationFailureReason</c> is a code, published only once decoded against
-    /// the gateway's own table — a value outside it is reported as unrecognised rather than echoed,
-    /// since the element is free text on the wire (ADR-0002 §4). The raw value is always logged.
+    /// The upstream <c>ReservationFailureReason</c> is a code, published only as a
+    /// <see cref="ReservationFailureReason"/> decoded against the gateway's own table — a value
+    /// outside it is <see cref="ReservationFailureReason.Unrecognised"/> rather than echoed, since
+    /// the element is free text on the wire (ADR-0002 §4). The raw value is only ever logged.
     /// </summary>
     private static IResult Refused(
         string chedId,
@@ -352,24 +368,51 @@ public static class CustomsChedQuantityEndpoints
                 response.ReservationFailureReason
             );
 
-        var failedItem = response.ReservationFailureConsignmentItem;
-        var reason = ReservationFailureReasons.Decode(response.ReservationFailureReason);
-
-        return Results.Problem(
-            statusCode: StatusCodes.Status409Conflict,
+        return Problem(
             detail: $"TracesNT refused the reservation of CHED '{chedId}' against declaration '{mrn}'.",
+            chedId: chedId,
+            mrn: mrn,
+            statusCode: StatusCodes.Status409Conflict,
+            reason: ReservationFailureReasons.Decode(response.ReservationFailureReason)
+        );
+    }
+
+    private static IResult Problem(
+        ChedQuantityManagementOutcomeType? chedQuantityManagementOutcomeType,
+        string chedId,
+        string mrn
+    )
+    {
+        var outcome = chedQuantityManagementOutcomeType?.QuantityManagementOutcome;
+        return Problem(
+            detail: QuantityManagementOutcomes.Describe(outcome),
+            chedId: chedId,
+            mrn: mrn,
+            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
+            reason: ReservationFailureReasons.Decode(outcome),
+            chedStatus: chedQuantityManagementOutcomeType?.StatusCode
+        );
+    }
+
+    private static IResult Problem(
+        string detail,
+        string chedId,
+        string mrn,
+        int statusCode,
+        ReservationFailureReason reason,
+        string? chedStatus = null
+    )
+    {
+        return Results.Problem(
+            title: "Quantity management request not executed",
+            detail: detail,
+            statusCode: statusCode,
             extensions: new Dictionary<string, object?>
             {
-                ["failureReason"] = reason is null
-                    ? null
-                    : new { code = reason.Value.Code, description = reason.Value.Description },
-                ["failedItem"] = failedItem is null
-                    ? null
-                    : new
-                    {
-                        goodsItemNumber = failedItem.GoodsItemNumber,
-                        documentLineItemNumber = failedItem.DocumentLineItemNumber,
-                    },
+                ["chedId"] = chedId,
+                ["mrn"] = mrn,
+                ["reason"] = reason,
+                ["chedStatus"] = chedStatus,
             }
         );
     }
