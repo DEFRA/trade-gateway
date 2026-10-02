@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,26 +7,29 @@ namespace Api.Models;
 public class FindCertificatesRequest : IValidatableObject
 {
     [FromQuery(Name = "pageSize")]
-    [System.ComponentModel.Description("The number of records to return")]
+    [Description("Number of summary records to return per page, between 10 and 200.")]
+    [DefaultValue(10)]
     [Range(10, 200, ErrorMessage = "pageSize must be between 10 and 200")]
     public int? PageSize { get; set; } = 10;
 
     [FromQuery(Name = "offset")]
-    [System.ComponentModel.Description("Number of records to offset")]
+    [Description("Number of records to skip before this page.")]
+    [DefaultValue(0)]
     [Range(0, 9990, ErrorMessage = "offset must be equal to or greater than 0")]
     public int? Offset { get; set; } = 0;
 
     [FromQuery(Name = "updatedFrom")]
-    [System.ComponentModel.Description("Start of the range")]
+    [Description("Inclusive start of the update window, as a UTC timestamp.")]
     [Required]
     public DateTimeOffset? UpdatedFrom { get; set; }
 
     [FromQuery(Name = "updatedBefore")]
-    [System.ComponentModel.Description("End of the range")]
+    [Description("Exclusive end of the update window, as a UTC timestamp.")]
     [Required]
     public DateTimeOffset? UpdatedBefore { get; set; }
 
-    [System.ComponentModel.Description("End of the range")]
+    [Description("Preferred language for returned names, as a BCP 47 language tag. Defaults to en.")]
+    [DefaultValue("en")]
     [FromHeader(Name = "Accept-Language")]
     public string? AcceptLanguage { get; set; } = "en";
 

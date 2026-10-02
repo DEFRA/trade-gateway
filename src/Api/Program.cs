@@ -47,9 +47,49 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen(options =>
     {
-        options.SwaggerDoc("v1", new OpenApiInfo { Title = "Trade Gateway", Version = "v1" });
+        options.SwaggerDoc(
+            "v1",
+            new OpenApiInfo
+            {
+                Title = "Trade Gateway",
+                Version = "v1",
+                Description =
+                    "REST API for TRACES: read access to TRACES certificates "
+                    + "(CHED, INTRA and DOCOMs) and customs quantity management for CHEDs.",
+                License = new OpenApiLicense
+                {
+                    Name = "Open Government Licence v3.0",
+#pragma warning disable S1075
+                    Url = new Uri("https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"),
+#pragma warning restore S1075
+                },
+                Contact = new OpenApiContact { Name = "Nexus Team", Email = "#eudp-traces-integration-questions" },
+            }
+        );
+        options.AddServer(
+            new OpenApiServer { Url = "/", Description = "The service as reached through the CDP API Gateway." }
+        );
+        options.AddSecurityDefinition(
+            "Bearer",
+            new OpenApiSecurityScheme
+            {
+                Type = SecuritySchemeType.Http,
+                Scheme = "bearer",
+                BearerFormat = "JWT",
+                Description = "Cognito or STS-issued JWT. Send as: Authorization: Bearer <token>",
+            }
+        );
+        options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("Bearer", document)] = [],
+        });
         options.OperationFilter<ContentNegotiationOperationFilter>();
+        options.OperationFilter<AcceptLanguageHeaderOperationFilter>();
+        options.OperationFilter<ParameterDescriptionDedupOperationFilter>();
+        options.DocumentFilter<TagDocumentFilter>();
         options.SchemaFilter<ConstValueSchemaFilter>();
+        options.SupportNonNullableReferenceTypes();
+        options.IncludeXmlComments(typeof(Program).Assembly);
     });
 
     // Configure logging to use the CDP Platform standards.
@@ -93,6 +133,7 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     {
         // The MONGODB-AWS mechanism may already be registered (e.g. when tests/startup run multiple times). Ignore this specific error.
     }
+
     builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));
     builder.Services.AddSingleton<IMongoDbClientFactory, MongoDbClientFactory>();
 

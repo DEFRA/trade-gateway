@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -6,6 +6,9 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <WarningsNotAsErrors>NU1901,NU1902,NU1903,NU1904</WarningsNotAsErrors>
     <RootNamespace>Api</RootNamespace>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1591</NoWarn>
+    <UserSecretsId>6d5184a8-c67c-4cfa-a27f-7ede0775f60f</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
