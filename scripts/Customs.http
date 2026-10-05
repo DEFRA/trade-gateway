@@ -272,3 +272,29 @@ Authorization: Bearer {{chedToken.response.body.access_token}}
 GET {{host}}/customs/cheds/{{chedId}}/quantities
 Accept-Language: en
 Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+###############################################################################
+# CUSTOMS — releasing or deleting a declaration's reservation
+#
+# Both are chedClearanceRequest upstream, told apart by GoodsClearanceInformation: 01 releases
+# (the goods have cleared, so the reservation becomes consumed and does not come back), 02 deletes
+# (the declaration is withdrawn, so the quantity is available again). The outcome code decides the
+# status: 01/04 succeed, 02 is a 404, 03/05 are a 409, anything else a 502.
+###############################################################################
+
+### Release the declaration's reservation
+# 200 with no body. Consumes the quantity for good — on acceptance, keep it tiny.
+PUT {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation/release
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+### Delete the declaration's reservation
+# 204. The reserved quantity returns to available.
+DELETE {{host}}/customs/cheds/{{chedId}}/declarations/{{mrn}}/reservation
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}
+
+### Deleting a reservation that does not exist returns 404 (outcome 02)
+DELETE {{host}}/customs/cheds/{{chedId}}/declarations/26GB00000000000000/reservation
+Accept-Language: en
+Authorization: Bearer {{customsManagerToken.response.body.access_token}}

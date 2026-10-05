@@ -142,10 +142,14 @@ public static class LocalTokenServer
                 {
                     var form = await request.ReadFormAsync();
                     if (form["Action"] != "GetWebIdentityToken")
-                        return Results.Text(
-                            $"""<ErrorResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/"><Error><Type>Sender</Type><Code>InvalidAction</Code><Message>Unsupported action '{form["Action"]}'</Message></Error></ErrorResponse>""",
-                            "text/xml",
-                            statusCode: 400
+                        return StsError(400, "InvalidAction", $"Unsupported action '{form["Action"]}'");
+
+                    var caller = AccessKeyOf(request);
+                    if (caller is null)
+                        return StsError(
+                            403,
+                            "MissingAuthenticationToken",
+                            "Request must be signed with AWS credentials"
                         );
 
                     var expires = DateTime.UtcNow.AddSeconds(
@@ -156,7 +160,7 @@ public static class LocalTokenServer
                     {
                         Issuer = authority,
                         Audience = form["Audience.member.1"].ToString(),
-                        Claims = new Dictionary<string, object> { ["sub"] = "trade-gateway-publisher" },
+                        Claims = new Dictionary<string, object> { ["sub"] = caller },
                         Expires = expires,
                         SigningCredentials = Credentials,
                     };
@@ -171,4 +175,31 @@ public static class LocalTokenServer
             .AllowAnonymous()
             .DisableAntiforgery()
             .ExcludeFromDescription();
+
+    /// <summary>
+    /// Real STS issues the token to the caller's IAM role, and the gateway's own authorization decides
+    /// what that role may do. Locally every caller signs with made-up AWS credentials, so the access key
+    /// stands in for the role: the publisher signs as <c>trade-gateway-publisher</c>, the journey tests
+    /// as <c>trade-gateway-journey-tests</c>. A key no principal maps to still gets a token, and is
+    /// refused by authorization, as an unmapped role would be.
+    /// </summary>
+    private static string? AccessKeyOf(HttpRequest request)
+    {
+        // SigV4: "AWS4-HMAC-SHA256 Credential=<access key>/<date>/<region>/sts/aws4_request, ..."
+        var header = request.Headers.Authorization.ToString();
+        var start = header.IndexOf("Credential=", StringComparison.Ordinal);
+        if (start < 0)
+            return null;
+
+        start += "Credential=".Length;
+        var end = header.IndexOf('/', start);
+        return end > start ? header[start..end] : null;
+    }
+
+    private static IResult StsError(int statusCode, string code, string message) =>
+        Results.Text(
+            $"""<ErrorResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/"><Error><Type>Sender</Type><Code>{code}</Code><Message>{message}</Message></Error></ErrorResponse>""",
+            "text/xml",
+            statusCode: statusCode
+        );
 }

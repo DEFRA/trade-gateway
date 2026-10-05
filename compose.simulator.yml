@@ -1,0 +1,25 @@
+# Points Trade Gateway at the local TRACES NT stub instead of EU acceptance.
+#
+# Run the stub on the host first (port 8085), from DEFRA/trade-tracesnt-stub:
+#   dotnet run --project src/Api.TradeTracesNTStub --urls http://localhost:8085
+#
+# Then:
+#   docker compose -f compose.yml -f compose.simulator.yml up -d
+#
+# Defaults to the CoreWCF simulator. Switch to the WireMock stub with:
+#   TRACES_FACE=/mock docker compose -f compose.yml -f compose.simulator.yml up -d
+# and back again with TRACES_FACE= (empty).
+services:
+  trade-gateway:
+    env_file:
+      - ./compose/config/aws.env
+      - ./compose/config/trade-gateway.env
+      - ./.env.simulator
+    environment:
+      # Wins over anything in the env_file list, so a real .env cannot leak in here.
+      TRACESNT__BASEURL: http://host.docker.internal:8085${TRACES_FACE-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      # The scripts/*.http files target port 5000.
+      - "5000:8080"

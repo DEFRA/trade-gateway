@@ -87,10 +87,13 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
     /// the local <c>GetWebIdentityToken</c> stand-in — so the XML envelope stays parseable by the
     /// SDK's unmarshaller. The <c>sub</c> is fixed by the endpoint; real STS takes no such parameter.
     /// </summary>
-    public async Task<GetWebIdentityTokenResponse> GetWebIdentityTokenAsync(string audience)
+    public async Task<GetWebIdentityTokenResponse> GetWebIdentityTokenAsync(
+        string audience,
+        string accessKey = "trade-gateway-publisher"
+    )
     {
         using var sts = new AmazonSecurityTokenServiceClient(
-            new BasicAWSCredentials("test-access-key", "test-secret-key"),
+            new BasicAWSCredentials(accessKey, "test-secret-key"),
             new AmazonSecurityTokenServiceConfig
             {
                 ServiceURL = StsEndpoint,

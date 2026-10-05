@@ -270,7 +270,7 @@ public static class CustomsChedQuantityEndpoints
             mrn,
             request,
             customsChedService,
-            InterventionType.DeleteWriteOff,
+            InterventionType.AmendWriteOff,
             acceptLanguage
         );
     }
