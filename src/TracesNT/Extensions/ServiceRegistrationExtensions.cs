@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.Text;
+using System.Xml;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -17,7 +19,8 @@ public static class ServiceRegistrationExtensions
         this IServiceCollection services,
         string servicePath,
         string credentialKey,
-        Func<Binding, EndpointAddress, TClient> clientFactory
+        Func<Binding, EndpointAddress, TClient> clientFactory,
+        bool useSoap12Mtom = false
     )
         where TClient : ClientBase<TChannel>, TChannel
         where TChannel : class
@@ -28,7 +31,7 @@ public static class ServiceRegistrationExtensions
             var credentials = sp.GetRequiredService<IOptionsMonitor<TracesNtCredentials>>().Get(credentialKey);
             var logger = sp.GetRequiredService<ILogger<TClient>>();
             var endpoint = new EndpointAddress(config.GetServiceUrl(servicePath));
-            var binding = GetOrCreateBinding(endpoint.Uri);
+            var binding = useSoap12Mtom ? GetOrCreateSoap12MtomBinding(endpoint.Uri) : GetOrCreateBinding(endpoint.Uri);
             var metricsService = sp.GetRequiredService<ITracesNtClientMetricsService>();
 
             TClient client = clientFactory(binding, endpoint);
@@ -76,6 +79,39 @@ public static class ServiceRegistrationExtensions
                     MaxReceivedMessageSize = int.MaxValue,
                     MaxBufferPoolSize = int.MaxValue,
                 };
+            }
+        );
+    }
+
+    /// <summary>
+    /// Some TRACES NT services (e.g. CertificateAttachmentsServiceV1) publish a SOAP 1.2 binding with an
+    /// MTOM policy and reject SOAP 1.1 text/xml requests with HTTP 415.
+    /// </summary>
+    private static Binding GetOrCreateSoap12MtomBinding(Uri endpointUrl)
+    {
+        var proxyUrl = Environment.GetEnvironmentVariable("HTTP_PROXY") ?? string.Empty;
+        var key = $"soap12mtom|{endpointUrl.Scheme}|{proxyUrl}";
+
+        return s_bindingCache.GetOrAdd(
+            key,
+            _ =>
+            {
+                var encoding = new MtomMessageEncodingBindingElement(MessageVersion.Soap12, Encoding.UTF8);
+                XmlDictionaryReaderQuotas.Max.CopyTo(encoding.ReaderQuotas);
+
+                var transport =
+                    endpointUrl.Scheme == Uri.UriSchemeHttps
+                        ? new HttpsTransportBindingElement()
+                        : new HttpTransportBindingElement();
+                transport.MaxReceivedMessageSize = int.MaxValue;
+                transport.MaxBufferPoolSize = int.MaxValue;
+                if (!string.IsNullOrEmpty(proxyUrl))
+                {
+                    transport.UseDefaultWebProxy = false;
+                    transport.ProxyAddress = new Uri(proxyUrl);
+                }
+
+                return new CustomBinding(encoding, transport);
             }
         );
     }
