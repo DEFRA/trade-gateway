@@ -245,6 +245,7 @@
     MainCarriageLogisticsTransportMovement: [
       {
         Identifier: R5434FGD,
+        UrlId: https://traces-codelists.ec.europa.eu/road_vehicle_registration,
         ModeCode: 3
       }
     ],

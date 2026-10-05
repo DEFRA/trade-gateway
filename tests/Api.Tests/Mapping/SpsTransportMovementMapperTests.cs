@@ -13,7 +13,6 @@ public class SpsTransportMovementMapperTests
         {
             ID = new IDType { Value = "VESSEL-123" },
             ModeCode = new TransportModeCodeType { Value = TransportModeCodeContentType.Item1 },
-            UsedSPSTransportMeans = new SPSTransportMeansType { Name = new TextType { Value = "MV Example" } },
         };
 
         var result = SpsTransportMovementMapper.Map(source);
@@ -23,14 +22,17 @@ public class SpsTransportMovementMapperTests
     }
 
     [Fact]
-    public void Map_NoMovementId_FallsBackToTransportMeansName()
+    public void Map_MovementId_MapsIdentifierAndSchemeUri()
     {
         var source = new SPSTransportMovementType
         {
-            UsedSPSTransportMeans = new SPSTransportMeansType { Name = new TextType { Value = "MV Example" } },
+            ID = new IDType { Value = "R5434FGD", schemeID = "road_vehicle_registration" },
         };
 
-        SpsTransportMovementMapper.Map(source)!.Identifier.Should().Be("MV Example");
+        var result = SpsTransportMovementMapper.Map(source)!;
+
+        result.Identifier.Should().Be("R5434FGD");
+        result.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/road_vehicle_registration");
     }
 
     [Fact]
@@ -46,6 +48,7 @@ public class SpsTransportMovementMapperTests
 
         result.Should().NotBeNull();
         result!.Identifier.Should().BeNull();
+        result.UrlId.Should().BeNull();
         result.ModeCode.Should().BeNull();
     }
 

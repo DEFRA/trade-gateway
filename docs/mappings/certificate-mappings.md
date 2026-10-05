@@ -222,13 +222,14 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `identifier` | `ID.Value` | transport identifier (vessel name, flight number, vehicle registration) |
-| `modeCode` | `ModeCode.Value` | UN/EDIFACT Rec 19 wire code e.g. `"3"` (Road); from the `[XmlEnum]` value |
-| `usedLogisticsTransportMeans.name` | `UsedSPSTransportMeans.Name.Value` | omitted if no transport-means name |
-| `urlId` | `null` | no SOAP source |
+| `identifier` | `ID.Value` | transport identifier (vessel name, flight number, vehicle registration); the register is named by `urlId` |
+| `urlId` | `ID.schemeID` | codelist URI via [coded value rule](#coded-values) (e.g. `road_vehicle_registration`) |
+| `modeCode` | `ModeCode.Value` | UN/EDIFACT Rec 19 code as an integer, e.g. `3` (Road); parsed from the `[XmlEnum]` value |
 | `transportContractRelatedReferencedDocument` | `null` | no SOAP source |
 | `arrivalEvent` | `null` | no SOAP source |
 | `departureEvent` | `null` | no SOAP source |
+
+BSP's separate conveyance-name slot was removed upstream, where `identifier` became the single home for the means-of-transport identification; TRACES carries that identification on the movement `ID` (with its register on `schemeID`), so the old `UsedSPSTransportMeans.Name` fallback is not used.
 
 `SPSConsignment.MainCarriageSPSTransportMovement` is a SOAP array and the contract slot is now a
 list (the SPS profile collapses BSP's pre/main/on-carriage split into this single slot, with one

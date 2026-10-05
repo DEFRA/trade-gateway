@@ -245,6 +245,7 @@
     MainCarriageLogisticsTransportMovement: [
       {
         Identifier: R5434FGD,
+        UrlId: https://traces-codelists.ec.europa.eu/road_vehicle_registration,
         ModeCode: 3
       }
     ],
@@ -371,6 +372,7 @@
           {
             SpecifiedLogisticsTransportMovement: {
               Identifier: BX21 ABC,
+              UrlId: https://traces-codelists.ec.europa.eu/road_vehicle_registration_after_bcp,
               ModeCode: 3
             },
             InternationalTransportDocument: CMR-2026-000421

@@ -240,6 +240,7 @@ DAERA Plant Health Inspection Branch
     MainCarriageLogisticsTransportMovement: [
       {
         Identifier: N1 CKP,
+        UrlId: https://traces-codelists.ec.europa.eu/road_vehicle_registration_before_bcp,
         ModeCode: 3
       }
     ],
