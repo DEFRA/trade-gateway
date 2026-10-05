@@ -22,16 +22,31 @@ schemas/
 
   contexts/
     defra-unvtd-core-v1.context.jsonld
+    defra-unvtd-docom-followup-v1.context.jsonld
 
   profiles/
     imports/
       international/
         defra-unvtd-profile-ched-v1.schema.json
+        events/
+          ched-event-certificate-updated-v1.schema.json
       eu/
         defra-unvtd-profile-intra-v1.schema.json
         defra-unvtd-profile-docom-v1.schema.json
+        defra-unvtd-profile-docom-followup-v1.schema.json
+        events/
+          intra-event-certificate-updated-v1.schema.json
+          docom-event-certificate-updated-v1.schema.json
+          docom-event-followup-updated-v1.schema.json
       gb/
         gbn-ag-v1.schema.json
+        events/
+      events/
+        README.md
+      pims/
+        gbn-ag-pims-v0.1.0.schema.json
+        gbn-ag-pims-v0.2.0.schema.json
+        gbn-ag-pims-v0.2.0-changes.md
       messaging/
         event-envelope-v1.schema.json
 
@@ -56,11 +71,11 @@ Typical certificate layering:
 
 ## BSP-qualified names and the JSON-LD bridge
 
-The schemas use BSP-master-style names (`LogisticsTransportMovement`, `mainCarriageLogisticsTransportMovement`, `usedLogisticsTransportMeans`, `entryCustomsOfficeSpecifiedLogisticsLocation`) on the wire because TRACES SPS Certificate XML carries the same `Logistics_` BIE qualifier. Keeping the BSP shape avoids per-property name translation at the gateway.
+The schemas use BSP-master-style names (`LogisticsTransportMovement`, `mainCarriageLogisticsTransportMovement`, `entryCustomsOfficeSpecifiedLogisticsLocation`) on the wire because TRACES SPS Certificate XML carries the same `Logistics_` BIE qualifier. Keeping the BSP shape avoids per-property name translation at the gateway.
 
-The canonical UN/CEFACT D23B vocabulary publishes the shorter forms at `https://vocabulary.uncefact.org/` (`TransportMovement`, `mainCarriageTransportMovement`, `usedTransportMeans`, `entryCustomsOfficeSpecifiedLocation`). To keep both layers usable, `contexts/defra-unvtd-core-v1.context.jsonld` carries an `@id` binding for each BSP-qualified term to its canonical IRI. A consumer walking the context dereferences cleanly against the published vocabulary; the JSON payload on the wire matches TRACES.
+The canonical UN/CEFACT D23B vocabulary publishes the shorter forms at `https://vocabulary.uncefact.org/` (`TransportMovement`, `mainCarriageTransportMovement`, `entryCustomsOfficeSpecifiedLocation`). To keep both layers usable, `contexts/defra-unvtd-core-v1.context.jsonld` carries an `@id` binding for each BSP-qualified term to its canonical IRI. A consumer walking the context dereferences cleanly against the published vocabulary; the JSON payload on the wire matches TRACES.
 
-When adding a new property or class to a core or profile schema, check the canonical D23B context (`build/vendor/uncefact/unece-context-D23B.jsonld`) for the equivalent IRI. If the BSP-qualified form is absent there, add a binding in the core context entry mapping it to the canonical short form. Some terms (e.g. `LogisticsLocation`, `occurrenceLogisticsLocation`, `LogisticsTransportMeans`) are canonical with the `Logistics` qualifier and need no bridge.
+When adding a new property or class to a core or profile schema, check the canonical D23B context (`build/vendor/uncefact/unece-context-D23B.jsonld`) for the equivalent IRI. If the BSP-qualified form is absent there, add a binding in the core context entry mapping it to the canonical short form. Some terms (e.g. `LogisticsLocation`, `occurrenceLogisticsLocation`) are canonical with the `Logistics` qualifier and need no bridge.
 
 ## Samples
 
@@ -68,6 +83,7 @@ Primary sample locations:
 
 - `samples/imports/international/ched/json/unvtd-ched.json`
 - `samples/imports/eu/intra/json/unvtd-intra.json`
+- `samples/imports/eu/docom/json/DOCOM.ES.2026.0000001.json` (certificate; optional inline `followUp`) and `-followup.json` (standalone Part III payload)
 - `samples/imports/gb/gbn-ag/json/gbn-ag-v1-example.json`
 - `samples/imports/reference-data/node-detail/json/unvtd-reference-data-node-detail.json`
 

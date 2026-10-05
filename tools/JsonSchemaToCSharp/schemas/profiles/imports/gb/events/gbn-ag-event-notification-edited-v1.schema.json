@@ -1,8 +1,8 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "gbn-ag-event-notification-created-v1.schema.json",
-  "title": "GBN-AG NotificationCreated event (v1)",
-  "description": "Event emitted when a new GBN-AG notification is created (entry -> DRAFT). The data payload carries the minimum to identify the notification and pin the goods: the notification `identifier`, the workflow status (`notificationStatusCode = DRAFT`), the consignment-level `originCountry`, and at least one trade line with an `applicableClassification`. Sub-shapes reference `gbn-ag-v1.schema.json`'s `$def`s (and the core `TradeCountry`) so any change to the canonical types flows through. The full SUBMITTED-grade contract lives on the NotificationSubmitted event.",
+  "$id": "gbn-ag-event-notification-edited-v1.schema.json",
+  "title": "GBN-AG NotificationEdited event (v1)",
+  "description": "Event emitted when a GBN-AG notification is saved with no lifecycle transition. Fires on every page-by-page edit that does not change the notification status; a save that does change status emits the corresponding lifecycle event instead — a single save never emits both. The data payload is a partial snapshot: at minimum the notification identifier, the notificationStatusCode, the consignment-level originCountry, and at least one trade line carrying an applicableClassification. Sub-shapes reference gbn-ag-v1.schema.json's $defs and the core TradeCountry so canonical type changes flow through without editing this file.",
 
   "allOf": [
     { "$ref": "profiles/imports/messaging/event-envelope-v1.schema.json" },
@@ -11,7 +11,7 @@
       "properties": {
         "aggregateType": { "const": "Notification" },
         "subType":       { "const": "GBN-AG" },
-        "eventType":     { "const": "uk.gov.defra.imports.notification.NotificationCreated" },
+        "eventType":     { "const": "uk.gov.defra.imports.notification.NotificationEdited" },
         "data": {
           "type": "object",
           "required": ["$model", "$type", "exchangedDocument", "specifiedConsignment"],
@@ -23,7 +23,7 @@
               "required": ["identifier", "notificationStatusCode"],
               "properties": {
                 "identifier":             { "type": "string" },
-                "notificationStatusCode": { "const": "DRAFT" }
+                "notificationStatusCode": { "type": "string" }
               }
             },
             "specifiedConsignment": {

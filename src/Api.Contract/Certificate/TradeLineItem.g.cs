@@ -24,7 +24,16 @@ public partial record TradeLineItem
     public UneceWeightMeasure? GrossWeight { get; init; }
 
     [JsonPropertyName("netVolume")]
+    [Description("Net volume of the goods on this line, with unitCode carrying the UN/ECE Rec 20 unit (e.g. H87 piece, LTR litre). Aliased to `unece:netVolumeMeasure` in defra-unvtd-core-v1.context.jsonld.")]
     public UneceMeasure? NetVolume { get; init; }
+
+    [JsonPropertyName("originCountry")]
+    [Description("Country of origin of the goods on this line (TRACES line-level `OriginSPSCountry`, `unece:originCountry`). Line-level origin, distinct from the consignment-level `originCountry`, for consignments whose lines originate in different countries.")]
+    public TradeCountry? OriginCountry { get; init; }
+
+    [JsonPropertyName("appliedProcess")]
+    [Description("Processes applied to the goods on this line (TRACES `AppliedSPSProcess`, `unece:appliedProcess`).")]
+    public List<AppliedProcess>? AppliedProcess { get; init; }
 
     [JsonPropertyName("applicableClassification")]
     public List<ApplicableClassification>? ApplicableClassification { get; init; }

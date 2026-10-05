@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "gbn-ag-v1.schema.json",
-  "title": "GBN-AG — GB Notification for Animals and Germinals (v1)",
+  "title": "GBN-AG - GB Notification for Animals and Germinals (v1)",
   "description": "Defra import pre-notification schema for live animals and germinals. Derives from the canonical Defra UNVTD core (CertificatePayload)",
   "version": "0.0.1",
 
@@ -17,83 +17,68 @@
         "$type": { "const": "gbn-ag" },
 
         "exchangedDocument": {
-          "allOf": [
-            { "$ref": "../../../core/defra-unvtd-canonical-core-v1.schema.json#/$defs/ExchangedDocument" },
-            {
+          "type": "object",
+          "required": ["identifier", "issuer", "firstSignatoryAuthentication"],
+          "properties": {
+            "identifier": {
+              "type": "string",
+              "description": "The final agreed format is `GBN-AG-26-7K8M2P`. `GBN` is Great Britain Notification, `AG` is Animals and Germinals, `26` is the two-digit year of allocation, and `7K8M2P` is a six-character Crockford base32 non-guessable body. The scheme is reusable for other GB import journeys (for example `GBN-P-26-XXXXXX` for Products of Animal Origin, `GBN-PP-26-XXXXXX` for Plants)."
+            },
+            "documentTypeCode": {
+              "type": "string",
+              "description": "UNTDID 1001 code. GBN-AG leaves this optional and unset today because a UK pre-notification code has not yet been decided. INTRA and CHED carry codes 666/856 and 636 respectively."
+            },
+            "documentStatusCode": {
+              "type": "string",
+              "description": "TRACES-boundary value, populated by the gateway on outbound TRACES messages and round-tripped on inbound. UNCL1373 per UN/CEFACT. Internal workflow state is on `notificationStatusCode`."
+            },
+            "notificationStatusCode": {
+              "type": "string",
+              "description": "Defra-internal workflow status of this notification. Under GBN-AG the values are `DRAFT`, `SUBMITTED`, `AMEND`, `DELETED`, drawn from `https://refdata.tbc.defra.gov.uk/gbn-ag-notification-status`."
+            },
+            "name": {
+              "description": "An optional human-readable name for the document. GBN-AG identifies the pre-notification by its `identifier`."
+            },
+            "traderAssignedId": {
+              "description": "Optional reference the trader assigns to the pre-notification - their own internal reference number, carried through unchanged."
+            },
+            "includedNote": {
+              "description": "General notes attached to the document as a whole, distinct from the per-line notes on a trade line's `additionalInformationNote`."
+            },
+            "firstSignatoryAuthentication": {
               "type": "object",
-              "required": ["identifier", "issuer", "firstSignatoryAuthentication", "referenceDocument"],
+              "description": "Beyond the primary signature, this hosts the consignment's coded declaration clauses on `includedClause[]`: the reason for import (`identifier` `PURPOSE`) and what the animals are certified for (`identifier` `GOODS_CERTIFIED_AS`), each carrying its value in `content` with the sibling `urlId` naming the `ched_consignment_clause` codelist. GBN-AG requires both clauses to be present. When the `PURPOSE` clause `content` is `INTERNAL_MARKET`, the payload must also include a clause with `identifier` `INTERNAL_MARKET_PURPOSE` declaring the fine-grained agricultural intent (slaughter / breeding / fattening / production / transfer of ownership), drawn from the same codelist.",
+              "required": ["includedClause"],
               "properties": {
-                "identifier": {
-                  "type": "string",
-                  "description": "The final agreed format is `GBN-AG-26-7K8M2P`. `GBN` is Great Britain Notification, `AG` is Animals and Germinals, `26` is the two-digit year of allocation, and `7K8M2P` is a six-character Crockford base32 non-guessable body. The scheme is reusable for other GB import journeys (for example `GBN-P-26-XXXXXX` for Products of Animal Origin, `GBN-PP-26-XXXXXX` for Plants)."
-                },
-                "documentTypeCode": {
-                  "type": "string",
-                  "description": "UNTDID 1001 code. GBN-AG leaves this optional and unset today because a UK pre-notification code has not yet been decided. INTRA and CHED carry codes 666/856 and 636 respectively."
-                },
-                "documentStatusCode": {
-                  "type": "string",
-                  "description": "TRACES-boundary value, populated by the gateway on outbound TRACES messages and round-tripped on inbound. UNCL1373 per UN/CEFACT. Internal workflow state is on `notificationStatusCode`."
-                },
-                "notificationStatusCode": {
-                  "type": "string",
-                  "description": "Defra-internal workflow status of this notification. Under GBN-AG the values are `DRAFT`, `SUBMITTED`, `AMEND`, `WITHDRAWN`, drawn from `https://refdata.tbc.defra.gov.uk/gbn-ag-notification-status`."
-                },
-                "name": {
-                  "description": "An optional human-readable name for the document. GBN-AG identifies the pre-notification by its `identifier`."
-                },
-                "traderAssignedId": {
-                  "description": "Optional reference the trader assigns to the pre-notification - their own internal reference number, carried through unchanged."
-                },
-                "includedNote": {
-                  "description": "General notes attached to the document as a whole, distinct from the per-line notes on a trade line's `additionalInformationNote`."
-                },
-                "firstSignatoryAuthentication": {
-                  "type": "object",
-                  "description": "Beyond the primary signature, this hosts the consignment's coded declaration clauses on `includedClause[]`: the reason for import (`identifier` `PURPOSE`) and what the animals are certified for (`identifier` `GOODS_CERTIFIED_AS`), each carrying its value in `content` with the sibling `urlId` naming the `ched_consignment_clause` codelist. GBN-AG requires both clauses to be present. When the `PURPOSE` clause `content` is `INTERNAL_MARKET`, the payload must also include a clause with `identifier` `INTERNAL_MARKET_PURPOSE` declaring the fine-grained agricultural intent (slaughter / breeding / fattening / production / transfer of ownership), drawn from the same codelist.",
-                  "required": ["includedClause"],
-                  "properties": {
-                    "includedClause": {
-                      "type": "array",
-                      "minItems": 2,
-                      "allOf": [
-                        {
-                          "contains": {
-                            "type": "object",
-                            "properties": { "identifier": { "const": "PURPOSE" } },
-                            "required": ["identifier"]
-                          },
-                          "description": "Must contain a clause declaring the Reason for Import (identifier='PURPOSE'; urlId points at the ched_consignment_clause codelist)."
-                        },
-                        {
-                          "contains": {
-                            "type": "object",
-                            "properties": { "identifier": { "const": "GOODS_CERTIFIED_AS" } },
-                            "required": ["identifier"]
-                          },
-                          "description": "Must contain a clause declaring the Animals Certified For category (identifier='GOODS_CERTIFIED_AS'; urlId points at the ched_consignment_clause codelist)."
-                        }
-                      ]
-                    }
-                  }
-                },
-                "referenceDocument": {
+                "includedClause": {
                   "type": "array",
-                  "minItems": 1,
-                  "contains": {
-                    "type": "object",
-                    "properties": {
-                      "typeCode": { "const": "853" }
+                  "minItems": 2,
+                  "allOf": [
+                    {
+                      "contains": {
+                        "type": "object",
+                        "properties": { "identifier": { "const": "PURPOSE" } },
+                        "required": ["identifier"]
+                      },
+                      "description": "Must contain a clause declaring the Reason for Import (identifier='PURPOSE'; urlId points at the ched_consignment_clause codelist)."
                     },
-                    "required": ["typeCode"]
-                  },
-                  "description": "Carries the regulatory documents that accompany the consignment. At least one entry is the veterinary health certificate (`typeCode` `853` on UNTDID 1001); further entries cover the other accompanying documents (transport documents and the like), each distinguished by its `typeCode`. Attachments are referenced by `filename`, `mimeCode`, and `uri` rather than embedded inline."
+                    {
+                      "contains": {
+                        "type": "object",
+                        "properties": { "identifier": { "const": "GOODS_CERTIFIED_AS" } },
+                        "required": ["identifier"]
+                      },
+                      "description": "Must contain a clause declaring the Animals Certified For category (identifier='GOODS_CERTIFIED_AS'; urlId points at the ched_consignment_clause codelist)."
+                    }
+                  ]
                 }
               }
+            },
+            "referenceDocument": {
+              "description": "Carries the regulatory documents that accompany the consignment: typically the veterinary health certificate (`typeCode` `853` on UNTDID 1001), plus transport documents and other accompanying documents, each distinguished by its `typeCode`. Accompanying documents are all-or-nothing: they are optional as a group, but when one is provided its type, reference and date of issue accompany it. Attachments are referenced by `uri`, `filename`, and `mimeCode` rather than embedded inline."
             }
-          ]
+          }
         },
-
 
         "specifiedConsignment": {
           "type": "object",
@@ -123,7 +108,7 @@
               "description": "The party the animals will be delivered to at the immediate destination - the contractual delivery point, which may be temporary. The post-movement permanent home is carried separately: per-animal `permanentLocation`, or the consignment's `finalDestinationLocation` for livestock."
             },
             "carrier": {
-              "description": "The person or organisation responsible for moving the goods from the consignment's despatch point to the delivery point. Pre-notifications distinguish commercial from private transporters via the `operator_activity_type` code on `partyTypeCode`; private transporters carry a UK transporter approval number (issued under the welfare-in-transport regime) as the value of `identifier`. `partyTypeCode` is an array of coded values: a single entry for the common case where the party carries one classification; multiple entries when the party carries codes from more than one TRACES list (e.g. an `operator_activity_type` code plus a `classification_section_code`). Transporter status (active, suspended, expired) is not in the notification payload; consumers resolve it by looking the approval number up against the issuing scheme at consumption time."
+              "description": "The person or organisation responsible for moving the goods from the consignment's despatch point to the delivery point. The party's role is carried on `partyRoleCode` as `CA` (Carrier, UNTDID 3035). Pre-notifications distinguish commercial from private transporters via the `operator_activity_type` code on `partyTypeCode`, and the two are mutually exclusive: a transporter is one or the other, never both. `partyTypeCode` is an array of coded values: a single entry for the common case where the party carries one classification; multiple entries when the party carries codes from more than one TRACES list (e.g. an `operator_activity_type` code plus a `classification_section_code`). The array holds codes from different lists, not two transporter types. To read the transporter type, take the entry whose `urlId` is the `operator_activity_type` list. `identifier` is an optional party identifier, with `urlId` naming the register it is drawn from."
             },
             "originCountry": {
               "$ref": "../../../core/defra-unvtd-canonical-core-v1.schema.json#/$defs/TradeCountry",
@@ -142,7 +127,7 @@
               "description": "The UK port (or point) of entry the consignment arrives at, sourced from the MDM Countries API restricted to ports handling arrivals from EU and EFTA countries within scope of the GBN-AG journey under EU-Reset. `identifier` carries the port reference (typically a UN/LOCODE like `GBHUL`); `name` carries the human-readable port name. This slot is the structural anchor for identifying the UK arrival event: the `arrivalEvent` whose `occurrenceLogisticsLocation.identifier` matches this slot's `identifier` is the leg arriving at the UK port. Distinct from any inspection point under `applicableCrossBorderRegulatoryProcedure`, which is a separate regulatory concept."
             },
             "mainCarriageLogisticsTransportMovement": {
-              "description": "The transport legs that move the consignment to the UK port of entry. Producers may populate any number of legs. The consumer rule for finding the UK port arrival is to match `arrivalEvent.occurrenceLogisticsLocation.identifier` against `unloadingBaseportLocation.identifier`. Intra-EU upstream legs are modelled here; post-port onward legs are not. The Reason for Import clause distinguishes transit from internal-market cases."
+              "description": "The transport legs that move the consignment to the UK port of entry. Producers may populate any number of legs. The consumer rule for finding the UK port arrival is to match `arrivalEvent.occurrenceLogisticsLocation.identifier` against `unloadingBaseportLocation.identifier`. On the UK-arrival leg, `identifier` with its `urlId` register carries the V4 Transport identification value. Intra-EU upstream legs are modelled here; post-port onward legs are not. The Reason for Import clause distinguishes transit from internal-market cases."
             },
             "importer": {
               "$ref": "../../../core/defra-unvtd-canonical-core-v1.schema.json#/$defs/TradeParty",
@@ -160,9 +145,6 @@
             "isOrHasUnweanedAnimals": {
               "type": "boolean",
               "description": "True when the consignment contains any unweaned (non-ablacted) animals. A UK welfare indicator on live-animal import pre-notifications."
-            },
-            "packageQuantity": {
-              "description": "On GBN-AG, packageQuantity carries the count of boxes, cages, or stalls in which the animals are transported. At consignment level: the schema does not carry a per-species packaging count. Optional - bulk consignments where animals are loose-loaded (for example livestock in a single trailer compartment) omit it."
             },
             "includedConsignmentItem": {
               "type": "array",
@@ -267,7 +249,13 @@
             "specifiedLineTradeDelivery": {
               "type": "array",
               "minItems": 1,
+              "description": "The per-line quantity, carried on `productUnitQuantity` as `content` plus a `unitCode`: `H87` for a live-animal head count, `KGM` for weighed germinals (semen, embryos, ova). One slot carries both, keeping the declared quantity distinct from the physical `netWeight`. GBN-AG holds the quantity here rather than in the TRACES eCert `NetVolumeMeasure` measure; the eCert form is recoverable, with `H87` mapping to `NetVolumeMeasure` and `KGM` to `NetWeightMeasure`.",
               "items": { "$ref": "#/$defs/gbnAgLineTradeDelivery" }
+            },
+            "physicalReferencedLogisticsPackage": {
+              "type": "array",
+              "description": "The packages the line's animals are transported in - one entry per package group, carried per species, so a mixed consignment has a package group on each line and the consignment carries no aggregate. `itemQuantity` is the package count, `typeCode` the package type (an open string per UNECE PackageTypeCode), and `levelCode` the packaging level. Optional: consignments where the animals are loose-loaded (for example livestock in a single trailer compartment) omit it.",
+              "items": { "$ref": "#/$defs/gbnAgLogisticsPackage" }
             },
             "individualTradeProductInstance": {
               "type": "array",
@@ -302,8 +290,13 @@
 
     "tradeProductInstance": {
       "type": "object",
-      "description": "An individual animal. `identifier` is an array of regulatory IDs (microchip, passport, tattoo, ear tag, leg ring) - an animal can carry several types at once, and which types apply varies by species. `permanentLocation` is the address where this individual animal will permanently live after import; different animals on the same line can carry different permanent addresses (common when pets are imported to a business address and shipped onwards to their owners). All properties are optional; populate whichever apply to the species.",
+      "description": "An individual animal. `identifier` is an array of regulatory IDs (microchip, passport, tattoo, ear tag, leg ring) - an animal can carry several types at once, and which types apply varies by species. `permanentLocation` is the address and contact details for where this individual animal will permanently live after import; different animals on the same line can carry different permanent addresses (common when pets are imported to a business address and shipped onwards to their owners). All properties are optional; populate whichever apply to the species.",
       "properties": {
+        "name": {
+          "type": "string",
+          "maxLength": 58,
+          "description": "The given name of this individual animal. Required for equines (horses, donkeys, asses); omitted for other species."
+        },
         "identifier": {
           "type": "array",
           "items": {
@@ -318,8 +311,8 @@
           }
         },
         "permanentLocation": {
-          "$ref": "../../../core/defra-unvtd-canonical-core-v1.schema.json#/$defs/LogisticsLocation",
-          "description": "Optional per-animal permanent address. The address where this individual animal will permanently reside after import (e.g. for pets imported to a business address and then shipped onwards to their owner's home). Shown for commodities where the producer's refdata indicates a permanent address applies."
+          "$ref": "../../../core/defra-unvtd-canonical-core-v1.schema.json#/$defs/TradeParty",
+          "description": "Per-animal permanent address: the name, postal address, and contact details (telephone and email) for where the individual animal will permanently reside after import. Different animals on the same trade line can carry different addresses, common when pets are imported to a business address and then shipped onwards to their owners' homes. Populated for the species to which a permanent residence applies. Optional in the schema; the per-species requirement and the mandatory telephone and email are enforced at source."
         }
       }
     },
@@ -329,7 +322,7 @@
         { "$ref": "../../../core/defra-unvtd-canonical-core-v1.schema.json#/$defs/LineTradeDelivery" },
         {
           "type": "object",
-          "description": "GBN-AG line delivery: the per-line quantity. The unit varies by commodity per Defra refdata routing — most live animals use H87 (piece count via numberOfAnimals); some commodities (e.g. Sus scrofa domesticus embryos/ova, commodity 203) use KGM (kilograms). The schema accepts any positive number with any string unit code; the source system enforces the refdata-driven unit per commodity.",
+          "description": "GBN-AG line delivery: the per-line quantity on `productUnitQuantity`. The unit varies by commodity per Defra refdata routing: live animals use `H87` (a head count), and weighed germinals such as embryos or ova use `KGM` (kilograms). The schema accepts any positive number with any string unit code; the source system enforces the refdata-driven unit per commodity.",
           "required": ["productUnitQuantity"],
           "properties": {
             "productUnitQuantity": {
@@ -337,6 +330,22 @@
               "properties": {
                 "content": { "exclusiveMinimum": 0 }
               }
+            }
+          }
+        }
+      ]
+    },
+
+    "gbnAgLogisticsPackage": {
+      "allOf": [
+        { "$ref": "../../../core/defra-unvtd-canonical-core-v1.schema.json#/$defs/LogisticsPackage" },
+        {
+          "type": "object",
+          "required": ["itemQuantity", "typeCode"],
+          "properties": {
+            "typeCode": {
+              "type": "string",
+              "description": "Package type, an open string drawn from the UNECE PackageTypeCode list (UN/EDIFACT Recommendation 21)."
             }
           }
         }

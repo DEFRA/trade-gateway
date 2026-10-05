@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "gbn-ag-pims-v0.1.0.schema.json",
+  "title": "GBN-AG PIMS consumer schema (v0.1.0)",
+  "description": "Consumer-specific schema published to PIMS for the GBN-AG event payload. v0.1.0 is a point-in-time description of what the trade-imports-animals-backend currently serialises — derived from the outbox/gbnag/ Java types, not from gbn-ag-v1.schema.json. This schema is insulated from changes to the upstream GBN-AG schema; new PIMS versions are minted independently. Core envelope infrastructure is composed via event-envelope-v1. Note: the transport identification will move to the movement's `identifier` + `urlId` register in a future PIMS version as the backend converges on the GBN-AG single-home contract; `usedLogisticsTransportMeans` here reflects the current wire only.",
+  "version": "0.1.0",
+
+  "allOf": [
+    { "$ref": "profiles/imports/messaging/event-envelope-v1.schema.json" },
+    {
+      "type": "object",
+      "properties": {
+        "aggregateType": { "const": "Notification" },
+        "subType":       { "const": "GBN-AG" },
+        "data": {
+          "type": "object",
+          "required": ["$model", "$type", "exchangedDocument", "specifiedConsignment"],
+          "properties": {
+            "$model": { "const": "defra/certificate-internal/1" },
+            "$type":  { "const": "gbn-ag" },
+            "exchangedDocument": {
+              "type": "object",
+              "required": ["identifier"],
+              "properties": {
+                "identifier":             { "type": "string" },
+                "traderAssignedId":       { "type": "string" },
+                "notificationStatusCode": { "type": "string" },
+                "versionId":              { "type": "integer" },
+                "issueDateTime":          { "type": "string", "format": "date-time" },
+                "firstSignatoryAuthentication": {
+                  "type": "object",
+                  "properties": {
+                    "includedClause": {
+                      "type": "array",
+                      "items": { "$ref": "#/$defs/clause" }
+                    }
+                  }
+                }
+              }
+            },
+            "specifiedConsignment": {
+              "type": "object",
+              "properties": {
+                "consignorParty":    { "$ref": "#/$defs/tradeParty" },
+                "consigneeParty":    { "$ref": "#/$defs/tradeParty" },
+                "despatchParty":     { "$ref": "#/$defs/tradeParty" },
+                "deliveryParty":     { "$ref": "#/$defs/tradeParty" },
+                "importer":          { "$ref": "#/$defs/tradeParty" },
+                "carrier":           { "$ref": "#/$defs/tradeParty" },
+                "originCountry":     { "$ref": "#/$defs/tradeCountry" },
+                "unloadingBaseportLocation": { "$ref": "#/$defs/logisticsLocation" },
+                "mainCarriageLogisticsTransportMovement": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/logisticsTransportMovement" }
+                },
+                "isOrHasUnweanedAnimals": { "type": "boolean" },
+                "includedConsignmentItem": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "includedTradeLineItem": {
+                        "type": "array",
+                        "items": { "$ref": "#/$defs/tradeLineItem" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+
+  "$defs": {
+
+    "codedValue": {
+      "type": "object",
+      "properties": {
+        "value": { "type": "string" },
+        "urlId": { "type": "string" }
+      }
+    },
+
+    "tradeAddress": {
+      "type": "object",
+      "properties": {
+        "lineOne":  { "type": "string" },
+        "lineTwo":  { "type": "string" },
+        "cityName": { "type": "string" },
+        "countryId": { "type": "string" }
+      }
+    },
+
+    "tradeParty": {
+      "type": "object",
+      "properties": {
+        "identifier":    { "type": "string" },
+        "urlId":         { "type": "string" },
+        "name":          { "type": "string" },
+        "partyTypeCode": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/codedValue" }
+        },
+        "postalAddress": { "$ref": "#/$defs/tradeAddress" }
+      }
+    },
+
+    "tradeCountry": {
+      "type": "object",
+      "properties": {
+        "code": { "$ref": "#/$defs/codedValue" }
+      }
+    },
+
+    "logisticsLocation": {
+      "type": "object",
+      "properties": {
+        "identifier": { "type": "string" }
+      }
+    },
+
+    "clause": {
+      "type": "object",
+      "properties": {
+        "identifier": { "type": "string" },
+        "content":    { "type": ["string", "null"] },
+        "urlId":      { "type": ["string", "null"] }
+      }
+    },
+
+    "applicableClassification": {
+      "type": "object",
+      "properties": {
+        "systemId":  { "type": "string" },
+        "classCode": { "$ref": "#/$defs/codedValue" }
+      }
+    },
+
+    "animalIdentifier": {
+      "type": "object",
+      "properties": {
+        "typeCode": { "type": "string" },
+        "content":  { "type": "string" }
+      }
+    },
+
+    "tradeProductInstance": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/animalIdentifier" }
+        }
+      }
+    },
+
+    "lineTradeDelivery": {
+      "type": "object",
+      "properties": {
+        "productUnitQuantity": {
+          "type": "object",
+          "properties": {
+            "content": { "type": "integer" }
+          }
+        }
+      }
+    },
+
+    "logisticsPackage": {
+      "type": "object",
+      "properties": {
+        "itemQuantity": { "type": "integer" }
+      }
+    },
+
+    "logisticsTransportMeans": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }
+      }
+    },
+
+    "transportEvent": {
+      "type": "object",
+      "properties": {
+        "scheduledOccurrenceDateTime": { "type": "string", "format": "date-time" }
+      }
+    },
+
+    "logisticsTransportMovement": {
+      "type": "object",
+      "properties": {
+        "modeCode": { "type": "integer" },
+        "usedLogisticsTransportMeans": { "$ref": "#/$defs/logisticsTransportMeans" },
+        "arrivalEvent": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/transportEvent" }
+        }
+      }
+    },
+
+    "tradeLineItem": {
+      "type": "object",
+      "properties": {
+        "applicableClassification": { "$ref": "#/$defs/applicableClassification" },
+        "specifiedLineTradeDelivery": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/lineTradeDelivery" }
+        },
+        "physicalReferencedLogisticsPackage": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/logisticsPackage" }
+        },
+        "individualTradeProductInstance": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/tradeProductInstance" }
+        }
+      }
+    }
+  }
+}

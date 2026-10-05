@@ -10,13 +10,12 @@ internal static class SpsTransportMovementMapper
         if (source is null)
             return null;
 
+        var id = source.ID?.Value;
+
         return new LogisticsTransportMovement
         {
-            Identifier = source.ID?.Value,
-            ModeCode = source.ModeCode?.Value.XmlEnumCode(),
-            UsedLogisticsTransportMeans = source.UsedSPSTransportMeans?.Name?.Value is { } name
-                ? new LogisticsTransportMovementUsedLogisticsTransportMeans { Name = name }
-                : null,
+            Identifier = string.IsNullOrEmpty(id) ? source.UsedSPSTransportMeans?.Name?.Value : id,
+            ModeCode = int.TryParse(source.ModeCode?.Value.XmlEnumCode(), out var mode) ? mode : null,
         };
     }
 

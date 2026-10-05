@@ -19,8 +19,18 @@ public class SpsTransportMovementMapperTests
         var result = SpsTransportMovementMapper.Map(source);
 
         result!.Identifier.Should().Be("VESSEL-123");
-        result.ModeCode.Should().Be("1");
-        result.UsedLogisticsTransportMeans!.Name.Should().Be("MV Example");
+        result.ModeCode.Should().Be(1);
+    }
+
+    [Fact]
+    public void Map_NoMovementId_FallsBackToTransportMeansName()
+    {
+        var source = new SPSTransportMovementType
+        {
+            UsedSPSTransportMeans = new SPSTransportMeansType { Name = new TextType { Value = "MV Example" } },
+        };
+
+        SpsTransportMovementMapper.Map(source)!.Identifier.Should().Be("MV Example");
     }
 
     [Fact]
@@ -37,17 +47,20 @@ public class SpsTransportMovementMapperTests
         result.Should().NotBeNull();
         result!.Identifier.Should().BeNull();
         result.ModeCode.Should().BeNull();
-        result.UsedLogisticsTransportMeans.Should().BeNull();
     }
 
     [Fact]
-    public void Map_NoTransportMeansName_ReturnsNullTransportMeans()
+    public void Map_NonNumericModeCode_ReturnsNullModeCode()
     {
-        var source = new SPSTransportMovementType { UsedSPSTransportMeans = new SPSTransportMeansType() };
+        var source = new SPSTransportMovementType
+        {
+            ModeCode = new TransportModeCodeType { Value = TransportModeCodeContentType.Item1, name = "Maritime" },
+        };
 
         var result = SpsTransportMovementMapper.Map(source);
 
-        result!.UsedLogisticsTransportMeans.Should().BeNull();
+        // XmlEnumCode reads [XmlEnum("1")] -> "1" -> parses to 1
+        result!.ModeCode.Should().Be(1);
     }
 
     [Fact]

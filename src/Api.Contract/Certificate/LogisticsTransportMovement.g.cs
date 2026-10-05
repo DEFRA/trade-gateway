@@ -8,7 +8,7 @@ namespace Trade.Gateway.Api.Contract.Certificate;
 public partial record LogisticsTransportMovement
 {
     [JsonPropertyName("identifier")]
-    [Description("Transport identifier as a bare string or integer (legacy INTRA shape where it was sometimes numeric). Matches the BSP D23B canonical shape where idType metadata is disabled. The sibling urlId names the register the identifier is drawn from (e.g. vessel_name, road_vehicle_registration, airplane_flight_number).")]
+    [Description("The declared transport identification for this movement, as a bare string or integer (legacy INTRA shape where it was sometimes numeric). Matches the BSP D23B canonical shape where idType metadata is disabled. The value's register is named by the sibling urlId and varies by mode - road_vehicle_registration for road, vessel_name for maritime, airplane_flight_number for air - mirroring the schemeID that TRACES carries on the movement's ID. This is the single home for the means-of-transport identification; there is no separate conveyance-name slot.")]
     public string? Identifier { get; init; }
 
     [JsonPropertyName("urlId")]
@@ -16,12 +16,8 @@ public partial record LogisticsTransportMovement
     public string? UrlId { get; init; }
 
     [JsonPropertyName("modeCode")]
-    [Description("Mode-of-transport code per UN/EDIFACT Recommendation 19. Accepts integer (current INTRA/CHED shape) or string (hybrid shape where GBN-AG and TRACES-textual consumers prefer it as a code value).")]
-    public string? ModeCode { get; init; }
-
-    [JsonPropertyName("usedLogisticsTransportMeans")]
-    [Description("The conveyance used on this leg. `name` carries the means' identifying name (vessel name, vehicle registration, flight callsign). Distinct from `identifier` on the parent movement, which carries the movement's reference (journey number, waybill, booking). Both slots can be populated and may carry different values: identifier identifies the movement, usedLogisticsTransportMeans.name identifies the vehicle / vessel / aircraft.")]
-    public LogisticsTransportMovementUsedLogisticsTransportMeans? UsedLogisticsTransportMeans { get; init; }
+    [Description("Mode-of-transport code, held as an integer. From the UN/CEFACT TransportModeCodeList (UN/EDIFACT Recommendation 19): 1 Maritime, 2 Rail, 3 Road, 4 Air.")]
+    public int? ModeCode { get; init; }
 
     [JsonPropertyName("transportContractRelatedReferencedDocument")]
     public List<ReferencedDocument>? TransportContractRelatedReferencedDocument { get; init; }
@@ -31,10 +27,4 @@ public partial record LogisticsTransportMovement
 
     [JsonPropertyName("departureEvent")]
     public List<TransportEvent>? DepartureEvent { get; init; }
-}
-
-public partial record LogisticsTransportMovementUsedLogisticsTransportMeans
-{
-    [JsonPropertyName("name")]
-    public string? Name { get; init; }
 }
