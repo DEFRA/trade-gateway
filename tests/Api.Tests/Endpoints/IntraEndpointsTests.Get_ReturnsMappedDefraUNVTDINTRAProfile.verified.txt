@@ -1,4 +1,4 @@
-﻿{
+{
   Model: defra/certificate-internal/1,
   Type: intra,
   ExchangedDocument: {
@@ -7,6 +7,7 @@
     DocumentTypeCode: 856,
     DocumentStatusCode: 1,
     IssueDateTime: DateTimeOffset_1,
+    RevisionDateTime: DateTimeOffset_2,
     IncludedNote: [
       {
         Type: Note,
@@ -236,6 +237,11 @@
         }
       }
     ],
+    LoadingBaseportLocation: {
+      Identifier: TEST-01-01,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: Bourg-en-Bresse
+    },
     MainCarriageLogisticsTransportMovement: [
       {
         Identifier: R5434FGD,
@@ -265,6 +271,37 @@
               Content: 1,
               UnitCode: H87
             },
+            AppliedProcess: [
+              {
+                TypeCode: 44,
+                UrlId: https://traces-codelists.ec.europa.eu/7187,
+                OperatorParty: {
+                  Identifier: Type I,
+                  UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+                  Name: Test type I,
+                  PartyTypeCode: [
+                    {
+                      Value: REGISTERED_TRANSPORTER,
+                      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+                      Name: Registered transporter
+                    },
+                    {
+                      Value: REG-TRANS,
+                      UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+                      Name: Registered transporter
+                    }
+                  ],
+                  PostalAddress: {
+                    PostcodeCode: 91744,
+                    LineOne: rue I,
+                    CityName: Paris,
+                    CountryId: FR,
+                    CountryName: France,
+                    CountrySubDivisionName: Paris
+                  }
+                }
+              }
+            ],
             PhysicalReferencedLogisticsPackage: [
               {
                 LevelCode: 4,

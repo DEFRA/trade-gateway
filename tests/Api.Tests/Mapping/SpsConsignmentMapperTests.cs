@@ -67,6 +67,71 @@ public class SpsConsignmentMapperTests
     }
 
     [Fact]
+    public void Map_LoadingBaseportLocation_MapsFromCorrectSourceFields()
+    {
+        var source = new SPSConsignmentType
+        {
+            LoadingBaseportSPSLocation = new SPSLocationType
+            {
+                ID = new IDType { Value = "GBLON1", schemeID = "un_locode" },
+            },
+        };
+
+        var result = SpsConsignmentMapper.Map(source, Context);
+
+        result.LoadingBaseportLocation!.Identifier.Should().Be("GBLON1");
+    }
+
+    [Fact]
+    public void Map_PresentExaminationEvent_MapsToSingleEvent()
+    {
+        var source = new SPSConsignmentType
+        {
+            ExaminationSPSEvent = new SPSEventType
+            {
+                OccurrenceSPSLocation = new SPSLocationType { ID = new IDType { Value = "GBDVR1" } },
+            },
+        };
+
+        var result = SpsConsignmentMapper.Map(source, Context);
+
+        result.ExaminationEvent.Should().ContainSingle();
+        result.ExaminationEvent![0].OccurrenceLogisticsLocation!.Identifier.Should().Be("GBDVR1");
+    }
+
+    [Fact]
+    public void Map_UtilizedTransportEquipment_MapsWithSeals()
+    {
+        var source = new SPSConsignmentType
+        {
+            UtilizedSPSTransportEquipment =
+            [
+                new SPSTransportEquipmentType
+                {
+                    ID = new IDType { Value = "MSKU1234567" },
+                    AffixedSPSSeal = [new SPSSealType { ID = new IDType { Value = "SEAL001" } }],
+                },
+            ],
+        };
+
+        var result = SpsConsignmentMapper.Map(source, Context);
+
+        var equipment = result.UtilizedLogisticsTransportEquipment.Should().ContainSingle().Subject;
+        equipment.Identifier.Should().Be("MSKU1234567");
+        equipment.AffixedLogisticsSeal.Should().ContainSingle().Which.Identifier.Should().Be("SEAL001");
+    }
+
+    [Fact]
+    public void Map_NoLoadingExaminationOrEquipment_AreNull()
+    {
+        var result = SpsConsignmentMapper.Map(new SPSConsignmentType(), Context);
+
+        result.LoadingBaseportLocation.Should().BeNull();
+        result.ExaminationEvent.Should().BeNull();
+        result.UtilizedLogisticsTransportEquipment.Should().BeNull();
+    }
+
+    [Fact]
     public void Map_SingleCountries_MapFromCorrectSourceFields()
     {
         var source = new SPSConsignmentType

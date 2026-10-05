@@ -43,6 +43,7 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `documentTypeCode` | `TypeCode.Value` | e.g. `"856"` |
 | `documentStatusCode` | `StatusCode.Value` | e.g. `"1"` |
 | `issueDateTime` | `IssueDateTime.Item` | ISO 8601; see [Date/Time Handling](#datetime-handling) |
+| `revisionDateTime` | `IncludedSPSNote` where `SubjectCode = LAST_UPDATE_DATETIME` | latest note content parsed as ISO 8601; omitted if no such note. The note itself stays in `includedNote` |
 | `issuer` | `IssuerSPSParty` | see [TradeParty](#tradeparty--spspartytype); the party responsible for issuing the document |
 | `includedNote` | `IncludedSPSNote[]` | see [IncludedNote](#includednote--spsnotetype); omitted if empty |
 | `referenceDocument` | `ReferenceSPSReferencedDocument[]` | see [ReferencedDocument](#referenceddocument--spsreferenceddocumenttype); omitted if empty |
@@ -71,6 +72,9 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `transitCountry` | `TransitSPSCountry[]` | list; omitted if empty, see [TradeCountry](#tradecountry--spscountrytype) |
 | `transitTradeCountry` | `TransitSPSCountry[]` | see [TradeCountry](#tradecountry--spscountrytype) |
 | `unloadingBaseportLocation` | `UnloadingBaseportSPSLocation` | see [LogisticsLocation](#logisticslocation--spslocationtype) |
+| `loadingBaseportLocation` | `LoadingBaseportSPSLocation` | see [LogisticsLocation](#logisticslocation--spslocationtype) |
+| `examinationEvent` | `ExaminationSPSEvent` | see [ExaminationEvent](#examinationevent--spseventtype); omitted when the source element carries no location data |
+| `utilizedLogisticsTransportEquipment` | `UtilizedSPSTransportEquipment[]` | see [LogisticsTransportEquipment](#logisticstransportequipment--spstransportequipmenttype); omitted if empty |
 | `mainCarriageLogisticsTransportMovement` | `MainCarriageSPSTransportMovement[]` | list, one entry per carriage leg; see [LogisticsTransportMovement](#logisticstransportmovement--spstransportmovementtype); omitted if empty |
 | `packageQuantity` | `— (no direct SOAP equivalent on SPSConsignmentType)` | The canonical `packageQuantity` slot exists on the contract type but is not present on all SOAP variants; it remains unmapped unless a source element is available in the SOAP payload |
 | `includedConsignmentItem` | `IncludedSPSConsignmentItem[]` | see [ConsignmentItem](#consignmentitem--spsconsignmentitemtype); omitted if empty |
@@ -207,6 +211,8 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `netWeight` | `NetWeightMeasure` | see [UneceWeightMeasure](#uneceweightmeasure--measuretype) |
 | `grossWeight` | `GrossWeightMeasure` | |
 | `netVolume` | `NetVolumeMeasure` | see [UneceMeasure](#unecemeasure--measuretype) |
+| `originCountry` | `OriginSPSCountry[]` | first entry; line-level origin, see [TradeCountry](#tradecountry--spscountrytype) |
+| `appliedProcess` | `AppliedSPSProcess[]` | see [AppliedProcess](#appliedprocess--spsprocesstype); omitted if empty |
 | `applicableClassification` | `ApplicableSPSClassification[]` | see [ApplicableClassification](#applicableclassification--spsclassificationtype); omitted if empty |
 | `physicalReferencedLogisticsPackage` | `PhysicalSPSPackage[]` | see [LogisticsPackage](#logisticspackage--spspackagetype); omitted if empty |
 
@@ -274,6 +280,47 @@ entry per carriage leg). Every element is mapped; an empty or absent array maps 
 | `content` | `Value` | decimal value expressed as string |
 | `unitCode` | `unitCode` | open UN/CEFACT Rec 20 unit e.g. `"LTR"` |
 | `unitCodeListVersionId` | `unitCodeListVersionID` | e.g. `"rec20"` |
+
+---
+
+### `AppliedProcess` ← `SPSProcessType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `typeCode` | `TypeCode.Value` | UN/CEFACT 7187 process type as a string |
+| `urlId` | `TypeCode.listID` | codelist URI via [coded value rule](#coded-values) |
+| `operatorParty` | `OperatorSPSParty` | see [TradeParty](#tradeparty--spspartytype); omitted if absent |
+
+`CompletionSPSPeriod`, `ApplicableSPSProcessCharacteristic` and `OperationSPSCountry` have no target slot on the contract and are not mapped.
+
+---
+
+### `ExaminationEvent` ← `SPSEventType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `occurrenceLogisticsLocation` | `OccurrenceSPSLocation` | see [LogisticsLocation](#logisticslocation--spslocationtype) |
+
+The SOAP event carries only the occurrence location, so `scheduledOccurrenceDateTime` and `actualOccurrenceDateTime` have no source and are left null. The event is emitted only when the location has at least one of identifier, scheme URI or name; an empty element is dropped rather than emitted as an empty object.
+
+---
+
+### `LogisticsTransportEquipment` ← `SPSTransportEquipmentType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `identifier` | `ID.Value` | e.g. a container number |
+| `urlId` | `ID.schemeID` | codelist URI via [coded value rule](#coded-values) |
+| `affixedLogisticsSeal` | `AffixedSPSSeal[]` | see [LogisticsSeal](#logisticsseal--spssealtype); omitted if empty |
+
+### `LogisticsSeal` ← `SPSSealType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `identifier` | `ID.Value` | |
+| `urlId` | `ID.schemeID` | codelist URI via [coded value rule](#coded-values) |
+
+`SettingSPSTemperature` and the seal's `MaximumID` / `IssuingSPSParty` have no target slot and are not mapped.
 
 ---
 

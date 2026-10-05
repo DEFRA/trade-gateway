@@ -5,8 +5,9 @@ namespace Api.Mapping;
 
 internal static class SpsExchangedDocumentMapper
 {
-    internal static ExchangedDocument Map(SPSExchangedDocumentType source, MappingContext context) =>
-        new()
+    internal static ExchangedDocument Map(SPSExchangedDocumentType source, MappingContext context)
+    {
+        var document = new ExchangedDocument
         {
             Name = source.Name.ForLanguage(context.LanguageCode),
             Identifier = source.ID?.Value ?? string.Empty,
@@ -35,4 +36,7 @@ internal static class SpsExchangedDocumentMapper
                 context
             ),
         };
+
+        return document with { RevisionDateTime = document.GetLatestLastUpdateDateTime() };
+    }
 }

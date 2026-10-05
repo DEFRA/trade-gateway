@@ -1,4 +1,4 @@
-﻿{
+{
   LastUpdated: DateTimeOffset_1,
   Model: defra/certificate-internal/1,
   Type: ched,
@@ -8,6 +8,7 @@
     DocumentTypeCode: 636,
     DocumentStatusCode: 1,
     IssueDateTime: DateTimeOffset_2,
+    RevisionDateTime: DateTimeOffset_1,
     Issuer: {
       Identifier: XIXXX1,
       UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
@@ -283,6 +284,12 @@ DAERA Plant Health Inspection Branch
             NetVolume: {
               Content: 5,
               UnitCode: H87
+            },
+            OriginCountry: {
+              Code: {
+                Value: GB,
+                Name: United Kingdom
+              }
             },
             ApplicableClassification: [
               {

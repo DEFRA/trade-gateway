@@ -96,6 +96,33 @@ public class SpsTradeLineItemMapperTests
     }
 
     [Fact]
+    public void Map_OriginCountry_MapsFromLineLevelCountry()
+    {
+        var source = new SPSTradeLineItemType
+        {
+            OriginSPSCountry = [new SPSCountryType { ID = new IDType { Value = "IE" } }],
+        };
+
+        SpsTradeLineItemMapper.Map(source, Context).OriginCountry!.Code?.Value.Should().Be("IE");
+    }
+
+    [Fact]
+    public void Map_AppliedProcess_MapsList()
+    {
+        var source = new SPSTradeLineItemType
+        {
+            AppliedSPSProcess = [new SPSProcessType { TypeCode = new ProcessTypeCodeType { Value = ProcessTypeCodeContentType.Item3 } }],
+        };
+
+        SpsTradeLineItemMapper
+            .Map(source, Context)
+            .AppliedProcess.Should()
+            .ContainSingle()
+            .Which.TypeCode.Should()
+            .Be("3");
+    }
+
+    [Fact]
     public void Map_NullProperties_ReturnNullFields()
     {
         var result = SpsTradeLineItemMapper.Map(new SPSTradeLineItemType(), Context);
