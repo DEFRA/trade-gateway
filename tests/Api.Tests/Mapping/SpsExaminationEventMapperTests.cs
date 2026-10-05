@@ -34,7 +34,7 @@ public class SpsExaminationEventMapperTests
     }
 
     [Fact]
-    public void MapList_EmptyLocation_ReturnsNull()
+    public void Map_EmptyOccurrenceLocation_ReturnsNull()
     {
         var source = new SPSEventType { OccurrenceSPSLocation = new SPSLocationType() };
 

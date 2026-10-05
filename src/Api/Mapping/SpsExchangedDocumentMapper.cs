@@ -7,7 +7,9 @@ internal static class SpsExchangedDocumentMapper
 {
     internal static ExchangedDocument Map(SPSExchangedDocumentType source, MappingContext context)
     {
-        var document = new ExchangedDocument
+        var includedNote = SpsNoteMapper.MapList(source.IncludedSPSNote);
+
+        return new ExchangedDocument
         {
             Name = source.Name.ForLanguage(context.LanguageCode),
             Identifier = source.ID?.Value ?? string.Empty,
@@ -15,7 +17,8 @@ internal static class SpsExchangedDocumentMapper
             DocumentStatusCode = source.StatusCode?.Value.XmlEnumCode(),
             Issuer = SpsPartyMapper.Map(source.IssuerSPSParty),
             IssueDateTime = SpsDateTimeMapper.Map(source.IssueDateTime),
-            IncludedNote = SpsNoteMapper.MapList(source.IncludedSPSNote),
+            RevisionDateTime = includedNote.GetLatestLastUpdateDateTime(),
+            IncludedNote = includedNote,
             ReferenceDocument = source
                 .ReferenceSPSReferencedDocument?.Select(SpsReferencedDocumentMapper.Map)
                 .ToList()
@@ -36,7 +39,5 @@ internal static class SpsExchangedDocumentMapper
                 context
             ),
         };
-
-        return document with { RevisionDateTime = document.GetLatestLastUpdateDateTime() };
     }
 }
