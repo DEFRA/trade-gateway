@@ -109,6 +109,18 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | Target field | Source path | Notes |
 |---|---|---|
 | `code` | `ID` / `Name` | [coded value](#coded-values): `value` ← `ID.Value` (ISO 3166-1 alpha-2 e.g. `"GB"`), `name` ← `Name[].Value` [language-preferred](#language-selection) |
+| `subordinateTradeCountrySubDivision` | `SubordinateSPSCountrySubDivision[]` | one per entry, in source order; see [TradeCountrySubDivision](#tradecountrysubdivision--spscountrysubdivisiontype); omitted if absent |
+
+---
+
+### `TradeCountrySubDivision` ← `SPSCountrySubDivisionType`
+
+| Target field | Source path | Notes |
+|---|---|---|
+| `identifier` | `ID.Value` | Region code where `functionTypeCode` is `106`; absent on a positional authority wrapper (`44`/`42`/`41`) |
+| `urlId` | `ID.schemeID` | codelist URI via [codelist rule](#coded-values) |
+| `functionTypeCode.content` | `FunctionTypeCode.Value` | UNCL3227 code as a string (`XmlEnumCode`) |
+| `activityAuthorizedParty` | `ActivityAuthorizedSPSParty[]` | [party](#tradeparty--spspartytype) per authority; `partyRoleCode` distinguishes `RA` central, `VG` local, `CM` customs / border control post; omitted if empty |
 
 ---
 

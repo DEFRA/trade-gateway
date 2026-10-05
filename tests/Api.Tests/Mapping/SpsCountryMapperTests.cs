@@ -50,6 +50,123 @@ public class SpsCountryMapperTests
     }
 
     [Fact]
+    public void Map_SubordinateSubDivision_MapsThrough()
+    {
+        var source = new SPSCountryType
+        {
+            ID = new IDType { Value = "NL" },
+            SubordinateSPSCountrySubDivision =
+            [
+                new SPSCountrySubDivisionType
+                {
+                    FunctionTypeCode = new LocationFunctionCodeType { Value = LocationFunctionCodeContentType.Item44 },
+                    ActivityAuthorizedSPSParty =
+                    [
+                        new SPSPartyType
+                        {
+                            ID = new IDType { Value = "NL0002" },
+                            RoleCode = new PartyRoleCodeType { Value = PartyRoleCodeContentType.RA },
+                        },
+                    ],
+                },
+            ],
+        };
+
+        var result = SpsCountryMapper.Map(source, Context)!;
+
+        result.SubordinateTradeCountrySubDivision.Should().NotBeNull();
+        result.SubordinateTradeCountrySubDivision!.Should().ContainSingle();
+        result.SubordinateTradeCountrySubDivision[0].FunctionTypeCode.Content.Should().Be("44");
+        result
+            .SubordinateTradeCountrySubDivision[0]
+            .ActivityAuthorizedParty.Should()
+            .ContainSingle()
+            .Which.PartyRoleCode!.Value.Should()
+            .Be("RA");
+    }
+
+    [Fact]
+    public void Map_MultipleSubdivisions_MapsAll()
+    {
+        var source = new SPSCountryType
+        {
+            SubordinateSPSCountrySubDivision =
+            [
+                new SPSCountrySubDivisionType
+                {
+                    FunctionTypeCode = new LocationFunctionCodeType { Value = LocationFunctionCodeContentType.Item44 },
+                },
+                new SPSCountrySubDivisionType
+                {
+                    FunctionTypeCode = new LocationFunctionCodeType { Value = LocationFunctionCodeContentType.Item42 },
+                },
+            ],
+        };
+
+        var result = SpsCountryMapper.Map(source, Context)!;
+
+        result
+            .SubordinateTradeCountrySubDivision!.Select(d => d.FunctionTypeCode.Content)
+            .Should()
+            .Equal("44", "42");
+    }
+
+    [Fact]
+    public void Map_SubdivisionWithoutFunctionTypeCode_IsOmittedFromList()
+    {
+        var source = new SPSCountryType
+        {
+            SubordinateSPSCountrySubDivision =
+            [
+                new SPSCountrySubDivisionType { ID = new IDType { Value = "NL" } },
+                new SPSCountrySubDivisionType
+                {
+                    FunctionTypeCode = new LocationFunctionCodeType { Value = LocationFunctionCodeContentType.Item44 },
+                },
+            ],
+        };
+
+        var result = SpsCountryMapper.Map(source, Context)!;
+
+        result.SubordinateTradeCountrySubDivision.Should().ContainSingle();
+        result.SubordinateTradeCountrySubDivision![0].FunctionTypeCode.Content.Should().Be("44");
+    }
+
+    [Fact]
+    public void Map_NewIntraCountry_OmitsSubdivisionAndAuthorities()
+    {
+        var source = new SPSCountryType
+        {
+            ID = new IDType { Value = "XI" },
+            Name = [new TextType { Value = "Northern Ireland" }],
+        };
+
+        var result = SpsCountryMapper.Map(source, Context)!;
+
+        result.SubordinateTradeCountrySubDivision.Should().BeNull();
+    }
+
+    [Fact]
+    public void Map_SubdivisionWithoutParties_OmitsAuthorities()
+    {
+        var source = new SPSCountryType
+        {
+            ID = new IDType { Value = "XI" },
+            SubordinateSPSCountrySubDivision =
+            [
+                new SPSCountrySubDivisionType
+                {
+                    FunctionTypeCode = new LocationFunctionCodeType { Value = LocationFunctionCodeContentType.Item44 },
+                },
+            ],
+        };
+
+        var result = SpsCountryMapper.Map(source, Context)!;
+
+        result.SubordinateTradeCountrySubDivision![0].ActivityAuthorizedParty.Should().BeNull();
+    }
+
+    [Fact]
     public void Map_NullProperties_ReturnNullFields()
     {
         var result = SpsCountryMapper.Map(new SPSCountryType(), Context)!;

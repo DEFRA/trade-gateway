@@ -3676,7 +3676,11 @@
             $ref: #/components/schemas/CodedValue
           },
           subordinateTradeCountrySubDivision: {
-            $ref: #/components/schemas/TradeCountrySubDivision
+            type: array,
+            items: {
+              $ref: #/components/schemas/TradeCountrySubDivision
+            },
+            nullable: true
           }
         },
         additionalProperties: false
