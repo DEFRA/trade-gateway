@@ -101,11 +101,7 @@ namespace Api.Tests
                 {
                     ["Content-Type"] = ["application/soap+xml; charset=utf-8"],
                 },
-                BodyData = new BodyData
-                {
-                    BodyAsString = resourceContent.Trim(),
-                    DetectedBodyType = BodyType.String,
-                },
+                BodyData = new BodyData { BodyAsString = resourceContent.Trim(), DetectedBodyType = BodyType.String },
             };
         }
 

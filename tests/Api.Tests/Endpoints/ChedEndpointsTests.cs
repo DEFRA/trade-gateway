@@ -12,6 +12,7 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string GetChedCertificateSoapAction = "\"getChedCertificate\"";
     private const string FindChedCertificateSoapAction = "\"findChedCertificate\"";
+
     // CertificateAttachmentsServiceV1 is SOAP 1.2 with MTOM, so the action travels in the Content-Type header.
     private const string GetCertificateAttachmentSoapAction = "getCertificateAttachment";
 
