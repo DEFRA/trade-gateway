@@ -23,32 +23,29 @@ public static class CustomsChedQuantityEndpoints
     {
         app.MapGet("customs/cheds/{chedId}/quantities", GetQuantities)
             .WithName("GetChedQuantities")
-            .WithSummary("Get a CHED's quantity ledger")
+            .WithSummary("Read the quantity position of a CHED.")
             .WithDescription(
-                "Returns the quantity management position of the CHED from TRACES NT: the quantities still "
-                    + "available, and those reserved and consumed by customs declarations. Read only; "
-                    + "nothing is reserved."
+                "Returns what remains available on the CHED and, when declarations hold "
+                    + "quantities, what they reserve and have consumed."
             )
             .Produces<ChedQuantityLedger>(200, MediaTypeAttribute.For<ChedQuantityLedger>())
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation", PutReservation)
-            .WithName("PutChedReservation")
-            .WithSummary("Reserve CHED quantities against a declaration")
+            .WithName("ReserveChedQuantities")
+            .WithSummary("Reserve quantities of a CHED against a customs declaration.")
             .WithDescription(
-                "Reserves quantities of the CHED's consignment items against the customs declaration "
-                    + "identified by the MRN. Returns the quantities reserved and consumed for that "
-                    + "declaration, or 409 Conflict if TRACES NT refuses the reservation, whose `failureReason` is one of "
-                    + "Unrecognised, CnCodesMismatch, InappropriateStatus, QuantitiesInsufficient, WriteOffExists, "
-                    + "LineNumbersMismatch, MeasurementUnitMismatch or QuantitiesCannotBeValidated, and `failedItem` "
-                    + "the goods item and document line refused."
+                "Creates a reservation against the declaration's MRN for the supplied consignment items. "
+                    + "Returns the allocation result or an error from TRACES indicating why it failed."
             )
             .Validates<ChedReservationRequest>()
             .Produces<ChedDeclarationReservation>(200, MediaTypeAttribute.For<ChedDeclarationReservation>())
             .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -56,15 +53,17 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPost("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", ForceWriteOff)
-            .WithName("ForceWriteOffChedReservation")
-            .WithSummary("Force a write-off of a CHED reservation")
+            .WithName("ForceWriteOff")
+            .WithSummary("Force a customs write-off against a declaration.")
             .WithDescription(
-                "Manually releases (force writes off) quantities of the CHED reserved against the customs "
-                    + "declaration identified by the MRN, for the given consignment items."
+                "Creates a customs write-off against the declaration's MRN for the supplied "
+                    + "consignment items, without waiting for the declaration to clear. Returns 200 "
+                    + "when TRACES executes it, or the upstream failure as a problem response."
             )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -72,15 +71,17 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", AmendWriteOff)
-            .WithName("AmendWriteOffChedReservation")
-            .WithSummary("Amend a forced write-off of a CHED reservation")
+            .WithName("AmendWriteOff")
+            .WithSummary("Amend an existing customs write-off.")
             .WithDescription(
-                "Amends a previous manual release (forced write-off) of quantities of the CHED against the "
-                    + "customs declaration identified by the MRN, for the given consignment items."
+                "Replaces the quantities written off against the declaration's MRN with the "
+                    + "supplied consignment items. Returns 200 when TRACES executes the amendment, "
+                    + "or the upstream failure."
             )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -88,15 +89,16 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation/manual-release", DeleteWriteOff)
-            .WithName("DeleteWriteOffChedReservation")
-            .WithSummary("Delete a forced write-off of a CHED reservation")
+            .WithName("DeleteWriteOff")
+            .WithSummary("Delete a customs write-off.")
             .WithDescription(
-                "Deletes a previous manual release (forced write-off) of quantities of the CHED against the "
-                    + "customs declaration identified by the MRN, for the given consignment items."
+                "Removes the write-off held against the declaration's MRN. Returns 200 when "
+                    + "TRACES executes the deletion, or the upstream failure."
             )
             .Validates<ChedReservationInterventionRequest>()
             .Produces(StatusCodes.Status200OK)
             .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -104,14 +106,14 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapPut("customs/cheds/{chedId}/declarations/{mrn}/reservation/release", Release)
-            .WithName("ReleaseChedReservation")
-            .WithSummary("Release a CHED reservation")
+            .WithName("ReleaseReservation")
+            .WithSummary("Release a CHED reservation.")
             .WithDescription(
-                "Releases the quantities of the CHED reserved against the customs declaration identified by "
-                    + "the MRN. Returns 200 with no body on success; otherwise a problem describing the "
-                    + "TRACES NT quantity management outcome."
+                "Releases the quantities reserved against the declaration's MRN. "
+                    + "If successful, returns a 200, if not then it will respond with the TRACES error code."
             )
             .Produces(StatusCodes.Status200OK)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -119,14 +121,14 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapDelete("customs/cheds/{chedId}/declarations/{mrn}/reservation", DeleteReservation)
-            .WithName("DeleteChedReservation")
-            .WithSummary("Delete a CHED reservation")
+            .WithName("DeleteReservation")
+            .WithSummary("Delete a CHED reservation.")
             .WithDescription(
-                "Cancels the reservation of the CHED's quantities against the customs declaration identified "
-                    + "by the MRN. Returns 204 on success; otherwise a problem describing the TRACES NT "
-                    + "quantity management outcome."
+                "Cancels the reservation held against the declaration's MRN. "
+                    + "If successful, returns a 200, if not then it will respond with the TRACES error code."
             )
             .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status409Conflict)
@@ -134,6 +136,9 @@ public static class CustomsChedQuantityEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
     }
 
+    /// <param name="chedId" example="CHEDA.GB.2024.1020304">CHED reference whose quantity position is read.</param>
+    /// <param name="customsChedService">Reads the quantity position from TracesNT.</param>
+    /// <param name="acceptLanguage">Preferred language for returned names, as a BCP 47 language tag.</param>
     private static async Task<IResult> GetQuantities(
         string chedId,
         ICustomsChedService customsChedService,
@@ -167,6 +172,12 @@ public static class CustomsChedQuantityEndpoints
         );
     }
 
+    /// <param name="chedId" example="CHEDA.GB.2024.1020304">CHED reference the reservation is made against.</param>
+    /// <param name="mrn">Movement Reference Number of the customs declaration holding the reservation.</param>
+    /// <param name="request">Consignment items to reserve.</param>
+    /// <param name="customsChedService">Sends the reservation to TracesNT.</param>
+    /// <param name="loggerFactory">Creates the logger for the refusal path.</param>
+    /// <param name="acceptLanguage">Preferred language for returned names, as a BCP 47 language tag.</param>
     private static async Task<IResult> PutReservation(
         string chedId,
         string mrn,
@@ -218,6 +229,11 @@ public static class CustomsChedQuantityEndpoints
         return Results.Json(reservation, contentType: MediaTypeAttribute.For<ChedDeclarationReservation>());
     }
 
+    /// <param name="chedId" example="CHEDA.GB.2024.1020304">CHED reference the write-off applies to.</param>
+    /// <param name="mrn">Movement Reference Number of the customs declaration.</param>
+    /// <param name="request">Consignment items to write off.</param>
+    /// <param name="customsChedService">Sends the write-off to TracesNT.</param>
+    /// <param name="acceptLanguage">Preferred language for returned names, as a BCP 47 language tag.</param>
     private static Task<IResult> ForceWriteOff(
         string chedId,
         string mrn,
@@ -236,6 +252,11 @@ public static class CustomsChedQuantityEndpoints
         );
     }
 
+    /// <param name="chedId" example="CHEDA.GB.2024.1020304">CHED reference the write-off applies to.</param>
+    /// <param name="mrn">Movement Reference Number of the customs declaration.</param>
+    /// <param name="request">Consignment items to write off.</param>
+    /// <param name="customsChedService">Sends the amendment to TracesNT.</param>
+    /// <param name="acceptLanguage">Preferred language for returned names, as a BCP 47 language tag.</param>
     private static Task<IResult> AmendWriteOff(
         string chedId,
         string mrn,
@@ -254,6 +275,11 @@ public static class CustomsChedQuantityEndpoints
         );
     }
 
+    /// <param name="chedId" example="CHEDA.GB.2024.1020304">CHED reference the write-off applies to.</param>
+    /// <param name="mrn">Movement Reference Number of the customs declaration.</param>
+    /// <param name="request">Consignment items identifying the write-off to delete.</param>
+    /// <param name="customsChedService">Sends the deletion to TracesNT.</param>
+    /// <param name="acceptLanguage">Preferred language for returned names, as a BCP 47 language tag.</param>
     private static Task<IResult> DeleteWriteOff(
         string chedId,
         string mrn,
@@ -272,6 +298,10 @@ public static class CustomsChedQuantityEndpoints
         );
     }
 
+    /// <param name="chedId" example="CHEDA.GB.2024.1020304">CHED reference whose reservation is released.</param>
+    /// <param name="mrn">Movement Reference Number of the customs declaration holding the reservation.</param>
+    /// <param name="customsChedService">Sends the release to TracesNT.</param>
+    /// <param name="acceptLanguage">Preferred language for returned names, as a BCP 47 language tag.</param>
     private static async Task<IResult> Release(
         string chedId,
         string mrn,
@@ -324,6 +354,10 @@ public static class CustomsChedQuantityEndpoints
         return Problem(chedQuantityManagementOutcomeType: response, chedId: chedId, mrn: mrn);
     }
 
+    /// <param name="chedId" example="CHEDA.GB.2024.1020304">CHED reference whose reservation is deleted.</param>
+    /// <param name="mrn">Movement Reference Number of the customs declaration holding the reservation.</param>
+    /// <param name="customsChedService">Sends the cancellation to TracesNT.</param>
+    /// <param name="acceptLanguage">Preferred language for returned names, as a BCP 47 language tag.</param>
     private static async Task<IResult> DeleteReservation(
         string chedId,
         string mrn,

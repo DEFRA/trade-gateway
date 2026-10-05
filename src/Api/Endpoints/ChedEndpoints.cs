@@ -14,13 +14,11 @@ public static class ChedEndpoints
     public static void UseChedEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("certificates/cheds/{id}", Get)
-            .WithName("GetChedCertificate")
-            .WithSummary("Get a CHED certificate")
-            .WithDescription(
-                "Retrieves the CHED certificate with the given reference from TRACES NT, mapped to the "
-                    + "DEFRA UN/CEFACT CHED profile. Text is localised using the Accept-Language header."
-            )
+            .WithName("GetChed")
+            .WithSummary("Fetch a single CHED certificate by its reference.")
+            .WithDescription("Returns the full CHED profile.")
             .Produces<DefraUNVTDCHEDProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDProfile>())
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
@@ -42,13 +40,16 @@ public static class ChedEndpoints
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet("certificates/cheds", Find)
-            .WithName("FindChedCertificates")
-            .WithSummary("Find updated CHED certificates")
+            .WithName("FindCheds")
+            .WithSummary("Search CHED certificates updated in a time window.")
             .WithDescription(
-                "Returns a page of summaries of CHED certificates updated between updatedFrom and "
-                    + "updatedBefore. Use offset and pageSize to page through the results."
+                "Returns a paged summary of CHED certificates updated between updatedFrom and "
+                    + "updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates "
+                    + "whether there are more pages to follow."
             )
             .Produces<DefraUNVTDCHEDSummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>())
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
