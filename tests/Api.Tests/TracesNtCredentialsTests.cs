@@ -160,7 +160,10 @@ public class TracesNtCredentialsTests(TradeGatewayWebApplicationFactory factory)
 
         body.Should().NotBeNullOrEmpty("the client should have sent a request to {0}", servicePath);
 
-        var token = XDocument.Parse(body!).Descendants(s_wsse + "UsernameToken").SingleOrDefault();
+        var token = XDocument
+            .Parse(SoapUtilities.ExtractSoapEnvelope(body!))
+            .Descendants(s_wsse + "UsernameToken")
+            .SingleOrDefault();
         token.Should().NotBeNull("the WS-Security header is omitted entirely when credentials are blank");
         var usernameToken = token!;
 

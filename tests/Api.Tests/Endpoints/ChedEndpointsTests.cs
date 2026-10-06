@@ -12,7 +12,9 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string GetChedCertificateSoapAction = "\"getChedCertificate\"";
     private const string FindChedCertificateSoapAction = "\"findChedCertificate\"";
-    private const string GetCertificateAttachmentSoapAction = "\"getCertificateAttachment\"";
+
+    // CertificateAttachmentsServiceV1 is SOAP 1.2 with MTOM, so the action travels in the Content-Type header.
+    private const string GetCertificateAttachmentSoapAction = "getCertificateAttachment";
 
     private static string AttachmentRequestXPath(string chedId) =>
         $"/*[local-name() = 'GetCertificateAttachmentRequest']/*[local-name() = 'ChedCertificateReference' and text() = '{chedId}']";
@@ -367,7 +369,7 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
     private void StubAttachment(string chedId, long documentId, string fileName, byte[] fileBytes) =>
         factory
             .WireMockServer.Given(
-                SoapUtilities.CreateSoapRequestInterceptor(
+                SoapUtilities.CreateSoap12MtomRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
                     AttachmentRequestXPath(chedId, documentId, fileName)
                 )
@@ -376,22 +378,24 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                 Response
                     .Create()
                     .WithCallback(_ =>
-                        SoapUtilities.StubResponseMessage(
+                        SoapUtilities.StubSoap12MtomResponseMessage(
                             HttpStatusCode.OK,
                             $"""
                             <?xml version="1.0" encoding="utf-8"?>
-                            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-                              <s:Body>
+                            <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+                              <env:Body>
                                 <GetCertificateAttachmentResponse
                                     xmlns="http://ec.europa.eu/tracesnt/certificate/attachments/v1"
                                     xmlns:xmime="http://www.w3.org/2005/05/xmlmime"
                                     fileName="{fileName}"
                                     xmime:contentType="application/pdf">
-                                  <Attachment>{Convert.ToBase64String(fileBytes)}</Attachment>
+                                  <Attachment><xop:Include xmlns:xop="http://www.w3.org/2004/08/xop/include" href="cid:attachment@traces" /></Attachment>
                                 </GetCertificateAttachmentResponse>
-                              </s:Body>
-                            </s:Envelope>
-                            """
+                              </env:Body>
+                            </env:Envelope>
+                            """,
+                            "attachment@traces",
+                            fileBytes
                         )
                     )
             );
@@ -406,7 +410,7 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         factory
             .WireMockServer.Given(
-                SoapUtilities.CreateSoapRequestInterceptor(
+                SoapUtilities.CreateSoap12MtomRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
                     AttachmentRequestXPath("ATTACHMENT-BADSOAP")
                 )
@@ -415,18 +419,18 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                 Response
                     .Create()
                     .WithCallback(_ =>
-                        SoapUtilities.StubResponseMessage(
+                        SoapUtilities.StubSoap12ResponseMessage(
                             HttpStatusCode.InternalServerError,
                             """
                             <?xml version="1.0" encoding="utf-8"?>
-                            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-                              <s:Body>
-                                <s:Fault>
-                                  <faultcode>s:Client</faultcode>
-                                  <faultstring>SAXException: invalid request</faultstring>
-                                </s:Fault>
-                              </s:Body>
-                            </s:Envelope>
+                            <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+                              <env:Body>
+                                <env:Fault>
+                                  <env:Code><env:Value>env:Sender</env:Value></env:Code>
+                                  <env:Reason><env:Text xml:lang="en">SAXException: invalid request</env:Text></env:Reason>
+                                </env:Fault>
+                              </env:Body>
+                            </env:Envelope>
                             """
                         )
                     )
@@ -453,7 +457,7 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         factory
             .WireMockServer.Given(
-                SoapUtilities.CreateSoapRequestInterceptor(
+                SoapUtilities.CreateSoap12MtomRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
                     AttachmentRequestXPath("ATTACHMENT-COMMFAIL")
                 )
@@ -487,7 +491,7 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         factory
             .WireMockServer.Given(
-                SoapUtilities.CreateSoapRequestInterceptor(
+                SoapUtilities.CreateSoap12MtomRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
                     AttachmentRequestXPath("ATTACHMENT-MISSING")
                 )
@@ -496,21 +500,21 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                 Response
                     .Create()
                     .WithCallback(_ =>
-                        SoapUtilities.StubResponseMessage(
+                        SoapUtilities.StubSoap12ResponseMessage(
                             HttpStatusCode.InternalServerError,
                             """
                             <?xml version="1.0" encoding="utf-8"?>
-                            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-                              <s:Body>
-                                <s:Fault>
-                                  <faultcode>s:Client</faultcode>
-                                  <faultstring>Attachment not found</faultstring>
-                                  <detail>
+                            <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+                              <env:Body>
+                                <env:Fault>
+                                  <env:Code><env:Value>env:Sender</env:Value></env:Code>
+                                  <env:Reason><env:Text xml:lang="en">Attachment not found</env:Text></env:Reason>
+                                  <env:Detail>
                                     <CertificateAttachmentNotFoundException xmlns="http://ec.europa.eu/tracesnt/certificate/attachments/v1" />
-                                  </detail>
-                                </s:Fault>
-                              </s:Body>
-                            </s:Envelope>
+                                  </env:Detail>
+                                </env:Fault>
+                              </env:Body>
+                            </env:Envelope>
                             """
                         )
                     )
@@ -538,7 +542,7 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
 
         factory
             .WireMockServer.Given(
-                SoapUtilities.CreateSoapRequestInterceptor(
+                SoapUtilities.CreateSoap12MtomRequestInterceptor(
                     GetCertificateAttachmentSoapAction,
                     AttachmentRequestXPath("ATTACHMENT-FORBIDDEN")
                 )
@@ -547,21 +551,21 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
                 Response
                     .Create()
                     .WithCallback(_ =>
-                        SoapUtilities.StubResponseMessage(
+                        SoapUtilities.StubSoap12ResponseMessage(
                             HttpStatusCode.InternalServerError,
                             """
                             <?xml version="1.0" encoding="utf-8"?>
-                            <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-                              <s:Body>
-                                <s:Fault>
-                                  <faultcode>s:Client</faultcode>
-                                  <faultstring>Permission denied</faultstring>
-                                  <detail>
+                            <env:Envelope xmlns:env="http://www.w3.org/2003/05/soap-envelope">
+                              <env:Body>
+                                <env:Fault>
+                                  <env:Code><env:Value>env:Sender</env:Value></env:Code>
+                                  <env:Reason><env:Text xml:lang="en">Permission denied</env:Text></env:Reason>
+                                  <env:Detail>
                                     <CertificateAttachmentPermissionDeniedException xmlns="http://ec.europa.eu/tracesnt/certificate/attachments/v1" />
-                                  </detail>
-                                </s:Fault>
-                              </s:Body>
-                            </s:Envelope>
+                                  </env:Detail>
+                                </env:Fault>
+                              </env:Body>
+                            </env:Envelope>
                             """
                         )
                     )

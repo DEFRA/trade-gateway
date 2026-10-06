@@ -17,7 +17,8 @@ namespace TracesNT.Extensions
             services.AddTracesNtClient<CertificateAttachmentsPortClient, CertificateAttachmentsPort>(
                 "CertificateAttachmentsServiceV1",
                 TracesNtCredentialKeys.Default,
-                (binding, endpoint) => new CertificateAttachmentsPortClient(binding, endpoint)
+                (binding, endpoint) => new CertificateAttachmentsPortClient(binding, endpoint),
+                useSoap12Mtom: true
             );
 
             services.AddTracesNtClient<EuIntraCertificatePortClient, EuIntraCertificatePort>(
