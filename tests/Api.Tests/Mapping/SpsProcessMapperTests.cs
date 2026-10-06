@@ -29,12 +29,16 @@ public class SpsProcessMapperTests
     }
 
     [Fact]
-    public void Map_NoTypeCode_LeavesCodeAndUrlNull()
+    public void Map_AllNullProcess_IsDropped() => SpsProcessMapper.MapList([new SPSProcessType()]).Should().BeNull();
+
+    [Fact]
+    public void Map_OperatorOnlyWithoutTypeCode_KeepsProcess()
     {
-        var result = SpsProcessMapper.MapList([new SPSProcessType()])!.Single();
+        var source = new SPSProcessType { OperatorSPSParty = new SPSPartyType { ID = new IDType { Value = "OP1" } } };
+
+        var result = SpsProcessMapper.MapList([source])!.Single();
 
         result.TypeCode.Should().BeNull();
-        result.UrlId.Should().BeNull();
-        result.OperatorParty.Should().BeNull();
+        result.OperatorParty!.Identifier.Should().Be("OP1");
     }
 }

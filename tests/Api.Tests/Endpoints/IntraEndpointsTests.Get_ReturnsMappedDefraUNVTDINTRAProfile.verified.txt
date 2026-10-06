@@ -221,7 +221,51 @@
       }
     },
     ExportCountry: {
-      Code: {}
+      Code: {},
+      SubordinateTradeCountrySubDivision: [
+        {
+          FunctionTypeCode: {
+            Content: 44
+          },
+          ActivityAuthorizedParty: [
+            {
+              Identifier: XI0000,
+              UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+              Name: Department of Agriculture, Environment and Rural Affairs (DAERA),
+              PartyRoleCode: {
+                Value: RA,
+                UrlId: https://traces-codelists.ec.europa.eu/3035,
+                Name: Central competent authority
+              }
+            },
+            {
+              Name: Department of Agriculture, Environment and Rural Affairs (DAERA),
+              PartyRoleCode: {
+                Value: VG,
+                UrlId: https://traces-codelists.ec.europa.eu/3035,
+                Name: Local competent authority
+              }
+            }
+          ]
+        },
+        {
+          FunctionTypeCode: {
+            Content: 42
+          },
+          ActivityAuthorizedParty: [
+            {
+              Identifier: PL32010,
+              UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+              Name: Białogard,
+              PartyRoleCode: {
+                Value: CM,
+                UrlId: https://traces-codelists.ec.europa.eu/3035,
+                Name: Customs (Border control post)
+              }
+            }
+          ]
+        }
+      ]
     },
     ImportCountry: {
       Code: {

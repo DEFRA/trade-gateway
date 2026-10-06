@@ -22,7 +22,7 @@ schemas/
 
   contexts/
     defra-unvtd-core-v1.context.jsonld
-    defra-unvtd-docom-followup-v1.context.jsonld
+    defra-unvtd-docom-followup-v1.context.jsonld         # DOCOM Part III terms, layered on core
 
   profiles/
     imports/
@@ -33,20 +33,20 @@ schemas/
       eu/
         defra-unvtd-profile-intra-v1.schema.json
         defra-unvtd-profile-docom-v1.schema.json
-        defra-unvtd-profile-docom-followup-v1.schema.json
+        defra-unvtd-profile-docom-followup-v1.schema.json  # FollowUpRecord shape + standalone follow-up payload
         events/
           intra-event-certificate-updated-v1.schema.json
           docom-event-certificate-updated-v1.schema.json
           docom-event-followup-updated-v1.schema.json
       gb/
         gbn-ag-v1.schema.json
-        events/
+        events/                                          # GBN-AG Notification* catalogue
       events/
-        README.md
+        README.md                                        # Certificate vs Notification guidance
       pims/
         gbn-ag-pims-v0.1.0.schema.json
-        gbn-ag-pims-v0.2.0.schema.json
-        gbn-ag-pims-v0.2.0-changes.md
+        gbn-ag-pims-v0.2.0.schema.json                    # target contract, minted ahead of the mapper code (EUDPA-370)
+        gbn-ag-pims-v0.2.0-changes.md                     # field-by-field v0.1.0 -> v0.2.0 diff + open questions
       messaging/
         event-envelope-v1.schema.json
 

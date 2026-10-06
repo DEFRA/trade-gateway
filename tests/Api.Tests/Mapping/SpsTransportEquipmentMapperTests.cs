@@ -15,7 +15,13 @@ public class SpsTransportEquipmentMapperTests
         var source = new SPSTransportEquipmentType
         {
             ID = new IDType { Value = "MSKU1234567", schemeID = "container_number" },
-            AffixedSPSSeal = [new SPSSealType { ID = new IDType { Value = "SEAL001", schemeID = "seal_number" } }],
+            AffixedSPSSeal =
+            [
+                new SPSSealType
+                {
+                    ID = new IDType { Value = "SEAL001", schemeID = "seal_number" },
+                },
+            ],
         };
 
         var result = SpsTransportEquipmentMapper.MapList([source])!.Single();
@@ -23,17 +29,24 @@ public class SpsTransportEquipmentMapperTests
         result.Identifier.Should().Be("MSKU1234567");
         result.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/container_number");
         result.AffixedLogisticsSeal.Should().ContainSingle().Which.Identifier.Should().Be("SEAL001");
-        result
-            .AffixedLogisticsSeal![0].UrlId.Should()
-            .Be("https://traces-codelists.ec.europa.eu/seal_number");
+        result.AffixedLogisticsSeal![0].UrlId.Should().Be("https://traces-codelists.ec.europa.eu/seal_number");
     }
 
     [Fact]
-    public void MapList_EquipmentWithoutSeals_LeavesSealsNull()
+    public void MapList_AllNullEquipment_IsDropped() =>
+        SpsTransportEquipmentMapper.MapList([new SPSTransportEquipmentType()]).Should().BeNull();
+
+    [Fact]
+    public void MapList_SealsOnlyWithoutIdentifier_KeepsEquipment()
     {
-        var result = SpsTransportEquipmentMapper.MapList([new SPSTransportEquipmentType()])!.Single();
+        var source = new SPSTransportEquipmentType
+        {
+            AffixedSPSSeal = [new SPSSealType { ID = new IDType { Value = "SEAL002" } }],
+        };
+
+        var result = SpsTransportEquipmentMapper.MapList([source])!.Single();
 
         result.Identifier.Should().BeNull();
-        result.AffixedLogisticsSeal.Should().BeNull();
+        result.AffixedLogisticsSeal.Should().ContainSingle().Which.Identifier.Should().Be("SEAL002");
     }
 }

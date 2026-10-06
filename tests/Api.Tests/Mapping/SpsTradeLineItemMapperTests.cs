@@ -111,7 +111,10 @@ public class SpsTradeLineItemMapperTests
     {
         var source = new SPSTradeLineItemType
         {
-            AppliedSPSProcess = [new SPSProcessType { TypeCode = new ProcessTypeCodeType { Value = ProcessTypeCodeContentType.Item3 } }],
+            AppliedSPSProcess =
+            [
+                new SPSProcessType { TypeCode = new ProcessTypeCodeType { Value = ProcessTypeCodeContentType.Item3 } },
+            ],
         };
 
         SpsTradeLineItemMapper

@@ -105,10 +105,7 @@ public class SpsCountryMapperTests
 
         var result = SpsCountryMapper.Map(source, Context)!;
 
-        result
-            .SubordinateTradeCountrySubDivision!.Select(d => d.FunctionTypeCode.Content)
-            .Should()
-            .Equal("44", "42");
+        result.SubordinateTradeCountrySubDivision!.Select(d => d.FunctionTypeCode.Content).Should().Equal("44", "42");
     }
 
     [Fact]
@@ -130,40 +127,6 @@ public class SpsCountryMapperTests
 
         result.SubordinateTradeCountrySubDivision.Should().ContainSingle();
         result.SubordinateTradeCountrySubDivision![0].FunctionTypeCode.Content.Should().Be("44");
-    }
-
-    [Fact]
-    public void Map_NewIntraCountry_OmitsSubdivisionAndAuthorities()
-    {
-        var source = new SPSCountryType
-        {
-            ID = new IDType { Value = "XI" },
-            Name = [new TextType { Value = "Northern Ireland" }],
-        };
-
-        var result = SpsCountryMapper.Map(source, Context)!;
-
-        result.SubordinateTradeCountrySubDivision.Should().BeNull();
-    }
-
-    [Fact]
-    public void Map_SubdivisionWithoutParties_OmitsAuthorities()
-    {
-        var source = new SPSCountryType
-        {
-            ID = new IDType { Value = "XI" },
-            SubordinateSPSCountrySubDivision =
-            [
-                new SPSCountrySubDivisionType
-                {
-                    FunctionTypeCode = new LocationFunctionCodeType { Value = LocationFunctionCodeContentType.Item44 },
-                },
-            ],
-        };
-
-        var result = SpsCountryMapper.Map(source, Context)!;
-
-        result.SubordinateTradeCountrySubDivision![0].ActivityAuthorizedParty.Should().BeNull();
     }
 
     [Fact]

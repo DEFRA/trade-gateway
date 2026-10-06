@@ -14,7 +14,7 @@ internal static class SpsTransportEquipmentMapper
         };
 
     internal static List<LogisticsTransportEquipment>? MapList(SPSTransportEquipmentType[]? source) =>
-        source?.Select(Map).ToList().NullIfEmpty();
+        source?.Where(s => s.ID is not null || s.AffixedSPSSeal is { Length: > 0 }).Select(Map).ToList().NullIfEmpty();
 
     static List<LogisticsSeal>? MapSeals(SPSSealType[]? source) =>
         source

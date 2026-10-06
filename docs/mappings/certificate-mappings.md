@@ -76,7 +76,6 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 | `examinationEvent` | `ExaminationSPSEvent` | see [ExaminationEvent](#examinationevent--spseventtype); omitted when the source element carries no location data |
 | `utilizedLogisticsTransportEquipment` | `UtilizedSPSTransportEquipment[]` | see [LogisticsTransportEquipment](#logisticstransportequipment--spstransportequipmenttype); omitted if empty |
 | `mainCarriageLogisticsTransportMovement` | `MainCarriageSPSTransportMovement[]` | list, one entry per carriage leg; see [LogisticsTransportMovement](#logisticstransportmovement--spstransportmovementtype); omitted if empty |
-| `packageQuantity` | `— (no direct SOAP equivalent on SPSConsignmentType)` | The canonical `packageQuantity` slot exists on the contract type but is not present on all SOAP variants; it remains unmapped unless a source element is available in the SOAP payload |
 | `includedConsignmentItem` | `IncludedSPSConsignmentItem[]` | see [ConsignmentItem](#consignmentitem--spsconsignmentitemtype); omitted if empty |
 
 ---

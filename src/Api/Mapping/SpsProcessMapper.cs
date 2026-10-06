@@ -14,5 +14,5 @@ internal static class SpsProcessMapper
         };
 
     internal static List<AppliedProcess>? MapList(SPSProcessType[]? source) =>
-        source?.Select(Map).ToList().NullIfEmpty();
+        source?.Where(s => s.TypeCode is not null || s.OperatorSPSParty is not null).Select(Map).ToList().NullIfEmpty();
 }

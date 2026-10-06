@@ -9,8 +9,7 @@ public class SpsExaminationEventMapperTests
     private static readonly MappingContext Context = new("en");
 
     [Fact]
-    public void MapList_NullSource_ReturnsNull() =>
-        SpsExaminationEventMapper.MapList(null, Context).Should().BeNull();
+    public void MapList_NullSource_ReturnsNull() => SpsExaminationEventMapper.MapList(null, Context).Should().BeNull();
 
     [Fact]
     public void MapList_Location_MapsOccurrence()
@@ -27,9 +26,7 @@ public class SpsExaminationEventMapperTests
         var result = SpsExaminationEventMapper.MapList(source, Context)!.Single();
 
         result.OccurrenceLogisticsLocation!.Identifier.Should().Be("GBDVR1");
-        result
-            .OccurrenceLogisticsLocation.UrlId.Should()
-            .Be("https://traces-codelists.ec.europa.eu/un_locode");
+        result.OccurrenceLogisticsLocation.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/un_locode");
         result.OccurrenceLogisticsLocation.Name.Should().Be("Dover");
     }
 
