@@ -1,54 +1,29 @@
 # Schemas Overview
 
-This directory contains versioned schema and context artefacts for trade-import payloads.
+Input schemas for `JsonSchemaToCSharp`. This tree is a curated subset of
+[DEFRA/trade-imports-schemas](https://github.com/DEFRA/trade-imports-schemas) —
+only the schemas the gateway consumes are vendored here, not the full published
+set. Re-sync by copying individual files, not the whole tree.
 
-## Design principle
-
-The active design is **UNVTD + UN/CEFACT vocabulary-first**:
-
-- JSON Schema defines structure/validation.
-- JSON-LD context defines semantic mapping to UN/CEFACT vocabulary IRIs.
-- Payloads align to D23B vocabulary typing (`xsd:string`, `@vocab`, `@id`) where applicable.
-- We do not treat nested SPSCertificate inheritance as the primary modelling approach.
-
-More information about the Import Notification and Event Envelope schemas can be found in [profiles/imports/README.md](profiles/imports/README.md)
+Structure and validation follow UNVTD + UN/CEFACT vocabulary typing
+(`xsd:string`, `@vocab`, `@id`). JSON-LD contexts and the GBN-AG, PIMS, and
+event schemas live upstream and are not needed here.
 
 ## Directory map
 
 ```text
 schemas/
   core/
-    defra-unvtd-canonical-core-v1.schema.json
-
-  contexts/
-    defra-unvtd-core-v1.context.jsonld
-    defra-unvtd-docom-followup-v1.context.jsonld         # DOCOM Part III terms, layered on core
+    defra-unvtd-canonical-core-v1.schema.json            # common building blocks, $ref'd by every profile
 
   profiles/
     imports/
       international/
         defra-unvtd-profile-ched-v1.schema.json
-        events/
-          ched-event-certificate-updated-v1.schema.json
       eu/
         defra-unvtd-profile-intra-v1.schema.json
         defra-unvtd-profile-docom-v1.schema.json
         defra-unvtd-profile-docom-followup-v1.schema.json  # FollowUpRecord shape + standalone follow-up payload
-        events/
-          intra-event-certificate-updated-v1.schema.json
-          docom-event-certificate-updated-v1.schema.json
-          docom-event-followup-updated-v1.schema.json
-      gb/
-        gbn-ag-v1.schema.json
-        events/                                          # GBN-AG Notification* catalogue
-      events/
-        README.md                                        # Certificate vs Notification guidance
-      pims/
-        gbn-ag-pims-v0.1.0.schema.json
-        gbn-ag-pims-v0.2.0.schema.json                    # target contract, minted ahead of the mapper code (EUDPA-370)
-        gbn-ag-pims-v0.2.0-changes.md                     # field-by-field v0.1.0 -> v0.2.0 diff + open questions
-      messaging/
-        event-envelope-v1.schema.json
 
   reference-data/
     defra-unvtd-profile-reference-data-core-v1.schema.json
@@ -58,35 +33,28 @@ schemas/
     defra-unvtd-profile-reference-data-MetadataListResponse-v1.schema.json
 ```
 
-## Core + context + profile layering
+The certificate profiles and the reference-data response schemas are the codegen
+entry points; `core` and `reference-data-core` are pulled in transitively via
+`$ref`. These roots are declared in `../args.json`.
 
-Typical certificate layering:
+## Layering
 
-1. `core/defra-unvtd-canonical-core-v1.schema.json`  
-   Common UNVTD-aligned building blocks and certificate payload shape.
-2. `contexts/defra-unvtd-core-v1.context.jsonld`  
-   JSON-LD mapping layer (official D23B context + minimal Defra aliases where required).
-3. Profile schema under `profiles/imports/...`  
-   Type-specific constraints (for example CHED/INTRA/DOCOM document type constraints).
+1. `core/defra-unvtd-canonical-core-v1.schema.json` — shared UNVTD-aligned
+   building blocks and certificate payload shape.
+2. Profile schema under `profiles/imports/...` — type-specific constraints
+   (CHED / INTRA / DOCOM document type constraints).
 
-## BSP-qualified names and the JSON-LD bridge
+## Regenerating the contract
 
-The schemas use BSP-master-style names (`LogisticsTransportMovement`, `mainCarriageLogisticsTransportMovement`, `entryCustomsOfficeSpecifiedLogisticsLocation`) on the wire because TRACES SPS Certificate XML carries the same `Logistics_` BIE qualifier. Keeping the BSP shape avoids per-property name translation at the gateway.
+```sh
+cd tools/JsonSchemaToCSharp
+dotnet run --project . -- --control-file ./args.json
+```
 
-The canonical UN/CEFACT D23B vocabulary publishes the shorter forms at `https://vocabulary.uncefact.org/` (`TransportMovement`, `mainCarriageTransportMovement`, `entryCustomsOfficeSpecifiedLocation`). To keep both layers usable, `contexts/defra-unvtd-core-v1.context.jsonld` carries an `@id` binding for each BSP-qualified term to its canonical IRI. A consumer walking the context dereferences cleanly against the published vocabulary; the JSON payload on the wire matches TRACES.
-
-When adding a new property or class to a core or profile schema, check the canonical D23B context (`build/vendor/uncefact/unece-context-D23B.jsonld`) for the equivalent IRI. If the BSP-qualified form is absent there, add a binding in the core context entry mapping it to the canonical short form. Some terms (e.g. `LogisticsLocation`, `occurrenceLogisticsLocation`) are canonical with the `Logistics` qualifier and need no bridge.
-
-## Samples
-
-Primary sample locations:
-
-- `samples/imports/international/ched/json/unvtd-ched.json`
-- `samples/imports/eu/intra/json/unvtd-intra.json`
-- `samples/imports/eu/docom/json/DOCOM.ES.2026.0000001.json` (certificate; optional inline `followUp`) and `-followup.json` (standalone Part III payload)
-- `samples/imports/gb/gbn-ag/json/gbn-ag-v1-example.json`
-- `samples/imports/reference-data/node-detail/json/unvtd-reference-data-node-detail.json`
+Output lands in `src/Api.Contract/`.
 
 ## Migration note
 
-During migration to versioned filenames/paths, transitional internal `$id` and `$ref` values may still be present. Use file locations in this README as the source of truth for where artefacts live now.
+During migration to versioned filenames/paths, transitional internal `$id` and
+`$ref` values may still be present. Use file locations in this README as the
+source of truth for where artefacts live now.
