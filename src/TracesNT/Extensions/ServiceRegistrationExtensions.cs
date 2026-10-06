@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Text;
@@ -11,6 +12,7 @@ using TracesNT.Services;
 
 namespace TracesNT.Extensions;
 
+[ExcludeFromCodeCoverage]
 public static class ServiceRegistrationExtensions
 {
     private static readonly ConcurrentDictionary<string, Binding> s_bindingCache = new();
