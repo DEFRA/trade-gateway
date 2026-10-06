@@ -126,6 +126,35 @@ public class SpsTradeLineItemMapperTests
     }
 
     [Fact]
+    public void Map_AdditionalInformationNote_MapsList()
+    {
+        var source = new SPSTradeLineItemType
+        {
+            AdditionalInformationSPSNote =
+            [
+                new SPSNoteType
+                {
+                    SubjectCode = new CodeType
+                    {
+                        listID = "ched_commodity_note_subject_code",
+                        Value = "INDIVIDUAL_IDENTIFICATION_NUMBER",
+                    },
+                    Content = [new TextType { Value = "GB0987645768734" }],
+                },
+            ],
+        };
+
+        var note = SpsTradeLineItemMapper
+            .Map(source, Context)
+            .AdditionalInformationNote.Should()
+            .ContainSingle()
+            .Subject;
+
+        note.SubjectCode!.Value.Should().Be("INDIVIDUAL_IDENTIFICATION_NUMBER");
+        note.Content.Should().ContainSingle().Which.Should().Be("GB0987645768734");
+    }
+
+    [Fact]
     public void Map_NullProperties_ReturnNullFields()
     {
         var result = SpsTradeLineItemMapper.Map(new SPSTradeLineItemType(), Context);
@@ -138,6 +167,7 @@ public class SpsTradeLineItemMapperTests
         result.NetVolume.Should().BeNull();
         result.ApplicableClassification.Should().BeNull();
         result.PhysicalReferencedLogisticsPackage.Should().BeNull();
+        result.AdditionalInformationNote.Should().BeNull();
     }
 
     [Fact]

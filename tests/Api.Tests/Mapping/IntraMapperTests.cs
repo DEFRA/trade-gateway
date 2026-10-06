@@ -19,9 +19,110 @@ public class IntraMapperTests
     }
 
     [Fact]
-    public void Map_LaboratoryObservationResult_IsNull()
+    public void Map_LaboratoryObservationResult_IsNull_WhenSourceHasNone()
     {
         IntraMapper.Map(MinimalCertificate(), Context).LaboratoryObservationResult.Should().BeNull();
+    }
+
+    [Fact]
+    public void Map_LaboratoryObservationResult_MapsFromConsignmentItemLaboratoryTests()
+    {
+        var cert = MinimalCertificate();
+        cert.SPSConsignmentItemLaboratoryTest =
+        [
+            new SPSConsignmentItemLaboratoryTestType
+            {
+                NatureIdentificationSPSCargo = new SPSCargoType
+                {
+                    TypeCode = new CargoTypeClassificationCodeType
+                    {
+                        Value = CargoTypeClassificationCodeContentType.Item12,
+                    },
+                },
+                ProductSPSLaboratoryTest =
+                [
+                    new ProductSPSLaboratoryTestType
+                    {
+                        ProductSPSClassification = new SPSClassificationType
+                        {
+                            SystemID = new IDType { Value = "CN" },
+                            SystemName = [new TextType { Value = "CN Code (Combined Nomenclature)" }],
+                            ClassName = [new TextType { Value = "LIVE ANIMALS" }],
+                        },
+                        SPSLaboratoryTest =
+                        [
+                            new SPSLaboratoryTestType
+                            {
+                                Reference = "LAP-000000915-INTRA.EU.NL.2021.0000001",
+                                TestDescriptor = new LaboratoryTestDescriptorType
+                                {
+                                    ID = new IDType { Value = "11221" },
+                                    Description = new TextType { Value = "ANTICOCCIDIALS, INCLUDING NITROIMIDAZOLES" },
+                                    CategoryCode = new CodeType { Value = "RESIDUES_B2B" },
+                                },
+                                TestMotivationCode = new CodeType { Value = "RANDOM" },
+                                InspectorConclusionCode = new CodeType { Value = "SATISFACTORY" },
+                                Analysys =
+                                [
+                                    new SPSLaboratoryTestAnalysisType
+                                    {
+                                        AnalysisTypeCode = new CodeType { Value = "INITIAL" },
+                                        SamplingDateTime = new DateTime(2021, 3, 9, 0, 0, 0, DateTimeKind.Utc),
+                                        SamplingDateTimeSpecified = true,
+                                        SampleBatchNumber = "1223",
+                                        NumberOfSamples = "2",
+                                        SampleTypeCode = new CodeType { Value = "LARVA" },
+                                        SampleConservationCode = new CodeType { Value = "CHILLED" },
+                                        LaboratorySPSParty = new SPSPartyType
+                                        {
+                                            ID = new IDType { Value = "NLCODE123" },
+                                            Name = new TextType { Value = "Test Lab in NL" },
+                                        },
+                                        LaboratoryReceiptDateTime = new DateTime(2021, 3, 2, 0, 0, 0, DateTimeKind.Utc),
+                                        LaboratoryReceiptDateTimeSpecified = true,
+                                        LaboratoryReportDateTime = new DateTime(2021, 3, 9, 0, 0, 0, DateTimeKind.Utc),
+                                        LaboratoryReportDateTimeSpecified = true,
+                                        LaboratoryTestMethod = "test met",
+                                        LaboratoryResults = "ok",
+                                        LaboratoryConclusionCode = new CodeType { Value = "SATISFACTORY" },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        var result = IntraMapper.Map(cert, Context).LaboratoryObservationResult.Should().ContainSingle().Subject;
+
+        result.NatureIdCargo!.TypeCode.Should().Be("12");
+
+        var product = result.ProductLaboratoryTest.Should().ContainSingle().Subject;
+        product.ApplicableProductClassification!.SystemId.Should().Be("CN");
+
+        var test = product.LaboratoryTest.Should().ContainSingle().Subject;
+        test.Reference.Should().Be("LAP-000000915-INTRA.EU.NL.2021.0000001");
+        test.TestDescriptor!.Id.Should().Be(11221);
+        test.TestDescriptor.Description.Should().Be("ANTICOCCIDIALS, INCLUDING NITROIMIDAZOLES");
+        test.TestDescriptor.CategoryCode.Should().Be("RESIDUES_B2B");
+        test.TestMotivationCode.Should().Be("RANDOM");
+        test.InspectorConclusionCode.Should().Be("SATISFACTORY");
+
+        var analysis = test.Analysis!;
+        analysis.AnalysisTypeCode.Should().Be("INITIAL");
+        analysis.SamplingDateTime.Should().Be(new DateTimeOffset(2021, 3, 9, 0, 0, 0, TimeSpan.Zero));
+        analysis.SampleBatchNumber.Should().Be(1223);
+        analysis.NumberOfSamples.Should().Be(2);
+        analysis.SampleTypeCode.Should().Be("LARVA");
+        analysis.SampleConservationCode.Should().Be("CHILLED");
+        analysis.Laboratory!.Identifier.Should().Be("NLCODE123");
+        analysis.Laboratory.Name.Should().Be("Test Lab in NL");
+        analysis.LaboratoryReceiptDateTime.Should().Be(new DateTimeOffset(2021, 3, 2, 0, 0, 0, TimeSpan.Zero));
+        analysis.LaboratoryReportDateTime.Should().Be(new DateTimeOffset(2021, 3, 9, 0, 0, 0, TimeSpan.Zero));
+        analysis.LaboratoryTestMethod.Should().Be("test met");
+        analysis.LaboratoryResults.Should().Be("ok");
+        analysis.LaboratoryConclusionCode.Should().Be("SATISFACTORY");
     }
 
     [Fact]

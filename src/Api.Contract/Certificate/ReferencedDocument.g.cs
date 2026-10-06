@@ -11,6 +11,10 @@ public partial record ReferencedDocument
     [Description("Document type per UNTDID 1001 (e.g. 853 Veterinary certificate, 636 Health certificate, 916 Related document, 705 Bill of lading).")]
     public string? TypeCode { get; init; }
 
+    [JsonPropertyName("urlId")]
+    [Description("Codelist URI qualifying `typeCode` - the system that defines the code. Here `urlId` qualifies `typeCode`; on `LogisticsLocation` the sibling `urlId` qualifies `identifier`, so a consumer must not assume one rule across types.")]
+    public string? UrlId { get; init; }
+
     [JsonPropertyName("relationshipTypeCode")]
     [Description("Role this referenced document plays per UNTDID 1153.")]
     public string? RelationshipTypeCode { get; init; }

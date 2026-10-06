@@ -15,6 +15,7 @@ internal static class SpsConsignmentMapper
             DeliveryParty = SpsPartyMapper.Map(source.DeliverySPSParty),
             DespatchParty = SpsPartyMapper.Map(source.DespatchSPSParty),
             CustomsTransitAgentParty = SpsPartyMapper.Map(source.CustomsTransitAgentSPSParty),
+            Carrier = SpsPartyMapper.Map(source.CarrierSPSParty),
             ExportCountry = SpsCountryMapper.Map(source.ExportSPSCountry, context),
             ImportCountry = SpsCountryMapper.Map(source.ImportSPSCountry, context),
             ReExportCountry = SpsCountryMapper.MapList(source.ReExportSPSCountry, context),

@@ -11,5 +11,5 @@ public partial record ProductLaboratoryTest
     public ApplicableClassification? ApplicableProductClassification { get; init; }
 
     [JsonPropertyName("laboratoryTest")]
-    public List<object>? LaboratoryTest { get; init; }
+    public List<LaboratoryTest>? LaboratoryTest { get; init; }
 }

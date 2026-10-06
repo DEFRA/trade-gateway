@@ -10,7 +10,10 @@ internal static class IntraMapper
         {
             ExchangedDocument = SpsExchangedDocumentMapper.Map(source.SPSCertificate.SPSExchangedDocument, context),
             SpecifiedConsignment = SpsConsignmentMapper.Map(source.SPSCertificate.SPSConsignment, context),
-            LaboratoryObservationResult = null,
+            LaboratoryObservationResult = SpsLaboratoryObservationResultMapper.MapList(
+                source.SPSConsignmentItemLaboratoryTest,
+                context
+            ),
         };
 
     internal static DefraUNVTDINTRASummaryProfileItem Map(EuIntraCertificateQueryResultType source) =>

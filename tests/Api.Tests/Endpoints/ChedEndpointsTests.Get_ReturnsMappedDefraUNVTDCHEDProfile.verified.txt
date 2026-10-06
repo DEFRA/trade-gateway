@@ -74,11 +74,13 @@ DAERA Plant Health Inspection Branch
     ReferenceDocument: [
       {
         TypeCode: 636,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: CAW,
         Identifier: CHEDA.XI.2026.0000063
       },
       {
         TypeCode: 521,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: ZZZ,
         Identifier: 455645665566
       }
@@ -325,6 +327,18 @@ DAERA Plant Health Inspection Branch
                 },
                 ClassName: [
                   Hatching eggs
+                ]
+              }
+            ],
+            AdditionalInformationNote: [
+              {
+                Type: Note,
+                SubjectCode: {
+                  Value: INDIVIDUAL_IDENTIFICATION_NUMBER,
+                  UrlId: ched_commodity_note_subject_code
+                },
+                Content: [
+                  GB0987645768734
                 ]
               }
             ]

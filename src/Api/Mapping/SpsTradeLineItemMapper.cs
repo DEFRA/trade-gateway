@@ -20,6 +20,7 @@ internal static class SpsTradeLineItemMapper
             AppliedProcess = SpsProcessMapper.MapList(source.AppliedSPSProcess),
             ApplicableClassification = SpsClassificationMapper.MapList(source.ApplicableSPSClassification, context),
             PhysicalReferencedLogisticsPackage = SpsPackageMapper.MapList(source.PhysicalSPSPackage),
+            AdditionalInformationNote = SpsNoteMapper.MapList(source.AdditionalInformationSPSNote).NullIfEmpty(),
         };
 
     internal static List<TradeLineItem>? MapList(SPSTradeLineItemType[]? source, MappingContext context) =>

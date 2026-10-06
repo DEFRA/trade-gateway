@@ -9,6 +9,7 @@ internal static class SpsReferencedDocumentMapper
         new()
         {
             TypeCode = source.TypeCode?.Value.XmlEnumCode(),
+            UrlId = source.TypeCode?.listID.ToCodelistUri(),
             RelationshipTypeCode = source.RelationshipTypeCode?.Value.XmlEnumCode(),
             Identifier = source.ID?.Value,
             AttachmentBinaryObject = null,

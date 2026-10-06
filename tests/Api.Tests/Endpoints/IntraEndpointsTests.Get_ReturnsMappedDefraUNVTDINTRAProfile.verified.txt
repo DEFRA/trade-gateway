@@ -39,11 +39,13 @@
     ReferenceDocument: [
       {
         TypeCode: 856,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: CAW,
         Identifier: INTRA.EU.FR.2026.0000041
       },
       {
         TypeCode: 784,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: ZZZ,
         Identifier: wer
       }
@@ -220,6 +222,36 @@
         CountrySubDivisionName: County Antrim
       }
     },
+    Carrier: {
+      Identifier: Type I,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: Test type I,
+      PartyRoleCode: {
+        Value: CA,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Carrier (Transporter)
+      },
+      PartyTypeCode: [
+        {
+          Value: REGISTERED_TRANSPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Registered transporter
+        },
+        {
+          Value: REG-TRANS,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Registered transporter
+        }
+      ],
+      PostalAddress: {
+        PostcodeCode: 91744,
+        LineOne: rue I,
+        CityName: Paris,
+        CountryId: FR,
+        CountryName: France,
+        CountrySubDivisionName: Paris
+      }
+    },
     ExportCountry: {
       Code: {},
       SubordinateTradeCountrySubDivision: [
@@ -387,6 +419,18 @@
                 },
                 ClassName: [
                   Tattoo
+                ]
+              }
+            ],
+            AdditionalInformationNote: [
+              {
+                Type: Note,
+                SubjectCode: {
+                  Value: IDENTIFICATION_NUMBER,
+                  UrlId: eu_intra_commodity_note_subject_code
+                },
+                Content: [
+                  NEW
                 ]
               }
             ]

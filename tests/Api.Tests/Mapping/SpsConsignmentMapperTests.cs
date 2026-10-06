@@ -16,6 +16,8 @@ public class SpsConsignmentMapperTests
             ConsignorSPSParty = new SPSPartyType { ID = new IDType { Value = "CONSIGNOR" } },
             ConsigneeSPSParty = new SPSPartyType { ID = new IDType { Value = "CONSIGNEE" } },
             DespatchSPSParty = new SPSPartyType { ID = new IDType { Value = "DESPATCH" } },
+            DeliverySPSParty = new SPSPartyType { ID = new IDType { Value = "DELIVERY" } },
+            CarrierSPSParty = new SPSPartyType { ID = new IDType { Value = "CARRIER" } },
             CustomsTransitAgentSPSParty = new SPSPartyType { ID = new IDType { Value = "CUSTOMS" } },
         };
 
@@ -24,6 +26,8 @@ public class SpsConsignmentMapperTests
         result.ConsignorParty!.Identifier.Should().Be("CONSIGNOR");
         result.ConsigneeParty!.Identifier.Should().Be("CONSIGNEE");
         result.DespatchParty!.Identifier.Should().Be("DESPATCH");
+        result.DeliveryParty!.Identifier.Should().Be("DELIVERY");
+        result.Carrier!.Identifier.Should().Be("CARRIER");
         result.CustomsTransitAgentParty!.Identifier.Should().Be("CUSTOMS");
     }
 
@@ -35,6 +39,8 @@ public class SpsConsignmentMapperTests
         result.ConsignorParty.Should().BeNull();
         result.ConsigneeParty.Should().BeNull();
         result.DespatchParty.Should().BeNull();
+        result.DeliveryParty.Should().BeNull();
+        result.Carrier.Should().BeNull();
         result.CustomsTransitAgentParty.Should().BeNull();
     }
 

@@ -3134,6 +3134,111 @@
         },
         additionalProperties: false
       },
+      LaboratoryTest: {
+        type: object,
+        properties: {
+          reference: {
+            type: string,
+            nullable: true
+          },
+          testDescriptor: {
+            $ref: #/components/schemas/LaboratoryTestTestDescriptor
+          },
+          testMotivationCode: {
+            type: string,
+            nullable: true
+          },
+          inspectorConclusionCode: {
+            type: string,
+            nullable: true
+          },
+          analysis: {
+            $ref: #/components/schemas/LaboratoryTestAnalysis
+          }
+        },
+        additionalProperties: false
+      },
+      LaboratoryTestAnalysis: {
+        type: object,
+        properties: {
+          analysisTypeCode: {
+            type: string,
+            nullable: true
+          },
+          samplingDateTime: {
+            type: string,
+            format: date-time,
+            nullable: true
+          },
+          sampleBatchNumber: {
+            type: integer,
+            format: int32,
+            nullable: true
+          },
+          numberOfSamples: {
+            type: integer,
+            format: int32,
+            nullable: true
+          },
+          sampleTypeCode: {
+            type: string,
+            nullable: true
+          },
+          sampleConservationCode: {
+            type: string,
+            nullable: true
+          },
+          laboratory: {
+            $ref: #/components/schemas/TradeParty
+          },
+          laboratoryReceiptDateTime: {
+            type: string,
+            format: date-time,
+            nullable: true
+          },
+          laboratoryReportDateTime: {
+            type: string,
+            format: date-time,
+            nullable: true
+          },
+          laboratoryTestMethod: {
+            type: string,
+            nullable: true
+          },
+          laboratoryResults: {
+            type: string,
+            nullable: true
+          },
+          laboratoryConclusionCode: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      LaboratoryTestTestDescriptor: {
+        type: object,
+        properties: {
+          id: {
+            type: integer,
+            format: int32,
+            nullable: true
+          },
+          identifier: {
+            type: string,
+            nullable: true
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          categoryCode: {
+            type: string,
+            nullable: true
+          }
+        },
+        additionalProperties: false
+      },
       LegislationAttribute: {
         required: [
           key,
@@ -3457,6 +3562,9 @@
           },
           laboratoryTest: {
             type: array,
+            items: {
+              $ref: #/components/schemas/LaboratoryTest
+            },
             nullable: true
           }
         },
@@ -3521,6 +3629,11 @@
           typeCode: {
             type: string,
             description: Document type per UNTDID 1001 (e.g. 853 Veterinary certificate, 636 Health certificate, 916 Related document, 705 Bill of lading).,
+            nullable: true
+          },
+          urlId: {
+            type: string,
+            description: Codelist URI qualifying `typeCode` - the system that defines the code. Here `urlId` qualifies `typeCode`; on `LogisticsLocation` the sibling `urlId` qualifies `identifier`, so a consumer must not assume one rule across types.,
             nullable: true
           },
           relationshipTypeCode: {
