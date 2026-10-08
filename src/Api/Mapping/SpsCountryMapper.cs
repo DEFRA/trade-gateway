@@ -13,6 +13,10 @@ internal static class SpsCountryMapper
         return new TradeCountry
         {
             Code = new CodedValue { Value = source.ID?.Value!, Name = source.Name.ForLanguage(context.LanguageCode) },
+            SubordinateTradeCountrySubDivision = SpsCountrySubDivisionMapper.MapList(
+                source.SubordinateSPSCountrySubDivision,
+                context
+            ),
         };
     }
 

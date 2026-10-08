@@ -15,11 +15,17 @@ internal static class SpsConsignmentMapper
             DeliveryParty = SpsPartyMapper.Map(source.DeliverySPSParty),
             DespatchParty = SpsPartyMapper.Map(source.DespatchSPSParty),
             CustomsTransitAgentParty = SpsPartyMapper.Map(source.CustomsTransitAgentSPSParty),
+            Carrier = SpsPartyMapper.Map(source.CarrierSPSParty),
             ExportCountry = SpsCountryMapper.Map(source.ExportSPSCountry, context),
             ImportCountry = SpsCountryMapper.Map(source.ImportSPSCountry, context),
             ReExportCountry = SpsCountryMapper.MapList(source.ReExportSPSCountry, context),
             TransitCountry = SpsCountryMapper.MapList(source.TransitSPSCountry, context),
             UnloadingBaseportLocation = SpsLocationMapper.Map(source.UnloadingBaseportSPSLocation, context),
+            LoadingBaseportLocation = SpsLocationMapper.Map(source.LoadingBaseportSPSLocation, context),
+            ExaminationEvent = SpsExaminationEventMapper.MapList(source.ExaminationSPSEvent, context),
+            UtilizedLogisticsTransportEquipment = SpsTransportEquipmentMapper.MapList(
+                source.UtilizedSPSTransportEquipment
+            ),
             IncludedConsignmentItem = SpsConsignmentItemMapper.MapList(source.IncludedSPSConsignmentItem, context),
             MainCarriageLogisticsTransportMovement = SpsTransportMovementMapper.MapList(
                 source.MainCarriageSPSTransportMovement

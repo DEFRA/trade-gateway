@@ -13,10 +13,8 @@ internal static class SpsTransportMovementMapper
         return new LogisticsTransportMovement
         {
             Identifier = source.ID?.Value,
-            ModeCode = source.ModeCode?.Value.XmlEnumCode(),
-            UsedLogisticsTransportMeans = source.UsedSPSTransportMeans?.Name?.Value is { } name
-                ? new LogisticsTransportMovementUsedLogisticsTransportMeans { Name = name }
-                : null,
+            UrlId = source.ID?.schemeID.ToCodelistUri(),
+            ModeCode = int.TryParse(source.ModeCode?.Value.XmlEnumCode(), out var mode) ? mode : null,
         };
     }
 

@@ -8,8 +8,12 @@ namespace Trade.Gateway.Api.Contract.Certificate;
 public partial record ReferencedDocument
 {
     [JsonPropertyName("typeCode")]
-    [Description("Document type per UNTDID 1001 (e.g. 853 Veterinary certificate, 636 CHED, 916 Journey log, 705 Bill of lading).")]
+    [Description("Document type per UNTDID 1001 (e.g. 853 Veterinary certificate, 636 Health certificate, 916 Related document, 705 Bill of lading).")]
     public string? TypeCode { get; init; }
+
+    [JsonPropertyName("urlId")]
+    [Description("Codelist URI qualifying `typeCode` - the system that defines the code. Here `urlId` qualifies `typeCode`; on `LogisticsLocation` the sibling `urlId` qualifies `identifier`, so a consumer must not assume one rule across types.")]
+    public string? UrlId { get; init; }
 
     [JsonPropertyName("relationshipTypeCode")]
     [Description("Role this referenced document plays per UNTDID 1153.")]
@@ -24,7 +28,7 @@ public partial record ReferencedDocument
     public DateOnly? IssueDateTime { get; init; }
 
     [JsonPropertyName("attachmentBinaryObject")]
-    [Description("Attachment(s) for the referenced document. Single object (legacy INTRA/CHED shape) or array (when one referenced document carries multiple files).")]
+    [Description("Attachment for the referenced document, carried by reference: a link to the stored file (`uri`) with `filename` and `mimeCode` alongside. File content is never embedded.")]
     public AttachmentBinaryObject? AttachmentBinaryObject { get; init; }
 
     [JsonPropertyName("information")]

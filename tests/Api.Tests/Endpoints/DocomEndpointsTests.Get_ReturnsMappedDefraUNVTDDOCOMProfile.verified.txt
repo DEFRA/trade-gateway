@@ -1,4 +1,4 @@
-﻿{
+{
   Model: defra/certificate-internal/1,
   Type: docom,
   ExchangedDocument: {
@@ -7,6 +7,7 @@
     DocumentTypeCode: 332,
     DocumentStatusCode: 1,
     IssueDateTime: DateTimeOffset_1,
+    RevisionDateTime: DateTimeOffset_2,
     IncludedNote: [
       {
         Type: Note,
@@ -38,11 +39,13 @@
     ReferenceDocument: [
       {
         TypeCode: 332,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: CAW,
         Identifier: DOCOM.GB.2026.0000123
       },
       {
         TypeCode: 784,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: ZZZ,
         Identifier: wer
       }
@@ -219,6 +222,36 @@
         CountrySubDivisionName: County Antrim
       }
     },
+    Carrier: {
+      Identifier: Type I,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: Test type I,
+      PartyRoleCode: {
+        Value: CA,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Carrier (Transporter)
+      },
+      PartyTypeCode: [
+        {
+          Value: REGISTERED_TRANSPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Registered transporter
+        },
+        {
+          Value: REG-TRANS,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Registered transporter
+        }
+      ],
+      PostalAddress: {
+        PostcodeCode: 91744,
+        LineOne: rue I,
+        CityName: Paris,
+        CountryId: FR,
+        CountryName: France,
+        CountrySubDivisionName: Paris
+      }
+    },
     ExportCountry: {
       Code: {}
     },
@@ -236,9 +269,15 @@
         }
       }
     ],
+    LoadingBaseportLocation: {
+      Identifier: TEST-01-01,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: Bourg-en-Bresse
+    },
     MainCarriageLogisticsTransportMovement: [
       {
         Identifier: R5434FGD,
+        UrlId: https://traces-codelists.ec.europa.eu/road_vehicle_registration,
         ModeCode: 3
       }
     ],
@@ -265,6 +304,37 @@
               Content: 1,
               UnitCode: H87
             },
+            AppliedProcess: [
+              {
+                TypeCode: 44,
+                UrlId: https://traces-codelists.ec.europa.eu/7187,
+                OperatorParty: {
+                  Identifier: Type I,
+                  UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+                  Name: Test type I,
+                  PartyTypeCode: [
+                    {
+                      Value: REGISTERED_TRANSPORTER,
+                      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+                      Name: Registered transporter
+                    },
+                    {
+                      Value: REG-TRANS,
+                      UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+                      Name: Registered transporter
+                    }
+                  ],
+                  PostalAddress: {
+                    PostcodeCode: 91744,
+                    LineOne: rue I,
+                    CityName: Paris,
+                    CountryId: FR,
+                    CountryName: France,
+                    CountrySubDivisionName: Paris
+                  }
+                }
+              }
+            ],
             PhysicalReferencedLogisticsPackage: [
               {
                 LevelCode: 4,
@@ -307,6 +377,18 @@
                   Tattoo
                 ]
               }
+            ],
+            AdditionalInformationNote: [
+              {
+                Type: Note,
+                SubjectCode: {
+                  Value: IDENTIFICATION_NUMBER,
+                  UrlId: docom_commodity_note_subject_code
+                },
+                Content: [
+                  NEW
+                ]
+              }
             ]
           }
         ]
@@ -334,6 +416,7 @@
           {
             SpecifiedLogisticsTransportMovement: {
               Identifier: BX21 ABC,
+              UrlId: https://traces-codelists.ec.europa.eu/road_vehicle_registration_after_bcp,
               ModeCode: 3
             },
             InternationalTransportDocument: CMR-2026-000421

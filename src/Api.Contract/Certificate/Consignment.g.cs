@@ -53,31 +53,30 @@ public partial record Consignment
     [Description("Transit countries on the consignment route (TRACES TransitSPSCountry[]).")]
     public List<TradeCountry>? TransitCountry { get; init; }
 
+    [JsonPropertyName("loadingBaseportLocation")]
+    [Description("Port of exit / loading baseport (TRACES `LoadingBaseportSPSLocation`, `unece:loadingBaseportLocation`) — where the consignment is loaded for despatch.")]
+    public LogisticsLocation? LoadingBaseportLocation { get; init; }
+
     [JsonPropertyName("unloadingBaseportLocation")]
     [Description("Port of entry / unloading baseport. For Defra import pre-notifications the identifier carries un_locode.")]
     public LogisticsLocation? UnloadingBaseportLocation { get; init; }
 
+    [JsonPropertyName("examinationEvent")]
+    [Description("Examination (inspection) events on the consignment (TRACES `ExaminationSPSEvent`, `unece:examinationEvent`).")]
+    public List<ExaminationEvent>? ExaminationEvent { get; init; }
+
+    [JsonPropertyName("utilizedLogisticsTransportEquipment")]
+    [Description("Transport equipment carrying the consignment, with any seals affixed to it (TRACES `UtilizedSPSTransportEquipment`). Aliased to `unece:utilizedTransportEquipment` in defra-unvtd-core-v1.context.jsonld.")]
+    public List<LogisticsTransportEquipment>? UtilizedLogisticsTransportEquipment { get; init; }
+
     [JsonPropertyName("mainCarriageLogisticsTransportMovement")]
-    [Description("Transport movement(s) for the main carriage leg(s). An array of one entry per carriage leg, with entries distinguished by id.schemeId. The SPS profile collapses BSP's three-way pre/main/on carriage split into this slot.")]
+    [Description("Transport movement(s) for the main carriage leg(s). An array of one entry per carriage leg; consumers identify a specific leg by matching its arrivalEvent.occurrenceLogisticsLocation.identifier against a location anchor (for GB imports, unloadingBaseportLocation.identifier), never positionally. The SPS profile collapses BSP's three-way pre/main/on carriage split into this slot.")]
     public List<LogisticsTransportMovement>? MainCarriageLogisticsTransportMovement { get; init; }
 
     [JsonPropertyName("transitTradeCountry")]
     [Description("Transit countries between the consignment's origin and destination.")]
     public List<TradeCountry>? TransitTradeCountry { get; init; }
 
-    [JsonPropertyName("packageQuantity")]
-    [Description("Optional consignment-level package count. BSP/D23B canonical slot (unece:packageQuantity) for the number of packages in the consignment. content carries the count; unitCode is conventionally omitted for raw piece counts.")]
-    public ConsignmentPackageQuantity? PackageQuantity { get; init; }
-
     [JsonPropertyName("includedConsignmentItem")]
     public List<ConsignmentItem>? IncludedConsignmentItem { get; init; }
-}
-
-public partial record ConsignmentPackageQuantity
-{
-    [JsonPropertyName("content")]
-    public required decimal Content { get; init; }
-
-    [JsonPropertyName("unitCode")]
-    public string? UnitCode { get; init; }
 }

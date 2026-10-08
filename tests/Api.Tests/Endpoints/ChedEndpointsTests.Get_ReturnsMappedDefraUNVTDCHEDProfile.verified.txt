@@ -1,4 +1,4 @@
-﻿{
+{
   LastUpdated: DateTimeOffset_1,
   Model: defra/certificate-internal/1,
   Type: ched,
@@ -8,6 +8,7 @@
     DocumentTypeCode: 636,
     DocumentStatusCode: 1,
     IssueDateTime: DateTimeOffset_2,
+    RevisionDateTime: DateTimeOffset_1,
     Issuer: {
       Identifier: XIXXX1,
       UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
@@ -73,11 +74,13 @@ DAERA Plant Health Inspection Branch
     ReferenceDocument: [
       {
         TypeCode: 636,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: CAW,
         Identifier: CHEDA.XI.2026.0000063
       },
       {
         TypeCode: 521,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: ZZZ,
         Identifier: 455645665566
       }
@@ -239,6 +242,7 @@ DAERA Plant Health Inspection Branch
     MainCarriageLogisticsTransportMovement: [
       {
         Identifier: N1 CKP,
+        UrlId: https://traces-codelists.ec.europa.eu/road_vehicle_registration_before_bcp,
         ModeCode: 3
       }
     ],
@@ -284,6 +288,12 @@ DAERA Plant Health Inspection Branch
               Content: 5,
               UnitCode: H87
             },
+            OriginCountry: {
+              Code: {
+                Value: GB,
+                Name: United Kingdom
+              }
+            },
             ApplicableClassification: [
               {
                 SystemId: CN,
@@ -317,6 +327,18 @@ DAERA Plant Health Inspection Branch
                 },
                 ClassName: [
                   Hatching eggs
+                ]
+              }
+            ],
+            AdditionalInformationNote: [
+              {
+                Type: Note,
+                SubjectCode: {
+                  Value: INDIVIDUAL_IDENTIFICATION_NUMBER,
+                  UrlId: ched_commodity_note_subject_code
+                },
+                Content: [
+                  GB0987645768734
                 ]
               }
             ]

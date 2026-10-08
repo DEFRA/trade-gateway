@@ -12,5 +12,5 @@ public partial record TradeCountry
     public CodedValue? Code { get; init; }
 
     [JsonPropertyName("subordinateTradeCountrySubDivision")]
-    public TradeCountrySubDivision? SubordinateTradeCountrySubDivision { get; init; }
+    public List<TradeCountrySubDivision>? SubordinateTradeCountrySubDivision { get; init; }
 }
