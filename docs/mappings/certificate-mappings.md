@@ -120,9 +120,12 @@ This document describes how SOAP types from the TracesNT service are mapped to t
 
 | Target field | Source path | Notes |
 |---|---|---|
-| `identifier` | `ID.Value` | Region code where `functionTypeCode` is `106`; absent on a positional authority wrapper (`44`/`42`/`41`) |
+| `identifier` | `ID.Value` | codelist identifier where the sub-division carries one (e.g. a codelist-named region); absent on a positional authority wrapper (`44`/`42`/`41`) |
 | `urlId` | `ID.schemeID` | codelist URI via [codelist rule](#coded-values) |
+| `name` | `Name[].Value` | [language-preferred](#language-selection); the region name, e.g. `"Greater London"` |
+| `hierarchicalLevelCode` | `HierarchicalLevelCode` | [coded value](#coded-values): `value` ← `HierarchicalLevelCode.Value`, `name` ← `HierarchicalLevelCode.name`; omitted if absent |
 | `functionTypeCode.content` | `FunctionTypeCode.Value` | UNCL3227 code as a string (`XmlEnumCode`) |
+| `functionTypeCode.name` | `FunctionTypeCode.name` | human-readable label as sent, e.g. `"Region of Origin"` |
 | `activityAuthorizedParty` | `ActivityAuthorizedSPSParty[]` | [party](#tradeparty--spspartytype) per authority; `partyRoleCode` distinguishes `RA` central, `VG` local, `CM` customs / border control post; omitted if empty |
 
 ---

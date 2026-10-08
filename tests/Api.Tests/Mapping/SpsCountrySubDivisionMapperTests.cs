@@ -6,15 +6,17 @@ namespace Api.Tests.Mapping;
 
 public class SpsCountrySubDivisionMapperTests
 {
+    private static readonly MappingContext Context = new("en");
+
     [Fact]
-    public void Map_NullSource_ReturnsNull() => SpsCountrySubDivisionMapper.Map(null).Should().BeNull();
+    public void Map_NullSource_ReturnsNull() => SpsCountrySubDivisionMapper.Map(null, Context).Should().BeNull();
 
     [Fact]
     public void Map_MissingFunctionTypeCode_ReturnsNull()
     {
         var source = new SPSCountrySubDivisionType { ID = new IDType { Value = "NL" } };
 
-        SpsCountrySubDivisionMapper.Map(source).Should().BeNull();
+        SpsCountrySubDivisionMapper.Map(source, Context).Should().BeNull();
     }
 
     [Fact]
@@ -51,7 +53,7 @@ public class SpsCountrySubDivisionMapperTests
             ],
         };
 
-        var result = SpsCountrySubDivisionMapper.Map(source)!;
+        var result = SpsCountrySubDivisionMapper.Map(source, Context)!;
 
         result.FunctionTypeCode.Content.Should().Be("44");
         result.ActivityAuthorizedParty.Should().HaveCount(2);
@@ -88,14 +90,40 @@ public class SpsCountrySubDivisionMapperTests
             ],
         };
 
-        var result = SpsCountrySubDivisionMapper.Map(source)!;
+        var result = SpsCountrySubDivisionMapper.Map(source, Context)!;
 
         result.ActivityAuthorizedParty.Should().ContainSingle();
         result.ActivityAuthorizedParty![0].PartyRoleCode!.Value.Should().Be("CM");
     }
 
     [Fact]
-    public void Map_Region_KeepsIdentifierAndUrlId()
+    public void Map_Region_MapsNameHierarchicalLevelAndFunctionName()
+    {
+        // IncludedSPSConsignmentItem -> OriginSPSCountry -> SubordinateSPSCountrySubDivision (106 region).
+        var source = new SPSCountrySubDivisionType
+        {
+            Name = [new TextType { languageID = "en", Value = "Greater London" }],
+            HierarchicalLevelCode = new CodeType { Value = "1", name = "Region" },
+            FunctionTypeCode = new LocationFunctionCodeType
+            {
+                Value = LocationFunctionCodeContentType.Item106,
+                name = "Region of Origin",
+            },
+        };
+
+        var result = SpsCountrySubDivisionMapper.Map(source, Context)!;
+
+        result.Name.Should().Be("Greater London");
+        result
+            .HierarchicalLevelCode.Should()
+            .BeEquivalentTo(new Trade.Gateway.Api.Contract.Certificate.CodedValue { Value = "1", Name = "Region" });
+        result.FunctionTypeCode.Content.Should().Be("106");
+        result.FunctionTypeCode.Name.Should().Be("Region of Origin");
+        result.ActivityAuthorizedParty.Should().BeNull();
+    }
+
+    [Fact]
+    public void Map_Region_KeepsIdentifierAndUrlIdWhenCodelistNamed()
     {
         var source = new SPSCountrySubDivisionType
         {
@@ -103,7 +131,7 @@ public class SpsCountrySubDivisionMapperTests
             FunctionTypeCode = new LocationFunctionCodeType { Value = LocationFunctionCodeContentType.Item106 },
         };
 
-        var result = SpsCountrySubDivisionMapper.Map(source)!;
+        var result = SpsCountrySubDivisionMapper.Map(source, Context)!;
 
         result.Identifier.Should().Be("IT-CAM");
         result.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/region_code");
@@ -112,10 +140,11 @@ public class SpsCountrySubDivisionMapperTests
     }
 
     [Fact]
-    public void MapList_NullSource_ReturnsNull() => SpsCountrySubDivisionMapper.MapList(null).Should().BeNull();
+    public void MapList_NullSource_ReturnsNull() =>
+        SpsCountrySubDivisionMapper.MapList(null, Context).Should().BeNull();
 
     [Fact]
-    public void MapList_EmptyArray_ReturnsNull() => SpsCountrySubDivisionMapper.MapList([]).Should().BeNull();
+    public void MapList_EmptyArray_ReturnsNull() => SpsCountrySubDivisionMapper.MapList([], Context).Should().BeNull();
 
     [Fact]
     public void MapList_MultipleSubdivisions_MapsAll()
@@ -163,7 +192,7 @@ public class SpsCountrySubDivisionMapperTests
             },
         };
 
-        var result = SpsCountrySubDivisionMapper.MapList(source)!;
+        var result = SpsCountrySubDivisionMapper.MapList(source, Context)!;
 
         result.Should().HaveCount(2);
         result[0].FunctionTypeCode.Content.Should().Be("44");

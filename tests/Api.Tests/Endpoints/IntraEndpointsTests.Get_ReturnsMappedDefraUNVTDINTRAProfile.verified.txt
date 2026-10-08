@@ -257,7 +257,8 @@
       SubordinateTradeCountrySubDivision: [
         {
           FunctionTypeCode: {
-            Content: 44
+            Content: 44,
+            Name: Place of authentication of document
           },
           ActivityAuthorizedParty: [
             {
@@ -282,7 +283,8 @@
         },
         {
           FunctionTypeCode: {
-            Content: 42
+            Content: 42,
+            Name: Consignment exit customs office location
           },
           ActivityAuthorizedParty: [
             {
