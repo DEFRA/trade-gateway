@@ -14,7 +14,7 @@ This does not fit the standard REST member-resource pattern (`GET /intras/{id}`)
 1. **Query parameters on the collection URL** — `GET /intras?updatedFrom=...&updatedBefore=...`
 2. **A dedicated operation URL** — `GET /intras/_updates?after=...&before=...`
 
-Pagination strategy is constrained by the upstream TracesNT SOAP API, which uses offset-based pagination (`pageSize` + `offset`, both required, `pageSize` capped at 200) and returns no total item count. The stop condition is receiving fewer items than `pageSize`.
+Pagination strategy is constrained by the upstream TracesNT SOAP API, which uses offset-based pagination (`pageSize` + `offset`, both required, `pageSize` capped at 200) and returns no total item count. The upstream's own stop condition is receiving fewer items than `pageSize`; the gateway's `hasMore` is derived from that same upstream page (see Pagination).
 
 ---
 
@@ -51,7 +51,7 @@ The semantics were verified against the TracesNT acceptance environment: the ups
 
 The upstream TracesNT `findEuIntraCertificate` and `findChedCertificate` operations use **offset-based pagination**: both `pageSize` and `offset` are required parameters (cardinality 1..1). `offset` is the number of items to skip.
 
-The upstream does not return a total item count. The termination condition is: stop requesting further pages when the number of items returned is less than `pageSize`. The gateway reflects this in the response envelope.
+The upstream does not return a total item count. The upstream's termination condition is: stop requesting further pages when the number of items returned is less than `pageSize`. The gateway reflects this in the response envelope, subject to the draft caveat below.
 
 The response envelope:
 
@@ -64,7 +64,9 @@ The response envelope:
 }
 ```
 
-`hasMore` is `true` when `items.length == pageSize` (there may be more pages), `false` when `items.length < pageSize` (this is the last page). Consumers must also treat an empty `items` array as a terminal condition: if the total result count is an exact multiple of `pageSize`, the final page will be full and `hasMore` will be `true`, but the subsequent request will return zero items. This edge case is inherited from the upstream API, which uses the same heuristic.
+`hasMore` is `true` when the upstream page returned `pageSize` items (there may be more pages), `false` when it returned fewer (this is the last page). It describes the upstream page rather than `items`, so a response carrying fewer than `pageSize` items with `hasMore` set to `true` is expected. Consumers must page on `hasMore` alone and must not read a short `items` array as the end of the window. They must also treat an empty `items` array as terminal: if the total result count is an exact multiple of `pageSize`, the final page will be full and `hasMore` will be `true`, but the subsequent request will return zero items. This edge case is inherited from the upstream API, which uses the same heuristic.
+
+A draft certificate (a `statusCode` of 47) is an unsubmitted copy. Drafts are omitted from `items`, and a draft fetched by reference (`GET /cheds/{id}`, `GET /intras/{id}`, `GET /docoms/{id}`, and the CHED attachment route) returns the same `404` as a reference that does not exist. The filter is applied after fetching, so `hasMore` continues to describe the unfiltered upstream page.
 
 ### Response content type
 

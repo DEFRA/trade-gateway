@@ -582,6 +582,97 @@ public class ChedEndpointsTests(TradeGatewayWebApplicationFactory factory)
         Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
     }
 
+    /// <summary>
+    /// Stubs getChedCertificate for <c>DRAFTCHED</c> with the sample CHED marked draft by its status code.
+    /// </summary>
+    private void StubDraftChed() =>
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(GetChedCertificateSoapAction, ChedRequestXPath("DRAFTCHED"))
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            ChedSampleResource,
+                            SoapUtilities.DraftStatusSubstitution
+                        )
+                    )
+            );
+
+    [Fact]
+    public async Task Get_WhenChedIsDraft_ReturnsNotFound()
+    {
+        StubDraftChed();
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetChedCertification("DRAFTCHED", TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task GetAttachment_WhenChedIsDraft_ReturnsNotFound()
+    {
+        StubDraftChed();
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.GetChedCertificationAttachment(
+            "DRAFTCHED",
+            1,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        var problem = await response.Content.ReadFromJsonAsync<ProblemDetails>(TestContext.Current.CancellationToken);
+        Assert.Equal("Ched certificate 'DRAFTCHED' was not found.", problem?.Detail);
+    }
+
+    [Fact]
+    public async Task Find_WhenAChedIsDraft_ExcludesItFromItems()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    FindChedCertificateSoapAction,
+                    "/*[local-name() = 'FindChedCertificateRequest']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.CHED.FindChedCertificateResponse.xml",
+                            new TokenSubstitution
+                            {
+                                Token = "<ns7:ID>CHEDA.XI.2026.0000063</ns7:ID>",
+                                Substitution =
+                                    "<ns7:ID>CHEDA.XI.2026.0000063</ns7:ID>"
+                                    + """<ns7:Status name="Draft version (Draft)">47</ns7:Status>""",
+                            }
+                        )
+                    )
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        var response = await client.FindChedUpdates(
+            new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            10,
+            0,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.DoesNotContain(response.Content!.Items, item => item.Id == "CHEDA.XI.2026.0000063");
+        Assert.Contains(response.Content.Items, item => item.Id == "CHEDPP.XI.2026.0000064");
+    }
+
     [Fact]
     public async Task Find_WhenOffsetIsLessThanZero_ReturnsBadRequest()
     {

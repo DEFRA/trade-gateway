@@ -36,6 +36,36 @@ public class DocomEndpointsTests(TradeGatewayWebApplicationFactory factory)
     }
 
     [Fact]
+    public async Task Get_WhenDocomIsDraft_ReturnsNotFound()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    GetDocomCertificateSoapAction,
+                    "/*[local-name() = 'GetDocomCertificateRequest']"
+                        + "/*[local-name() = 'ID' and text() = 'DRAFTDOCOM']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.DOCOM.GetDocomCertificateResponse.xml",
+                            SoapUtilities.DraftStatusSubstitution
+                        )
+                    )
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-docom-reader");
+        var response = await client.GetDocomCertification("DRAFTDOCOM", TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+    }
+
+    [Fact]
     public async Task Get_WhenTracesReturnsInvalidSoapFault_ReturnsInternalServerError()
     {
         factory

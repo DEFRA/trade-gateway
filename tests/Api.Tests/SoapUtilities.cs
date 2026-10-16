@@ -18,6 +18,12 @@ namespace Api.Tests
 
         public const string BodyXPath = "/*[local-name() = 'Envelope']/*[local-name() = 'Body']";
 
+        public static readonly TokenSubstitution DraftStatusSubstitution = new()
+        {
+            Token = """<ns4:StatusCode name="To be done (New)">1</ns4:StatusCode>""",
+            Substitution = """<ns4:StatusCode name="Draft version (Draft)">47</ns4:StatusCode>""",
+        };
+
         public static Task<string> GetEmbeddedResource(string resourceName)
         {
             using var stream =

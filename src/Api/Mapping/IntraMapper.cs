@@ -28,7 +28,7 @@ internal static class IntraMapper
 
         return new()
         {
-            Items = results.Select(Map).ToArray(),
+            Items = results.Where(result => !DraftNotification.IsDraft(result)).Select(Map).ToArray(),
             Offset = source.offset,
             PageSize = source.pageSize,
             HasMore = results.Length == source.pageSize,

@@ -190,6 +190,78 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
     }
 
     [Fact]
+    public async Task Get_WhenIntraIsDraft_ReturnsNotFound()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    GetEuIntraCertificateSoapAction,
+                    "/*[local-name() = 'GetEuIntraCertificateRequest']"
+                        + "/*[local-name() = 'ID' and text() = 'DRAFTINTRA']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.INTRA.GetEuIntraCertificateResponse.xml",
+                            SoapUtilities.DraftStatusSubstitution
+                        )
+                    )
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.GetIntraCertification("DRAFTINTRA", TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Find_WhenAnIntraIsDraft_ExcludesItFromItems()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    FindEuIntraCertificateSoapAction,
+                    "/*[local-name() = 'FindEuIntraCertificateRequest']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.INTRA.FindEuIntraCertificateResponse.xml",
+                            new TokenSubstitution
+                            {
+                                Token = "<ns3:ID>INTRA.EU.AT.2026.0000002</ns3:ID>",
+                                Substitution =
+                                    "<ns3:ID>INTRA.EU.AT.2026.0000002</ns3:ID>"
+                                    + """<ns3:Status name="Draft version (Draft)">47</ns3:Status>""",
+                            }
+                        )
+                    )
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.FindIntraUpdates(
+            new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            10,
+            0,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.DoesNotContain(response.Content!.Items, item => item.Id == "INTRA.EU.AT.2026.0000002");
+        Assert.Contains(response.Content.Items, item => item.Id == "INTRA.EU.AT.2026.0000001");
+    }
+
+    [Fact]
     public async Task Find_WhenUpdatedFromIsMissing_ReturnsBadRequest()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");

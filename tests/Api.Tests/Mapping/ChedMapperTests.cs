@@ -121,6 +121,52 @@ public class ChedMapperTests
         result.HasMore.Should().BeFalse();
     }
 
+    [Fact]
+    public void ToDefraUNVTDCHEDProfileSummary_ExcludesDrafts_AndKeepsHasMoreFromUnfilteredPage()
+    {
+        var source = new FindChedCertificateResultType
+        {
+            offset = 0,
+            pageSize = 2,
+            ChedCertificateResult =
+            [
+                new ChedCertificateQueryResultType
+                {
+                    ID = "CHEDA.XI.2026.0000100",
+                    Status = new StatusCodeType { Value = StatusCodeContentType.Item47 },
+                },
+                new ChedCertificateQueryResultType { ID = "CHEDA.XI.2026.0000101" },
+            ],
+        };
+
+        var result = ChedMapper.Map(source);
+
+        result.Items.Should().ContainSingle().Which.Id.Should().Be("CHEDA.XI.2026.0000101");
+        result.HasMore.Should().BeTrue();
+    }
+
+    [Fact]
+    public void ToDefraUNVTDCHEDProfileSummary_IncludesResultWithDraftReferencePrefix()
+    {
+        var source = new FindChedCertificateResultType
+        {
+            offset = 0,
+            pageSize = 10,
+            ChedCertificateResult =
+            [
+                new ChedCertificateQueryResultType
+                {
+                    ID = "DRAFTCHEDA.XI.2026.0000103",
+                    Status = new StatusCodeType { Value = StatusCodeContentType.Item1 },
+                },
+            ],
+        };
+
+        var result = ChedMapper.Map(source);
+
+        result.Items.Should().ContainSingle().Which.Id.Should().Be("DRAFTCHEDA.XI.2026.0000103");
+    }
+
     private static ChedCertificateType MinimalCertificate() =>
         new()
         {

@@ -26,7 +26,7 @@
           ChedEndpoints
         ],
         summary: Fetch a single CHED certificate by its reference.,
-        description: Returns the full CHED profile.,
+        description: Returns the full CHED profile. A draft certificate (statusCode 47) is not served and returns 404.,
         operationId: GetChed,
         parameters: [
           {
@@ -116,7 +116,7 @@
           ChedEndpoints
         ],
         summary: Get a CHED certificate attachment,
-        description: Downloads a supporting document attached to the CHED certificate. The attachment id is the document id from the certificate's referenced document attachment (uri:documentid:{attachmentId}); the file is returned with its original content type and file name.,
+        description: Downloads a supporting document attached to the CHED certificate. The attachment id is the document id from the certificate's referenced document attachment (uri:documentid:{attachmentId}); the file is returned with its original content type and file name. A draft certificate (statusCode 47) is not served and returns 404.,
         operationId: GetChedCertificateAttachment,
         parameters: [
           {
@@ -206,7 +206,7 @@
           ChedEndpoints
         ],
         summary: Search CHED certificates updated in a time window.,
-        description: Returns a paged summary of CHED certificates updated between updatedFrom and updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates whether there are more pages to follow.,
+        description: Returns a paged summary of CHED certificates updated between updatedFrom and updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates whether there are more pages to follow. Draft certificates (statusCode 47) are omitted from items; hasMore is computed from the unfiltered upstream page.,
         operationId: FindCheds,
         parameters: [
           {
@@ -1133,7 +1133,7 @@
           DocomEndpoints
         ],
         summary: Fetch a single DOCOM certificate by its identifier.,
-        description: Returns the full DOCOM profile: consignment, parties and supporting documents.,
+        description: Returns the full DOCOM profile: consignment, parties and supporting documents. A draft certificate (statusCode 47) is not served and returns 404.,
         operationId: GetDocom,
         parameters: [
           {
@@ -1225,7 +1225,7 @@
           IntraEndpoints
         ],
         summary: Fetch a single INTRA certificate by its identifier.,
-        description: Returns the full INTRA profile: consignment, parties, classification and notes.,
+        description: Returns the full INTRA profile: consignment, parties, classification and notes. A draft certificate (statusCode 47) is not served and returns 404.,
         operationId: GetIntra,
         parameters: [
           {
@@ -1317,7 +1317,7 @@
           IntraEndpoints
         ],
         summary: Search INTRA certificates updated in a time window.,
-        description: Returns a paged summary of INTRA certificates updated between updatedFrom and updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates whether there are more pages to follow.,
+        description: Returns a paged summary of INTRA certificates updated between updatedFrom and updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates whether there are more pages to follow. Draft certificates (statusCode 47) are omitted from items; hasMore is computed from the unfiltered upstream page.,
         operationId: FindIntras,
         parameters: [
           {
