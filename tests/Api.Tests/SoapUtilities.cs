@@ -7,6 +7,8 @@ using System.Xml.XPath;
 using WireMock;
 using WireMock.Matchers;
 using WireMock.RequestBuilders;
+using WireMock.ResponseBuilders;
+using WireMock.Server;
 using WireMock.Types;
 using WireMock.Util;
 
@@ -17,6 +19,12 @@ namespace Api.Tests
         private static readonly Assembly s_assembly = Assembly.GetExecutingAssembly();
 
         public const string BodyXPath = "/*[local-name() = 'Envelope']/*[local-name() = 'Body']";
+
+        private static readonly TokenSubstitution s_draftStatusSubstitution = new()
+        {
+            Token = """<ns4:StatusCode name="To be done (New)">1</ns4:StatusCode>""",
+            Substitution = """<ns4:StatusCode name="Draft version (Draft)">47</ns4:StatusCode>""",
+        };
 
         public static Task<string> GetEmbeddedResource(string resourceName)
         {
@@ -69,6 +77,48 @@ namespace Api.Tests
                 .WithBody(new XPathMatcher(BodyXPath + bodyXpathSuffix))
                 .UsingPost();
         }
+
+        /// <summary>
+        /// Stubs a SOAP operation with a response whose certificate carries the draft status code.
+        /// </summary>
+        public static void StubDraftCertificate(
+            WireMockServer server,
+            string soapAction,
+            string bodyXpathSuffix,
+            string resourceName
+        ) =>
+            server
+                .Given(CreateSoapRequestInterceptor(soapAction, bodyXpathSuffix))
+                .RespondWith(
+                    Response
+                        .Create()
+                        .WithCallback(async _ =>
+                            await CreateResponseFromResource(HttpStatusCode.OK, resourceName, s_draftStatusSubstitution)
+                        )
+                );
+
+        /// <summary>
+        /// Stubs a SOAP operation, handing each request body to <paramref name="capture"/>.
+        /// </summary>
+        public static IResponseBuilder CaptureRequestAndRespond(string resourceName, Action<string?> capture) =>
+            Response
+                .Create()
+                .WithCallback(async request =>
+                {
+                    capture(request.Body);
+                    return await CreateResponseFromResource(HttpStatusCode.OK, resourceName);
+                });
+
+        /// <summary>
+        /// Returns the value of every <c>Status</c> element in a SOAP body, in document order.
+        /// </summary>
+        public static string[] StatusCodesInEnvelope(string soapBody) =>
+            XDocument
+                .Parse(soapBody)
+                .Descendants()
+                .Where(element => element.Name.LocalName == "Status")
+                .Select(element => element.Value)
+                .ToArray();
 
         /// <summary>
         /// Matches a SOAP 1.2 request sent with MTOM encoding: the action travels in the Content-Type
