@@ -1771,7 +1771,7 @@
           ReferenceDataEndpoints
         ],
         summary: Search tree nodes updated in a time window.,
-        description: Returns a paged summary of classification tree nodes for nodes updated between updatedFrom and updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates whether there are more pages to follow.,
+        description: Returns a paged summary of classification tree nodes for nodes updated between updatedFrom and updatedBefore (both UTC). Pagination is not implemented as Traces does not support it.,
         operationId: FindClassifcationTreeNodes,
         parameters: [
           {

@@ -76,8 +76,7 @@ public static class ReferenceDataEndpoints
             .WithSummary("Search tree nodes updated in a time window.")
             .WithDescription(
                 "Returns a paged summary of classification tree nodes for nodes updated between updatedFrom and "
-                    + "updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates "
-                    + "whether there are more pages to follow."
+                    + "updatedBefore (both UTC). Pagination is not implemented as Traces does not support it."
             )
             .Produces<DefraUNVTDProfileClassificationTreeResponse>(
                 200,
