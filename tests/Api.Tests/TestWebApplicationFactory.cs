@@ -44,6 +44,9 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                         ["TracesNt:Credentials:Default:Username"] = "test-user",
                         ["TracesNt:Credentials:Default:AuthenticationKey"] = "test-auth-key",
                         ["TracesNt:Credentials:Default:WebServiceClientId"] = "test-client-id",
+                        ["TracesNt:Credentials:ReferenceData:Username"] = "test-refdata-user",
+                        ["TracesNt:Credentials:ReferenceData:AuthenticationKey"] = "test-refdata-auth-key",
+                        ["TracesNt:Credentials:ReferenceData:WebServiceClientId"] = "test-refdata-client-id",
                         // Deliberately different from the default set — TracesNtCredentialsTests
                         // asserts the customs port authenticates as this account, not the default one.
                         ["TracesNt:Credentials:Customs:Username"] = "test-customs-user",

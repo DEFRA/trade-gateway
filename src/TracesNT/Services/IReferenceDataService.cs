@@ -15,4 +15,11 @@ public interface IReferenceDataService
     );
 
     Task<MetadataCodeType[]?> GetMetadatas(string metaDataType, string languageCode);
+
+    Task<GetClassificationTreeUpdatesResponse> FindClassificationTreeUpdates(
+        string treeId,
+        DateTime after,
+        DateTime before,
+        string languageCode
+    );
 }
