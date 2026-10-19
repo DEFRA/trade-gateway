@@ -1,6 +1,7 @@
 using Api.Contract;
 using Api.Extensions;
 using Api.Mapping;
+using Api.Models;
 using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
 using TracesNT.Services;
@@ -67,6 +68,24 @@ public static class ReferenceDataEndpoints
             )
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status500InternalServerError)
+            .ProducesProblem(StatusCodes.Status502BadGateway);
+
+        app.MapGet("reference-data/classifications/trees/{treeId}/nodes", FindClassificationTreeUpdates)
+            .WithName("FindClassifcationTreeNodes")
+            .WithSummary("Search tree nodes updated in a time window.")
+            .WithDescription(
+                "Returns a paged summary of classification tree nodes for nodes updated between updatedFrom and "
+                    + "updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates "
+                    + "whether there are more pages to follow."
+            )
+            .Produces<DefraUNVTDProfileClassificationTreeResponse>(
+                200,
+                MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeResponse>()
+            )
+            .ProducesValidationProblem()
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status403Forbidden)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
     }
@@ -180,5 +199,26 @@ public static class ReferenceDataEndpoints
             MetadataMapper.Map(metadatas, metadataType),
             contentType: MediaTypeAttribute.For<DefraUNVTDProfileMetadataListResponse>()
         );
+    }
+
+    private static async Task<IResult> FindClassificationTreeUpdates(
+        string treeId,
+        [AsParameters] FindTreeNodesRequest query,
+        [FromServices] IReferenceDataService referenceDataService
+    )
+    {
+        var classificationTreeNodes = await referenceDataService.FindClassificationTreeUpdates(
+            treeId,
+            query.UpdatedFrom!.Value.UtcDateTime,
+            query.UpdatedBefore!.Value.UtcDateTime,
+            query.AcceptLanguage!
+        );
+
+        var mapped = ClassificationTreeMapper.Map(
+            classificationTreeNodes.GetClassificationTreeUpdatesResponse1,
+            treeId
+        );
+
+        return Results.Json(mapped, contentType: MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeResponse>());
     }
 }

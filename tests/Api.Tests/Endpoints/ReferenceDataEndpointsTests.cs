@@ -493,4 +493,143 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         var response = await client.GetMetadatas(metadataType, TestContext.Current.CancellationToken);
         await Verify((response.Error as ValidationApiException)?.Content);
     }
+
+    [Fact]
+    public async Task Find_WhenValidRequest_ReturnsOk()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getClassificationTreeUpdates\"",
+                    "/*[local-name() = 'GetClassificationTreeUpdatesRequest']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithCallback(async _ =>
+                        await SoapUtilities.CreateResponseFromResource(
+                            HttpStatusCode.OK,
+                            "Api.Tests.Samples.REFERENCE_DATA.GetClassificationTreeUpdatesResponse_CHEDA.xml"
+                        )
+                    )
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.FindCommodityTreeUpdates(
+            "cheda",
+            new DateTime(2026, 09, 28, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(
+            MediaTypeAttribute.For<DefraUNVTDProfileClassificationTreeResponse>(),
+            response.ContentHeaders?.ContentType?.MediaType
+        );
+
+        await Verify(response.Content);
+    }
+
+    [Fact]
+    public async Task Find_WhenTracesCommunicationFails_ReturnsBadGateway()
+    {
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    "\"getClassificationTreeUpdates\"",
+                    "/*[local-name() = 'GetClassificationTreeUpdatesRequest']"
+                )
+            )
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithStatusCode((int)HttpStatusCode.BadGateway)
+                    .WithHeader("Content-Type", "text/plain; charset=utf-8")
+                    .WithBody("upstream failed")
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+        var response = await client.FindCommodityTreeUpdates(
+            "cheda",
+            new DateTime(2026, 09, 28, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Find_WhenOffsetIsLessThanZero_ReturnsBadRequest()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+
+        var response = await client.FindCommodityTreeUpdates(
+            "cheda",
+            new DateTimeOffset(2026, 10, 2, 0, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2026, 10, 1, 0, 0, 0, TimeSpan.Zero),
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+        await Verify((response.Error as ValidationApiException)?.Content);
+    }
+
+    [Fact]
+    public async Task Find_WhenOffsetIsGreaterThan60Days_ReturnsBadRequest()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+
+        var updatedFrom = new DateTimeOffset(2026, 10, 28, 0, 0, 0, TimeSpan.Zero);
+        var updatedTo = updatedFrom.AddDays(61);
+
+        var response = await client.FindCommodityTreeUpdates(
+            "cheda",
+            updatedFrom,
+            updatedTo,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+        await Verify((response.Error as ValidationApiException)?.Content);
+    }
+
+    [Fact]
+    public async Task Find_WhenUpdatedFromIsNotUTC_ReturnsBadRequest()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+
+        var response = await client.FindCommodityTreeUpdates(
+            "cheda",
+            new DateTimeOffset(2026, 10, 2, 0, 0, 0, TimeSpan.FromHours(2)),
+            new DateTimeOffset(2026, 10, 5, 0, 0, 0, TimeSpan.Zero),
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+        await Verify((response.Error as ValidationApiException)?.Content);
+    }
+
+    [Fact]
+    public async Task Find_WhenUpdatedToIsNotUTC_ReturnsBadRequest()
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-reference-data-reader");
+
+        var response = await client.FindCommodityTreeUpdates(
+            "cheda",
+            new DateTimeOffset(2026, 10, 2, 0, 0, 0, TimeSpan.Zero),
+            new DateTimeOffset(2026, 10, 5, 0, 0, 0, TimeSpan.FromHours(2)),
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+        await Verify((response.Error as ValidationApiException)?.Content);
+    }
 }

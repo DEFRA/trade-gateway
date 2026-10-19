@@ -28,4 +28,12 @@ public interface IReferenceDataClient
         string metadataType,
         CancellationToken cancellationToken
     );
+
+    [Get("/reference-data/classifications/trees/{treeId}/nodes")]
+    Task<ApiResponse<DefraUNVTDProfileClassificationTreeResponse>> FindCommodityTreeUpdates(
+        string treeId,
+        DateTimeOffset updatedFrom,
+        DateTimeOffset updatedBefore,
+        CancellationToken cancellationToken
+    );
 }

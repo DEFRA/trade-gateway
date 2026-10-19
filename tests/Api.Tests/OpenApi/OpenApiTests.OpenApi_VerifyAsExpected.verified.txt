@@ -1764,6 +1764,116 @@
           }
         }
       }
+    },
+    /reference-data/classifications/trees/{treeId}/nodes: {
+      get: {
+        tags: [
+          ReferenceDataEndpoints
+        ],
+        summary: Search tree nodes updated in a time window.,
+        description: Returns a paged summary of classification tree nodes for nodes updated between updatedFrom and updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates whether there are more pages to follow.,
+        operationId: FindClassifcationTreeNodes,
+        parameters: [
+          {
+            name: treeId,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: updatedFrom,
+            in: query,
+            description: Inclusive start of the update window, as a UTC timestamp.,
+            schema: {
+              type: string,
+              format: date-time
+            }
+          },
+          {
+            name: updatedBefore,
+            in: query,
+            description: Exclusive end of the update window, as a UTC timestamp.,
+            schema: {
+              type: string,
+              format: date-time
+            }
+          },
+          {
+            name: Accept-Language,
+            in: header,
+            description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en when absent or not recognised.,
+            schema: {
+              type: string,
+              description: Preferred language for returned names, as a BCP 47 language tag. Defaults to en.,
+              default: en
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/vnd.defra.trade.classificationtree.v1+json: {
+                schema: {
+                  $ref: #/components/schemas/DefraUNVTDProfileClassificationTreeResponse
+                }
+              }
+            }
+          },
+          400: {
+            description: Bad Request,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/HttpValidationProblemDetails
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   components: {

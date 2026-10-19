@@ -13,11 +13,14 @@ namespace TracesNT;
 /// </remarks>
 public static class TracesNtCredentialKeys
 {
-    /// <summary>The original gateway account, used by every certificate and reference-data port.</summary>
+    /// <summary>The original gateway account, used by every certificate type port.</summary>
     public const string Default = "Default";
 
     /// <summary>The customs account, used by the quantity-management port.</summary>
     public const string Customs = "Customs";
 
-    public static readonly string[] All = [Default, Customs];
+    /// <summary>The reference data account, used by the reference-data port.</summary>
+    public const string ReferenceData = "ReferenceData";
+
+    public static readonly string[] All = [Default, Customs, ReferenceData];
 }
