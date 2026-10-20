@@ -53,12 +53,10 @@ public static class EventEnvelopeExtensions
         };
     }
 
-    public static string? GetSubType(this ExchangedDocument obj)
-    {
-        return obj.Identifier.Split('.').FirstOrDefault();
-    }
-
-    public static EventEnvelope<DefraUNVTDProfileClassificationTreeNodeDetailResponse> ToEventEnvelope(this DefraUNVTDProfileClassificationTreeNodeDetailResponse classificationTreeNode, string correlationId)
+    public static EventEnvelope<DefraUNVTDProfileClassificationTreeNodeDetailResponse> ToEventEnvelope(
+        this DefraUNVTDProfileClassificationTreeNodeDetailResponse classificationTreeNode,
+        string correlationId
+    )
     {
         return new EventEnvelope<DefraUNVTDProfileClassificationTreeNodeDetailResponse>()
         {
@@ -77,5 +75,10 @@ public static class EventEnvelopeExtensions
                 SchemaUri = Constants.Schemas.TracesClassificationTreeNodeDetailV1.Uri,
             },
         };
+    }
+
+    public static string? GetSubType(this ExchangedDocument obj)
+    {
+        return obj.Identifier.Split('.').FirstOrDefault();
     }
 }

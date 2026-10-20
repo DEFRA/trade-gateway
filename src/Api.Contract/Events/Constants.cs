@@ -25,6 +25,7 @@ public static class Constants
 
         public static SchemaMetadata TracesChedV1 => new() { Uri = new Uri(TracesChedV1Uri), Version = "1.0.0" };
         public static SchemaMetadata TracesIntraV1 => new() { Uri = new Uri(TracesIntraV1Uri), Version = "1.0.0" };
-        public static SchemaMetadata TracesClassificationTreeNodeDetailV1 => new() { Uri = new Uri(TracesClassificationTreeNodeDetailV1Uri), Version = "1.0.0" };
+        public static SchemaMetadata TracesClassificationTreeNodeDetailV1 =>
+            new() { Uri = new Uri(TracesClassificationTreeNodeDetailV1Uri), Version = "1.0.0" };
     }
 }
