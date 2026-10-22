@@ -39,13 +39,10 @@ public class SpsLocationMapperTests
     }
 
     [Fact]
-    public void Map_EmptyLocation_ReturnsNullTargetFields()
+    public void Map_EmptyLocation_ReturnsNull()
     {
-        var result = SpsLocationMapper.Map(new SPSLocationType(), Context)!;
+        var result = SpsLocationMapper.Map(new SPSLocationType(), Context);
 
-        result.Should().NotBeNull();
-        result.Identifier.Should().BeNull();
-        result.UrlId.Should().BeNull();
-        result.Name.Should().BeNull();
+        result.Should().BeNull();
     }
 }

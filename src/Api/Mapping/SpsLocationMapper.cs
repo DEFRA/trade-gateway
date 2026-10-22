@@ -10,11 +10,13 @@ internal static class SpsLocationMapper
         if (source is null)
             return null;
 
-        return new LogisticsLocation
+        var location = new LogisticsLocation
         {
             Identifier = source.ID?.Value,
             UrlId = source.ID?.schemeID.ToCodelistUri(),
             Name = source.Name.ForLanguage(context.LanguageCode),
         };
+
+        return location is { Identifier: null, UrlId: null, Name: null } ? null : location;
     }
 }
