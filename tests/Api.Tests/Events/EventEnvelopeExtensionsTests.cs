@@ -62,8 +62,28 @@ namespace Api.Tests.Events
                 Attributes = [],
                 ClassificationSectionGroups = [],
                 LegislationAttributes = [],
-                Taxons = [new Taxon { TaxonId = 101, EppoCode = "EPP001", FaoCode = "FAO001", Name = "Bos taurus", LanguageId = "en" }],
-                InvasiveTaxons = [new Taxon { TaxonId = 202, EppoCode = "EPP002", FaoCode = "FAO002", Name = "Invasive species", LanguageId = "en" },],
+                Taxons =
+                [
+                    new Taxon
+                    {
+                        TaxonId = 101,
+                        EppoCode = "EPP001",
+                        FaoCode = "FAO001",
+                        Name = "Bos taurus",
+                        LanguageId = "en",
+                    },
+                ],
+                InvasiveTaxons =
+                [
+                    new Taxon
+                    {
+                        TaxonId = 202,
+                        EppoCode = "EPP002",
+                        FaoCode = "FAO002",
+                        Name = "Invasive species",
+                        LanguageId = "en",
+                    },
+                ],
                 RetrievedAt = new DateTimeOffset(2024, 1, 3, 12, 0, 0, TimeSpan.Zero),
             };
 
