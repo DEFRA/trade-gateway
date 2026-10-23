@@ -2,6 +2,7 @@ using Api.Contract;
 using Api.Mapping;
 using Api.Utils.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TracesNT.Services;
 using Trade.Gateway.Api.Contract.Certificate;
 
@@ -14,7 +15,10 @@ public static class DocomEndpoints
         app.MapGet("certificates/docoms/{id}", Get)
             .WithName("GetDocom")
             .WithSummary("Fetch a single DOCOM certificate by its identifier.")
-            .WithDescription("Returns the full DOCOM profile: consignment, parties and supporting documents.")
+            .WithDescription(
+                "Returns the full DOCOM profile: consignment, parties and supporting documents. A draft "
+                    + "certificate (statusCode 47) is not served and returns 404."
+            )
             .Produces<DefraUNVTDDOCOMProfile>(200, MediaTypeAttribute.For<DefraUNVTDDOCOMProfile>())
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -25,10 +29,12 @@ public static class DocomEndpoints
 
     /// <param name="id" example="CHEDA.GB.2024.1020304">Certificate reference of the DOCOM to fetch.</param>
     /// <param name="docomCertificateService">Reads the certificate from TracesNT.</param>
+    /// <param name="loggerFactory">Creates the logger for the draft path.</param>
     /// <param name="acceptLanguage">Preferred language for returned names, as a BCP 47 language tag.</param>
     private static async Task<IResult> Get(
         string id,
         IDocomCertificateService docomCertificateService,
+        ILoggerFactory loggerFactory,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
@@ -36,13 +42,20 @@ public static class DocomEndpoints
         var context = new MappingContext(languageCode);
         var certificate = await docomCertificateService.GetDocomCertificate(id, languageCode);
         if (certificate?.SPSCertificate == null)
-            return Results.Problem(
-                statusCode: StatusCodes.Status404NotFound,
-                detail: $"Docom certificate '{id}' was not found."
-            );
+            return DocomNotFound(id);
+
+        if (DraftNotification.IsDraft(certificate.SPSCertificate))
+        {
+            DraftNotification.LogIgnored(loggerFactory, "DOCOM", id);
+            return DocomNotFound(id);
+        }
+
         return Results.Json(
             DocomMapper.Map(certificate, context),
             contentType: MediaTypeAttribute.For<DefraUNVTDDOCOMProfile>()
         );
     }
+
+    private static IResult DocomNotFound(string id) =>
+        Results.Problem(statusCode: StatusCodes.Status404NotFound, detail: $"Docom certificate '{id}' was not found.");
 }
