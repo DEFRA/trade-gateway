@@ -125,6 +125,31 @@ public class SpsExchangedDocumentMapperTests
         SpsExchangedDocumentMapper.Map(source, Context).IncludedNote.Should().BeEmpty();
     }
 
+    [Fact]
+    public void Map_LastUpdateNote_SetsRevisionDateTime()
+    {
+        var source = MinimalDocument();
+        source.IncludedSPSNote =
+        [
+            new SPSNoteType
+            {
+                SubjectCode = new CodeType { Value = "LAST_UPDATE_DATETIME" },
+                Content = [new TextType { Value = "2024-01-01T00:00:00Z" }],
+            },
+        ];
+
+        SpsExchangedDocumentMapper
+            .Map(source, Context)
+            .RevisionDateTime.Should()
+            .Be(DateTimeOffset.Parse("2024-01-01T00:00:00Z", System.Globalization.CultureInfo.InvariantCulture));
+    }
+
+    [Fact]
+    public void Map_NoLastUpdateNote_LeavesRevisionDateTimeNull()
+    {
+        SpsExchangedDocumentMapper.Map(MinimalDocument(), Context).RevisionDateTime.Should().BeNull();
+    }
+
     private static SPSExchangedDocumentType MinimalDocument() =>
         new()
         {
