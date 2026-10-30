@@ -190,6 +190,55 @@ public class IntraEndpointsTests(TradeGatewayWebApplicationFactory factory)
     }
 
     [Fact]
+    public async Task Get_WhenIntraIsDraft_ReturnsNotFound()
+    {
+        SoapUtilities.StubDraftCertificate(
+            factory.WireMockServer,
+            GetEuIntraCertificateSoapAction,
+            "/*[local-name() = 'GetEuIntraCertificateRequest']" + "/*[local-name() = 'ID' and text() = 'DRAFTINTRA']",
+            "Api.Tests.Samples.INTRA.GetEuIntraCertificateResponse.xml"
+        );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.GetIntraCertification("DRAFTINTRA", TestContext.Current.CancellationToken);
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal("application/problem+json", response.ContentHeaders?.ContentType?.MediaType);
+    }
+
+    [Fact]
+    public async Task Find_AsksTracesForTheNonDraftStatusesOnly()
+    {
+        string? requestBody = null;
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoapRequestInterceptor(
+                    FindEuIntraCertificateSoapAction,
+                    "/*[local-name() = 'FindEuIntraCertificateRequest']"
+                )
+            )
+            .RespondWith(
+                SoapUtilities.CaptureRequestAndRespond(
+                    "Api.Tests.Samples.INTRA.FindEuIntraCertificateResponse.xml",
+                    body => requestBody = body
+                )
+            );
+
+        var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
+        var response = await client.FindIntraUpdates(
+            new DateTime(2002, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 10, 28, 0, 0, 0, DateTimeKind.Utc),
+            10,
+            0,
+            TestContext.Current.CancellationToken
+        );
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+        Assert.Equal(["1", "41", "42", "44", "55", "64", "70"], SoapUtilities.StatusCodesInEnvelope(requestBody!));
+    }
+
+    [Fact]
     public async Task Find_WhenUpdatedFromIsMissing_ReturnsBadRequest()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-intra-reader");
