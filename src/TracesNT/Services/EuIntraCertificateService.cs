@@ -15,6 +15,17 @@ namespace TracesNT.Services
     {
         private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.Default);
 
+        private static readonly StatusCodeType[] NonDraftStatuses =
+        [
+            new() { Value = StatusCodeContentType.Item1 }, // 1 New
+            new() { Value = StatusCodeContentType.Item411 }, // 41 Rejected
+            new() { Value = StatusCodeContentType.Item42 }, // 42 In progress
+            new() { Value = StatusCodeContentType.Item44 }, // 44 Replaced
+            new() { Value = StatusCodeContentType.Item55 }, // 55 Deleted
+            new() { Value = StatusCodeContentType.Item64 }, // 64 Cancelled
+            new() { Value = StatusCodeContentType.Item70 }, // 70 Validated
+        ];
+
         public async Task<EuIntraCertificateType?> GetEuIntraCertificate(string id, string languageCode)
         {
             try
@@ -73,6 +84,7 @@ namespace TracesNT.Services
                     [],
                     new FindEuIntraCertificateRequestType()
                     {
+                        Status = NonDraftStatuses,
                         offset = offset,
                         pageSize = pageSize,
                         UpdateDateTimeRange = new DateTimeRange() { From = after, To = before },
