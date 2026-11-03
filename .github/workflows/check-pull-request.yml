@@ -61,6 +61,19 @@ jobs:
             --ignore-unfixed \
             --exit-code 1 \
             trade-gateway:latest
+      # Tagged with the image name used by trade-gateway-local-environment so the journey tests pick it up
+      - name: Save image for journey tests
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          docker tag trade-gateway:latest defradigital/trade-gateway:pr-$PR_NUMBER
+          docker save defradigital/trade-gateway:pr-$PR_NUMBER -o trade-gateway.tar
+      - name: Upload image for journey tests
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+        with:
+          name: trade-gateway-image
+          path: trade-gateway.tar
+          retention-days: 1
       - name: Pack NuGets
         if: github.actor != 'dependabot[bot]'
         env:
@@ -88,3 +101,15 @@ jobs:
     needs: pr-validator
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  journey-tests:
+    name: Journey Tests
+    permissions:
+      contents: read
+      id-token: write
+      packages: read
+    uses: DEFRA/trade-gateway-journey-tests/.github/workflows/journey-tests.yml@main
+    needs: pr-validator
+    with:
+      image-artifact: trade-gateway-image
+      image-variable: TRADE_GATEWAY
+      image-tag: pr-${{ github.event.pull_request.number }}
