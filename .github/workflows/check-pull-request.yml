@@ -107,6 +107,7 @@ jobs:
       contents: read
       id-token: write
       packages: read
+      pull-requests: write
     uses: DEFRA/trade-gateway-journey-tests/.github/workflows/journey-tests.yml@main
     needs: pr-validator
     with:
