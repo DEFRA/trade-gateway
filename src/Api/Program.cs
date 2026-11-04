@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Metrics;
+using Api.Attachments;
 using Api.Config;
 using Api.Endpoints;
 using Api.Utils;
@@ -9,6 +10,7 @@ using Api.Utils.Logging;
 using Api.Utils.Mongo;
 using Defra.TradeImports.Api.Metrics;
 using Defra.TradeImports.EmfExporter;
+using Defra.TradeImports.Messaging.Extensions;
 using FluentValidation;
 using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
@@ -103,15 +105,9 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     builder.Services.AddTransient<ProxyHttpMessageHandler>();
     builder.Services.AddHttpClient("proxy").ConfigurePrimaryHttpMessageHandler<ProxyHttpMessageHandler>();
 
-    // Propagate trace header.
-    builder.Services.AddHeaderPropagation(options =>
-    {
-        var traceHeader = builder.Configuration.GetValue<string>("TraceHeader");
-        if (!string.IsNullOrWhiteSpace(traceHeader))
-        {
-            options.Headers.Add(traceHeader);
-        }
-    });
+    // Propagate the trace header. Which header is set by AddTraceContextAccessor (called by
+    // AddMessaging below) from the required "TraceHeader" setting.
+    builder.Services.AddHeaderPropagation();
 
     // add the Traces NT clients
     var tracesNtSection = builder.Configuration.GetRequiredSection("TracesNt");
@@ -136,6 +132,13 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
 
     builder.Services.Configure<MongoConfig>(builder.Configuration.GetSection("Mongo"));
     builder.Services.AddSingleton<IMongoDbClientFactory, MongoDbClientFactory>();
+
+    // CHED attachments: queued downloads (SNS/SQS FIFO), malware scanned by the CDP uploader, kept in S3.
+    builder.Services.AddMessaging(
+        builder.Configuration,
+        options => options.MeterName = TracesNtClientMetricsService.MeterName
+    );
+    builder.Services.AddChedAttachments(builder.Configuration);
 
     // Add health check, this is required for the platform to know your service is alive.
     builder.Services.AddHealthChecks();
@@ -169,6 +172,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.MapHealthChecks("/health").AllowAnonymous();
     app.MapLocalTokenEndpoints();
     app.UseChedEndpoints();
+    app.UseAttachmentScanResultsEndpoints();
     app.UseCustomsChedQuantityEndpoints();
     app.UseIntraEndpoints();
     app.UseDocomEndpoints();

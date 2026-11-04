@@ -1,4 +1,6 @@
 services:
+  # floci emulates AWS (SNS, SQS, S3) locally. Topics, queues and buckets are created by
+  # compose/scripts/floci/ready.d, including the ones cdp-uploader needs.
   floci:
     image: floci/floci:1.5.25-compat
     env_file:
@@ -19,6 +21,32 @@ services:
     ports:
       - "27017:27017"
 
+  # Session store for cdp-uploader.
+  redis:
+    image: redis:7.2.3-alpine3.18
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      retries: 5
+
+  # CDP uploader: malware scans CHED attachments before they reach the trade-gateway-documents
+  # bucket. Locally the scan is mocked; a file whose name contains "virus" is rejected.
+  # See https://github.com/DEFRA/cdp-uploader
+  cdp-uploader:
+    image: defradigital/cdp-uploader:${CDP_UPLOADER_VERSION:-latest}
+    env_file:
+      - ./compose/config/aws.env
+      - ./compose/config/cdp-uploader.env
+    depends_on:
+      floci:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "7337:7337"
+
   trade-gateway:
     build:
       args:
@@ -35,6 +63,8 @@ services:
         condition: service_healthy
       mongodb:
         condition: service_healthy
+      cdp-uploader:
+        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "http://localhost:8080/health"]
       interval: 3s

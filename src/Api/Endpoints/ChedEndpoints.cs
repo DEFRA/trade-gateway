@@ -1,3 +1,4 @@
+using Api.Attachments;
 using Api.Contract;
 using Api.Mapping;
 using Api.Models;
@@ -11,6 +12,8 @@ namespace Api.Endpoints;
 
 public static class ChedEndpoints
 {
+    private const string RetryAfterSeconds = "5";
+
     public static void UseChedEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapGet("certificates/cheds/{id}", Get)
@@ -32,13 +35,26 @@ public static class ChedEndpoints
             .WithDescription(
                 "Downloads a supporting document attached to the CHED certificate. The attachment id is the "
                     + "document id from the certificate's referenced document attachment "
-                    + "(uri:documentid:{attachmentId}); the file is returned with its original content type "
-                    + "and file name. A draft certificate (statusCode 47) is not served "
-                    + "and returns 404."
+                    + "(uri:documentid:{attachmentId}).\n\n"
+                    + "Attachments are fetched from TRACES in the background and malware scanned before they "
+                    + "are served. The first request queues the download and returns 202 Accepted with a "
+                    + "Retry-After header; ask again for the same URL until the file is returned with 200, "
+                    + "with its original content type and file name. Scanned files are kept for 180 days.\n\n"
+                    + "Only PDF attachments are currently supported; others return 422 UNSUPPORTED_FILE_TYPE.\n\n"
+                    + "A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or "
+                    + "ATTACHMENT_NOT_FOUND (404, which includes draft certificates, statusCode 47), "
+                    + "TRACES_PERMISSION_DENIED (403), UNSUPPORTED_FILE_TYPE (422, not a supported type), "
+                    + "FILE_VIRUS, FILE_EMPTY, FILE_TOO_LARGE or FILE_INVALID_TYPE (422, the file failed its "
+                    + "scan, including content that is not the type it claims to be), TRACES_UNAVAILABLE, UPLOAD_FAILED "
+                    + "or FILE_UPLOAD_FAILED (502) and TRACES_INVALID_REQUEST or UNEXPECTED_ERROR (500). "
+                    + "Failures other than a failed scan are tried again on a request made 15 minutes later."
             )
             .Produces<Stream>(StatusCodes.Status200OK, "application/octet-stream")
-            .ProducesProblem(StatusCodes.Status404NotFound)
+            .Produces<AttachmentDownloadStatus>(StatusCodes.Status202Accepted)
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status403Forbidden)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
             .ProducesProblem(StatusCodes.Status502BadGateway);
 
@@ -87,54 +103,47 @@ public static class ChedEndpoints
     private static async Task<IResult> GetAttachment(
         string id,
         long attachmentId,
-        IChedCertificateService chedCertificateService,
-        ILoggerFactory loggerFactory,
-        [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
+        IChedAttachmentService attachmentService,
+        HttpContext httpContext,
+        CancellationToken cancellationToken
     )
     {
-        var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
-        var ched = await chedCertificateService.GetChedCertificate(id, languageCode);
-        if (ched?.SPSCertificate == null)
-            return ChedNotFound(id);
+        var lookup = await attachmentService.GetOrRequest(id, attachmentId, cancellationToken);
 
-        if (DraftNotification.IsDraft(ched.SPSCertificate))
+        switch (lookup)
         {
-            DraftNotification.LogIgnored(loggerFactory, "CHED", id);
-            return ChedNotFound(id);
+            case ChedAttachmentLookup.Ready ready:
+                httpContext.Response.RegisterForDisposeAsync(ready.File);
+                return Results.Stream(
+                    ready.File.Content,
+                    ready.Record.ContentType ?? "application/octet-stream",
+                    ready.Record.FileName
+                );
+
+            case ChedAttachmentLookup.Failed failed:
+                return Results.Problem(
+                    statusCode: AttachmentErrorCodes.ToStatusCode(failed.Error.Code),
+                    detail: failed.Error.Message,
+                    extensions: new Dictionary<string, object?>
+                    {
+                        ["errorCode"] = failed.Error.Code,
+                        ["errorSource"] = failed.Error.Source.ToString(),
+                    }
+                );
+
+            default:
+                httpContext.Response.Headers.RetryAfter = RetryAfterSeconds;
+                return Results.Accepted(
+                    $"/certificates/cheds/{Uri.EscapeDataString(id)}/attachments/{attachmentId}",
+                    new AttachmentDownloadStatus
+                    {
+                        CertificateId = lookup.Record.ChedId,
+                        AttachmentId = lookup.Record.AttachmentId,
+                        Status = lookup.Record.Status.ToString(),
+                        UpdatedAt = new DateTimeOffset(lookup.Record.UpdatedAt, TimeSpan.Zero),
+                    }
+                );
         }
-
-        var filename = FindAttachmentFileName(ched.SPSCertificate, attachmentId);
-        if (filename == null)
-            return Results.Problem(
-                statusCode: StatusCodes.Status404NotFound,
-                detail: $"Ched certificate attachment '{id} - {attachmentId}' was not found."
-            );
-
-        var attachment = await chedCertificateService.GetChedCertificateAttachment(id, attachmentId, filename);
-        if (attachment?.Attachment == null)
-            return Results.Problem(
-                statusCode: StatusCodes.Status404NotFound,
-                detail: $"Ched certificate attachment '{id} - {attachmentId}' was not found."
-            );
-
-        return Results.Bytes(attachment.Attachment, attachment.contentType, attachment.fileName);
-    }
-
-    // TracesNT identifies attachments by a uri of the form "uri:documentid:{documentId}", with the
-    // filename alongside it on the same BinaryObjectType.
-    private static string? FindAttachmentFileName(SPSCertificateType certificate, long attachmentId)
-    {
-        var tradeLineItemDocuments =
-            certificate
-                .SPSConsignment?.IncludedSPSConsignmentItem?.SelectMany(item => item.IncludedSPSTradeLineItem ?? [])
-                .SelectMany(lineItem => lineItem.ReferenceSPSReferencedDocument ?? [])
-            ?? [];
-
-        return (certificate.SPSExchangedDocument?.ReferenceSPSReferencedDocument ?? [])
-            .Concat(tradeLineItemDocuments)
-            .SelectMany(document => document.AttachmentBinaryObject ?? [])
-            .FirstOrDefault(binaryObject => binaryObject.uri == $"uri:documentid:{attachmentId}")
-            ?.filename;
     }
 
     private static async Task<IResult> Find(
