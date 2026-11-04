@@ -16,8 +16,11 @@ internal static class SpsTradeLineItemMapper
             NetWeight = SpsMeasureMapper.Map(source.NetWeightMeasure),
             GrossWeight = SpsMeasureMapper.Map(source.GrossWeightMeasure),
             NetVolume = SpsMeasureMapper.MapVolume(source.NetVolumeMeasure),
+            OriginCountry = SpsCountryMapper.Map(source.OriginSPSCountry?.FirstOrDefault(), context),
+            AppliedProcess = SpsProcessMapper.MapList(source.AppliedSPSProcess),
             ApplicableClassification = SpsClassificationMapper.MapList(source.ApplicableSPSClassification, context),
             PhysicalReferencedLogisticsPackage = SpsPackageMapper.MapList(source.PhysicalSPSPackage),
+            AdditionalInformationNote = SpsNoteMapper.MapList(source.AdditionalInformationSPSNote).NullIfEmpty(),
         };
 
     internal static List<TradeLineItem>? MapList(SPSTradeLineItemType[]? source, MappingContext context) =>

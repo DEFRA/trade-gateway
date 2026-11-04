@@ -19,7 +19,7 @@ public partial record ExchangedDocument
     public string? TraderAssignedId { get; init; }
 
     [JsonPropertyName("documentTypeCode")]
-    [Description("Document type per UNTDID 1001 (e.g. 636 CHED, 666/856 INTRA). Optional at core level; profile schemas constrain by const/enum.")]
+    [Description("Document type per UNTDID 1001 (e.g. 636 Health certificate, 666/856 INTRA). Optional at core level; profile schemas constrain by const/enum.")]
     public string? DocumentTypeCode { get; init; }
 
     [JsonPropertyName("documentStatusCode")]
@@ -39,10 +39,15 @@ public partial record ExchangedDocument
     public string? FunctionCode { get; init; }
 
     [JsonPropertyName("issueDateTime")]
+    [Description("The datetime this version of the document was issued. For a pre-notification, issuance is the submission, so this carries the submission moment and is re-stamped on each re-submission: the original submission datetime on the NotificationSubmitted event, and the amendment's submission datetime on the latest NotificationSubmissionAmended event. This is the notification's own issuance datetime, distinct from the issue dates of accompanying documents held under referenceDocument.")]
     public DateTimeOffset? IssueDateTime { get; init; }
 
+    [JsonPropertyName("revisionDateTime")]
+    [Description("UNECE Exchanged_Document.Revision.DateTime — when this document was last revised. When present on a TRACES certificate, copied from the IncludedSPSNote with SubjectCode LAST_UPDATE_DATETIME (note content). The LAST_UPDATE_DATETIME note is retained in includedNote. Distinct from issueDateTime (document issuance) and from the event envelope timestamp (when CertificateUpdated was emitted).")]
+    public DateTimeOffset? RevisionDateTime { get; init; }
+
     [JsonPropertyName("issuer")]
-    [Description("The party responsible for issuing this document. For TRACES CHED and Defra import pre-notifications, this carries the responsible-person organisation with a named contact.")]
+    [Description("The party responsible for issuing this document. For TRACES CHED and Defra import pre-notifications, this carries the responsible-person organisation with a named contact. This is the organisation of record, not the individual who submitted the notification; the submitting user is an event-level identity, not carried in this payload.")]
     public TradeParty? Issuer { get; init; }
 
     [JsonPropertyName("includedNote")]

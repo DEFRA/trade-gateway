@@ -32,6 +32,20 @@ public class SpsReferencedDocumentMapperTests
     }
 
     [Fact]
+    public void Map_TypeCode_AlsoCarriesCodelistUri()
+    {
+        var source = new SPSReferencedDocumentType
+        {
+            TypeCode = new DocumentCodeType { Value = DocumentNameCodeContentType.Item856, listID = "document_type" },
+        };
+
+        var result = SpsReferencedDocumentMapper.Map(source);
+
+        result.TypeCode.Should().Be("856");
+        result.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/document_type");
+    }
+
+    [Fact]
     public void Map_NullInformation_ReturnsNullList()
     {
         var result = SpsReferencedDocumentMapper.Map(new SPSReferencedDocumentType());
