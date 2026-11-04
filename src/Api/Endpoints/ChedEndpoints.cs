@@ -16,7 +16,9 @@ public static class ChedEndpoints
         app.MapGet("certificates/cheds/{id}", Get)
             .WithName("GetChed")
             .WithSummary("Fetch a single CHED certificate by its reference.")
-            .WithDescription("Returns the full CHED profile.")
+            .WithDescription(
+                "Returns the full CHED profile. A draft certificate (statusCode 47) is not served and returns 404."
+            )
             .Produces<DefraUNVTDCHEDProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDProfile>())
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -31,7 +33,8 @@ public static class ChedEndpoints
                 "Downloads a supporting document attached to the CHED certificate. The attachment id is the "
                     + "document id from the certificate's referenced document attachment "
                     + "(uri:documentid:{attachmentId}); the file is returned with its original content type "
-                    + "and file name."
+                    + "and file name. A draft certificate (statusCode 47) is not served "
+                    + "and returns 404."
             )
             .Produces<Stream>(StatusCodes.Status200OK, "application/octet-stream")
             .ProducesProblem(StatusCodes.Status404NotFound)
@@ -45,7 +48,8 @@ public static class ChedEndpoints
             .WithDescription(
                 "Returns a paged summary of CHED certificates updated between updatedFrom and "
                     + "updatedBefore (both UTC). Paginate with offset and pageSize; hasMore indicates "
-                    + "whether there are more pages to follow."
+                    + "whether there are more pages to follow. Draft certificates (statusCode 47) "
+                    + "are excluded by the upstream query."
             )
             .Produces<DefraUNVTDCHEDSummaryProfile>(200, MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>())
             .ProducesValidationProblem()
@@ -58,6 +62,7 @@ public static class ChedEndpoints
     private static async Task<IResult> Get(
         string id,
         IChedCertificateService chedCertificateService,
+        ILoggerFactory loggerFactory,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
@@ -65,10 +70,14 @@ public static class ChedEndpoints
         var context = new MappingContext(languageCode);
         var certificate = await chedCertificateService.GetChedCertificate(id, languageCode);
         if (certificate?.SPSCertificate == null)
-            return Results.Problem(
-                statusCode: StatusCodes.Status404NotFound,
-                detail: $"Ched certificate '{id}' was not found."
-            );
+            return ChedNotFound(id);
+
+        if (DraftNotification.IsDraft(certificate.SPSCertificate))
+        {
+            DraftNotification.LogIgnored(loggerFactory, "CHED", id);
+            return ChedNotFound(id);
+        }
+
         return Results.Json(
             ChedMapper.Map(certificate, context),
             contentType: MediaTypeAttribute.For<DefraUNVTDCHEDProfile>()
@@ -79,16 +88,20 @@ public static class ChedEndpoints
         string id,
         long attachmentId,
         IChedCertificateService chedCertificateService,
+        ILoggerFactory loggerFactory,
         [FromHeader(Name = "Accept-Language")] string? acceptLanguage = null
     )
     {
         var languageCode = AcceptLanguageParser.GetPrimaryLanguageCode(acceptLanguage);
         var ched = await chedCertificateService.GetChedCertificate(id, languageCode);
         if (ched?.SPSCertificate == null)
-            return Results.Problem(
-                statusCode: StatusCodes.Status404NotFound,
-                detail: $"Ched certificate '{id}' was not found."
-            );
+            return ChedNotFound(id);
+
+        if (DraftNotification.IsDraft(ched.SPSCertificate))
+        {
+            DraftNotification.LogIgnored(loggerFactory, "CHED", id);
+            return ChedNotFound(id);
+        }
 
         var filename = FindAttachmentFileName(ched.SPSCertificate, attachmentId);
         if (filename == null)
@@ -141,4 +154,7 @@ public static class ChedEndpoints
             contentType: MediaTypeAttribute.For<DefraUNVTDCHEDSummaryProfile>()
         );
     }
+
+    private static IResult ChedNotFound(string id) =>
+        Results.Problem(statusCode: StatusCodes.Status404NotFound, detail: $"Ched certificate '{id}' was not found.");
 }

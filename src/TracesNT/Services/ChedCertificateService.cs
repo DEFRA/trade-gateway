@@ -17,6 +17,24 @@ namespace TracesNT.Services
     {
         private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.Default);
 
+        private static readonly StatusCodeType[] NonDraftStatuses =
+        [
+            new() { Value = StatusCodeContentType.Item1 }, // 1 New
+            new() { Value = StatusCodeContentType.Item35 }, // 35 Authorized for onward travel
+            new() { Value = StatusCodeContentType.Item411 }, // 41 Rejected
+            new() { Value = StatusCodeContentType.Item42 }, // 42 Decision signed as in progress
+            new() { Value = StatusCodeContentType.Item44 }, // 44 Replaced
+            new() { Value = StatusCodeContentType.Item55 }, // 55 Deleted
+            new() { Value = StatusCodeContentType.Item64 }, // 64 Cancelled
+            new() { Value = StatusCodeContentType.Item68 }, // 68 Split
+            new() { Value = StatusCodeContentType.Item70 }, // 70 Validated
+            new() { Value = StatusCodeContentType.Item97 }, // 97 Authorized for onward transportation
+            new() { Value = StatusCodeContentType.Item99 }, // 99 Authorized for transit
+            new() { Value = StatusCodeContentType.Item122 }, // 122 Partially rejected
+            new() { Value = StatusCodeContentType.Item124 }, // 124 Authorized for transfer
+            new() { Value = StatusCodeContentType.Item146 }, // 146 Authorized for transhipment
+        ];
+
         public async Task<ChedCertificateType?> GetChedCertificate(string id, string languageCode)
         {
             try
@@ -128,6 +146,7 @@ namespace TracesNT.Services
                     [],
                     new FindChedCertificateRequestType
                     {
+                        Status = NonDraftStatuses,
                         offset = offset,
                         pageSize = pageSize,
                         UpdateDateTimeRange = new DateTimeRange() { From = after, To = before },
