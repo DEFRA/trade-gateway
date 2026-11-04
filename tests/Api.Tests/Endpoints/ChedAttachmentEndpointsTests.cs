@@ -124,10 +124,7 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         Assert.Equal("health-certificate.pdf", upload.Headers!["x-filename"].Single());
         // Declared as its allowed type: the uploader checks mimeTypes against the declared type.
         Assert.StartsWith("application/pdf", upload.Headers["Content-Type"].Single());
-        Assert.Equal(
-            "application/pdf",
-            Assert.Single(initiate.GetProperty("mimeTypes").EnumerateArray()).GetString()
-        );
+        Assert.Equal("application/pdf", Assert.Single(initiate.GetProperty("mimeTypes").EnumerateArray()).GetString());
 
         var stillScanning = await GetAttachment(chedId, 2003);
         Assert.Equal(HttpStatusCode.Accepted, stillScanning.StatusCode);
