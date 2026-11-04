@@ -1,4 +1,5 @@
 using Trade.Gateway.Api.Contract.Certificate;
+using Trade.Gateway.Api.Contract.ReferenceData;
 
 namespace Trade.Gateway.Api.Contract.Events;
 
@@ -48,6 +49,30 @@ public static class EventEnvelopeExtensions
                 CorrelationId = correlationId,
                 SchemaVersion = Constants.Schemas.TracesIntraV1.Version,
                 SchemaUri = Constants.Schemas.TracesIntraV1.Uri,
+            },
+        };
+    }
+
+    public static EventEnvelope<DefraUNVTDProfileClassificationTreeNodeDetailResponse> ToEventEnvelope(
+        this DefraUNVTDProfileClassificationTreeNodeDetailResponse classificationTreeNode,
+        string correlationId
+    )
+    {
+        return new EventEnvelope<DefraUNVTDProfileClassificationTreeNodeDetailResponse>()
+        {
+            EventId = Guid.CreateVersion7(),
+            AggregateId =
+                $"Imports.{Constants.AggregateTypes.TracesClassificationTreeNodeDetail}.{classificationTreeNode.TreeId}.{classificationTreeNode.NodeId}",
+            AggregateType = Constants.AggregateTypes.TracesClassificationTreeNodeDetail,
+            SubType = classificationTreeNode.TreeId ?? string.Empty,
+            EventType = classificationTreeNode.GetType().FullName!,
+            Timestamp = DateTime.UtcNow,
+            Data = classificationTreeNode,
+            Metadata = new EventEnvelopeMetadata
+            {
+                CorrelationId = correlationId,
+                SchemaVersion = Constants.Schemas.TracesClassificationTreeNodeDetailV1.Version,
+                SchemaUri = Constants.Schemas.TracesClassificationTreeNodeDetailV1.Uri,
             },
         };
     }

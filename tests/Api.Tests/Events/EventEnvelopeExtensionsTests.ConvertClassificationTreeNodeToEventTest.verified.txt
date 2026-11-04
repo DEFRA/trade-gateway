@@ -1,0 +1,51 @@
+{
+  EventId: Guid_1,
+  AggregateType: TracesClassificationTreeNodeDetail,
+  SubType: intra_trade,
+  AggregateId: Imports.TracesClassificationTreeNodeDetail.intra_trade.R_N-10000_N-10065_L-10121_L-10301_C-11978,
+  EventType: Trade.Gateway.Api.Contract.ReferenceData.DefraUNVTDProfileClassificationTreeNodeDetailResponse,
+  Timestamp: DateTime_1,
+  Data: {
+    Source: traces,
+    TreeId: intra_trade,
+    NodePath: R/N-10000/N-10065/L-10121/L-10301/C-11978,
+    NodeId: R_N-10000_N-10065_L-10121_L-10301_C-11978,
+    Node: {
+      CnCode: 0101,
+      CertificateModel: {
+        ModelId: 11978,
+        ShortTitle: 11978,
+        LongTitle: Model animal health certificate,
+        CreatedOn: DateTimeOffset_1,
+        UpdatedOn: DateTimeOffset_2
+      },
+      Selectable: true,
+      NodeType: certificate_model,
+      Label: Model animal health certificate
+    },
+    Taxons: [
+      {
+        TaxonId: 101,
+        EppoCode: EPP001,
+        FaoCode: FAO001,
+        Name: Bos taurus,
+        LanguageId: en
+      }
+    ],
+    InvasiveTaxons: [
+      {
+        TaxonId: 202,
+        EppoCode: EPP002,
+        FaoCode: FAO002,
+        Name: Invasive species,
+        LanguageId: en
+      }
+    ],
+    RetrievedAt: DateTimeOffset_3
+  },
+  Metadata: {
+    CorrelationId: testCorrelationId,
+    SchemaVersion: 1.0.0,
+    SchemaUri: https://github.com/DEFRA/trade-imports-schemas/blob/main/schemas/reference-data/defra-unvtd-profile-reference-data-ClassificationTreeNodeDetailResponse-v1.schema.json
+  }
+}

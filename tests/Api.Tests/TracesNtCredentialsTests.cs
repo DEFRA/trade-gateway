@@ -116,6 +116,9 @@ public class TracesNtCredentialsTests(TradeGatewayWebApplicationFactory factory)
                     ["Credentials:Default:Username"] = "someone",
                     ["Credentials:Default:AuthenticationKey"] = "a-key",
                     ["Credentials:Default:WebServiceClientId"] = "a-client-id",
+                    ["Credentials:ReferenceData:Username"] = "someoneelse",
+                    ["Credentials:ReferenceData:AuthenticationKey"] = "another-key",
+                    ["Credentials:ReferenceData:WebServiceClientId"] = "another-client-id",
                     // Customs omitted entirely.
                 }
             )

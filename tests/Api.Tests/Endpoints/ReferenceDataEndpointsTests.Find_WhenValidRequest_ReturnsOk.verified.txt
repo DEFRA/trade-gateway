@@ -1,0 +1,1651 @@
+{
+  Source: traces,
+  TreeId: cheda,
+  Nodes: [
+    {
+      NodeId: R_N-10000,
+      Path: R/N-10000,
+      Label: LIVE ANIMALS,
+      NodeType: nomenclature,
+      Selectable: false,
+      CnCode: 01,
+      Children: [
+        {
+          NodeId: R_N-10000_N-10065,
+          Path: R/N-10000/N-10065,
+          Label: Live horses, asses, mules and hinnies,
+          NodeType: nomenclature,
+          Selectable: true,
+          CnCode: 0101
+        },
+        {
+          NodeId: R_N-10000_N-10066,
+          Path: R/N-10000/N-10066,
+          Label: Live bovine animals,
+          NodeType: nomenclature,
+          Selectable: true,
+          CnCode: 0102
+        },
+        {
+          NodeId: R_N-10000_N-10067,
+          Path: R/N-10000/N-10067,
+          Label: Live swine,
+          NodeType: nomenclature,
+          Selectable: true,
+          CnCode: 0103
+        },
+        {
+          NodeId: R_N-10000_N-10068,
+          Path: R/N-10000/N-10068,
+          Label: Live sheep and goats,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0104,
+          Children: [
+            {
+              NodeId: R_N-10000_N-10068_N-10584,
+              Path: R/N-10000/N-10068/N-10584,
+              Label: Sheep,
+              NodeType: nomenclature,
+              Selectable: true,
+              CnCode: 010410
+            },
+            {
+              NodeId: R_N-10000_N-10068_N-10585,
+              Path: R/N-10000/N-10068/N-10585,
+              Label: Goats,
+              NodeType: nomenclature,
+              Selectable: true,
+              CnCode: 010420
+            }
+          ]
+        },
+        {
+          NodeId: R_N-10000_N-10069,
+          Path: R/N-10000/N-10069,
+          Label: Live poultry, that is to say, fowls of the species Gallus domesticus, ducks, geese, turkeys and guinea fowls,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0105,
+          Children: [
+            {
+              NodeId: R_N-10000_N-10069_N-10427,
+              Path: R/N-10000/N-10069/N-10427,
+              Label: Weighing  more than 185 g,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10000_N-10069_N-10427_N-10594,
+                  Path: R/N-10000/N-10069/N-10427/N-10594,
+                  Label: Fowls of the species Gallus domesticus,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010594,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10069_N-10427_N-10594_N-11610,
+                      Path: R/N-10000/N-10069/N-10427/N-10594/N-11610,
+                      Label: Fowls of the species Gallus domesticus,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01059400
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10069_N-10427_N-10595,
+                  Path: R/N-10000/N-10069/N-10427/N-10595,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010599,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10069_N-10427_N-10595_N-11611,
+                      Path: R/N-10000/N-10069/N-10427/N-10595/N-11611,
+                      Label: Ducks,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01059910
+                    },
+                    {
+                      NodeId: R_N-10000_N-10069_N-10427_N-10595_N-11612,
+                      Path: R/N-10000/N-10069/N-10427/N-10595/N-11612,
+                      Label: Geese,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01059920
+                    },
+                    {
+                      NodeId: R_N-10000_N-10069_N-10427_N-10595_N-11613,
+                      Path: R/N-10000/N-10069/N-10427/N-10595/N-11613,
+                      Label: Turkeys,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01059930
+                    },
+                    {
+                      NodeId: R_N-10000_N-10069_N-10427_N-10595_N-11614,
+                      Path: R/N-10000/N-10069/N-10427/N-10595/N-11614,
+                      Label: Guinea fowls,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01059950
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10000_N-10069_N-10426,
+              Path: R/N-10000/N-10069/N-10426,
+              Label: Weighing not more than 185 g:,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10000_N-10069_N-10426_N-10586,
+                  Path: R/N-10000/N-10069/N-10426/N-10586,
+                  Label: Fowls of the species Gallus domesticus,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010511,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10069_N-10426_N-10586_N-11600,
+                      Path: R/N-10000/N-10069/N-10426/N-10586/N-11600,
+                      Label: Weighing not more than 185 g:Fowls of the species Gallus domesticus, Grandparent and parent female chicks: Laying stocks,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01051111
+                    },
+                    {
+                      NodeId: R_N-10000_N-10069_N-10426_N-10586_N-11601,
+                      Path: R/N-10000/N-10069/N-10426/N-10586/N-11601,
+                      Label: Fowls of the species Gallus domesticus Other  Grandparent and parent female chicks, not Laying stocks,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01051119
+                    },
+                    {
+                      NodeId: R_N-10000_N-10069_N-10426_N-10586_N-11602,
+                      Path: R/N-10000/N-10069/N-10426/N-10586/N-11602,
+                      Label: Weighing not more than 185 g:Fowls of the species Gallus domesticus, not Grandparent and parent female chicks ,Laying stocks,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01051191
+                    },
+                    {
+                      NodeId: R_N-10000_N-10069_N-10426_N-10586_N-11603,
+                      Path: R/N-10000/N-10069/N-10426/N-10586/N-11603,
+                      Label: Other Fowls of the species Gallus domesticus, not Grandparent and parent female chicks , not Laying stocks,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01051199
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10069_N-10426_N-10587,
+                  Path: R/N-10000/N-10069/N-10426/N-10587,
+                  Label: Turkeys,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010512,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10069_N-10426_N-10587_N-11604,
+                      Path: R/N-10000/N-10069/N-10426/N-10587/N-11604,
+                      Label: Turkeys,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01051200
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10069_N-10426_N-10588,
+                  Path: R/N-10000/N-10069/N-10426/N-10588,
+                  Label: Ducks,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010513,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10069_N-10426_N-10588_N-11605,
+                      Path: R/N-10000/N-10069/N-10426/N-10588/N-11605,
+                      Label: Ducks,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01051300
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10069_N-10426_N-10589,
+                  Path: R/N-10000/N-10069/N-10426/N-10589,
+                  Label: Geese,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010514,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10069_N-10426_N-10589_N-11606,
+                      Path: R/N-10000/N-10069/N-10426/N-10589/N-11606,
+                      Label: Geese,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01051400
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10069_N-10426_N-10590,
+                  Path: R/N-10000/N-10069/N-10426/N-10590,
+                  Label: Guinea fowls,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010515,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10069_N-10426_N-10590_N-11607,
+                      Path: R/N-10000/N-10069/N-10426/N-10590/N-11607,
+                      Label: Guinea fowls,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01051500
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          NodeId: R_N-10000_N-10070,
+          Path: R/N-10000/N-10070,
+          Label: Other live animals,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0106,
+          Children: [
+            {
+              NodeId: R_N-10000_N-10070_N-10601,
+              Path: R/N-10000/N-10070/N-10601,
+              Label: Reptiles (including snakes and turtles),
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 010620,
+              Children: [
+                {
+                  NodeId: R_N-10000_N-10070_N-10601_N-11623,
+                  Path: R/N-10000/N-10070/N-10601/N-11623,
+                  Label: Reptiles (including snakes and turtles),
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 01062000
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10000_N-10070_N-10608,
+              Path: R/N-10000/N-10070/N-10608,
+              Label: Animals other than mammals, birds, reptiles and insects.,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 010690,
+              Children: [
+                {
+                  NodeId: R_N-10000_N-10070_N-10608_N-11632,
+                  Path: R/N-10000/N-10070/N-10608/N-11632,
+                  Label: Animals other than mammals, birds, reptiles and insects.,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 01069000
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10000_N-10070_N-10429,
+              Path: R/N-10000/N-10070/N-10429,
+              Label: Birds:,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10000_N-10070_N-10429_N-10602,
+                  Path: R/N-10000/N-10070/N-10429/N-10602,
+                  Label: Birds of prey,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010631,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10429_N-10602_N-11624,
+                      Path: R/N-10000/N-10070/N-10429/N-10602/N-11624,
+                      Label: Birds of prey,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01063100
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10070_N-10429_N-10603,
+                  Path: R/N-10000/N-10070/N-10429/N-10603,
+                  Label: Psittaciformes (including parrots, parakeets, macaws and cockatoos),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010632,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10429_N-10603_N-11625,
+                      Path: R/N-10000/N-10070/N-10429/N-10603/N-11625,
+                      Label: Psittaciformes (including parrots, parakeets, macaws and cockatoos),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01063200
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10070_N-10429_N-10604,
+                  Path: R/N-10000/N-10070/N-10429/N-10604,
+                  Label: Ostriches; emus (Dromaius novaehollandiae),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010633,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10429_N-10604_N-11626,
+                      Path: R/N-10000/N-10070/N-10429/N-10604/N-11626,
+                      Label: Ostriches; emus (Dromaius novaehollandiae),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01063300
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10070_N-10429_N-10605,
+                  Path: R/N-10000/N-10070/N-10429/N-10605,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010639,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10429_N-10605_N-11627,
+                      Path: R/N-10000/N-10070/N-10429/N-10605/N-11627,
+                      Label: Pigeons,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01063910
+                    },
+                    {
+                      NodeId: R_N-10000_N-10070_N-10429_N-10605_N-11628,
+                      Path: R/N-10000/N-10070/N-10429/N-10605/N-11628,
+                      Label: other than  0105; 010631; 010632 and 01063910,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01063980
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10000_N-10070_N-10430,
+              Path: R/N-10000/N-10070/N-10430,
+              Label: Insects,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10000_N-10070_N-10430_N-10606,
+                  Path: R/N-10000/N-10070/N-10430/N-10606,
+                  Label: Bees,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010641,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10430_N-10606_N-11630,
+                      Path: R/N-10000/N-10070/N-10430/N-10606/N-11630,
+                      Label: Bees,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01064100
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10070_N-10430_N-10607,
+                  Path: R/N-10000/N-10070/N-10430/N-10607,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010649,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10430_N-10607_N-11631,
+                      Path: R/N-10000/N-10070/N-10430/N-10607/N-11631,
+                      Label: Other,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01064900
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10000_N-10070_N-10428,
+              Path: R/N-10000/N-10070/N-10428,
+              Label: Mammals:,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10000_N-10070_N-10428_N-10596,
+                  Path: R/N-10000/N-10070/N-10428/N-10596,
+                  Label: Primates,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010611,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10428_N-10596_N-11615,
+                      Path: R/N-10000/N-10070/N-10428/N-10596/N-11615,
+                      Label: Primates,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01061100
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10070_N-10428_N-10597,
+                  Path: R/N-10000/N-10070/N-10428/N-10597,
+                  Label: Whales, dolphins and porpoises (mammals of the order Cetacea); manatees and dugongs (mammals of the order Sirenia); seals, sea lions and walruses (mammals of the suborder Pinnipedia),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010612,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10428_N-10597_N-11616,
+                      Path: R/N-10000/N-10070/N-10428/N-10597/N-11616,
+                      Label: Whales, dolphins and porpoises (mammals of the order Cetacea); manatees and dugongs (mammals of the order Sirenia); seals, sea lions and walruses (mammals of the suborder Pinnipedia),
+                      NodeType: nomenclature,
+                      Selectable: false,
+                      CnCode: 01061200
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10070_N-10428_N-10598,
+                  Path: R/N-10000/N-10070/N-10428/N-10598,
+                  Label: Camels and other camelids (Camelidae),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010613,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10428_N-10598_N-11617,
+                      Path: R/N-10000/N-10070/N-10428/N-10598/N-11617,
+                      Label: Camels and other camelids (Camelidae),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01061300
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10070_N-10428_N-10599,
+                  Path: R/N-10000/N-10070/N-10428/N-10599,
+                  Label: Rabbits and hares,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010614,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10428_N-10599_N-11618,
+                      Path: R/N-10000/N-10070/N-10428/N-10599/N-11618,
+                      Label: Domestic rabbits,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01061410
+                    },
+                    {
+                      NodeId: R_N-10000_N-10070_N-10428_N-10599_N-11619,
+                      Path: R/N-10000/N-10070/N-10428/N-10599/N-11619,
+                      Label: other than. 0106 14 10,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 01061490
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10000_N-10070_N-10428_N-10600,
+                  Path: R/N-10000/N-10070/N-10428/N-10600,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 010619,
+                  Children: [
+                    {
+                      NodeId: R_N-10000_N-10070_N-10428_N-10600_L-10160,
+                      Path: R/N-10000/N-10070/N-10428/N-10600/L-10160,
+                      Label: Cats, Dogs and ferrets.,
+                      NodeType: label,
+                      Selectable: false,
+                      Children: [
+                        {
+                          NodeId: R_N-10000_N-10070_N-10428_N-10600_L-10160_N-11620,
+                          Path: R/N-10000/N-10070/N-10428/N-10600/L-10160/N-11620,
+                          Label: Other,
+                          NodeType: nomenclature,
+                          Selectable: true,
+                          CnCode: 01061900
+                        }
+                      ]
+                    },
+                    {
+                      NodeId: R_N-10000_N-10070_N-10428_N-10600_L-10161,
+                      Path: R/N-10000/N-10070/N-10428/N-10600/L-10161,
+                      Label: Other mammals,
+                      NodeType: label,
+                      Selectable: false,
+                      Children: [
+                        {
+                          NodeId: R_N-10000_N-10070_N-10428_N-10600_L-10161_N-11620,
+                          Path: R/N-10000/N-10070/N-10428/N-10600/L-10161/N-11620,
+                          Label: Other,
+                          NodeType: nomenclature,
+                          Selectable: true,
+                          CnCode: 01061900
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      NodeId: R_N-10002,
+      Path: R/N-10002,
+      Label: FISH AND CRUSTACEANS, MOLLUSCS AND OTHER AQUATIC INVERTEBRATES,
+      NodeType: nomenclature,
+      Selectable: false,
+      CnCode: 03,
+      Children: [
+        {
+          NodeId: R_N-10002_N-10081,
+          Path: R/N-10002/N-10081,
+          Label: Live fish,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0301,
+          Children: [
+            {
+              NodeId: R_N-10002_N-10081_N-10445,
+              Path: R/N-10002/N-10081/N-10445,
+              Label: Ornamental fish,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10081_N-10445_N-19996,
+                  Path: R/N-10002/N-10081/N-10445/N-19996,
+                  Label: Freshwater fish,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030111,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10081_N-10445_N-19996_N-11890,
+                      Path: R/N-10002/N-10081/N-10445/N-19996/N-11890,
+                      Label: Freshwater fish,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03011100
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10081_N-10445_N-19997,
+                  Path: R/N-10002/N-10081/N-10445/N-19997,
+                  Label: other than. 0301 11 00,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030119,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10081_N-10445_N-19997_N-11891,
+                      Path: R/N-10002/N-10081/N-10445/N-19997/N-11891,
+                      Label: other than. 0301 11 00,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03011900
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10081_N-10446,
+              Path: R/N-10002/N-10081/N-10446,
+              Label: Other live fish,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10081_N-10446_N-10680,
+                  Path: R/N-10002/N-10081/N-10446/N-10680,
+                  Label: Trout (Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae, Oncorhynchus apache and Oncorhynchus chrysogaster),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030191,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10680_N-11892,
+                      Path: R/N-10002/N-10081/N-10446/N-10680/N-11892,
+                      Label: Of the species Oncorhynchus apache or Oncorhynchus chrysogaster,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019110
+                    },
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10680_N-11893,
+                      Path: R/N-10002/N-10081/N-10446/N-10680/N-11893,
+                      Label: Of the species Salmo trutta, Oncorhynchus mykiss, Oncorhynchus clarki, Oncorhynchus aguabonita, Oncorhynchus gilae,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019190
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10081_N-10446_N-10681,
+                  Path: R/N-10002/N-10081/N-10446/N-10681,
+                  Label: Eels (Anguilla spp.),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030192,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10681_N-11895,
+                      Path: R/N-10002/N-10081/N-10446/N-10681/N-11895,
+                      Label: Of a length of less than 12|cm,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019210
+                    },
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10681_N-11896,
+                      Path: R/N-10002/N-10081/N-10446/N-10681/N-11896,
+                      Label: Of a length of 12|cm or more but less than 20|cm,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019230
+                    },
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10681_N-11897,
+                      Path: R/N-10002/N-10081/N-10446/N-10681/N-11897,
+                      Label: Of a length of 20|cm or more,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019290
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10081_N-10446_N-10682,
+                  Path: R/N-10002/N-10081/N-10446/N-10682,
+                  Label: Carp,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030193,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10682_N-11898,
+                      Path: R/N-10002/N-10081/N-10446/N-10682/N-11898,
+                      Label: Carp (Cyprinus spp., Carassius spp., Ctenopharyngodon idellus, Hypophthalmichthys spp., Cirrhinus spp., Mylopharyngodon piceus, Catla catla, Labeo spp., Osteochilus hasselti, Leptobarbus hoeveni, Megalobrama spp.),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019300
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10081_N-10446_N-10683,
+                  Path: R/N-10002/N-10081/N-10446/N-10683,
+                  Label: Atlantic and Pacific bluefin tuna (Thunnus thynnus, Thunnus orientalis),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030194,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10683_N-11900,
+                      Path: R/N-10002/N-10081/N-10446/N-10683/N-11900,
+                      Label: Bluefin tunas (Thunnus thynnus),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019410
+                    },
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10683_N-11901,
+                      Path: R/N-10002/N-10081/N-10446/N-10683/N-11901,
+                      Label: Pacific bluefin tuna (Thunnus orientalis),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019490
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10081_N-10446_N-10684,
+                  Path: R/N-10002/N-10081/N-10446/N-10684,
+                  Label: Southern bluefin tunas (Thunnus maccoyii),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030195,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10684_N-11902,
+                      Path: R/N-10002/N-10081/N-10446/N-10684/N-11902,
+                      Label: Southern bluefin tunas (Thunnus maccoyii),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019500
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10081_N-10446_N-10685,
+                  Path: R/N-10002/N-10081/N-10446/N-10685,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030199,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10685_N-11903,
+                      Path: R/N-10002/N-10081/N-10446/N-10685/N-11903,
+                      Label: Pacific salmon (Oncorhynchus nerka, Oncorhynchus gorbuscha, Oncorhynchus keta, Oncorhynchus tschawytscha, Oncorhynchus kisutch, Oncorhynchus masou and Oncorhynchus rhodurus), Atlantic salmon (Salmo salar) and Danube salmon (Hucho hucho),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019911
+                    },
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10685_N-17740,
+                      Path: R/N-10002/N-10081/N-10446/N-10685/N-17740,
+                      Label: Other,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019917
+                    },
+                    {
+                      NodeId: R_N-10002_N-10081_N-10446_N-10685_N-11907,
+                      Path: R/N-10002/N-10081/N-10446/N-10685/N-11907,
+                      Label: Saltwater fish,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03019985
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          NodeId: R_N-10002_N-10086,
+          Path: R/N-10002/N-10086,
+          Label: Crustaceans, whether in shell or not, live, fresh, chilled, frozen, dried, salted or in brine; crustaceans, in shell, cooked by steaming or by boiling in water, whether or not chilled, frozen, dried, salted or in brine; flours, meals and pellets of crustaceans, fit for human consumption,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0306,
+          Children: [
+            {
+              NodeId: R_N-10002_N-10086_N-17804,
+              Path: R/N-10002/N-10086/N-17804,
+              Label: Rock lobster and other sea crawfish (Palinurus spp., Panulirus spp., Jasus spp.),
+              NodeType: nomenclature,
+              Selectable: true,
+              CnCode: 03063100
+            },
+            {
+              NodeId: R_N-10002_N-10086_N-17805,
+              Path: R/N-10002/N-10086/N-17805,
+              Label: Lobsters (Homarus spp.),
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 030632,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10086_N-17805_N-17810,
+                  Path: R/N-10002/N-10086/N-17805/N-17810,
+                  Label: Live,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03063210
+                },
+                {
+                  NodeId: R_N-10002_N-10086_N-17805_N-20401,
+                  Path: R/N-10002/N-10086/N-17805/N-20401,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false
+                },
+                {
+                  NodeId: R_N-10002_N-10086_N-17805_N-20402,
+                  Path: R/N-10002/N-10086/N-17805/N-20402,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false
+                },
+                {
+                  NodeId: R_N-10002_N-10086_N-17805_N-20463,
+                  Path: R/N-10002/N-10086/N-17805/N-20463,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false
+                },
+                {
+                  NodeId: R_N-10002_N-10086_N-17805_N-20462,
+                  Path: R/N-10002/N-10086/N-17805/N-20462,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10086_N-17814,
+              Path: R/N-10002/N-10086/N-17814,
+              Label: Crabs,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 030633,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10086_N-17814_N-17815,
+                  Path: R/N-10002/N-10086/N-17814/N-17815,
+                  Label: Crabs of the species Cancer pagurus,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03063310
+                },
+                {
+                  NodeId: R_N-10002_N-10086_N-17814_N-17816,
+                  Path: R/N-10002/N-10086/N-17814/N-17816,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03063390
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10086_N-17823,
+              Path: R/N-10002/N-10086/N-17823,
+              Label: Other shrimps and prawns,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 030636,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10086_N-17823_N-17826,
+                  Path: R/N-10002/N-10086/N-17823/N-17826,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03063690
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10086_N-17827,
+              Path: R/N-10002/N-10086/N-17827,
+              Label: Other, including flours, meals and pellets of crustaceans, fit for human consumption,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 030639,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10086_N-17827_N-17828,
+                  Path: R/N-10002/N-10086/N-17827/N-17828,
+                  Label: Freshwater crayfish,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03063910
+                },
+                {
+                  NodeId: R_N-10002_N-10086_N-17827_N-17829,
+                  Path: R/N-10002/N-10086/N-17827/N-17829,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03063990
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10086_N-17849,
+              Path: R/N-10002/N-10086/N-17849,
+              Label: Shrimps and prawns,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 030695,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10086_N-17849_N-17857,
+                  Path: R/N-10002/N-10086/N-17849/N-17857,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03069590
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10086_N-17840,
+              Path: R/N-10002/N-10086/N-17840,
+              Label: Other:,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10086_N-17840_N-20025,
+                  Path: R/N-10002/N-10086/N-17840/N-20025,
+                  Label: Rock lobster and other sea crawfish (Palinurus spp., Panulirus spp., Jasus spp.),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030691,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10086_N-17840_N-20025_N-17841,
+                      Path: R/N-10002/N-10086/N-17840/N-20025/N-17841,
+                      Label: Rock lobster and other sea crawfish (Palinurus spp., Panulirus spp., Jasus spp.),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03069100
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10086_N-17840_N-17845,
+                  Path: R/N-10002/N-10086/N-17840/N-17845,
+                  Label: Crabs,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030693,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10086_N-17840_N-17845_N-17846,
+                      Path: R/N-10002/N-10086/N-17840/N-17845/N-17846,
+                      Label: Crabs of the species Cancer pagurus,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03069310
+                    },
+                    {
+                      NodeId: R_N-10002_N-10086_N-17840_N-17845_N-17847,
+                      Path: R/N-10002/N-10086/N-17840/N-17845/N-17847,
+                      Label: Other,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03069390
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10086_N-17840_N-17858,
+                  Path: R/N-10002/N-10086/N-17840/N-17858,
+                  Label: Other, including flours, meals and pellets of crustaceans, fit for human consumption,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030699,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10086_N-17840_N-17858_N-17859,
+                      Path: R/N-10002/N-10086/N-17840/N-17858/N-17859,
+                      Label: Freshwater crayfish,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03069910
+                    },
+                    {
+                      NodeId: R_N-10002_N-10086_N-17840_N-17858_N-17860,
+                      Path: R/N-10002/N-10086/N-17840/N-17858/N-17860,
+                      Label: Other,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03069990
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          NodeId: R_N-10002_N-10087,
+          Path: R/N-10002/N-10087,
+          Label: Molluscs, whether in shell or not, live, fresh, chilled, frozen, dried, salted or in brine; smoked molluscs, whether in shell or not, whether or not cooked before or during the smoking process; flours, meals and pellets of molluscs, fit for human consumption,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0307,
+          Children: [
+            {
+              NodeId: R_N-10002_N-10087_N-20400,
+              Path: R/N-10002/N-10087/N-20400,
+              Label: Snails, other than sea snails,
+              NodeType: nomenclature,
+              Selectable: true,
+              CnCode: 030760
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10873,
+              Path: R/N-10002/N-10087/N-10873,
+              Label: Snails, other than sea snails,
+              NodeType: nomenclature,
+              Selectable: true,
+              CnCode: 03076000
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10479,
+              Path: R/N-10002/N-10087/N-10479,
+              Label: Abalone (Haliotis spp.),
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10087_N-10479_N-10876,
+                  Path: R/N-10002/N-10087/N-10479/N-10876,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030781,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10479_N-10876_N-12576,
+                      Path: R/N-10002/N-10087/N-10479/N-10876/N-12576,
+                      Label: Live, fresh or chilled,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03078100
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10002_N-10087_N-10479_N-20033,
+                  Path: R/N-10002/N-10087/N-10479/N-20033,
+                  Label: Live, fresh or chilled stromboid conchs (Strombus spp.),
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030782,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10479_N-20033_N-17987,
+                      Path: R/N-10002/N-10087/N-10479/N-20033/N-17987,
+                      Label: Live, fresh or chilled stromboid conchs (Strombus spp.),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03078200
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10478,
+              Path: R/N-10002/N-10087/N-10478,
+              Label: Clams, cockles and ark shells (families Arcidae, Arcticidae, Cardiidae, Donacidae, Hiatellidae, Mactridae, Mesodesmatidae, Myidae, Semelidae, Solecurtidae, Solenidae, Tridacnidae and Veneridae),
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10087_N-10478_N-10874,
+                  Path: R/N-10002/N-10087/N-10478/N-10874,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030771,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10478_N-10874_N-12572,
+                      Path: R/N-10002/N-10087/N-10478/N-10874/N-12572,
+                      Label: Live, fresh or chilled,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03077100
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10476,
+              Path: R/N-10002/N-10087/N-10476,
+              Label: Cuttle fish (Sepia officinalis, Rossia macrosoma, Sepiola|spp.) and squid (Ommastrephes|spp., Loligo|spp., Nototodarus|spp., Sepioteuthis|spp.),
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10087_N-10476_N-17889,
+                  Path: R/N-10002/N-10087/N-10476/N-17889,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030742,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10476_N-17889_N-17890,
+                      Path: R/N-10002/N-10087/N-10476/N-17889/N-17890,
+                      Label: Cuttle fish (Sepia officinalis, Rossia macrosoma, Sepiola spp.),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03074210
+                    },
+                    {
+                      NodeId: R_N-10002_N-10087_N-10476_N-17889_N-17891,
+                      Path: R/N-10002/N-10087/N-10476/N-17889/N-17891,
+                      Label: Loligo spp,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03074220
+                    },
+                    {
+                      NodeId: R_N-10002_N-10087_N-10476_N-17889_N-17892,
+                      Path: R/N-10002/N-10087/N-10476/N-17889/N-17892,
+                      Label: Squid (Ommastrephes spp., Nototodarus spp., Sepioteuthis spp.),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03074230
+                    },
+                    {
+                      NodeId: R_N-10002_N-10087_N-10476_N-17889_N-17893,
+                      Path: R/N-10002/N-10087/N-10476/N-17889/N-17893,
+                      Label: European flying squid (Todarodes sagittatus),
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03074240
+                    },
+                    {
+                      NodeId: R_N-10002_N-10087_N-10476_N-17889_N-17894,
+                      Path: R/N-10002/N-10087/N-10476/N-17889/N-17894,
+                      Label: Other,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03074290
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10475,
+              Path: R/N-10002/N-10087/N-10475,
+              Label: Mussels (Mytilus spp., Perna spp.):,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10087_N-10475_N-10867,
+                  Path: R/N-10002/N-10087/N-10475/N-10867,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030731,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10475_N-10867_N-12541,
+                      Path: R/N-10002/N-10087/N-10475/N-10867/N-12541,
+                      Label: Mytilus spp,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03073110
+                    },
+                    {
+                      NodeId: R_N-10002_N-10087_N-10475_N-10867_N-12542,
+                      Path: R/N-10002/N-10087/N-10475/N-10867/N-12542,
+                      Label: Perna spp,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03073190
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10477,
+              Path: R/N-10002/N-10087/N-10477,
+              Label: Octopus (Octopus spp.),
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10087_N-10477_N-10871,
+                  Path: R/N-10002/N-10087/N-10477/N-10871,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030751,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10477_N-10871_N-12565,
+                      Path: R/N-10002/N-10087/N-10477/N-10871/N-12565,
+                      Label: Live, fresh or chilled,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03075100
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10480,
+              Path: R/N-10002/N-10087/N-10480,
+              Label: Other, including flours, meals and pellets, fit for human consumption,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10087_N-10480_N-20028,
+                  Path: R/N-10002/N-10087/N-10480/N-20028,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030791,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10480_N-20028_N-10878,
+                      Path: R/N-10002/N-10087/N-10480/N-20028/N-10878,
+                      Label: Live, fresh or chilled,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03079100
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10473,
+              Path: R/N-10002/N-10087/N-10473,
+              Label: Oysters,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10087_N-10473_N-10863,
+                  Path: R/N-10002/N-10087/N-10473/N-10863,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030711,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10473_N-10863_N-12533,
+                      Path: R/N-10002/N-10087/N-10473/N-10863/N-12533,
+                      Label: Flat oysters (of the genus Ostrea), live and weighing (shell included) not more than 40|g each,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03071110
+                    },
+                    {
+                      NodeId: R_N-10002_N-10087_N-10473_N-10863_N-12534,
+                      Path: R/N-10002/N-10087/N-10473/N-10863/N-12534,
+                      Label: Oysters Other than 03071110,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03071190
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10087_N-10474,
+              Path: R/N-10002/N-10087/N-10474,
+              Label: Scallops, including queen scallops, of the genera Pecten, Chlamys or Placopecten:,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10087_N-10474_N-10865,
+                  Path: R/N-10002/N-10087/N-10474/N-10865,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030721,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10087_N-10474_N-10865_N-12537,
+                      Path: R/N-10002/N-10087/N-10474/N-10865/N-12537,
+                      Label: Live, fresh or chilled,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03072100
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          NodeId: R_N-10002_N-10088,
+          Path: R/N-10002/N-10088,
+          Label: Aquatic invertebrates other than crustaceans and molluscs, live, fresh, chilled, frozen, dried, salted or in brine; smoked aquatic invertebrates other than crustaceans and molluscs, whether or not cooked before or during the smoking process; flours, meals and pellets of aquatic invertebrates other than crustaceans and molluscs, fit for human consumption,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0308,
+          Children: [
+            {
+              NodeId: R_N-10002_N-10088_N-10880,
+              Path: R/N-10002/N-10088/N-10880,
+              Label: Jellyfish (Rhopilema spp.),
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 030830,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10088_N-10880_N-12603,
+                  Path: R/N-10002/N-10088/N-10880/N-12603,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03083010
+                },
+                {
+                  NodeId: R_N-10002_N-10088_N-10880_N-20403,
+                  Path: R/N-10002/N-10088/N-10880/N-20403,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03083080
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10088_N-10881,
+              Path: R/N-10002/N-10088/N-10881,
+              Label: Other,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 030890,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10088_N-10881_N-12607,
+                  Path: R/N-10002/N-10088/N-10881/N-12607,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 03089010
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10088_N-10481,
+              Path: R/N-10002/N-10088/N-10481,
+              Label: Sea cucumbers (Stichopus japonicus, Holothurioidea),
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10088_N-10481_N-20044,
+                  Path: R/N-10002/N-10088/N-10481/N-20044,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030811,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10088_N-10481_N-20044_N-12595,
+                      Path: R/N-10002/N-10088/N-10481/N-20044/N-12595,
+                      Label: Live, fresh or chilled,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03081100
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              NodeId: R_N-10002_N-10088_N-10482,
+              Path: R/N-10002/N-10088/N-10482,
+              Label: Sea urchins (Strongylocentrotus spp., Paracentrotus lividus, Loxechinus albus, Echinus esculentus),
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10002_N-10088_N-10482_N-20041,
+                  Path: R/N-10002/N-10088/N-10482/N-20041,
+                  Label: Live, fresh or chilled,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 030821,
+                  Children: [
+                    {
+                      NodeId: R_N-10002_N-10088_N-10482_N-20041_N-12599,
+                      Path: R/N-10002/N-10088/N-10482/N-20041/N-12599,
+                      Label: Live, fresh or chilled,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 03082100
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      NodeId: R_N-10003,
+      Path: R/N-10003,
+      Label: DAIRY PRODUCE; BIRDS' EGGS; NATURAL HONEY; EDIBLE PRODUCTS OF ANIMAL ORIGIN, NOT ELSEWHERE SPECIFIED OR INCLUDED,
+      NodeType: nomenclature,
+      Selectable: false,
+      CnCode: 04,
+      Children: [
+        {
+          NodeId: R_N-10003_N-10095,
+          Path: R/N-10003/N-10095,
+          Label: Birds' eggs, in shell, fresh, preserved or cooked,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0407,
+          Children: [
+            {
+              NodeId: R_N-10003_N-10095_N-10484,
+              Path: R/N-10003/N-10095/N-10484,
+              Label: Fertilised eggs for incubation,
+              NodeType: nomenclature,
+              Selectable: false,
+              Children: [
+                {
+                  NodeId: R_N-10003_N-10095_N-10484_N-20048,
+                  Path: R/N-10003/N-10095/N-10484/N-20048,
+                  Label: Of fowls of the species Gallus domesticus,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 040711,
+                  Children: [
+                    {
+                      NodeId: R_N-10003_N-10095_N-10484_N-20048_N-12786,
+                      Path: R/N-10003/N-10095/N-10484/N-20048/N-12786,
+                      Label: Of fowls of the species Gallus domesticus,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 04071100
+                    }
+                  ]
+                },
+                {
+                  NodeId: R_N-10003_N-10095_N-10484_N-10903,
+                  Path: R/N-10003/N-10095/N-10484/N-10903,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: false,
+                  CnCode: 040719,
+                  Children: [
+                    {
+                      NodeId: R_N-10003_N-10095_N-10484_N-10903_N-12789,
+                      Path: R/N-10003/N-10095/N-10484/N-10903/N-12789,
+                      Label: other than. 0407 11 00; 0407 19 11; 0407 19 19,
+                      NodeType: nomenclature,
+                      Selectable: true,
+                      CnCode: 04071990
+                    },
+                    {
+                      NodeId: R_N-10003_N-10095_N-10484_N-10903_N-11523,
+                      Path: R/N-10003/N-10095/N-10484/N-10903/N-11523,
+                      Label: Of poultry, other than of fowls of the species Gallus domesticus,
+                      NodeType: nomenclature,
+                      Selectable: false,
+                      Children: [
+                        {
+                          NodeId: R_N-10003_N-10095_N-10484_N-10903_N-11523_N-12787,
+                          Path: R/N-10003/N-10095/N-10484/N-10903/N-11523/N-12787,
+                          Label: Of turkeys or geese,
+                          NodeType: nomenclature,
+                          Selectable: true,
+                          CnCode: 04071911
+                        },
+                        {
+                          NodeId: R_N-10003_N-10095_N-10484_N-10903_N-11523_N-12788,
+                          Path: R/N-10003/N-10095/N-10484/N-10903/N-11523/N-12788,
+                          Label: other than. 0407 19 11,
+                          NodeType: nomenclature,
+                          Selectable: true,
+                          CnCode: 04071919
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      NodeId: R_N-10004,
+      Path: R/N-10004,
+      Label: PRODUCTS OF ANIMAL ORIGIN, NOT ELSEWHERE SPECIFIED OR INCLUDED,
+      NodeType: nomenclature,
+      Selectable: false,
+      CnCode: 05,
+      Children: [
+        {
+          NodeId: R_N-10004_N-10107,
+          Path: R/N-10004/N-10107,
+          Label: Animal products not elsewhere specified or included; dead animals of Chapter|1|or 3, unfit for human consumption,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 0511,
+          Children: [
+            {
+              NodeId: R_N-10004_N-10107_N-10925,
+              Path: R/N-10004/N-10107/N-10925,
+              Label: Products of fish or crustaceans, molluscs or other aquatic invertebrates; dead animals of Chapter|3,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 051191,
+              Children: [
+                {
+                  NodeId: R_N-10004_N-10107_N-10925_N-12821,
+                  Path: R/N-10004/N-10107/N-10925/N-12821,
+                  Label: Other,
+                  NodeType: nomenclature,
+                  Selectable: true,
+                  CnCode: 05119190
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      NodeId: R_N-10061,
+      Path: R/N-10061,
+      Label: TOYS, GAMES AND SPORTS REQUISITES; PARTS AND ACCESSORIES THEREOF,
+      NodeType: nomenclature,
+      Selectable: false,
+      CnCode: 95,
+      Children: [
+        {
+          NodeId: R_N-10061_N-10421,
+          Path: R/N-10061/N-10421,
+          Label: Roundabouts, swings, shooting galleries and other fairground amusements; travelling circuses and travelling menageries; travelling theatres,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 9508,
+          Children: [
+            {
+              NodeId: R_N-10061_N-10421_N-11490,
+              Path: R/N-10061/N-10421/N-11490,
+              Label: Travelling circuses and travelling menageries,
+              NodeType: nomenclature,
+              Selectable: true,
+              CnCode: 950810
+            }
+          ]
+        }
+      ]
+    },
+    {
+      NodeId: R_N-10064,
+      Path: R/N-10064,
+      Label: SPECIFIC EXTERNAL TRADE STATISTICS,
+      NodeType: nomenclature,
+      Selectable: false,
+      CnCode: 99,
+      Children: [
+        {
+          NodeId: R_N-10064_N-10425,
+          Path: R/N-10064/N-10425,
+          Label: Goods delivered to vessels and aircraft,
+          NodeType: nomenclature,
+          Selectable: false,
+          CnCode: 9930,
+          Children: [
+            {
+              NodeId: R_N-10064_N-10425_N-15348,
+              Path: R/N-10064/N-10425/N-15348,
+              Label: goods from CN chapters 1 to 24,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 99302400
+            },
+            {
+              NodeId: R_N-10064_N-10425_N-15349,
+              Path: R/N-10064/N-10425/N-15349,
+              Label: goods classified elsewhere,
+              NodeType: nomenclature,
+              Selectable: false,
+              CnCode: 99309900
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  RetrievedAt: DateTimeOffset_1
+}

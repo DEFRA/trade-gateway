@@ -13,7 +13,7 @@ namespace TracesNT.Services
         ILogger<ReferenceDataService> logger
     ) : IReferenceDataService
     {
-        private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.Default);
+        private readonly TracesNtCredentials _credentials = credentials.Get(TracesNtCredentialKeys.ReferenceData);
 
         public async Task<ClassificationSectionType[]?> GetClassificationSections(string languageCode)
         {
@@ -157,6 +157,45 @@ namespace TracesNT.Services
                     $"An error occurred calling the Traces web service getMetadatas for metadata type {metaDataType} and languageCode {languageCode}",
                     ex
                 );
+            }
+        }
+
+        public async Task<GetClassificationTreeUpdatesResponse> FindClassificationTreeUpdates(
+            string treeId,
+            DateTime after,
+            DateTime before,
+            string languageCode
+        )
+        {
+            var language = Enum.TryParse<ISO2AlphaLanguageCodeContentType>(languageCode, out var parsed)
+                ? parsed
+                : ISO2AlphaLanguageCodeContentType.en;
+
+            try
+            {
+                var response = await referenceDataPortClient.getClassificationTreeUpdatesAsync(
+                    new SecurityHeaderType(),
+                    _credentials.WebServiceClientId,
+                    language,
+                    new GetClassificationTreeUpdatesRequestType
+                    {
+                        TreeID = treeId,
+                        UpdateDateTimeRange = new DateTimeRange() { From = after, To = before },
+                    }
+                );
+
+                return response;
+            }
+            catch (FaultException ex) when (ex.Code.IsSenderFault)
+            {
+                throw new InvalidSoapException(
+                    $"Traces SOAP bad request calling classification tree node updates between '{after:s}' and '{before:s}' for tree '{treeId}'",
+                    ex
+                );
+            }
+            catch (Exception ex)
+            {
+                throw new TracesCommunicationException("An error occurred calling the Traces web service", ex);
             }
         }
     }

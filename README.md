@@ -38,7 +38,7 @@ TRACESNT__BASEURL=traces_base_url
 # 1-8 alphanumeric characters; the app will not start without it.
 TRACESNT__CUSTOMSOFFICEREFERENCENUMBER=traces_customs_office_reference_number
 
-# The default TracesNT account, used by the CHED, EU-INTRA, DOCOM and reference-data ports
+# The default TracesNT account, used by the CHED, EU-INTRA, DOCOM ports
 TRACESNT__CREDENTIALS__DEFAULT__USERNAME=traces_username
 TRACESNT__CREDENTIALS__DEFAULT__AUTHENTICATIONKEY=traces_authentication_key
 TRACESNT__CREDENTIALS__DEFAULT__WEBSERVICECLIENTID=traces_client_id
@@ -47,6 +47,11 @@ TRACESNT__CREDENTIALS__DEFAULT__WEBSERVICECLIENTID=traces_client_id
 TRACESNT__CREDENTIALS__CUSTOMS__USERNAME=traces_customs_username
 TRACESNT__CREDENTIALS__CUSTOMS__AUTHENTICATIONKEY=traces_customs_authentication_key
 TRACESNT__CREDENTIALS__CUSTOMS__WEBSERVICECLIENTID=traces_customs_client_id
+
+# The reference data TracesNT account, used by the reference-data port
+TRACESNT__CREDENTIALS__REFERENCEDATA__USERNAME=traces_reference-data_username
+TRACESNT__CREDENTIALS__REFERENCEDATA__AUTHENTICATIONKEY=traces_reference-data_authentication_key
+TRACESNT__CREDENTIALS__REFERENCEDATA__WEBSERVICECLIENTID=traces_reference-data_client_id
 
 # Cognito — for clients deployed outside CDP
 AUTHENTICATION__COGNITO__AUTHORITY=https://cognito-idp.<region>.amazonaws.com/<user-pool-id>
