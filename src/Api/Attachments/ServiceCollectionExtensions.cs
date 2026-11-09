@@ -1,11 +1,14 @@
 using System.Diagnostics.CodeAnalysis;
 using Amazon;
 using Amazon.S3;
+using Api.Utils;
 using Defra.TradeImports.CdpUploader;
 using Defra.TradeImports.Messaging;
 using Defra.TradeImports.Messaging.Consuming;
 using Defra.TradeImports.Messaging.Extensions;
+using Defra.TradeImports.Messaging.Health;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Options;
 
 namespace Api.Attachments;
@@ -41,6 +44,8 @@ public static class ServiceCollectionExtensions
             sp.GetRequiredService<IOptions<ChedAttachmentOptions>>().Value.TopicArn
         );
 
+        AddHealthChecks(services);
+
         services.AddCdpUploaderClient(configuration).AddHeaderPropagation();
 
         // Enabled is read when the service starts, so test configuration overrides apply.
@@ -57,6 +62,29 @@ public static class ServiceCollectionExtensions
         });
 
         return services;
+    }
+
+    private static void AddHealthChecks(IServiceCollection services)
+    {
+        static ChedAttachmentOptions Settings(IServiceProvider sp) =>
+            sp.GetRequiredService<IOptions<ChedAttachmentOptions>>().Value;
+
+        var timeout = TimeSpan.FromSeconds(10);
+        string[] tags = [HealthEndpoints.Extended];
+
+        services
+            .AddHealthChecks()
+            .AddSns("SNS - CHED attachments", sp => Settings(sp).TopicArn, tags, timeout)
+            .AddSqs("SQS - CHED attachments", sp => Settings(sp).QueueUrl, tags, timeout)
+            .Add(
+                new HealthCheckRegistration(
+                    "S3 - CHED attachments",
+                    sp => new S3BucketHealthCheck(sp.GetRequiredService<IAmazonS3>(), Settings(sp).S3Bucket),
+                    HealthStatus.Unhealthy,
+                    tags,
+                    timeout
+                )
+            );
     }
 
     private static IAmazonS3 CreateS3Client(IServiceProvider sp)

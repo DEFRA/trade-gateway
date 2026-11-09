@@ -1,8 +1,11 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
+using Amazon.SimpleNotificationService;
+using Amazon.SQS;
 using Api.Attachments;
 using Api.Tests.Attachments;
 using Api.Utils;
@@ -15,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using NSubstitute;
 using Refit;
 using Trade.Gateway.Api.Client.Clients;
 using Trade.Gateway.Api.Client.Extensions;
@@ -32,6 +36,13 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
     public InMemoryAttachmentStore AttachmentStore { get; } = new();
 
     public RecordingSnsPublisher Publisher { get; } = new();
+
+    /// <summary>AWS clients the health checks call; healthy unless a test says otherwise.</summary>
+    public IAmazonSimpleNotificationService Sns { get; } = Substitute.For<IAmazonSimpleNotificationService>();
+
+    public IAmazonSQS Sqs { get; } = Substitute.For<IAmazonSQS>();
+
+    public IAmazonS3 S3 { get; } = Substitute.For<IAmazonS3>();
 
     public const string AttachmentsTopicArn = "arn:aws:sns:eu-west-2:000000000000:test_ched_attachments.fifo";
     public const string AttachmentsBucket = "test-attachments";
@@ -92,6 +103,9 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
             services.AddSingleton<IChedAttachmentRepository>(Attachments);
             services.AddSingleton<IAttachmentStore>(AttachmentStore);
             services.AddSingleton<ISnsPublisher>(Publisher);
+            services.AddSingleton(Sns);
+            services.AddSingleton(Sqs);
+            services.AddSingleton(S3);
 
             services.PostConfigureAll<JwtBearerOptions>(opts =>
             {

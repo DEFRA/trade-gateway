@@ -169,7 +169,7 @@ static WebApplication SetupApplication(WebApplication app)
     app.UseRouting();
     app.UseAuthentication();
     app.UseAuthorization();
-    app.MapHealthChecks("/health").AllowAnonymous();
+    app.MapHealthEndpoints();
     app.MapLocalTokenEndpoints();
     app.UseChedEndpoints();
     app.UseAttachmentScanResultsEndpoints();

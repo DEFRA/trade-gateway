@@ -271,6 +271,15 @@ In CDP, configure the following:
   (`https://cdp-uploader.{env}.cdp-int.defra.cloud`) and `CdpUploader__CallbackUrl`
   (`https://trade-gateway.{env}.cdp-int.defra.cloud/attachments/scan-results`).
 
+### Health checks
+
+* `/health` is the platform's liveness check. It does not call any dependencies, so an AWS outage
+  doesn't get healthy containers restarted.
+* `/health/all` checks the CHED attachment topic, queue and bucket, with a 10 second timeout each. It
+  returns 503 if any are unhealthy. The response has statuses only; the details are in the logs.
+
+The checks need `sns:GetTopicAttributes`, `sqs:GetQueueAttributes` and `s3:ListBucket`.
+
 ### MongoDB
 
 #### MongoDB via Docker
