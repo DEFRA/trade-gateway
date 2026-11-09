@@ -28,6 +28,7 @@ public static class HealthEndpoints
             {
                 status = report.Status.ToString(),
                 results = report.Entries.ToDictionary(entry => entry.Key, entry => entry.Value.Status.ToString()),
-            }
+            },
+            cancellationToken: context.RequestAborted
         );
 }
