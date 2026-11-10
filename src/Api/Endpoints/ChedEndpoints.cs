@@ -34,20 +34,21 @@ public static class ChedEndpoints
             .WithSummary("Get a CHED certificate attachment")
             .WithDescription(
                 "Downloads a supporting document attached to the CHED certificate. The attachment id is the "
-                    + "document id from the certificate's referenced document attachment "
-                    + "(uri:documentid:{attachmentId}).\n\n"
-                    + "Attachments are fetched from TRACES in the background and malware scanned before they "
-                    + "are served. The first request queues the download and returns 202 Accepted with a "
-                    + "Retry-After header; ask again for the same URL until the file is returned with 200, "
-                    + "with its original content type and file name. Scanned files are kept for 180 days.\n\n"
-                    + "Only PDF attachments are currently supported; others return 422 UNSUPPORTED_FILE_TYPE.\n\n"
-                    + "A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or "
-                    + "ATTACHMENT_NOT_FOUND (404, which includes draft certificates, statusCode 47), "
-                    + "TRACES_PERMISSION_DENIED (403), UNSUPPORTED_FILE_TYPE (422, not a supported type), "
-                    + "FILE_VIRUS, FILE_EMPTY, FILE_TOO_LARGE or FILE_INVALID_TYPE (422, the file failed its "
-                    + "scan, including content that is not the type it claims to be), TRACES_UNAVAILABLE, UPLOAD_FAILED "
-                    + "or FILE_UPLOAD_FAILED (502) and TRACES_INVALID_REQUEST or UNEXPECTED_ERROR (500). "
-                    + "Failures other than a failed scan are tried again on a request made 15 minutes later."
+                + "document id from the certificate's referenced document attachment "
+                + "(uri:documentid:{attachmentId}).\n\n"
+                + "Attachments are fetched from TRACES in the background and malware scanned before they "
+                + "are served. The first request queues the download and returns 202 Accepted with a "
+                + "Retry-After header; ask again for the same URL until the file is returned with 200, "
+                + "with its original content type and file name. Scanned files are kept for 30 days.\n\n"
+                + "Supported attachment types are PDF, JPEG, PNG, Word (.doc) and Excel (.xls); others "
+                + "return 422 UNSUPPORTED_FILE_TYPE.\n\n"
+                + "A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or "
+                + "ATTACHMENT_NOT_FOUND (404, which includes draft certificates, statusCode 47), "
+                + "TRACES_PERMISSION_DENIED (403), UNSUPPORTED_FILE_TYPE (422, not a supported type), "
+                + "FILE_VIRUS, FILE_EMPTY, FILE_TOO_LARGE or FILE_INVALID_TYPE (422, the file failed its "
+                + "scan, including content that is not the type it claims to be), TRACES_UNAVAILABLE, UPLOAD_FAILED "
+                + "or FILE_UPLOAD_FAILED (502) and TRACES_INVALID_REQUEST or UNEXPECTED_ERROR (500). "
+                + "Failures other than a failed scan are tried again on a request made 15 minutes later."
             )
             .Produces<Stream>(StatusCodes.Status200OK, "application/octet-stream")
             .Produces<AttachmentDownloadStatus>(StatusCodes.Status202Accepted)
@@ -56,8 +57,7 @@ public static class ChedEndpoints
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
-            .ProducesProblem(StatusCodes.Status502BadGateway)
-            .AllowAnonymous();
+            .ProducesProblem(StatusCodes.Status502BadGateway);
 
         app.MapGet("certificates/cheds", Find)
             .WithName("FindCheds")

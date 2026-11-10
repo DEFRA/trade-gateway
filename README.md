@@ -234,10 +234,16 @@ Publishing and consuming use `Defra.TradeImports.Messaging`, and the uploader cl
 [trade-imports-common](https://github.com/DEFRA/trade-imports-common).
 
 **Supported file types** are listed in `ChedAttachments:AllowedFileTypes` (appsettings.json).
-Only PDF is allowed for now:
+PDF, JPEG, PNG, Word (`.doc`) and Excel (`.xls`) are allowed:
 
 ```json
-"AllowedFileTypes": [ { "MimeType": "application/pdf", "Extensions": [ ".pdf" ] } ]
+"AllowedFileTypes": [
+  { "MimeType": "application/pdf", "Extensions": [ ".pdf" ] },
+  { "MimeType": "image/jpeg", "Extensions": [ ".jpg", ".jpeg" ] },
+  { "MimeType": "image/png", "Extensions": [ ".png" ] },
+  { "MimeType": "application/msword", "Extensions": [ ".doc" ], "DetectedTypes": [ "application/x-cfb" ] },
+  { "MimeType": "application/vnd.ms-excel", "Extensions": [ ".xls" ], "DetectedTypes": [ "application/x-cfb" ] }
+]
 ```
 
 To support another type, add an entry. TRACES' content type decides whether a file is allowed. The
@@ -245,26 +251,28 @@ extensions are only used when TRACES gives no specific type (none, or `applicati
 A file whose type isn't on the list fails with `UNSUPPORTED_FILE_TYPE` (422) before anything is
 uploaded. It is downloaded again on its next request once its type has been added. The list is also
 sent to cdp-uploader as `mimeTypes`. The uploader only checks the type we declare, so the scan
-callback also checks the type it detected. A file whose content isn't an allowed type (e.g. a PNG
-named `.pdf`) fails with `FILE_INVALID_TYPE` (422).
+callback also checks that the type it detected matches the declared type: the `MimeType` itself, or
+one of the entry's `DetectedTypes`. Legacy Word and Excel files are only detected as the generic
+compound file format, `application/x-cfb`, so those entries list it. A file whose content doesn't
+match (e.g. a PNG named `.pdf`) fails with `FILE_INVALID_TYPE` (422).
 
 Errors are recorded on the record (`error.source`, `code`, `message`, internal `detail`). Transient
 failures (TRACES unavailable, uploader errors) are also rethrown, so SQS redelivers the message, up
 to the DLQ's `maxReceiveCount`. A request stuck in progress, or a failure other than a scan
 rejection, is queued again when it is requested after `ChedAttachments:RetryAfter` (15 minutes).
 
-Retention: Mongo records expire after **180 days** (TTL index `CreatedAtTtlIdx` on `createdAt`).
-Bucket objects expire after **190 days**, so a record never points at a deleted object.
+Retention: Mongo records expire after **30 days** (TTL index `CreatedAtTtlIdx` on `createdAt`).
+Bucket objects expire after **40 days**, so a record never points at a deleted object.
 
 Locally, `docker compose up` adds `redis` and `cdp-uploader` (the scan is mocked, and any file name
 containing `virus` is rejected). floci creates the topic, the queue and its DLQ, and the
-`trade-gateway-documents` bucket with its 190-day rule.
+`trade-gateway-documents` bucket with its 40-day rule.
 
 In CDP, configure the following:
 
 * `cdp-tenant-config`: the FIFO topic and queue (subscription with raw delivery, a DLQ, and a
   visibility timeout of at least `ChedAttachments:VisibilityTimeoutSeconds`). Also the bucket, with
-  an expiration rule of `"days": "190"`, and IAM permissions for the queue, topic and bucket.
+  an expiration rule of `"days": "40"`, and IAM permissions for the queue, topic and bucket.
 * Ask #cdp-support to allow cdp-uploader to write to the bucket.
 * `cdp-app-config`: `ChedAttachments__TopicArn`, `ChedAttachments__QueueUrl`,
   `ChedAttachments__S3Bucket`, `CdpUploader__BaseUrl`

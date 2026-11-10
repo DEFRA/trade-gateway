@@ -283,12 +283,35 @@ public class AttachmentFileTypesTests
         Assert.Equal("image/png", AttachmentFileTypes.Resolve(allowed, null, "scan.png"));
     }
 
+    private static readonly List<AllowedFileType> PdfPngAndWord =
+    [
+        new() { MimeType = "application/pdf", Extensions = [".pdf"] },
+        new() { MimeType = "image/png", Extensions = [".png"] },
+        new()
+        {
+            MimeType = "application/msword",
+            Extensions = [".doc"],
+            DetectedTypes = ["application/x-cfb"],
+        },
+    ];
+
     [Theory]
-    [InlineData("application/pdf", true)]
-    [InlineData("APPLICATION/PDF", true)]
-    [InlineData("image/png", false)]
-    [InlineData("application/octet-stream", false)]
-    [InlineData(null, false)]
-    public void IsAllowed_ChecksTheDetectedType(string? mimeType, bool expected) =>
-        Assert.Equal(expected, AttachmentFileTypes.IsAllowed(PdfOnly, mimeType));
+    [InlineData("application/pdf", "application/pdf", true)]
+    [InlineData("application/pdf", "APPLICATION/PDF", true)]
+    [InlineData("application/msword", "application/x-cfb", true)]
+    [InlineData("application/msword", "application/msword", true)]
+    // Allowed types, but not the one the file was declared as.
+    [InlineData("application/pdf", "image/png", false)]
+    [InlineData("application/pdf", "application/x-cfb", false)]
+    [InlineData("image/png", "application/x-cfb", false)]
+    [InlineData("application/pdf", "application/octet-stream", false)]
+    // Declared as a type that is no longer on the list.
+    [InlineData("image/jpeg", "image/jpeg", false)]
+    [InlineData("application/pdf", null, false)]
+    [InlineData(null, "application/pdf", false)]
+    public void MatchesContent_ChecksTheDetectedTypeAgainstTheDeclaredOne(
+        string? declared,
+        string? detected,
+        bool expected
+    ) => Assert.Equal(expected, AttachmentFileTypes.MatchesContent(PdfPngAndWord, declared, detected));
 }

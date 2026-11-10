@@ -75,14 +75,15 @@ public class ScanResultsHandler(
         var file = payload.GetFile();
         var now = timeProvider.GetUtcNow().UtcDateTime;
 
-        // The uploader only checks the declared type against mimeTypes; check what it actually found.
+        // The uploader only checks the declared type against mimeTypes; check what it actually found
+        // is the type the file was declared as.
         if (
             file is { IsComplete: true, DetectedContentType: { } detected }
-            && !AttachmentFileTypes.IsAllowed(options.Value.AllowedFileTypes, detected)
+            && !AttachmentFileTypes.MatchesContent(options.Value.AllowedFileTypes, record.ContentType, detected)
         )
         {
             record.Status = ChedAttachmentStatus.Failed;
-            record.Error = AttachmentErrorCodes.ContentNotAllowed(detected, now);
+            record.Error = AttachmentErrorCodes.ContentNotAllowed(record.ContentType, detected, now);
             logger.LogWarning(
                 "CHED attachment {Id} was declared {ContentType} but its content is {Detected}",
                 record.Id,

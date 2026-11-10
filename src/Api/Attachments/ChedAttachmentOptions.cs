@@ -34,10 +34,10 @@ public class ChedAttachmentOptions
 
     /// <summary>
     /// How long an attachment record lives in Mongo (TTL index on <c>createdAt</c>). Keep it shorter
-    /// than the bucket's expiry rule (190 days) so a record never points at an object that has gone.
-    /// Changing it needs the existing TTL index dropping first.
+    /// than the bucket's expiry rule (40 days) so a record never points at an object that has gone.
+    /// Changing it updates the existing TTL index in place on startup.
     /// </summary>
-    public TimeSpan RecordTimeToLive { get; init; } = TimeSpan.FromDays(180);
+    public TimeSpan RecordTimeToLive { get; init; } = TimeSpan.FromDays(30);
 
     /// <summary>
     /// A request still in progress, or a failure that may be transient, is queued again when the
@@ -52,7 +52,7 @@ public class ChedAttachmentOptions
     /// <summary>
     /// The file types attachments may be; anything else fails with <c>UNSUPPORTED_FILE_TYPE</c> before
     /// it is uploaded. Also sent to the CDP uploader as its <c>mimeTypes</c>, and the scanner's detected
-    /// type must be on it too. Set in appsettings.json (PDF only to start with); no default here, as
+    /// type must fit the declared one. Set in appsettings.json; no default here, as
     /// configuration binding appends to a list rather than replacing it.
     /// </summary>
     [MinLength(1)]

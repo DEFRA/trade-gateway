@@ -123,13 +123,17 @@ public static class AttachmentErrorCodes
         };
 
     /// <summary>The scanner found the file is not the type it was declared as.</summary>
-    public static AttachmentError ContentNotAllowed(string? detectedContentType, DateTime now) =>
+    public static AttachmentError ContentNotAllowed(
+        string? declaredContentType,
+        string? detectedContentType,
+        DateTime now
+    ) =>
         new()
         {
             Source = AttachmentErrorSource.Scan,
             Code = FileInvalidType,
-            Message = "The attachment's content is not a supported file type.",
-            Detail = $"Detected content type '{detectedContentType}'",
+            Message = "The attachment's content does not match its file type.",
+            Detail = $"Declared as '{declaredContentType}', detected content type '{detectedContentType}'",
             Retryable = false,
             OccurredAt = now,
         };

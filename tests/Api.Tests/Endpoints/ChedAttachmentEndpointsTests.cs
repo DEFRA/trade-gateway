@@ -124,7 +124,10 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         Assert.Equal("health-certificate.pdf", upload.Headers!["x-filename"].Single());
         // Declared as its allowed type: the uploader checks mimeTypes against the declared type.
         Assert.StartsWith("application/pdf", upload.Headers["Content-Type"].Single());
-        Assert.Equal("application/pdf", Assert.Single(initiate.GetProperty("mimeTypes").EnumerateArray()).GetString());
+        Assert.Equal(
+            ["application/pdf", "image/jpeg", "image/png", "application/msword", "application/vnd.ms-excel"],
+            initiate.GetProperty("mimeTypes").EnumerateArray().Select(m => m.GetString()!).ToArray()
+        );
 
         var stillScanning = await GetAttachment(chedId, 2003);
         Assert.Equal(HttpStatusCode.Accepted, stillScanning.StatusCode);
@@ -407,8 +410,8 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
     {
         const string chedId = "CHEDA.XI.2026.0002010";
 
-        StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(2010, "photo.jpg"));
-        StubAttachment(chedId, 2010, "photo.jpg", [0xFF, 0xD8, 0xFF], contentType: "image/jpeg");
+        StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(2010, "photo.gif"));
+        StubAttachment(chedId, 2010, "photo.gif", "GIF89a"u8.ToArray(), contentType: "image/gif");
 
         await GetAttachment(chedId, 2010);
         // Not transient, so the message is settled rather than redelivered.
@@ -418,7 +421,8 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
             await GetAttachment(chedId, 2010),
             HttpStatusCode.UnprocessableEntity,
             AttachmentErrorCodes.UnsupportedFileTypeCode,
-            "Attachments of type 'image/jpeg' are not supported. Supported types: application/pdf."
+            "Attachments of type 'image/gif' are not supported. Supported types: application/pdf, image/jpeg, "
+                + "image/png, application/msword, application/vnd.ms-excel."
         );
         Assert.Null(InitiateRequestBodyOrNull(chedId));
         Assert.Single(factory.Publisher.For(chedId, 2010));
@@ -444,6 +448,38 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         Assert.Equal("application/pdf", response.Content.Headers.ContentType?.MediaType);
     }
 
+    [Theory]
+    // Legacy Office files are only detected as the generic compound file format.
+    [InlineData(2013, "certificate.doc", "application/msword", "application/x-cfb")]
+    [InlineData(2014, "consignment.xls", "application/vnd.ms-excel", "application/x-cfb")]
+    [InlineData(2015, "photo.jpeg", "image/jpeg", "image/jpeg")]
+    [InlineData(2016, "label.png", "image/png", "image/png")]
+    public async Task GetAttachment_ServesEachSupportedType(
+        long attachmentId,
+        string fileName,
+        string contentType,
+        string detectedContentType
+    )
+    {
+        var chedId = $"CHEDA.XI.2026.000{attachmentId}";
+        byte[] fileBytes = [0x01, 0x02, 0x03];
+
+        StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(attachmentId, fileName));
+        StubAttachment(chedId, attachmentId, fileName, fileBytes, contentType: contentType);
+        StubUploader(chedId, attachmentId);
+
+        await GetAttachment(chedId, attachmentId);
+        Assert.Null(await RunConsumer(chedId, attachmentId));
+        Assert.StartsWith(contentType, UploadRequest(chedId, attachmentId).Headers!["Content-Type"].Single());
+        await ScanCallback(chedId, attachmentId, FileStatuses.Complete, detectedContentType: detectedContentType);
+
+        var response = await GetAttachment(chedId, attachmentId);
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(contentType, response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal(fileName, response.Content.Headers.ContentDisposition?.FileName);
+        Assert.Equal(fileBytes, await response.Content.ReadAsByteArrayAsync(TestContext.Current.CancellationToken));
+    }
+
     [Fact]
     public async Task GetAttachment_WhenTheScannerFindsTheContentIsNotAPdf_ReturnsInvalidType()
     {
@@ -464,7 +500,8 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
             await GetAttachment(chedId, 2012),
             HttpStatusCode.UnprocessableEntity,
             AttachmentErrorCodes.FileInvalidType,
-            "The attachment's content is not a supported file type."
+            // PNG is allowed, but not when it was declared as a PDF.
+            "The attachment's content does not match its file type."
         );
     }
 
