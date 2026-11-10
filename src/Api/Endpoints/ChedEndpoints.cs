@@ -56,7 +56,8 @@ public static class ChedEndpoints
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesProblem(StatusCodes.Status422UnprocessableEntity)
             .ProducesProblem(StatusCodes.Status500InternalServerError)
-            .ProducesProblem(StatusCodes.Status502BadGateway);
+            .ProducesProblem(StatusCodes.Status502BadGateway)
+            .AllowAnonymous();
 
         app.MapGet("certificates/cheds", Find)
             .WithName("FindCheds")
