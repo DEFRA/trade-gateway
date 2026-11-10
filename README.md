@@ -207,6 +207,79 @@ principal has an empty permissions list.
 > AUTHORIZATION__PRINCIPALS__REFERENCE-DATA-READER=b2c3d4e5-f6a7-8901-bcde-f12345678901
 > ```
 
+### CHED attachments
+
+`GET certificates/cheds/{id}/attachments/{attachmentId}` does not call TRACES inline. Each attachment
+has a record in the `ched_attachments` Mongo collection:
+
+1. **First request**: the record is created (`Requested`), a `ChedAttachmentDownloadRequested`
+   message is published to the `trade_gateway_ched_attachments_internal.fifo` SNS topic
+   (de-duplication and group id = the attachment id), and the endpoint returns **202** with
+   `Retry-After`.
+2. **Consumer** (`ChedAttachmentDownloadConsumer`, reading
+   `trade_gateway_ched_attachments_internal_downloader.fifo`): fetches the CHED and attachment from
+   TRACES, then hands the bytes to [cdp-uploader](https://github.com/DEFRA/cdp-uploader) (`/initiate`
+   plus a binary upload), so the file is malware scanned before it reaches S3. The record moves to
+   `Downloading`, then `Scanning`.
+3. **Scan callback**: cdp-uploader posts to `POST /attachments/scan-results`. This endpoint is
+   anonymous, and it only acts on a callback that carries the random token stored with the
+   attachment's current upload. The record becomes `Available` (with its S3 key) or `Failed`
+   (`FILE_VIRUS`, `FILE_EMPTY`, ...).
+4. **Later requests**: `Available` is streamed from S3 with its original content type and file name.
+   `Failed` returns a problem with an `errorCode`: 404 not found or draft, 403, 422 scan rejection,
+   500, or 502 TRACES/uploader failure. Anything still in progress returns 202.
+
+Publishing and consuming use `Defra.TradeImports.Messaging`, and the uploader client is
+`Defra.TradeImports.CdpUploader`. Both packages come from
+[trade-imports-common](https://github.com/DEFRA/trade-imports-common).
+
+**Supported file types** are listed in `ChedAttachments:AllowedFileTypes` (appsettings.json).
+Only PDF is allowed for now:
+
+```json
+"AllowedFileTypes": [ { "MimeType": "application/pdf", "Extensions": [ ".pdf" ] } ]
+```
+
+To support another type, add an entry. TRACES' content type decides whether a file is allowed. The
+extensions are only used when TRACES gives no specific type (none, or `application/octet-stream`).
+A file whose type isn't on the list fails with `UNSUPPORTED_FILE_TYPE` (422) before anything is
+uploaded. It is downloaded again on its next request once its type has been added. The list is also
+sent to cdp-uploader as `mimeTypes`. The uploader only checks the type we declare, so the scan
+callback also checks the type it detected. A file whose content isn't an allowed type (e.g. a PNG
+named `.pdf`) fails with `FILE_INVALID_TYPE` (422).
+
+Errors are recorded on the record (`error.source`, `code`, `message`, internal `detail`). Transient
+failures (TRACES unavailable, uploader errors) are also rethrown, so SQS redelivers the message, up
+to the DLQ's `maxReceiveCount`. A request stuck in progress, or a failure other than a scan
+rejection, is queued again when it is requested after `ChedAttachments:RetryAfter` (15 minutes).
+
+Retention: Mongo records expire after **180 days** (TTL index `CreatedAtTtlIdx` on `createdAt`).
+Bucket objects expire after **190 days**, so a record never points at a deleted object.
+
+Locally, `docker compose up` adds `redis` and `cdp-uploader` (the scan is mocked, and any file name
+containing `virus` is rejected). floci creates the topic, the queue and its DLQ, and the
+`trade-gateway-documents` bucket with its 190-day rule.
+
+In CDP, configure the following:
+
+* `cdp-tenant-config`: the FIFO topic and queue (subscription with raw delivery, a DLQ, and a
+  visibility timeout of at least `ChedAttachments:VisibilityTimeoutSeconds`). Also the bucket, with
+  an expiration rule of `"days": "190"`, and IAM permissions for the queue, topic and bucket.
+* Ask #cdp-support to allow cdp-uploader to write to the bucket.
+* `cdp-app-config`: `ChedAttachments__TopicArn`, `ChedAttachments__QueueUrl`,
+  `ChedAttachments__S3Bucket`, `CdpUploader__BaseUrl`
+  (`https://cdp-uploader.{env}.cdp-int.defra.cloud`) and `CdpUploader__CallbackUrl`
+  (`https://trade-gateway.{env}.cdp-int.defra.cloud/attachments/scan-results`).
+
+### Health checks
+
+* `/health` is the platform's liveness check. It does not call any dependencies, so an AWS outage
+  doesn't get healthy containers restarted.
+* `/health/all` checks the CHED attachment topic, queue and bucket, with a 10 second timeout each. It
+  returns 503 if any are unhealthy. The response has statuses only; the details are in the logs.
+
+The checks need `sns:GetTopicAttributes`, `sqs:GetQueueAttributes` and `s3:ListBucket`.
+
 ### MongoDB
 
 #### MongoDB via Docker
