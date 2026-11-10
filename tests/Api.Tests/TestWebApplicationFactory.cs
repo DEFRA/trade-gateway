@@ -1,9 +1,15 @@
 using System.Net.Http.Headers;
 using System.Text.Json;
 using Amazon.Runtime;
+using Amazon.S3;
 using Amazon.SecurityToken;
 using Amazon.SecurityToken.Model;
+using Amazon.SimpleNotificationService;
+using Amazon.SQS;
+using Api.Attachments;
+using Api.Tests.Attachments;
 using Api.Utils;
+using Defra.TradeImports.Messaging.Publishing;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -12,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using NSubstitute;
 using Refit;
 using Trade.Gateway.Api.Client.Clients;
 using Trade.Gateway.Api.Client.Extensions;
@@ -22,6 +29,23 @@ namespace Api.Tests;
 public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
 {
     public WireMockServer WireMockServer => Services.GetRequiredService<WireMockServer>();
+
+    /// <summary>Mongo, S3 and SNS stand-ins for CHED attachments; the SQS consumer is not started.</summary>
+    public InMemoryChedAttachmentRepository Attachments { get; } = new();
+
+    public InMemoryAttachmentStore AttachmentStore { get; } = new();
+
+    public RecordingSnsPublisher Publisher { get; } = new();
+
+    /// <summary>AWS clients the health checks call; healthy unless a test says otherwise.</summary>
+    public IAmazonSimpleNotificationService Sns { get; } = Substitute.For<IAmazonSimpleNotificationService>();
+
+    public IAmazonSQS Sqs { get; } = Substitute.For<IAmazonSQS>();
+
+    public IAmazonS3 S3 { get; } = Substitute.For<IAmazonS3>();
+
+    public const string AttachmentsTopicArn = "arn:aws:sns:eu-west-2:000000000000:test_ched_attachments.fifo";
+    public const string AttachmentsBucket = "test-attachments";
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -40,6 +64,13 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                     new Dictionary<string, string?>
                     {
                         ["TracesNt:BaseUrl"] = tracesBaseUrl,
+                        ["ChedAttachments:ConsumerEnabled"] = "false",
+                        ["ChedAttachments:TopicArn"] = AttachmentsTopicArn,
+                        ["ChedAttachments:QueueUrl"] = "http://localhost/000000000000/test_ched_attachments.fifo",
+                        ["ChedAttachments:S3Bucket"] = AttachmentsBucket,
+                        // The CDP uploader is stubbed on the same WireMock server as TRACES.
+                        ["CdpUploader:BaseUrl"] = tracesBaseUrl,
+                        ["CdpUploader:CallbackUrl"] = "http://localhost/attachments/scan-results",
                         ["TracesNt:CustomsOfficeReferenceNumber"] = "GBTEST01",
                         ["TracesNt:Credentials:Default:Username"] = "test-user",
                         ["TracesNt:Credentials:Default:AuthenticationKey"] = "test-auth-key",
@@ -68,6 +99,14 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
         );
 
         builder.ConfigureTestServices(services =>
+        {
+            services.AddSingleton<IChedAttachmentRepository>(Attachments);
+            services.AddSingleton<IAttachmentStore>(AttachmentStore);
+            services.AddSingleton<ISnsPublisher>(Publisher);
+            services.AddSingleton(Sns);
+            services.AddSingleton(Sqs);
+            services.AddSingleton(S3);
+
             services.PostConfigureAll<JwtBearerOptions>(opts =>
             {
                 if (string.IsNullOrEmpty(opts.Authority))
@@ -75,8 +114,8 @@ public class TradeGatewayWebApplicationFactory : WebApplicationFactory<Program>
                 var oidcConfig = new OpenIdConnectConfiguration { Issuer = opts.Authority };
                 oidcConfig.SigningKeys.Add(LocalTokenServer.Key);
                 opts.ConfigurationManager = new StaticConfigurationManager<OpenIdConnectConfiguration>(oidcConfig);
-            })
-        );
+            });
+        });
     }
 
     private const string CognitoTokenEndpoint = "/local/cognito/token";
