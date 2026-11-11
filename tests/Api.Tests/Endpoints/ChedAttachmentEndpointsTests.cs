@@ -16,9 +16,10 @@ using WireMock.ResponseBuilders;
 namespace Api.Tests.Endpoints;
 
 /// <summary>
-/// GET certificates/cheds/{id}/attachments/{attachmentId} end to end: the request is recorded and
-/// queued, the download consumer fetches the attachment from TRACES and hands it to the CDP uploader
-/// (both stubbed in WireMock), the uploader's scan callback lands, and the file is then served.
+/// GET certificates/cheds/{id}/attachments/{attachmentId}[/download] end to end: the request is
+/// recorded and queued, the download consumer fetches the attachment from TRACES and hands it to the
+/// CDP uploader (both stubbed in WireMock), the uploader's scan callback lands, the status gives the
+/// download link and the file is then served from /download.
 /// </summary>
 [Collection(IntegrationTestCollection.Name)]
 public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory factory)
@@ -64,15 +65,17 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
 
         Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
         Assert.Equal("5", response.Headers.RetryAfter?.ToString());
-        Assert.Equal($"/certificates/cheds/{chedId}/attachments/2001", response.Headers.Location?.OriginalString);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
         var status = await response.Content.ReadFromJsonAsync<AttachmentDownloadStatus>(Ct);
         Assert.Equal("Requested", status?.Status);
         Assert.Equal(chedId, status?.CertificateId);
         Assert.Equal(2001, status?.AttachmentId);
+        Assert.Null(status?.DownloadUrl);
+        Assert.Null(status?.Failure);
 
         var published = Assert.Single(factory.Publisher.For(chedId, 2001));
         Assert.Equal(TradeGatewayWebApplicationFactory.AttachmentsTopicArn, published.TopicArn);
-        Assert.Equal("2001", published.DuplicationId);
+        Assert.Equal("2001-1", published.DuplicationId);
         Assert.Equal("2001", published.MessageGroupId);
 
         Assert.Equal(ChedAttachmentStatus.Requested, factory.Attachments.Find(chedId, 2001)?.Status);
@@ -135,10 +138,22 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
 
         Assert.Equal(HttpStatusCode.OK, (await ScanCallback(chedId, 2003, FileStatuses.Complete)).StatusCode);
 
-        var response = await GetAttachment(chedId, 2003);
+        var statusResponse = await GetAttachment(chedId, 2003);
+        Assert.Equal(HttpStatusCode.OK, statusResponse.StatusCode);
+        Assert.Equal("application/json", statusResponse.Content.Headers.ContentType?.MediaType);
+        var status = (await statusResponse.Content.ReadFromJsonAsync<AttachmentDownloadStatus>(Ct))!;
+        Assert.Equal("Available", status.Status);
+        Assert.Equal($"/certificates/cheds/{chedId}/attachments/2003/download", status.DownloadUrl);
+        Assert.Equal("health-certificate.pdf", status.FileName);
+        Assert.Equal("application/pdf", status.ContentType);
+        Assert.Equal(fileBytes.Length, status.ContentLength);
+        Assert.Null(status.Failure);
+
+        var response = await DownloadAttachment(chedId, 2003);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("application/pdf", response.Content.Headers.ContentType?.MediaType);
         Assert.Equal("health-certificate.pdf", response.Content.Headers.ContentDisposition?.FileName);
+        Assert.Equal(fileBytes.Length, response.Content.Headers.ContentLength);
         Assert.Equal(fileBytes, await response.Content.ReadAsByteArrayAsync(Ct));
         Assert.Single(factory.Publisher.For(chedId, 2003));
     }
@@ -157,7 +172,7 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         Assert.Null(await RunConsumer(chedId, 2004));
         await ScanCallback(chedId, 2004, FileStatuses.Complete);
 
-        var response = await GetAttachment(chedId, 2004);
+        var response = await DownloadAttachment(chedId, 2004);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(fileBytes, await response.Content.ReadAsByteArrayAsync(Ct));
     }
@@ -173,10 +188,10 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         Assert.Null(await RunConsumer(chedId, 3001));
 
         var response = await GetAttachment(chedId, 3001);
-        await AssertProblem(
+        await AssertFailure(
             response,
             HttpStatusCode.NotFound,
-            AttachmentErrorCodes.AttachmentNotFound,
+            AttachmentFailureCodes.NotFound,
             $"Ched certificate attachment '{chedId} - 3001' was not found."
         );
         Assert.DoesNotContain(
@@ -227,12 +242,15 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         await GetAttachment(chedId, 1);
         Assert.Null(await RunConsumer(chedId, 1));
 
-        await AssertProblem(
+        await AssertFailure(
             await GetAttachment(chedId, 1),
             HttpStatusCode.NotFound,
-            AttachmentErrorCodes.ChedNotFound,
+            AttachmentFailureCodes.NotFound,
             $"Ched certificate '{chedId}' was not found."
         );
+        // Not retriable: asking again returns the failure without downloading again.
+        await AssertFailure(await GetAttachment(chedId, 1), HttpStatusCode.NotFound, AttachmentFailureCodes.NotFound);
+        Assert.Single(factory.Publisher.For(chedId, 1));
     }
 
     [Fact]
@@ -250,12 +268,15 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         await GetAttachment(chedId, 1);
         Assert.Null(await RunConsumer(chedId, 1));
 
-        await AssertProblem(
+        await AssertFailure(
             await GetAttachment(chedId, 1),
             HttpStatusCode.NotFound,
-            AttachmentErrorCodes.ChedNotFound,
+            AttachmentFailureCodes.NotFound,
             $"Ched certificate '{chedId}' was not found."
         );
+        // Not retriable: asking again returns the failure without downloading again.
+        await AssertFailure(await GetAttachment(chedId, 1), HttpStatusCode.NotFound, AttachmentFailureCodes.NotFound);
+        Assert.Single(factory.Publisher.For(chedId, 1));
     }
 
     [Fact]
@@ -269,10 +290,10 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         await GetAttachment(chedId, 42);
         Assert.Null(await RunConsumer(chedId, 42));
 
-        await AssertProblem(
+        await AssertFailure(
             await GetAttachment(chedId, 42),
             HttpStatusCode.NotFound,
-            AttachmentErrorCodes.AttachmentNotFound,
+            AttachmentFailureCodes.NotFound,
             $"Ched certificate attachment '{chedId} - 42' was not found."
         );
     }
@@ -288,15 +309,16 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         await GetAttachment(chedId, 1);
         Assert.Null(await RunConsumer(chedId, 1));
 
-        await AssertProblem(
+        await AssertFailure(
             await GetAttachment(chedId, 1),
             HttpStatusCode.Forbidden,
-            AttachmentErrorCodes.TracesPermissionDenied
+            AttachmentFailureCodes.PermissionDenied,
+            "Permission denied"
         );
     }
 
     [Fact]
-    public async Task GetAttachment_WhenTracesReturnsInvalidSoapFault_ReturnsInternalServerError()
+    public async Task GetAttachment_WhenTracesReturnsAnUnexpectedFault_RecordsOtherAndRetriesOnTheNextRequest()
     {
         const string chedId = "ATTACHMENT-BADSOAP";
 
@@ -304,55 +326,86 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         StubAttachmentFault(chedId, "SAXException: invalid request");
 
         await GetAttachment(chedId, 1);
-        // Not transient: settled on the record rather than redelivered.
         Assert.Null(await RunConsumer(chedId, 1));
 
-        await AssertProblem(
-            await GetAttachment(chedId, 1),
-            HttpStatusCode.InternalServerError,
-            AttachmentErrorCodes.TracesInvalidRequest
-        );
+        await AssertRecordedAndRetried(chedId, 1, AttachmentFailureCodes.Other, AttachmentErrorSource.Traces);
+    }
+
+    [Theory]
+    [InlineData("ATTACHMENT-RATELIMITED", HttpStatusCode.TooManyRequests, AttachmentFailureCodes.TracesRateLimited)]
+    [InlineData("ATTACHMENT-UNAVAILABLE", HttpStatusCode.ServiceUnavailable, AttachmentFailureCodes.TracesUnavailable)]
+    public async Task GetAttachment_WhenTracesAnswersWithAnHttpError_RecordsItsCodeAndRetriesOnTheNextRequest(
+        string chedId,
+        HttpStatusCode tracesStatus,
+        string expectedCode
+    )
+    {
+        StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(1, "file.pdf"));
+        StubAttachmentHttpError(chedId, tracesStatus);
+
+        await GetAttachment(chedId, 1);
+        Assert.Null(await RunConsumer(chedId, 1));
+
+        await AssertRecordedAndRetried(chedId, 1, expectedCode, AttachmentErrorSource.Traces);
     }
 
     [Fact]
-    public async Task GetAttachment_WhenTracesCommunicationFails_ReturnsBadGateway_AndTheMessageIsRetried()
+    public async Task GetAttachment_WhenTracesRejectsTheCredentials_ReturnsInvalidCredentialsWithoutRetrying()
+    {
+        const string chedId = "ATTACHMENT-UNAUTHORISED";
+
+        StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(1, "file.pdf"));
+        StubAttachmentHttpError(chedId, HttpStatusCode.Unauthorized);
+
+        await GetAttachment(chedId, 1);
+        Assert.Null(await RunConsumer(chedId, 1));
+
+        await AssertFailure(
+            await GetAttachment(chedId, 1),
+            HttpStatusCode.BadGateway,
+            AttachmentFailureCodes.InvalidCredentials,
+            "Invalid credentials"
+        );
+        Assert.Single(factory.Publisher.For(chedId, 1));
+    }
+
+    [Fact]
+    public async Task GetAttachment_WhenTracesCommunicationFails_CompletesTheMessage_AndRetriesOnTheNextRequest()
     {
         const string chedId = "ATTACHMENT-COMMFAIL";
 
         StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(1, "file.pdf"));
-        factory
-            .WireMockServer.Given(
-                SoapUtilities.CreateSoap12MtomRequestInterceptor(
-                    GetCertificateAttachmentSoapAction,
-                    AttachmentRequestXPath(chedId)
-                )
-            )
-            .RespondWith(
-                Response
-                    .Create()
-                    .WithStatusCode((int)HttpStatusCode.BadGateway)
-                    .WithHeader("Content-Type", "text/plain; charset=utf-8")
-                    .WithBody("upstream failed")
-            );
+        var outage = StubAttachmentHttpError(chedId, HttpStatusCode.BadGateway, "upstream failed");
 
         await GetAttachment(chedId, 1);
 
-        // Rethrown, so SQS makes the message visible again.
-        Assert.NotNull(await RunConsumer(chedId, 1));
+        // Settled on the record, not rethrown: SQS deletes the message.
+        Assert.Null(await RunConsumer(chedId, 1));
+        var failed = factory.Attachments.Find(chedId, 1)!;
+        Assert.Equal(ChedAttachmentStatus.Failed, failed.Status);
+        Assert.Equal(AttachmentFailureCodes.TracesUnavailable, failed.Error?.Code);
+        Assert.Equal("TRACES service unavailable", failed.Error?.Message);
+        Assert.Contains("ProtocolException", failed.Error?.Detail);
+        Assert.Contains("(502) Bad Gateway", failed.Error?.Detail);
 
-        var response = await GetAttachment(chedId, 1);
-        await AssertProblem(
-            response,
-            HttpStatusCode.BadGateway,
-            AttachmentErrorCodes.TracesUnavailable,
-            "An error occurred communicating with TRACES."
+        await AssertRecordedAndRetried(
+            chedId,
+            1,
+            AttachmentFailureCodes.TracesUnavailable,
+            AttachmentErrorSource.Traces
         );
-        Assert.DoesNotContain("upstream failed", await response.Content.ReadAsStringAsync(Ct));
-        Assert.Equal(AttachmentErrorSource.Traces, factory.Attachments.Find(chedId, 1)?.Error?.Source);
+
+        // The retry succeeds once TRACES answers.
+        factory.WireMockServer.DeleteMapping(outage);
+        StubAttachment(chedId, 1, "file.pdf", "%PDF-1.4"u8.ToArray());
+        StubUploader(chedId, 1);
+        Assert.Null(await RunConsumer(chedId, 1));
+        Assert.Equal(ChedAttachmentStatus.Scanning, factory.Attachments.Find(chedId, 1)?.Status);
+        Assert.Equal(2, factory.Attachments.Find(chedId, 1)?.Attempts);
     }
 
     [Fact]
-    public async Task GetAttachment_WhenTheUploaderFails_ReturnsBadGateway_AndTheMessageIsRetried()
+    public async Task GetAttachment_WhenTheUploaderFails_RecordsUploaderFailure_AndRetriesOnTheNextRequest()
     {
         const string chedId = "CHEDA.XI.2026.0002006";
 
@@ -363,14 +416,14 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
             .RespondWith(Response.Create().WithStatusCode(HttpStatusCode.ServiceUnavailable).WithBody("down"));
 
         await GetAttachment(chedId, 2006);
-        Assert.IsType<CdpUploaderException>(await RunConsumer(chedId, 2006));
+        Assert.Null(await RunConsumer(chedId, 2006));
 
-        await AssertProblem(
-            await GetAttachment(chedId, 2006),
-            HttpStatusCode.BadGateway,
-            AttachmentErrorCodes.UploadFailed
+        await AssertRecordedAndRetried(
+            chedId,
+            2006,
+            AttachmentFailureCodes.UploaderFailure,
+            AttachmentErrorSource.Uploader
         );
-        Assert.Equal(AttachmentErrorSource.Uploader, factory.Attachments.Find(chedId, 2006)?.Error?.Source);
     }
 
     [Fact]
@@ -397,11 +450,47 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
             ).StatusCode
         );
 
-        await AssertProblem(
+        await AssertFailure(
             await GetAttachment(chedId, 2007),
             HttpStatusCode.UnprocessableEntity,
-            AttachmentErrorCodes.FileVirus,
-            "The selected file contains a virus"
+            AttachmentFailureCodes.MalwareDetected,
+            "Malware detected"
+        );
+        Assert.Contains("FILE_VIRUS", factory.Attachments.Find(chedId, 2007)?.Error?.Detail);
+
+        // Not retriable, from either endpoint.
+        await AssertFailure(
+            await DownloadAttachment(chedId, 2007),
+            HttpStatusCode.UnprocessableEntity,
+            AttachmentFailureCodes.MalwareDetected
+        );
+        Assert.Single(factory.Publisher.For(chedId, 2007));
+    }
+
+    [Fact]
+    public async Task GetAttachment_WhenTheUploaderCannotStoreTheFile_RecordsStorageFailure_AndRetriesOnTheNextRequest()
+    {
+        const string chedId = "CHEDA.XI.2026.0002017";
+
+        StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(2017, "file.pdf"));
+        StubAttachment(chedId, 2017, "file.pdf", "%PDF-1.4"u8.ToArray());
+        StubUploader(chedId, 2017);
+
+        await GetAttachment(chedId, 2017);
+        Assert.Null(await RunConsumer(chedId, 2017));
+        await ScanCallback(
+            chedId,
+            2017,
+            FileStatuses.Rejected,
+            errorCode: "FILE_UPLOAD_FAILED",
+            errorMessage: "The selected file could not be uploaded"
+        );
+
+        await AssertRecordedAndRetried(
+            chedId,
+            2017,
+            AttachmentFailureCodes.StorageFailure,
+            AttachmentErrorSource.Storage
         );
     }
 
@@ -414,13 +503,12 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         StubAttachment(chedId, 2010, "photo.gif", "GIF89a"u8.ToArray(), contentType: "image/gif");
 
         await GetAttachment(chedId, 2010);
-        // Not transient, so the message is settled rather than redelivered.
         Assert.Null(await RunConsumer(chedId, 2010));
 
-        await AssertProblem(
+        await AssertFailure(
             await GetAttachment(chedId, 2010),
             HttpStatusCode.UnprocessableEntity,
-            AttachmentErrorCodes.UnsupportedFileTypeCode,
+            AttachmentFailureCodes.UnsupportedFileType,
             "Attachments of type 'image/gif' are not supported. Supported types: application/pdf, image/jpeg, "
                 + "image/png, application/msword, application/vnd.ms-excel."
         );
@@ -443,7 +531,7 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         Assert.StartsWith("application/pdf", UploadRequest(chedId, 2011).Headers!["Content-Type"].Single());
         await ScanCallback(chedId, 2011, FileStatuses.Complete);
 
-        var response = await GetAttachment(chedId, 2011);
+        var response = await DownloadAttachment(chedId, 2011);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal("application/pdf", response.Content.Headers.ContentType?.MediaType);
     }
@@ -473,7 +561,7 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         Assert.StartsWith(contentType, UploadRequest(chedId, attachmentId).Headers!["Content-Type"].Single());
         await ScanCallback(chedId, attachmentId, FileStatuses.Complete, detectedContentType: detectedContentType);
 
-        var response = await GetAttachment(chedId, attachmentId);
+        var response = await DownloadAttachment(chedId, attachmentId);
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(contentType, response.Content.Headers.ContentType?.MediaType);
         Assert.Equal(fileName, response.Content.Headers.ContentDisposition?.FileName);
@@ -496,13 +584,47 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
             (await ScanCallback(chedId, 2012, FileStatuses.Complete, detectedContentType: "image/png")).StatusCode
         );
 
-        await AssertProblem(
+        await AssertFailure(
             await GetAttachment(chedId, 2012),
             HttpStatusCode.UnprocessableEntity,
-            AttachmentErrorCodes.FileInvalidType,
+            AttachmentFailureCodes.UnsupportedFileType,
             // PNG is allowed, but not when it was declared as a PDF.
             "The attachment's content does not match its file type."
         );
+    }
+
+    [Fact]
+    public async Task DownloadAttachment_BeforeItIsAvailable_QueuesItAndAnswersWithTheStatus()
+    {
+        const string chedId = "CHEDA.XI.2026.0002018";
+
+        var response = await DownloadAttachment(chedId, 2018);
+
+        Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("5", response.Headers.RetryAfter?.ToString());
+        Assert.Equal("Requested", (await response.Content.ReadFromJsonAsync<AttachmentDownloadStatus>(Ct))?.Status);
+        Assert.Single(factory.Publisher.For(chedId, 2018));
+    }
+
+    [Fact]
+    public async Task DownloadAttachment_WhenTheStoredFileIsGone_DownloadsItAgain()
+    {
+        const string chedId = "CHEDA.XI.2026.0002019";
+        var record = ChedAttachmentEntity.NewRequest(chedId, 2019, DateTime.UtcNow);
+        record.Status = ChedAttachmentStatus.Available;
+        record.Requests = 1;
+        record.S3Bucket = TradeGatewayWebApplicationFactory.AttachmentsBucket;
+        record.S3Key = "ched-attachments/expired";
+        factory.Attachments.Save(record);
+
+        Assert.Equal(HttpStatusCode.OK, (await GetAttachment(chedId, 2019)).StatusCode);
+
+        var response = await DownloadAttachment(chedId, 2019);
+
+        Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
+        Assert.Equal("2019-2", Assert.Single(factory.Publisher.For(chedId, 2019)).DuplicationId);
+        Assert.Equal(ChedAttachmentStatus.Requested, factory.Attachments.Find(chedId, 2019)?.Status);
     }
 
     [Fact]
@@ -558,6 +680,42 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
     {
         var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
         return await client.GetChedCertificationAttachment(chedId, attachmentId, Ct);
+    }
+
+    private async Task<HttpResponseMessage> DownloadAttachment(string chedId, long attachmentId)
+    {
+        var client = await factory.CreateClientForPrincipalAsync("test-ched-reader");
+        return await client.DownloadChedCertificationAttachment(chedId, attachmentId, Ct);
+    }
+
+    /// <summary>
+    /// The download failed with a retriable code: it is on the record, and the next request queues a
+    /// new message (with a new de-duplication id, so SNS does not drop it) and answers 202.
+    /// </summary>
+    private async Task AssertRecordedAndRetried(
+        string chedId,
+        long attachmentId,
+        string code,
+        AttachmentErrorSource source
+    )
+    {
+        var failed = factory.Attachments.Find(chedId, attachmentId)!;
+        Assert.Equal(ChedAttachmentStatus.Failed, failed.Status);
+        Assert.Equal(code, failed.Error?.Code);
+        Assert.Equal(source, failed.Error?.Source);
+        Assert.True(failed.Error?.Retryable);
+
+        var response = await GetAttachment(chedId, attachmentId);
+        Assert.Equal(HttpStatusCode.Accepted, response.StatusCode);
+        var body = await response.Content.ReadAsStringAsync(Ct);
+        Assert.Equal("Requested", JsonSerializer.Deserialize<AttachmentDownloadStatus>(body)?.Status);
+        // The diagnostic detail is stored, never returned.
+        Assert.DoesNotContain("Exception", body);
+
+        var published = factory.Publisher.For(chedId, attachmentId);
+        Assert.Equal(2, published.Count);
+        Assert.Equal($"{attachmentId}-2", published[^1].DuplicationId);
+        Assert.Equal(ChedAttachmentStatus.Requested, factory.Attachments.Find(chedId, attachmentId)?.Status);
     }
 
     /// <summary>Delivers the last queued message for the attachment, as the SQS consumer would.</summary>
@@ -649,21 +807,47 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         return await factory.CreateClient().PostAsJsonAsync("/attachments/scan-results", payload, Ct);
     }
 
-    private static async Task AssertProblem(
+    /// <summary>A failure that is not retried: returned as JSON with the code's status.</summary>
+    private static async Task AssertFailure(
         HttpResponseMessage response,
         HttpStatusCode statusCode,
-        string errorCode,
-        string? detail = null
+        string code,
+        string? reason = null
     )
     {
         Assert.Equal(statusCode, response.StatusCode);
-        Assert.Equal("application/problem+json", response.Content.Headers.ContentType?.MediaType);
+        Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
 
-        using var problem = JsonDocument.Parse(await response.Content.ReadAsStringAsync(Ct));
-        Assert.Equal(errorCode, problem.RootElement.GetProperty("errorCode").GetString());
-        Assert.Equal((int)statusCode, problem.RootElement.GetProperty("status").GetInt32());
-        if (detail is not null)
-            Assert.Equal(detail, problem.RootElement.GetProperty("detail").GetString());
+        var status = (await response.Content.ReadFromJsonAsync<AttachmentDownloadStatus>(Ct))!;
+        Assert.Equal("Failed", status.Status);
+        Assert.Null(status.DownloadUrl);
+        Assert.NotNull(status.Failure);
+        Assert.Equal(code, status.Failure.Code);
+        Assert.False(status.Failure.Retriable);
+        if (reason is not null)
+            Assert.Equal(reason, status.Failure.Reason);
+    }
+
+    /// <summary>Returns the stub's id, so a test can remove it to let TRACES recover.</summary>
+    private Guid StubAttachmentHttpError(string chedId, HttpStatusCode status, string body = "error")
+    {
+        var id = Guid.NewGuid();
+        factory
+            .WireMockServer.Given(
+                SoapUtilities.CreateSoap12MtomRequestInterceptor(
+                    GetCertificateAttachmentSoapAction,
+                    AttachmentRequestXPath(chedId)
+                )
+            )
+            .WithGuid(id)
+            .RespondWith(
+                Response
+                    .Create()
+                    .WithStatusCode((int)status)
+                    .WithHeader("Content-Type", "text/plain; charset=utf-8")
+                    .WithBody(body)
+            );
+        return id;
     }
 
     private static IRequestBuilder InitiateRequest(string chedId) =>

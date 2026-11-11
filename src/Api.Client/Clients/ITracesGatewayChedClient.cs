@@ -18,8 +18,17 @@ public interface ITracesGatewayChedClient
     [Get("/certificates/cheds/{id}")]
     Task<ApiResponse<DefraUNVTDCHEDProfile>> GetChedCertification(string id, CancellationToken cancellationToken);
 
+    /// <summary>The attachment's status as JSON (<see cref="AttachmentDownloadStatus"/>), whatever the status code.</summary>
     [Get("/certificates/cheds/{id}/attachments/{attachmentId}")]
     Task<HttpResponseMessage> GetChedCertificationAttachment(
+        string id,
+        long attachmentId,
+        CancellationToken cancellationToken
+    );
+
+    /// <summary>The attachment's file once it is available; otherwise its status, as the call above.</summary>
+    [Get("/certificates/cheds/{id}/attachments/{attachmentId}/download")]
+    Task<HttpResponseMessage> DownloadChedCertificationAttachment(
         string id,
         long attachmentId,
         CancellationToken cancellationToken

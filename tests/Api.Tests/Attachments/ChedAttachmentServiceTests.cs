@@ -1,7 +1,15 @@
+using System.Net;
+using System.ServiceModel;
+using System.ServiceModel.Security;
+using Amazon.S3;
 using Api.Attachments;
+using Defra.TradeImports.CdpUploader;
 using Defra.TradeImports.Messaging.Publishing;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using NSubstitute;
+using NSubstitute.ExceptionExtensions;
+using TracesNT.Exceptions;
 
 namespace Api.Tests.Attachments;
 
@@ -22,10 +30,12 @@ public class ChedAttachmentServiceTests
 
     private List<AllowedFileType> _allowed = [Pdf];
 
+    private IAttachmentStore? _storeOverride;
+
     private ChedAttachmentService CreateService() =>
         new(
             _repository,
-            _store,
+            _storeOverride ?? _store,
             new TopicPublisher<ChedAttachmentDownloadRequested>(_publisher, TopicArn),
             Options.Create(
                 new ChedAttachmentOptions
@@ -48,6 +58,7 @@ public class ChedAttachmentServiceTests
         var record = ChedAttachmentEntity.NewRequest(ChedId, AttachmentId, (Now - age).UtcDateTime);
         record.Status = status;
         record.Error = error;
+        record.Requests = 1;
         _repository.Save(record);
         return record;
     }
@@ -80,7 +91,7 @@ public class ChedAttachmentServiceTests
         Assert.IsType<ChedAttachmentLookup.Pending>(result);
         var published = Assert.Single(_publisher.Published);
         Assert.Equal(TopicArn, published.TopicArn);
-        Assert.Equal("99", published.DuplicationId);
+        Assert.Equal("99-2", published.DuplicationId);
 
         var record = _repository.Find(ChedId, AttachmentId)!;
         Assert.Equal(ChedAttachmentStatus.Requested, record.Status);
@@ -89,37 +100,43 @@ public class ChedAttachmentServiceTests
         Assert.Equal((Now - TimeSpan.FromMinutes(16)).UtcDateTime, record.CreatedAt);
     }
 
-    [Fact]
-    public async Task RetryableFailure_Recent_ReturnsTheFailure()
+    [Theory]
+    [InlineData(AttachmentFailureCodes.Other)]
+    [InlineData(AttachmentFailureCodes.TracesUnavailable)]
+    [InlineData(AttachmentFailureCodes.TracesTimeout)]
+    [InlineData(AttachmentFailureCodes.TracesRateLimited)]
+    [InlineData(AttachmentFailureCodes.UploaderFailure)]
+    [InlineData(AttachmentFailureCodes.StorageFailure)]
+    // Recorded before the DDF codes: counts as any other reason.
+    [InlineData("TRACES_UNAVAILABLE")]
+    public async Task RetriableFailure_IsRequeuedStraightAway(string code)
     {
-        Seed(ChedAttachmentStatus.Failed, TimeSpan.FromMinutes(1), Error(AttachmentErrorCodes.TracesUnavailable, true));
-
-        var result = await CreateService().GetOrRequest(ChedId, AttachmentId, Ct);
-
-        var failed = Assert.IsType<ChedAttachmentLookup.Failed>(result);
-        Assert.Equal(AttachmentErrorCodes.TracesUnavailable, failed.Error.Code);
-        Assert.Empty(_publisher.Published);
-    }
-
-    [Fact]
-    public async Task RetryableFailure_Stale_IsRequeued()
-    {
-        Seed(ChedAttachmentStatus.Failed, TimeSpan.FromMinutes(30), Error(AttachmentErrorCodes.ChedNotFound, true));
+        Seed(ChedAttachmentStatus.Failed, TimeSpan.FromSeconds(10), Error(code));
 
         var result = await CreateService().GetOrRequest(ChedId, AttachmentId, Ct);
 
         Assert.IsType<ChedAttachmentLookup.Pending>(result);
-        Assert.Single(_publisher.Published);
+        var published = Assert.Single(_publisher.Published);
+        // A new de-duplication id, so SNS does not drop it as a repeat of the failed attempt.
+        Assert.Equal($"{AttachmentId}-2", published.DuplicationId);
+        Assert.Equal(ChedAttachmentStatus.Requested, _repository.Find(ChedId, AttachmentId)?.Status);
     }
 
-    [Fact]
-    public async Task ScanRejection_IsNeverRetried()
+    [Theory]
+    [InlineData(AttachmentFailureCodes.InvalidCredentials)]
+    [InlineData(AttachmentFailureCodes.PermissionDenied)]
+    [InlineData(AttachmentFailureCodes.MalwareDetected)]
+    [InlineData(AttachmentFailureCodes.UnsupportedFileType)]
+    [InlineData(AttachmentFailureCodes.FileTooLarge)]
+    [InlineData(AttachmentFailureCodes.NotFound)]
+    public async Task NonRetriableFailure_IsReturnedWithoutRetrying(string code)
     {
-        Seed(ChedAttachmentStatus.Failed, TimeSpan.FromDays(30), Error(AttachmentErrorCodes.FileVirus, false));
+        Seed(ChedAttachmentStatus.Failed, TimeSpan.FromDays(20), Error(code));
 
         var result = await CreateService().GetOrRequest(ChedId, AttachmentId, Ct);
 
-        Assert.IsType<ChedAttachmentLookup.Failed>(result);
+        var failed = Assert.IsType<ChedAttachmentLookup.Failed>(result);
+        Assert.Equal(code, failed.Error.Code);
         Assert.Empty(_publisher.Published);
     }
 
@@ -151,43 +168,75 @@ public class ChedAttachmentServiceTests
         var record = Seed(
             ChedAttachmentStatus.Failed,
             TimeSpan.FromMinutes(1),
-            AttachmentErrorCodes.UnsupportedFileType(contentType, fileName, ["application/pdf"], Now.UtcDateTime)
+            AttachmentFailureCodes.Unsupported(contentType, fileName, ["application/pdf"], Now.UtcDateTime)
         );
         record.ContentType = contentType;
         record.FileName = fileName;
         _repository.Save(record);
     }
 
-    [Fact]
-    public async Task Available_ButTheObjectIsGone_IsRequeued()
-    {
-        var record = Seed(ChedAttachmentStatus.Available, TimeSpan.FromDays(1));
-        record.S3Bucket = "bucket";
-        record.S3Key = "missing";
-        _repository.Save(record);
-
-        var result = await CreateService().GetOrRequest(ChedId, AttachmentId, Ct);
-
-        Assert.IsType<ChedAttachmentLookup.Pending>(result);
-        Assert.Single(_publisher.Published);
-    }
-
-    [Fact]
-    public async Task Available_ReturnsTheStoredFile()
+    private void SeedAvailable()
     {
         var record = Seed(ChedAttachmentStatus.Available, TimeSpan.FromDays(1));
         record.S3Bucket = "bucket";
         record.S3Key = "key";
         _repository.Save(record);
-        _store.Put("bucket", "key", [1, 2, 3]);
+    }
+
+    [Fact]
+    public async Task Available_IsReportedWithoutReadingTheBucket()
+    {
+        SeedAvailable();
+        _storeOverride = Substitute.For<IAttachmentStore>();
 
         var result = await CreateService().GetOrRequest(ChedId, AttachmentId, Ct);
+
+        Assert.IsType<ChedAttachmentLookup.Available>(result);
+        await _storeOverride.DidNotReceiveWithAnyArgs().Open(default!, default!, Ct);
+        Assert.Empty(_publisher.Published);
+    }
+
+    [Fact]
+    public async Task Open_Available_ReturnsTheStoredFile()
+    {
+        SeedAvailable();
+        _store.Put("bucket", "key", [1, 2, 3]);
+
+        var result = await CreateService().OpenOrRequest(ChedId, AttachmentId, Ct);
 
         var ready = Assert.IsType<ChedAttachmentLookup.Ready>(result);
         await using (ready.File)
         {
             Assert.Equal(3, ready.File.ContentLength);
         }
+        Assert.Empty(_publisher.Published);
+    }
+
+    [Fact]
+    public async Task Open_Available_ButTheObjectIsGone_IsRequeued()
+    {
+        SeedAvailable();
+
+        var result = await CreateService().OpenOrRequest(ChedId, AttachmentId, Ct);
+
+        Assert.IsType<ChedAttachmentLookup.Pending>(result);
+        Assert.Single(_publisher.Published);
+    }
+
+    [Fact]
+    public async Task Open_WhenTheBucketCannotBeRead_ReturnsAStorageFailureWithoutChangingTheRecord()
+    {
+        SeedAvailable();
+        _storeOverride = Substitute.For<IAttachmentStore>();
+        _storeOverride
+            .Open(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .ThrowsAsync(new AmazonS3Exception("slow down"));
+
+        var result = await CreateService().OpenOrRequest(ChedId, AttachmentId, Ct);
+
+        var failed = Assert.IsType<ChedAttachmentLookup.Failed>(result);
+        Assert.Equal(AttachmentFailureCodes.StorageFailure, failed.Error.Code);
+        Assert.Equal(ChedAttachmentStatus.Available, _repository.Find(ChedId, AttachmentId)?.Status);
         Assert.Empty(_publisher.Published);
     }
 
@@ -204,51 +253,142 @@ public class ChedAttachmentServiceTests
         var record = _repository.Find(ChedId, AttachmentId)!;
         Assert.Equal(ChedAttachmentStatus.Scanning, record.Status);
         Assert.Equal((Now - TimeSpan.FromHours(1)).UtcDateTime, record.UpdatedAt);
+        Assert.Equal(1, record.Requests);
     }
 
-    private AttachmentError Error(string code, bool retryable) =>
+    private static AttachmentError Error(string code) =>
         new()
         {
             Source = AttachmentErrorSource.Traces,
             Code = code,
             Message = code,
-            Retryable = retryable,
+            Retryable = AttachmentFailureCodes.IsRetriable(code),
             OccurredAt = Now.UtcDateTime,
         };
 }
 
-public class AttachmentErrorCodesTests
+public class AttachmentFailureCodesTests
 {
     [Theory]
-    [InlineData(AttachmentErrorCodes.ChedNotFound, 404)]
-    [InlineData(AttachmentErrorCodes.AttachmentNotFound, 404)]
-    [InlineData(AttachmentErrorCodes.TracesPermissionDenied, 403)]
-    [InlineData(AttachmentErrorCodes.FileVirus, 422)]
-    [InlineData(AttachmentErrorCodes.FileEmpty, 422)]
-    [InlineData(AttachmentErrorCodes.FileTooLarge, 422)]
-    [InlineData(AttachmentErrorCodes.FileInvalidType, 422)]
-    [InlineData(AttachmentErrorCodes.TracesInvalidRequest, 500)]
-    [InlineData(AttachmentErrorCodes.UnexpectedError, 500)]
-    [InlineData(AttachmentErrorCodes.TracesUnavailable, 502)]
-    [InlineData(AttachmentErrorCodes.UploadFailed, 502)]
-    [InlineData(AttachmentErrorCodes.FileUploadFailed, 502)]
-    [InlineData("SOMETHING_NEW", 502)]
-    public void ToStatusCode_MapsEachCode(string code, int statusCode) =>
-        Assert.Equal(statusCode, AttachmentErrorCodes.ToStatusCode(code));
+    [InlineData(AttachmentFailureCodes.Other, "Any other reason", true, 500)]
+    [InlineData(AttachmentFailureCodes.TracesUnavailable, "TRACES service unavailable", true, 502)]
+    [InlineData(AttachmentFailureCodes.TracesTimeout, "Document retrieval timeout", true, 504)]
+    [InlineData(AttachmentFailureCodes.TracesRateLimited, "TRACES request rate limited", true, 502)]
+    [InlineData(AttachmentFailureCodes.UploaderFailure, "CDP uploader failure", true, 502)]
+    [InlineData(AttachmentFailureCodes.StorageFailure, "S3 storage failure", true, 502)]
+    [InlineData(AttachmentFailureCodes.InvalidCredentials, "Invalid credentials", false, 502)]
+    [InlineData(AttachmentFailureCodes.PermissionDenied, "Permission denied", false, 403)]
+    [InlineData(AttachmentFailureCodes.MalwareDetected, "Malware detected", false, 422)]
+    [InlineData(AttachmentFailureCodes.UnsupportedFileType, "Unsupported file type", false, 422)]
+    [InlineData(AttachmentFailureCodes.FileTooLarge, "File exceeds maximum size", false, 422)]
+    [InlineData(AttachmentFailureCodes.NotFound, "Document not found or no longer available", false, 404)]
+    [InlineData("SOMETHING_OLD", "Any other reason", true, 500)]
+    public void EachCode_HasItsReasonRetriabilityAndStatus(string code, string reason, bool retriable, int status)
+    {
+        Assert.Equal(reason, AttachmentFailureCodes.ReasonFor(code));
+        Assert.Equal(retriable, AttachmentFailureCodes.IsRetriable(code));
+        Assert.Equal(status, AttachmentFailureCodes.ToStatusCode(code));
+    }
+
+    [Fact]
+    public void TheTableHasTwelveCodes() => Assert.Equal(12, AttachmentFailureCodes.All.Count);
+
+    public static TheoryData<Exception, string, AttachmentErrorSource> Exceptions =>
+        new()
+        {
+            {
+                new PermissionDeniedException("x", new Exception()),
+                AttachmentFailureCodes.PermissionDenied,
+                AttachmentErrorSource.Traces
+            },
+            {
+                Traces(new TimeoutException("timed out")),
+                AttachmentFailureCodes.TracesTimeout,
+                AttachmentErrorSource.Traces
+            },
+            {
+                Traces(
+                    new ProtocolException("The remote server returned an unexpected response: (429) Too Many Requests.")
+                ),
+                AttachmentFailureCodes.TracesRateLimited,
+                AttachmentErrorSource.Traces
+            },
+            {
+                Traces(new HttpRequestException("rate limited", null, HttpStatusCode.TooManyRequests)),
+                AttachmentFailureCodes.TracesRateLimited,
+                AttachmentErrorSource.Traces
+            },
+            {
+                Traces(new MessageSecurityException("The HTTP request is unauthorized")),
+                AttachmentFailureCodes.InvalidCredentials,
+                AttachmentErrorSource.Traces
+            },
+            {
+                new InvalidSoapException(
+                    "fault",
+                    new FaultException(new FaultReason("bad token"), new FaultCode("FailedAuthentication"), null)
+                ),
+                AttachmentFailureCodes.InvalidCredentials,
+                AttachmentErrorSource.Traces
+            },
+            {
+                Traces(new CommunicationException("(502) Bad Gateway")),
+                AttachmentFailureCodes.TracesUnavailable,
+                AttachmentErrorSource.Traces
+            },
+            {
+                new InvalidSoapException("fault", new FaultException("SAXException")),
+                AttachmentFailureCodes.Other,
+                AttachmentErrorSource.Traces
+            },
+            {
+                new CdpUploaderException("down", HttpStatusCode.ServiceUnavailable),
+                AttachmentFailureCodes.UploaderFailure,
+                AttachmentErrorSource.Uploader
+            },
+            {
+                new CdpUploaderException("too big", HttpStatusCode.RequestEntityTooLarge),
+                AttachmentFailureCodes.FileTooLarge,
+                AttachmentErrorSource.Uploader
+            },
+            {
+                new AmazonS3Exception("slow down"),
+                AttachmentFailureCodes.StorageFailure,
+                AttachmentErrorSource.Storage
+            },
+            { new InvalidOperationException("bug"), AttachmentFailureCodes.Other, AttachmentErrorSource.Internal },
+        };
+
+    private static TracesCommunicationException Traces(Exception inner) => new("TRACES call failed", inner);
 
     [Theory]
-    [InlineData("FILE_VIRUS", false)]
-    [InlineData("FILE_EMPTY", false)]
-    [InlineData("FILE_UPLOAD_FAILED", true)]
-    [InlineData("FILE_DOWNLOAD_FAILED", true)]
-    [InlineData(null, true)]
-    public void ScanRejected_OnlyRetriesTheUploadersOwnFailures(string? code, bool retryable)
+    [MemberData(nameof(Exceptions))]
+    public void FromException_ClassifiesTheFailure(Exception exception, string code, AttachmentErrorSource source)
     {
-        var error = AttachmentErrorCodes.ScanRejected(code, null, DateTime.UtcNow);
+        var error = AttachmentFailureCodes.FromException(exception, DateTime.UtcNow);
 
-        Assert.Equal(retryable, error.Retryable);
-        Assert.Equal(AttachmentErrorSource.Scan, error.Source);
-        Assert.False(string.IsNullOrWhiteSpace(error.Message));
+        Assert.Equal(code, error.Code);
+        Assert.Equal(source, error.Source);
+        Assert.Equal(AttachmentFailureCodes.ReasonFor(code), error.Message);
+        Assert.Equal(AttachmentFailureCodes.IsRetriable(code), error.Retryable);
+        Assert.StartsWith(exception.GetType().Name, error.Detail);
+    }
+
+    [Theory]
+    [InlineData("FILE_VIRUS", AttachmentFailureCodes.MalwareDetected)]
+    [InlineData("FILE_TOO_LARGE", AttachmentFailureCodes.FileTooLarge)]
+    [InlineData("FILE_INVALID_TYPE", AttachmentFailureCodes.UnsupportedFileType)]
+    [InlineData("FILE_UPLOAD_FAILED", AttachmentFailureCodes.StorageFailure)]
+    [InlineData("FILE_EMPTY", AttachmentFailureCodes.Other)]
+    [InlineData("FILE_DOWNLOAD_FAILED", AttachmentFailureCodes.UploaderFailure)]
+    [InlineData(null, AttachmentFailureCodes.UploaderFailure)]
+    public void ScanRejected_MapsTheUploadersCode(string? uploaderCode, string code)
+    {
+        var error = AttachmentFailureCodes.ScanRejected(uploaderCode, "uploader says", DateTime.UtcNow);
+
+        Assert.Equal(code, error.Code);
+        Assert.Equal(AttachmentFailureCodes.ReasonFor(code), error.Message);
+        Assert.Contains("uploader says", error.Detail);
     }
 }
 
