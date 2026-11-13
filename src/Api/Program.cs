@@ -1,6 +1,4 @@
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Diagnostics.Metrics;
 using Api.Attachments;
 using Api.Config;
 using Api.Endpoints;
@@ -12,7 +10,6 @@ using Defra.TradeImports.Api.Metrics;
 using Defra.TradeImports.EmfExporter;
 using Defra.TradeImports.Messaging.Extensions;
 using FluentValidation;
-using Microsoft.Extensions.Options;
 using Microsoft.OpenApi;
 using MongoDB.Driver;
 using MongoDB.Driver.Authentication.AWS;
@@ -163,10 +160,10 @@ static WebApplication SetupApplication(WebApplication app)
         options.SpecUrl("/.well-known/openapi/v1/openapi.json");
     });
 
-    app.UseMiddleware<ApiMetricsMiddleware>();
-    app.UseExceptionHandler();
     app.UseHeaderPropagation();
     app.UseRouting();
+    app.UseMiddleware<ApiMetricsMiddleware>();
+    app.UseExceptionHandler();
     app.UseAuthentication();
     app.UseAuthorization();
     app.MapHealthEndpoints();

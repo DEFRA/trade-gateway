@@ -20,7 +20,7 @@
   <ItemGroup>
     <PackageReference Include="AWSSDK.S3" Version="4.0.104.8" />
     <PackageReference Include="AWSSDK.SecurityToken" Version="4.0.101.7" />
-    <PackageReference Include="Defra.TradeImports.Api.Metrics" Version="0.1.0" />
+    <PackageReference Include="Defra.TradeImports.Api.Metrics" Version="0.2.0-pr-58.101" />
     <PackageReference Include="Defra.TradeImports.CdpUploader" Version="0.3.0" />
     <PackageReference Include="Defra.TradeImports.EmfExporter" Version="0.2.0" />
     <PackageReference Include="Defra.TradeImports.Messaging" Version="0.3.0" />
