@@ -321,7 +321,16 @@ public static class CustomsChedQuantityEndpoints
             return Results.Ok();
         }
 
-        return Problem(chedQuantityManagementOutcomeType: response, chedId: chedId, mrn: mrn);
+        // Release reports its failures against the consumption outcome table, not the
+        // reservation failure reasons used by the other quantity management operations.
+        return Problem(
+            detail: QuantityManagementOutcomes.Describe(outcome),
+            chedId: chedId,
+            mrn: mrn,
+            statusCode: QuantityManagementOutcomes.ToStatusCode(outcome),
+            reason: ConsumedFailures.Decode(outcome),
+            chedStatus: response?.StatusCode
+        );
     }
 
     private static async Task<IResult> ProcessWriteIntervention(
@@ -433,7 +442,7 @@ public static class CustomsChedQuantityEndpoints
         string chedId,
         string mrn,
         int statusCode,
-        ReservationFailureReason reason,
+        Enum reason,
         string? chedStatus = null
     )
     {

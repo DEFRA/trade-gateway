@@ -30,7 +30,7 @@ public interface IScanResultsHandler
 
 /// <summary>
 /// Applies the CDP uploader's scan-results callback to the attachment record: available, with its S3
-/// location, or failed with the uploader's error code (<c>FILE_VIRUS</c> and so on).
+/// location, or failed with the failure code for the uploader's error (<c>FILE_VIRUS</c> is <c>DDF_08</c>, and so on).
 /// </summary>
 public class ScanResultsHandler(
     IChedAttachmentRepository repository,
@@ -75,14 +75,15 @@ public class ScanResultsHandler(
         var file = payload.GetFile();
         var now = timeProvider.GetUtcNow().UtcDateTime;
 
-        // The uploader only checks the declared type against mimeTypes; check what it actually found.
+        // The uploader only checks the declared type against mimeTypes; check what it actually found
+        // is the type the file was declared as.
         if (
             file is { IsComplete: true, DetectedContentType: { } detected }
-            && !AttachmentFileTypes.IsAllowed(options.Value.AllowedFileTypes, detected)
+            && !AttachmentFileTypes.MatchesContent(options.Value.AllowedFileTypes, record.ContentType, detected)
         )
         {
             record.Status = ChedAttachmentStatus.Failed;
-            record.Error = AttachmentErrorCodes.ContentNotAllowed(detected, now);
+            record.Error = AttachmentFailureCodes.ContentNotAllowed(record.ContentType, detected, now);
             logger.LogWarning(
                 "CHED attachment {Id} was declared {ContentType} but its content is {Detected}",
                 record.Id,
@@ -102,10 +103,11 @@ public class ScanResultsHandler(
         else if (file is { IsRejected: true })
         {
             record.Status = ChedAttachmentStatus.Failed;
-            record.Error = AttachmentErrorCodes.ScanRejected(file.ErrorCode, file.ErrorMessage, now);
+            record.Error = AttachmentFailureCodes.ScanRejected(file.ErrorCode, file.ErrorMessage, now);
             logger.LogWarning(
-                "CHED attachment {Id} was rejected by the scan: {Code} {Message}",
+                "CHED attachment {Id} was rejected by the uploader with {UploaderCode}, recorded as {Code}: {Message}",
                 record.Id,
+                file.ErrorCode,
                 record.Error.Code,
                 file.ErrorMessage
             );
@@ -114,7 +116,7 @@ public class ScanResultsHandler(
         {
             // Ready with no file: the uploader received nothing, so treat it as its own failure.
             record.Status = ChedAttachmentStatus.Failed;
-            record.Error = AttachmentErrorCodes.ScanRejected(null, null, now);
+            record.Error = AttachmentFailureCodes.ScanRejected(null, null, now);
         }
         else
         {

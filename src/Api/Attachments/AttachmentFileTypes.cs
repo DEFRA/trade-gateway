@@ -11,6 +11,12 @@ public sealed class AllowedFileType
     /// (none, or <c>application/octet-stream</c>), to recognise the file by its name.
     /// </summary>
     public List<string> Extensions { get; set; } = [];
+
+    /// <summary>
+    /// Other types the scanner may report for this kind of content, besides <see cref="MimeType"/>.
+    /// e.g. legacy Word and Excel files are detected as the generic <c>application/x-cfb</c>.
+    /// </summary>
+    public List<string> DetectedTypes { get; set; } = [];
 }
 
 /// <summary>Decides whether an attachment's type is on the allowed list.</summary>
@@ -38,11 +44,24 @@ public static class AttachmentFileTypes
             ?.MimeType;
     }
 
-    /// <summary>Whether a MIME type (e.g. the scanner's detected type) is on the list.</summary>
-    public static bool IsAllowed(IReadOnlyList<AllowedFileType> allowed, string? mimeType)
+    /// <summary>
+    /// Whether the scanner's detected type fits the type the file was declared as: its MIME type or
+    /// one of its <see cref="AllowedFileType.DetectedTypes"/>. False if the declared type is no longer
+    /// on the list.
+    /// </summary>
+    public static bool MatchesContent(
+        IReadOnlyList<AllowedFileType> allowed,
+        string? declaredType,
+        string? detectedType
+    )
     {
-        var normalised = Normalise(mimeType);
-        return normalised is not null && allowed.Any(t => Normalise(t.MimeType) == normalised);
+        var declared = Normalise(declaredType);
+        var detected = Normalise(detectedType);
+        if (declared is null || detected is null)
+            return false;
+
+        var type = allowed.FirstOrDefault(t => Normalise(t.MimeType) == declared);
+        return type is not null && (declared == detected || type.DetectedTypes.Any(d => Normalise(d) == detected));
     }
 
     public static IReadOnlyList<string> MimeTypes(IReadOnlyList<AllowedFileType> allowed) =>
