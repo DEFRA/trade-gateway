@@ -115,16 +115,130 @@
         tags: [
           ChedEndpoints
         ],
-        summary: Get a CHED certificate attachment,
+        summary: Get the status of a CHED certificate attachment,
         description:
-Downloads a supporting document attached to the CHED certificate. The attachment id is the document id from the certificate's referenced document attachment (uri:documentid:{attachmentId}).
+Returns the state of a supporting document attached to the CHED certificate, as JSON. The attachment id is the document id from the certificate's referenced document attachment (uri:documentid:{attachmentId}).
 
-Attachments are fetched from TRACES in the background and malware scanned before they are served. The first request queues the download and returns 202 Accepted with a Retry-After header; ask again for the same URL until the file is returned with 200, with its original content type and file name. Scanned files are kept for 180 days.
+Attachments are fetched from TRACES in the background and malware scanned before they can be downloaded. The first request queues the download and returns 202 Accepted with a Retry-After header; ask again until the status is Available (200), when downloadUrl gives the file's download link. Scanned files are kept for 30 days.
 
-Only PDF attachments are currently supported; others return 422 UNSUPPORTED_FILE_TYPE.
+Supported attachment types are PDF, JPEG, PNG, Word (.doc) and Excel (.xls).
 
-A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or ATTACHMENT_NOT_FOUND (404, which includes draft certificates, statusCode 47), TRACES_PERMISSION_DENIED (403), UNSUPPORTED_FILE_TYPE (422, not a supported type), FILE_VIRUS, FILE_EMPTY, FILE_TOO_LARGE or FILE_INVALID_TYPE (422, the file failed its scan, including content that is not the type it claims to be), TRACES_UNAVAILABLE, UPLOAD_FAILED or FILE_UPLOAD_FAILED (502) and TRACES_INVALID_REQUEST or UNEXPECTED_ERROR (500). Failures other than a failed scan are tried again on a request made 15 minutes later.,
+A failed download has status Failed and a failure with its code, reason and whether it is retriable. Retriable failures are downloaded again on the next request, which returns 202: DDF_01 TRACES service unavailable, DDF_02 document retrieval timeout, DDF_03 TRACES request rate limited, DDF_04 CDP uploader failure, DDF_05 S3 storage failure and DDF_99 any other reason. The others are returned as they are: DDF_06 invalid credentials (502), DDF_07 permission denied (403), DDF_08 malware detected, DDF_09 unsupported file type and DDF_10 file exceeds maximum size (422), and DDF_11 document not found or no longer available (404, which includes draft certificates, statusCode 47).,
         operationId: GetChedCertificateAttachment,
+        parameters: [
+          {
+            name: id,
+            in: path,
+            required: true,
+            schema: {
+              type: string
+            }
+          },
+          {
+            name: attachmentId,
+            in: path,
+            required: true,
+            schema: {
+              type: integer,
+              format: int64
+            }
+          }
+        ],
+        responses: {
+          200: {
+            description: OK,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/AttachmentDownloadStatus
+                }
+              }
+            }
+          },
+          202: {
+            description: Accepted,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/AttachmentDownloadStatus
+                }
+              }
+            }
+          },
+          401: {
+            description: Unauthorized,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          403: {
+            description: Forbidden,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/AttachmentDownloadStatus
+                }
+              }
+            }
+          },
+          404: {
+            description: Not Found,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/AttachmentDownloadStatus
+                }
+              }
+            }
+          },
+          422: {
+            description: Unprocessable Content,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/AttachmentDownloadStatus
+                }
+              }
+            }
+          },
+          500: {
+            description: Internal Server Error,
+            content: {
+              application/problem+json: {
+                schema: {
+                  $ref: #/components/schemas/ProblemDetails
+                }
+              }
+            }
+          },
+          502: {
+            description: Bad Gateway,
+            content: {
+              application/json: {
+                schema: {
+                  $ref: #/components/schemas/AttachmentDownloadStatus
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    /certificates/cheds/{id}/attachments/{attachmentId}/download: {
+      get: {
+        tags: [
+          ChedEndpoints
+        ],
+        summary: Download a CHED certificate attachment,
+        description:
+Returns the scanned attachment's file, with its original content type and file name, once its status is Available. Until then it answers exactly as the attachment status endpoint does: 202 Accepted while the download is in progress (queueing it if it has not been requested), or the failure.
+
+A failed download has status Failed and a failure with its code, reason and whether it is retriable. Retriable failures are downloaded again on the next request, which returns 202: DDF_01 TRACES service unavailable, DDF_02 document retrieval timeout, DDF_03 TRACES request rate limited, DDF_04 CDP uploader failure, DDF_05 S3 storage failure and DDF_99 any other reason. The others are returned as they are: DDF_06 invalid credentials (502), DDF_07 permission denied (403), DDF_08 malware detected, DDF_09 unsupported file type and DDF_10 file exceeds maximum size (422), and DDF_11 document not found or no longer available (404, which includes draft certificates, statusCode 47).,
+        operationId: DownloadChedCertificateAttachment,
         parameters: [
           {
             name: id,
@@ -179,9 +293,9 @@ A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or ATTAC
           403: {
             description: Forbidden,
             content: {
-              application/problem+json: {
+              application/json: {
                 schema: {
-                  $ref: #/components/schemas/ProblemDetails
+                  $ref: #/components/schemas/AttachmentDownloadStatus
                 }
               }
             }
@@ -189,9 +303,9 @@ A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or ATTAC
           404: {
             description: Not Found,
             content: {
-              application/problem+json: {
+              application/json: {
                 schema: {
-                  $ref: #/components/schemas/ProblemDetails
+                  $ref: #/components/schemas/AttachmentDownloadStatus
                 }
               }
             }
@@ -199,9 +313,9 @@ A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or ATTAC
           422: {
             description: Unprocessable Content,
             content: {
-              application/problem+json: {
+              application/json: {
                 schema: {
-                  $ref: #/components/schemas/ProblemDetails
+                  $ref: #/components/schemas/AttachmentDownloadStatus
                 }
               }
             }
@@ -219,9 +333,9 @@ A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or ATTAC
           502: {
             description: Bad Gateway,
             content: {
-              application/problem+json: {
+              application/json: {
                 schema: {
-                  $ref: #/components/schemas/ProblemDetails
+                  $ref: #/components/schemas/AttachmentDownloadStatus
                 }
               }
             }
@@ -2008,6 +2122,29 @@ A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or ATTAC
         },
         additionalProperties: false
       },
+      AttachmentDownloadFailure: {
+        required: [
+          code,
+          reason
+        ],
+        type: object,
+        properties: {
+          code: {
+            type: string
+          },
+          reason: {
+            type: string
+          },
+          retriable: {
+            type: boolean
+          },
+          occurredAt: {
+            type: string,
+            format: date-time
+          }
+        },
+        additionalProperties: false
+      },
       AttachmentDownloadStatus: {
         required: [
           attachmentId,
@@ -2029,6 +2166,26 @@ A failed download returns a problem with an `errorCode`: CHED_NOT_FOUND or ATTAC
           updatedAt: {
             type: string,
             format: date-time
+          },
+          fileName: {
+            type: string,
+            nullable: true
+          },
+          contentType: {
+            type: string,
+            nullable: true
+          },
+          contentLength: {
+            type: integer,
+            format: int64,
+            nullable: true
+          },
+          downloadUrl: {
+            type: string,
+            nullable: true
+          },
+          failure: {
+            $ref: #/components/schemas/AttachmentDownloadFailure
           }
         },
         additionalProperties: false

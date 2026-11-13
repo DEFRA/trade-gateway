@@ -26,6 +26,7 @@ public enum AttachmentErrorSource
     Traces,
     Uploader,
     Scan,
+    Storage,
     Internal,
 }
 
@@ -34,16 +35,19 @@ public sealed class AttachmentError
     [BsonRepresentation(BsonType.String)]
     public required AttachmentErrorSource Source { get; init; }
 
-    /// <summary>Stable code, returned to the caller. See <see cref="AttachmentErrorCodes"/>.</summary>
+    /// <summary>Stable code (<c>DDF_nn</c>), returned to the caller. See <see cref="AttachmentFailureCodes"/>.</summary>
     public required string Code { get; init; }
 
-    /// <summary>Safe to return to the caller.</summary>
+    /// <summary>The failure reason; safe to return to the caller.</summary>
     public required string Message { get; init; }
 
     /// <summary>Internal diagnostic (exception type and message). Never returned to the caller.</summary>
     public string? Detail { get; init; }
 
-    /// <summary>Whether asking again later could succeed; false for e.g. a file that failed its virus scan.</summary>
+    /// <summary>
+    /// Whether the code was retriable when recorded. Informational: <see cref="AttachmentFailureCodes.IsRetriable"/>
+    /// decides.
+    /// </summary>
     public bool Retryable { get; init; }
 
     public DateTime OccurredAt { get; init; }
@@ -90,6 +94,12 @@ public sealed class ChedAttachmentEntity
 
     /// <summary>How many times the download has been attempted.</summary>
     public int Attempts { get; set; }
+
+    /// <summary>
+    /// How many download messages have been published for this record. Part of each message's
+    /// de-duplication id, so a retry is not dropped as a duplicate of the previous attempt.
+    /// </summary>
+    public int Requests { get; set; }
 
     public DateTime CreatedAt { get; init; }
 

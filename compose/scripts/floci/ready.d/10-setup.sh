@@ -36,12 +36,12 @@ create_subscribed_queue() {
 awslocal sns create-topic --name trade_gateway_ched_attachments_internal.fifo --attributes "$TOPIC_ATTRIBUTES"
 create_subscribed_queue trade_gateway_ched_attachments_internal_downloader trade_gateway_ched_attachments_internal 3 120
 
-# Scanned attachments. Expire after 190 days, 10 days after their Mongo record (180-day TTL index),
+# Scanned attachments. Expire after 40 days, 10 days after their Mongo record (30-day TTL index),
 # so a record never points at an object that has already gone. In CDP the same rule is set on the
 # bucket in cdp-tenant-config.
 awslocal s3 mb s3://trade-gateway-documents || true # exists already when floci kept its data
 awslocal s3api put-bucket-lifecycle-configuration --bucket trade-gateway-documents \
-  --lifecycle-configuration '{"Rules":[{"ID":"expire-ched-attachments","Status":"Enabled","Filter":{"Prefix":""},"Expiration":{"Days":190}}]}'
+  --lifecycle-configuration '{"Rules":[{"ID":"expire-ched-attachments","Status":"Enabled","Filter":{"Prefix":""},"Expiration":{"Days":40}}]}'
 
 # --- cdp-uploader -------------------------------------------------------------------------------
 # What cdp-uploader needs locally (from DEFRA/cdp-uploader compose/01-start-localstack.sh): its

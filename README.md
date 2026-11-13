@@ -209,13 +209,24 @@ principal has an empty permissions list.
 
 ### CHED attachments
 
-`GET certificates/cheds/{id}/attachments/{attachmentId}` does not call TRACES inline. Each attachment
-has a record in the `ched_attachments` Mongo collection:
+There are two endpoints, and neither calls TRACES inline:
 
-1. **First request**: the record is created (`Requested`), a `ChedAttachmentDownloadRequested`
-   message is published to the `trade_gateway_ched_attachments_internal.fifo` SNS topic
-   (de-duplication and group id = the attachment id), and the endpoint returns **202** with
-   `Retry-After`.
+* `GET certificates/cheds/{id}/attachments/{attachmentId}` always returns the attachment's status as
+  JSON (`AttachmentDownloadStatus`): `status`, `updatedAt`, the file's `fileName`, `contentType` and
+  `contentLength` once known, a `downloadUrl` when it is `Available`, and a `failure` when it has
+  `Failed`.
+* `GET certificates/cheds/{id}/attachments/{attachmentId}/download` returns the file itself once it is
+  available. Until then it answers exactly as the status endpoint does, including queueing the
+  download.
+
+Each attachment has a record in the `ched_attachments` Mongo collection:
+
+1. **First request** (to either endpoint): the record is created (`Requested`), a
+   `ChedAttachmentDownloadRequested` message is published to the
+   `trade_gateway_ched_attachments_internal.fifo` SNS topic, and the endpoint returns **202** with
+   `Retry-After`. The message group is the attachment id. Its de-duplication id is the attachment id
+   plus the record's request number (`2003-1`, `2003-2`, ...), so a retry isn't dropped as a repeat
+   of the attempt before.
 2. **Consumer** (`ChedAttachmentDownloadConsumer`, reading
    `trade_gateway_ched_attachments_internal_downloader.fifo`): fetches the CHED and attachment from
    TRACES, then hands the bytes to [cdp-uploader](https://github.com/DEFRA/cdp-uploader) (`/initiate`
@@ -223,48 +234,77 @@ has a record in the `ched_attachments` Mongo collection:
    `Downloading`, then `Scanning`.
 3. **Scan callback**: cdp-uploader posts to `POST /attachments/scan-results`. This endpoint is
    anonymous, and it only acts on a callback that carries the random token stored with the
-   attachment's current upload. The record becomes `Available` (with its S3 key) or `Failed`
-   (`FILE_VIRUS`, `FILE_EMPTY`, ...).
-4. **Later requests**: `Available` is streamed from S3 with its original content type and file name.
-   `Failed` returns a problem with an `errorCode`: 404 not found or draft, 403, 422 scan rejection,
-   500, or 502 TRACES/uploader failure. Anything still in progress returns 202.
+   attachment's current upload. The record becomes `Available` (with its S3 key) or `Failed`.
+4. **Later requests**: the status endpoint returns 200 with the `downloadUrl` for `Available`, and
+   `/download` streams the file from S3 with its original content type, file name and length.
+   Anything still in progress returns 202. Failures are described below.
 
 Publishing and consuming use `Defra.TradeImports.Messaging`, and the uploader client is
 `Defra.TradeImports.CdpUploader`. Both packages come from
 [trade-imports-common](https://github.com/DEFRA/trade-imports-common).
 
 **Supported file types** are listed in `ChedAttachments:AllowedFileTypes` (appsettings.json).
-Only PDF is allowed for now:
+PDF, JPEG, PNG, Word (`.doc`) and Excel (`.xls`) are allowed:
 
 ```json
-"AllowedFileTypes": [ { "MimeType": "application/pdf", "Extensions": [ ".pdf" ] } ]
+"AllowedFileTypes": [
+  { "MimeType": "application/pdf", "Extensions": [ ".pdf" ] },
+  { "MimeType": "image/jpeg", "Extensions": [ ".jpg", ".jpeg" ] },
+  { "MimeType": "image/png", "Extensions": [ ".png" ] },
+  { "MimeType": "application/msword", "Extensions": [ ".doc" ], "DetectedTypes": [ "application/x-cfb" ] },
+  { "MimeType": "application/vnd.ms-excel", "Extensions": [ ".xls" ], "DetectedTypes": [ "application/x-cfb" ] }
+]
 ```
 
 To support another type, add an entry. TRACES' content type decides whether a file is allowed. The
 extensions are only used when TRACES gives no specific type (none, or `application/octet-stream`).
-A file whose type isn't on the list fails with `UNSUPPORTED_FILE_TYPE` (422) before anything is
-uploaded. It is downloaded again on its next request once its type has been added. The list is also
+A file whose type isn't on the list fails with `DDF_09` (422) before anything is uploaded. It is downloaded again on its next request once its type has been added. The list is also
 sent to cdp-uploader as `mimeTypes`. The uploader only checks the type we declare, so the scan
-callback also checks the type it detected. A file whose content isn't an allowed type (e.g. a PNG
-named `.pdf`) fails with `FILE_INVALID_TYPE` (422).
+callback also checks that the type it detected matches the declared type: the `MimeType` itself, or
+one of the entry's `DetectedTypes`. Legacy Word and Excel files are only detected as the generic
+compound file format, `application/x-cfb`, so those entries list it. A file whose content doesn't
+match (e.g. a PNG named `.pdf`) also fails with `DDF_09`.
 
-Errors are recorded on the record (`error.source`, `code`, `message`, internal `detail`). Transient
-failures (TRACES unavailable, uploader errors) are also rethrown, so SQS redelivers the message, up
-to the DLQ's `maxReceiveCount`. A request stuck in progress, or a failure other than a scan
-rejection, is queued again when it is requested after `ChedAttachments:RetryAfter` (15 minutes).
+**Failures** are recorded on the record: `error.code`, the `message` (the reason, which is returned),
+`source` and an internal `detail` with the full exception chain, which is never returned. The
+consumer then completes the message, whatever the failure. SQS redelivers only if the record itself
+can't be written, or the service shuts down mid-download. A failure is returned as
+`"status": "Failed"` with `failure: { code, reason, retriable, occurredAt }`:
 
-Retention: Mongo records expire after **180 days** (TTL index `CreatedAtTtlIdx` on `createdAt`).
-Bucket objects expire after **190 days**, so a record never points at a deleted object.
+| Code | Reason | Retriable | Status |
+|---|---|---|---|
+| `DDF_01` | TRACES service unavailable | Yes | |
+| `DDF_02` | Document retrieval timeout | Yes | |
+| `DDF_03` | TRACES request rate limited (HTTP 429) | Yes | |
+| `DDF_04` | CDP uploader failure | Yes | |
+| `DDF_05` | S3 storage failure (the uploader's `FILE_UPLOAD_FAILED`, or the bucket can't be read) | Yes | |
+| `DDF_06` | Invalid credentials (HTTP 401, or a WS-Security fault) | No | 502 |
+| `DDF_07` | Permission denied | No | 403 |
+| `DDF_08` | Malware detected | No | 422 |
+| `DDF_09` | Unsupported file type | No | 422 |
+| `DDF_10` | File exceeds maximum size | No | 422 |
+| `DDF_11` | Document not found or no longer available (includes draft CHEDs) | No | 404 |
+| `DDF_99` | Any other reason (including the uploader's `FILE_EMPTY`) | Yes | |
+
+A request for an attachment that failed with a **retriable** code queues a new download straight
+away and returns 202. A **non-retriable** failure is returned with its status code, and isn't tried
+again until the record expires. The one exception is a `DDF_09` from TRACES' declared type, which is
+queued again once that type is added to the allowed list. Codes recorded before this table count as
+`DDF_99`. A request stuck in progress is queued again when it is requested after
+`ChedAttachments:RetryAfter` (15 minutes), in case its message was lost.
+
+Retention: Mongo records expire after **30 days** (TTL index `CreatedAtTtlIdx` on `createdAt`).
+Bucket objects expire after **40 days**, so a record never points at a deleted object.
 
 Locally, `docker compose up` adds `redis` and `cdp-uploader` (the scan is mocked, and any file name
 containing `virus` is rejected). floci creates the topic, the queue and its DLQ, and the
-`trade-gateway-documents` bucket with its 190-day rule.
+`trade-gateway-documents` bucket with its 40-day rule.
 
 In CDP, configure the following:
 
 * `cdp-tenant-config`: the FIFO topic and queue (subscription with raw delivery, a DLQ, and a
   visibility timeout of at least `ChedAttachments:VisibilityTimeoutSeconds`). Also the bucket, with
-  an expiration rule of `"days": "190"`, and IAM permissions for the queue, topic and bucket.
+  an expiration rule of `"days": "40"`, and IAM permissions for the queue, topic and bucket.
 * Ask #cdp-support to allow cdp-uploader to write to the bucket.
 * `cdp-app-config`: `ChedAttachments__TopicArn`, `ChedAttachments__QueueUrl`,
   `ChedAttachments__S3Bucket`, `CdpUploader__BaseUrl`

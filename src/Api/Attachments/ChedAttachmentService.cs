@@ -5,22 +5,32 @@ namespace Api.Attachments;
 
 public abstract record ChedAttachmentLookup(ChedAttachmentEntity Record)
 {
-    /// <summary>Scanned and stored; <see cref="File"/> must be disposed (the response does so).</summary>
+    /// <summary>Scanned and stored in S3.</summary>
+    public sealed record Available(ChedAttachmentEntity Record) : ChedAttachmentLookup(Record);
+
+    /// <summary>Scanned, stored and opened; <see cref="File"/> must be disposed (the response does so).</summary>
     public sealed record Ready(ChedAttachmentEntity Record, StoredAttachment File) : ChedAttachmentLookup(Record);
 
     /// <summary>Queued, downloading or being scanned.</summary>
     public sealed record Pending(ChedAttachmentEntity Record) : ChedAttachmentLookup(Record);
 
+    /// <summary>Failed with a code that is not retried, or the stored file could not be read.</summary>
     public sealed record Failed(ChedAttachmentEntity Record, AttachmentError Error) : ChedAttachmentLookup(Record);
 }
 
 public interface IChedAttachmentService
 {
     /// <summary>
-    /// Returns the attachment if it is ready, otherwise its progress or failure. An attachment never
-    /// seen before is recorded and queued for download.
+    /// The attachment's state. An attachment never seen before, or one that failed with a retriable
+    /// code, is queued for download.
     /// </summary>
     Task<ChedAttachmentLookup> GetOrRequest(string chedId, long attachmentId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// As <see cref="GetOrRequest"/>, but opens the stored file when it is available
+    /// (<see cref="ChedAttachmentLookup.Ready"/>). A file missing from the bucket is queued again.
+    /// </summary>
+    Task<ChedAttachmentLookup> OpenOrRequest(string chedId, long attachmentId, CancellationToken cancellationToken);
 }
 
 public class ChedAttachmentService(
@@ -44,6 +54,7 @@ public class ChedAttachmentService(
         if (record is null)
         {
             var created = ChedAttachmentEntity.NewRequest(chedId, attachmentId, Now);
+            created.Requests = 1;
             if (await repository.TryInsert(created, cancellationToken))
             {
                 await PublishNew(created, cancellationToken);
@@ -57,33 +68,11 @@ public class ChedAttachmentService(
         switch (record.Status)
         {
             case ChedAttachmentStatus.Available:
-                var file = await store.Open(record.S3Bucket!, record.S3Key!, cancellationToken);
-                if (file is not null)
-                    return new ChedAttachmentLookup.Ready(record, file);
-
-                logger.LogWarning(
-                    "CHED attachment {Id} is recorded as available but {Bucket}/{Key} is missing; downloading again",
-                    record.Id,
-                    record.S3Bucket,
-                    record.S3Key
-                );
-                await Requeue(record, cancellationToken);
-                return new ChedAttachmentLookup.Pending(record);
+                return new ChedAttachmentLookup.Available(record);
 
             case ChedAttachmentStatus.Failed:
                 var error = record.Error ?? UnknownError(record);
-                if (IsNowAllowed(record, error))
-                {
-                    logger.LogInformation(
-                        "CHED attachment {Id} was {ContentType}, which is now allowed; downloading again",
-                        record.Id,
-                        record.ContentType
-                    );
-                    await Requeue(record, cancellationToken);
-                    return new ChedAttachmentLookup.Pending(record);
-                }
-
-                if (error.Retryable && IsDueForRetry(record))
+                if (AttachmentFailureCodes.IsRetriable(error.Code) || IsNowAllowed(record, error))
                 {
                     logger.LogInformation(
                         "Retrying CHED attachment {Id} after {Code} at {OccurredAt}",
@@ -99,8 +88,8 @@ public class ChedAttachmentService(
 
             default:
                 // Requested, Downloading or Scanning. A request stuck that long has lost its message
-                // (dead-lettered, or the scan callback never came), so ask for it again.
-                if (IsDueForRetry(record))
+                // (the consumer died mid-download, or the scan callback never came), so ask again.
+                if (IsStuck(record))
                 {
                     logger.LogWarning(
                         "CHED attachment {Id} has been {Status} since {UpdatedAt}; requesting it again",
@@ -113,6 +102,41 @@ public class ChedAttachmentService(
 
                 return new ChedAttachmentLookup.Pending(record);
         }
+    }
+
+    public async Task<ChedAttachmentLookup> OpenOrRequest(
+        string chedId,
+        long attachmentId,
+        CancellationToken cancellationToken
+    )
+    {
+        var lookup = await GetOrRequest(chedId, attachmentId, cancellationToken);
+        if (lookup is not ChedAttachmentLookup.Available { Record: var record })
+            return lookup;
+
+        StoredAttachment? file;
+        try
+        {
+            file = await store.Open(record.S3Bucket!, record.S3Key!, cancellationToken);
+        }
+        catch (Exception ex) when (ex is not OperationCanceledException)
+        {
+            // Not recorded: the file is stored, the bucket just could not be read this time.
+            logger.LogWarning(ex, "Could not read CHED attachment {Id} from {Bucket}", record.Id, record.S3Bucket);
+            return new ChedAttachmentLookup.Failed(record, AttachmentFailureCodes.FromException(ex, Now));
+        }
+
+        if (file is not null)
+            return new ChedAttachmentLookup.Ready(record, file);
+
+        logger.LogWarning(
+            "CHED attachment {Id} is recorded as available but {Bucket}/{Key} is missing; downloading again",
+            record.Id,
+            record.S3Bucket,
+            record.S3Key
+        );
+        await Requeue(record, cancellationToken);
+        return new ChedAttachmentLookup.Pending(record);
     }
 
     private async Task PublishNew(ChedAttachmentEntity record, CancellationToken cancellationToken)
@@ -137,6 +161,7 @@ public class ChedAttachmentService(
         // Saved before publishing so the consumer, which may start at once, never sees a stale status.
         record.Status = ChedAttachmentStatus.Requested;
         record.UpdatedAt = Now;
+        record.Requests++;
         await repository.Replace(record, cancellationToken);
 
         try
@@ -147,6 +172,7 @@ public class ChedAttachmentService(
         {
             record.Status = previousStatus;
             record.UpdatedAt = previousUpdatedAt;
+            record.Requests--;
             await repository.Replace(record, CancellationToken.None);
             throw;
         }
@@ -154,26 +180,19 @@ public class ChedAttachmentService(
 
     private Task Publish(ChedAttachmentEntity record, CancellationToken cancellationToken) =>
         publisher.PublishAsync(
-            new ChedAttachmentDownloadRequested(record.ChedId, record.AttachmentId),
+            new ChedAttachmentDownloadRequested(record.ChedId, record.AttachmentId, record.Requests),
             cancellationToken: cancellationToken
         );
 
     // A type rejected before upload is asked for again, at once, after the allowed list gains it.
     private bool IsNowAllowed(ChedAttachmentEntity record, AttachmentError error) =>
-        error.Code == AttachmentErrorCodes.UnsupportedFileTypeCode
+        error is { Code: AttachmentFailureCodes.UnsupportedFileType, Source: AttachmentErrorSource.Traces }
         && AttachmentFileTypes.Resolve(options.Value.AllowedFileTypes, record.ContentType, record.FileName) is not null;
 
-    private bool IsDueForRetry(ChedAttachmentEntity record) => Now - record.UpdatedAt >= options.Value.RetryAfter;
+    private bool IsStuck(ChedAttachmentEntity record) => Now - record.UpdatedAt >= options.Value.RetryAfter;
 
-    private AttachmentError UnknownError(ChedAttachmentEntity record) =>
-        new()
-        {
-            Source = AttachmentErrorSource.Internal,
-            Code = AttachmentErrorCodes.UnexpectedError,
-            Message = "An unexpected error occurred.",
-            Retryable = true,
-            OccurredAt = record.UpdatedAt,
-        };
+    private static AttachmentError UnknownError(ChedAttachmentEntity record) =>
+        AttachmentFailureCodes.Create(AttachmentFailureCodes.Other, AttachmentErrorSource.Internal, record.UpdatedAt);
 
     private DateTime Now => timeProvider.GetUtcNow().UtcDateTime;
 }
