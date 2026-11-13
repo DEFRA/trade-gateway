@@ -16,7 +16,7 @@ internal static class ChedMapper
             ExchangedDocument = exchangedDocument,
             SpecifiedConsignment = SpsConsignmentMapper.Map(source.SPSCertificate.SPSConsignment, context),
             LaboratoryObservationResult = null,
-            LastUpdated = exchangedDocument.GetLatestLastUpdateDateTime(),
+            LastUpdated = exchangedDocument.IncludedNote.GetLatestLastUpdateDateTime(),
         };
     }
 
@@ -42,9 +42,8 @@ internal static class ChedMapper
         };
     }
 
-    internal static DateTimeOffset? GetLatestLastUpdateDateTime(this ExchangedDocument exchangedDocument)
+    internal static DateTimeOffset? GetLatestLastUpdateDateTime(this List<IncludedNote>? notes)
     {
-        var notes = exchangedDocument.IncludedNote;
         if (notes == null || notes.Count == 0)
         {
             return null;

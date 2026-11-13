@@ -1,4 +1,4 @@
-﻿{
+{
   Model: defra/certificate-internal/1,
   Type: intra,
   ExchangedDocument: {
@@ -7,6 +7,7 @@
     DocumentTypeCode: 856,
     DocumentStatusCode: 1,
     IssueDateTime: DateTimeOffset_1,
+    RevisionDateTime: DateTimeOffset_2,
     IncludedNote: [
       {
         Type: Note,
@@ -38,11 +39,13 @@
     ReferenceDocument: [
       {
         TypeCode: 856,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: CAW,
         Identifier: INTRA.EU.FR.2026.0000041
       },
       {
         TypeCode: 784,
+        UrlId: https://traces-codelists.ec.europa.eu/1001,
         RelationshipTypeCode: ZZZ,
         Identifier: wer
       }
@@ -219,8 +222,84 @@
         CountrySubDivisionName: County Antrim
       }
     },
+    Carrier: {
+      Identifier: Type I,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: Test type I,
+      PartyRoleCode: {
+        Value: CA,
+        UrlId: https://traces-codelists.ec.europa.eu/3035,
+        Name: Carrier (Transporter)
+      },
+      PartyTypeCode: [
+        {
+          Value: REGISTERED_TRANSPORTER,
+          UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+          Name: Registered transporter
+        },
+        {
+          Value: REG-TRANS,
+          UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+          Name: Registered transporter
+        }
+      ],
+      PostalAddress: {
+        PostcodeCode: 91744,
+        LineOne: rue I,
+        CityName: Paris,
+        CountryId: FR,
+        CountryName: France,
+        CountrySubDivisionName: Paris
+      }
+    },
     ExportCountry: {
-      Code: {}
+      Code: {},
+      SubordinateTradeCountrySubDivision: [
+        {
+          FunctionTypeCode: {
+            Content: 44,
+            Name: Place of authentication of document
+          },
+          ActivityAuthorizedParty: [
+            {
+              Identifier: XI0000,
+              UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+              Name: Department of Agriculture, Environment and Rural Affairs (DAERA),
+              PartyRoleCode: {
+                Value: RA,
+                UrlId: https://traces-codelists.ec.europa.eu/3035,
+                Name: Central competent authority
+              }
+            },
+            {
+              Name: Department of Agriculture, Environment and Rural Affairs (DAERA),
+              PartyRoleCode: {
+                Value: VG,
+                UrlId: https://traces-codelists.ec.europa.eu/3035,
+                Name: Local competent authority
+              }
+            }
+          ]
+        },
+        {
+          FunctionTypeCode: {
+            Content: 42,
+            Name: Consignment exit customs office location
+          },
+          ActivityAuthorizedParty: [
+            {
+              Identifier: PL32010,
+              UrlId: https://traces-codelists.ec.europa.eu/authority_activity_id,
+              Name: Białogard,
+              PartyRoleCode: {
+                Value: CM,
+                UrlId: https://traces-codelists.ec.europa.eu/3035,
+                Name: Customs (Border control post)
+              }
+            }
+          ]
+        }
+      ]
     },
     ImportCountry: {
       Code: {
@@ -236,9 +315,15 @@
         }
       }
     ],
+    LoadingBaseportLocation: {
+      Identifier: TEST-01-01,
+      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+      Name: Bourg-en-Bresse
+    },
     MainCarriageLogisticsTransportMovement: [
       {
         Identifier: R5434FGD,
+        UrlId: https://traces-codelists.ec.europa.eu/road_vehicle_registration,
         ModeCode: 3
       }
     ],
@@ -265,6 +350,37 @@
               Content: 1,
               UnitCode: H87
             },
+            AppliedProcess: [
+              {
+                TypeCode: 44,
+                UrlId: https://traces-codelists.ec.europa.eu/7187,
+                OperatorParty: {
+                  Identifier: Type I,
+                  UrlId: https://traces-codelists.ec.europa.eu/operator_activity_id,
+                  Name: Test type I,
+                  PartyTypeCode: [
+                    {
+                      Value: REGISTERED_TRANSPORTER,
+                      UrlId: https://traces-codelists.ec.europa.eu/operator_activity_type,
+                      Name: Registered transporter
+                    },
+                    {
+                      Value: REG-TRANS,
+                      UrlId: https://traces-codelists.ec.europa.eu/classification_section_code,
+                      Name: Registered transporter
+                    }
+                  ],
+                  PostalAddress: {
+                    PostcodeCode: 91744,
+                    LineOne: rue I,
+                    CityName: Paris,
+                    CountryId: FR,
+                    CountryName: France,
+                    CountrySubDivisionName: Paris
+                  }
+                }
+              }
+            ],
             PhysicalReferencedLogisticsPackage: [
               {
                 LevelCode: 4,
@@ -305,6 +421,18 @@
                 },
                 ClassName: [
                   Tattoo
+                ]
+              }
+            ],
+            AdditionalInformationNote: [
+              {
+                Type: Note,
+                SubjectCode: {
+                  Value: IDENTIFICATION_NUMBER,
+                  UrlId: eu_intra_commodity_note_subject_code
+                },
+                Content: [
+                  NEW
                 ]
               }
             ]
