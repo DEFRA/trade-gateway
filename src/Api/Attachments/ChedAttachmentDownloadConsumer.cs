@@ -10,8 +10,10 @@ namespace Api.Attachments;
 
 /// <summary>
 /// Downloads a CHED attachment from TRACES and hands it to the CDP uploader, which scans it and moves
-/// it to S3, then calls back on <c>/attachments/scan-results</c>. Every outcome is written to the
-/// attachment's Mongo record. Transient failures are rethrown so SQS redelivers the message.
+/// it to S3, then calls back on <c>/attachments/scan-results</c>. Every outcome, failures included, is
+/// written to the attachment's Mongo record and the message is completed: a retriable failure is
+/// downloaded again when the attachment is next requested, not by SQS redelivery. Only a failure to
+/// write the record itself is rethrown.
 /// </summary>
 public class ChedAttachmentDownloadConsumer(
     IChedCertificateService chedCertificateService,
@@ -41,7 +43,11 @@ public class ChedAttachmentDownloadConsumer(
             return;
         }
 
-        if (record.Status == ChedAttachmentStatus.Failed && record.Error is { Retryable: false })
+        if (
+            record.Status == ChedAttachmentStatus.Failed
+            && record.Error is { } previous
+            && !AttachmentFailureCodes.IsRetriable(previous.Code)
+        )
         {
             _logger.LogInformation(
                 "CHED attachment {Id} failed with {Code}, which will not change on retry; ignoring request",
@@ -66,13 +72,9 @@ public class ChedAttachmentDownloadConsumer(
         }
         catch (Exception ex) when (ex is not OperationCanceledException || !cancellationToken.IsCancellationRequested)
         {
-            error = AttachmentErrorCodes.FromException(ex, Now);
-            await Fail(record, error);
-
-            if (AttachmentErrorCodes.IsTransient(error))
-                throw;
-
-            return;
+            // Recorded and settled. A shutdown cancellation is not caught: the message is then
+            // redelivered, and a record left mid-download is requested again once it goes stale.
+            error = AttachmentFailureCodes.FromException(ex, Now);
         }
 
         if (error is not null)
@@ -113,6 +115,16 @@ public class ChedAttachmentDownloadConsumer(
             ? "application/octet-stream"
             : attachment.contentType;
         record.ContentLength = attachment.Attachment.LongLength;
+
+        if (settings.MaxFileSize is { } maxFileSize && record.ContentLength > maxFileSize)
+        {
+            return AttachmentFailureCodes.Create(
+                AttachmentFailureCodes.FileTooLarge,
+                AttachmentErrorSource.Traces,
+                Now,
+                detail: $"{record.ContentLength} bytes, maximum {maxFileSize}"
+            );
+        }
 
         // Checked before anything is uploaded. The resolved type is what the file is declared to the
         // uploader as (which checks it against mimeTypes) and what it is served as.
@@ -161,11 +173,12 @@ public class ChedAttachmentDownloadConsumer(
     private async Task Fail(ChedAttachmentEntity record, AttachmentError error)
     {
         _logger.LogWarning(
-            "CHED attachment {Id} failed with {Code} from {Source}: {Detail}",
+            "CHED attachment {Id} failed with {Code} ({Reason}) from {Source}: {Detail}",
             record.Id,
             error.Code,
+            error.Message,
             error.Source,
-            error.Detail ?? error.Message
+            error.Detail
         );
 
         record.Status = ChedAttachmentStatus.Failed;
@@ -194,14 +207,15 @@ public class ChedAttachmentDownloadConsumer(
     }
 
     private AttachmentError ChedNotFound(ChedAttachmentEntity record) =>
-        AttachmentErrorCodes.NotFound(
-            AttachmentErrorCodes.ChedNotFound,
-            $"Ched certificate '{record.ChedId}' was not found.",
-            Now
+        AttachmentFailureCodes.Create(
+            AttachmentFailureCodes.NotFound,
+            AttachmentErrorSource.Traces,
+            Now,
+            $"Ched certificate '{record.ChedId}' was not found."
         );
 
     private AttachmentError UnsupportedFileType(ChedAttachmentEntity record, ChedAttachmentOptions settings) =>
-        AttachmentErrorCodes.UnsupportedFileType(
+        AttachmentFailureCodes.Unsupported(
             record.ContentType,
             record.FileName,
             AttachmentFileTypes.MimeTypes(settings.AllowedFileTypes),
@@ -209,10 +223,11 @@ public class ChedAttachmentDownloadConsumer(
         );
 
     private AttachmentError AttachmentNotFound(ChedAttachmentEntity record) =>
-        AttachmentErrorCodes.NotFound(
-            AttachmentErrorCodes.AttachmentNotFound,
-            $"Ched certificate attachment '{record.ChedId} - {record.AttachmentId}' was not found.",
-            Now
+        AttachmentFailureCodes.Create(
+            AttachmentFailureCodes.NotFound,
+            AttachmentErrorSource.Traces,
+            Now,
+            $"Ched certificate attachment '{record.ChedId} - {record.AttachmentId}' was not found."
         );
 
     private DateTime Now => timeProvider.GetUtcNow().UtcDateTime;

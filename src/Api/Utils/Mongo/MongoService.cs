@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace Api.Utils.Mongo;
@@ -34,6 +35,46 @@ public abstract class MongoService<T>
             Collection.CollectionNamespace.CollectionName,
             Collection.Database.DatabaseNamespace
         );
-        Collection.Indexes.CreateMany(indexes);
+        try
+        {
+            Collection.Indexes.CreateMany(indexes);
+        }
+        catch (MongoCommandException ex) when (ex.Code == IndexOptionsConflict)
+        {
+            // An index already exists with the same name but different options. A TTL that changed in
+            // config is updated in place; anything else still fails, as before.
+            UpdateTimeToLives(indexes);
+            Collection.Indexes.CreateMany(indexes);
+        }
+    }
+
+    private const int IndexOptionsConflict = 85;
+
+    private void UpdateTimeToLives(List<CreateIndexModel<T>> indexes)
+    {
+        var timeToLives = indexes
+            .Select(index => index.Options)
+            .Where(options => options?.ExpireAfter is not null && options.Name is not null)
+            .Select(options => (Name: options!.Name, ExpireAfter: options.ExpireAfter!.Value));
+
+        foreach (var (name, expireAfter) in timeToLives)
+        {
+            Logger.LogInformation(
+                "Updating TTL of index {IndexName} on collection {CollectionName} to {ExpireAfter}",
+                name,
+                Collection.CollectionNamespace.CollectionName,
+                expireAfter
+            );
+            Collection.Database.RunCommand<BsonDocument>(
+                new BsonDocument
+                {
+                    { "collMod", Collection.CollectionNamespace.CollectionName },
+                    {
+                        "index",
+                        new BsonDocument { { "name", name }, { "expireAfterSeconds", (long)expireAfter.TotalSeconds } }
+                    },
+                }
+            );
+        }
     }
 }

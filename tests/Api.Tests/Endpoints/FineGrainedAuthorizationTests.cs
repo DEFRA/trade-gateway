@@ -108,7 +108,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         response.StatusCode.Should().Be(HttpStatusCode.Forbidden);
     }
 
-    [Fact(Skip = "Temp excluded")]
+    [Fact]
     public async Task CustomsQuantityReader_cannot_read_ched_attachment()
     {
         var client = await factory.CreateClientForPrincipalAsync("test-customs-quantity-reader");
