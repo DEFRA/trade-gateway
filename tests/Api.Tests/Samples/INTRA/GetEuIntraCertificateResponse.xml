@@ -222,6 +222,49 @@
           <ns4:ExportSPSCountry>
             <ns4:ID></ns4:ID>
             <ns4:Name></ns4:Name>
+            <ns4:SubordinateSPSCountrySubDivision>
+              <ns4:FunctionTypeCode
+                listID="location_function_code"
+                listName="Location function"
+                name="Place of authentication of document"
+                >44</ns4:FunctionTypeCode
+              >
+              <ns4:ActivityAuthorizedSPSParty>
+                <ns4:ID
+                  schemeID="authority_activity_id"
+                  schemeName="Authority activity ID"
+                  schemeAgencyID="ec_sante_traces"
+                  schemeAgencyName="European commission - DG SANTE - Traces"
+                  >XI0000</ns4:ID
+                >
+                <ns4:Name>Department of Agriculture, Environment and Rural Affairs (DAERA)</ns4:Name>
+                <ns4:RoleCode name="Central competent authority">RA</ns4:RoleCode>
+              </ns4:ActivityAuthorizedSPSParty>
+              <ns4:ActivityAuthorizedSPSParty>
+                <ns4:ID></ns4:ID>
+                <ns4:Name>Department of Agriculture, Environment and Rural Affairs (DAERA)</ns4:Name>
+                <ns4:RoleCode name="Local competent authority">VG</ns4:RoleCode>
+              </ns4:ActivityAuthorizedSPSParty>
+            </ns4:SubordinateSPSCountrySubDivision>
+            <ns4:SubordinateSPSCountrySubDivision>
+              <ns4:FunctionTypeCode
+                listID="location_function_code"
+                listName="Location function"
+                name="Consignment exit customs office location"
+                >42</ns4:FunctionTypeCode
+              >
+              <ns4:ActivityAuthorizedSPSParty>
+                <ns4:ID
+                  schemeID="authority_activity_id"
+                  schemeName="Authority activity ID"
+                  schemeAgencyID="ec_sante_traces"
+                  schemeAgencyName="European commission - DG SANTE - Traces"
+                  >PL32010</ns4:ID
+                >
+                <ns4:Name>Białogard</ns4:Name>
+                <ns4:RoleCode name="Customs (Border control post)">CM</ns4:RoleCode>
+              </ns4:ActivityAuthorizedSPSParty>
+            </ns4:SubordinateSPSCountrySubDivision>
           </ns4:ExportSPSCountry>
           <ns4:LoadingBaseportSPSLocation>
             <ns4:ID
