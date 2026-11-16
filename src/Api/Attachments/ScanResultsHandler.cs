@@ -36,6 +36,7 @@ public class ScanResultsHandler(
     IChedAttachmentRepository repository,
     IOptions<ChedAttachmentOptions> options,
     TimeProvider timeProvider,
+    IAttachmentFailureRecorder failureRecorder,
     ILogger<ScanResultsHandler> logger
 ) : IScanResultsHandler
 {
@@ -125,6 +126,9 @@ public class ScanResultsHandler(
 
         record.UpdatedAt = now;
         await repository.Replace(record, cancellationToken);
+
+        if (record is { Status: ChedAttachmentStatus.Failed, Error: { } error })
+            failureRecorder.Record(record, error, AttachmentFailureStage.Scan);
 
         logger.LogInformation("CHED attachment {Id} is now {Status}", record.Id, record.Status);
         return ScanResultsOutcome.Recorded;

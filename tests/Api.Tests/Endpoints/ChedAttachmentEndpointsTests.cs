@@ -1,3 +1,4 @@
+using System.Diagnostics.Metrics;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -7,6 +8,7 @@ using Defra.TradeImports.CdpUploader;
 using Defra.TradeImports.Messaging.Consuming;
 using Microsoft.AspNetCore.HeaderPropagation;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.Metrics.Testing;
 using Microsoft.Extensions.Primitives;
 using Trade.Gateway.Api.Contract.Certificate;
 using WireMock.Matchers;
@@ -286,9 +288,20 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
 
         StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(42, "file.pdf"));
         StubAttachmentFault(chedId, "Attachment not found", "CertificateAttachmentNotFoundException");
+        using var failures = FailureMetrics();
 
         await GetAttachment(chedId, 42);
         Assert.Null(await RunConsumer(chedId, 42));
+
+        var failure = Assert.Single(failures.GetMeasurementSnapshot());
+        Assert.Equal(1, failure.Value);
+        Assert.Equal(AttachmentFailureCodes.NotFound, failure.Tags[AttachmentFailureRecorder.Tags.FailureCode]);
+        Assert.Equal(
+            "Document not found or no longer available",
+            failure.Tags[AttachmentFailureRecorder.Tags.FailureReason]
+        );
+        Assert.Equal("Traces", failure.Tags[AttachmentFailureRecorder.Tags.FailureSource]);
+        Assert.Equal("Download", failure.Tags[AttachmentFailureRecorder.Tags.Stage]);
 
         await AssertFailure(
             await GetAttachment(chedId, 42),
@@ -434,6 +447,7 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
         StubChedWithAttachments(chedId, exchangedDocumentAttachments: AttachmentBinaryObject(2007, "virus.pdf"));
         StubAttachment(chedId, 2007, "virus.pdf", "X5O!P%@AP"u8.ToArray());
         StubUploader(chedId, 2007);
+        using var failures = FailureMetrics();
 
         await GetAttachment(chedId, 2007);
         Assert.Null(await RunConsumer(chedId, 2007));
@@ -457,6 +471,12 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
             "Malware detected"
         );
         Assert.Contains("FILE_VIRUS", factory.Attachments.Find(chedId, 2007)?.Error?.Detail);
+
+        // Counted once, when the scan result is recorded; returning the stored failure is not a new one.
+        var failure = Assert.Single(failures.GetMeasurementSnapshot());
+        Assert.Equal(AttachmentFailureCodes.MalwareDetected, failure.Tags[AttachmentFailureRecorder.Tags.FailureCode]);
+        Assert.Equal("Malware detected", failure.Tags[AttachmentFailureRecorder.Tags.FailureReason]);
+        Assert.Equal("Scan", failure.Tags[AttachmentFailureRecorder.Tags.Stage]);
 
         // Not retriable, from either endpoint.
         await AssertFailure(
@@ -719,6 +739,13 @@ public class ChedAttachmentEndpointsTests(TradeGatewayWebApplicationFactory fact
     }
 
     /// <summary>Delivers the last queued message for the attachment, as the SQS consumer would.</summary>
+    private MetricCollector<long> FailureMetrics() =>
+        new(
+            factory.Services.GetRequiredService<IMeterFactory>(),
+            TracesNT.Services.TracesNtClientMetricsService.MeterName,
+            AttachmentFailureRecorder.InstrumentName
+        );
+
     private async Task<Exception?> RunConsumer(string chedId, long attachmentId)
     {
         var message = factory.Publisher.For(chedId, attachmentId)[^1];
