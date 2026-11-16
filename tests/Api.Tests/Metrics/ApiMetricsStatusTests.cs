@@ -59,7 +59,7 @@ public class ApiMetricsStatusTests(TradeGatewayWebApplicationFactory factory)
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(2, statusCodes.Count); // Get Token call and Get Classification Sections call
         Assert.True(statusCodes.All(s => s is 200));
-        Assert.True(requestPaths.Exists(r => r is "/reference-data/classifications/sections"));
+        Assert.True(requestPaths.Exists(r => r is "reference-data/classifications/sections"));
     }
 
     [Fact]
@@ -108,6 +108,6 @@ public class ApiMetricsStatusTests(TradeGatewayWebApplicationFactory factory)
 
         Assert.Equal(HttpStatusCode.BadGateway, response.StatusCode);
         Assert.Equal(502, Assert.Single(statusCodes));
-        Assert.True(requestPaths.Exists(r => r is "/reference-data/classifications/sections"));
+        Assert.True(requestPaths.Exists(r => r is "reference-data/classifications/sections"));
     }
 }
