@@ -28,7 +28,7 @@ jobs:
       - name: Check out code
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 #v6
       - name: Test
-        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 #v5
+        uses: actions/setup-dotnet@0f4a354dd5547a28c70b7853dbd95d5b67886e73 #v5
         with:
           dotnet-version: |
             10.0
@@ -44,7 +44,7 @@ jobs:
           docker compose up -d --build
           dotnet test --filter "Category=IntegrationTests"
       - name: Build and Publish
-        uses: DEFRA/cdp-build-action/build@5f3ba75f66a3ef96855322c137727ff996cc2995
+        uses: DEFRA/cdp-build-action/build@4ab1468825e6361dc8503863359ca38d7234153d
         with:
           github-token: "${{ env.GITHUB_TOKEN }}"
       - name: Pack NuGets

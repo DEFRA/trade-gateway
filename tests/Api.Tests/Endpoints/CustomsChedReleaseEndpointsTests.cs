@@ -35,6 +35,8 @@ public class CustomsChedReleaseEndpointsTests(TradeGatewayWebApplicationFactory 
         var response = await PutAsync(Ched, Mrn);
 
         response.StatusCode.Should().Be(HttpStatusCode.Conflict);
+        var body = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        body.Should().Contain("\"reason\":\"ReservationConsumed\"");
     }
 
     [Fact]
