@@ -38,6 +38,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IAttachmentStore, S3AttachmentStore>();
         services.AddSingleton<IChedAttachmentService, ChedAttachmentService>();
         services.AddSingleton<IScanResultsHandler, ScanResultsHandler>();
+        services.AddSingleton<IAttachmentFailureRecorder, AttachmentFailureRecorder>();
         services.AddSingleton<IAmazonS3>(CreateS3Client);
 
         services.AddPublisher<ChedAttachmentDownloadRequested>(sp =>

@@ -21,6 +21,7 @@ public class ChedAttachmentDownloadConsumer(
     ICdpUploaderClient uploader,
     IOptions<ChedAttachmentOptions> options,
     TimeProvider timeProvider,
+    IAttachmentFailureRecorder failureRecorder,
     ILoggerFactory loggerFactory
 ) : IMessageConsumer
 {
@@ -172,14 +173,7 @@ public class ChedAttachmentDownloadConsumer(
 
     private async Task Fail(ChedAttachmentEntity record, AttachmentError error)
     {
-        _logger.LogWarning(
-            "CHED attachment {Id} failed with {Code} ({Reason}) from {Source}: {Detail}",
-            record.Id,
-            error.Code,
-            error.Message,
-            error.Source,
-            error.Detail
-        );
+        failureRecorder.Record(record, error, AttachmentFailureStage.Download);
 
         record.Status = ChedAttachmentStatus.Failed;
         record.Error = error;

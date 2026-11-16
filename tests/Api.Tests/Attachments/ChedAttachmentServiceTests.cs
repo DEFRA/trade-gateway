@@ -32,6 +32,8 @@ public class ChedAttachmentServiceTests
 
     private IAttachmentStore? _storeOverride;
 
+    private readonly IAttachmentFailureRecorder _failureRecorder = Substitute.For<IAttachmentFailureRecorder>();
+
     private ChedAttachmentService CreateService() =>
         new(
             _repository,
@@ -48,6 +50,7 @@ public class ChedAttachmentServiceTests
                 }
             ),
             _time,
+            _failureRecorder,
             NullLogger<ChedAttachmentService>.Instance
         );
 
@@ -238,6 +241,13 @@ public class ChedAttachmentServiceTests
         Assert.Equal(AttachmentFailureCodes.StorageFailure, failed.Error.Code);
         Assert.Equal(ChedAttachmentStatus.Available, _repository.Find(ChedId, AttachmentId)?.Status);
         Assert.Empty(_publisher.Published);
+        _failureRecorder
+            .Received(1)
+            .Record(
+                Arg.Is<ChedAttachmentEntity>(r => r.ChedId == ChedId),
+                failed.Error,
+                AttachmentFailureStage.Retrieval
+            );
     }
 
     [Fact]

@@ -39,6 +39,7 @@ public class ChedAttachmentService(
     ITopicPublisher<ChedAttachmentDownloadRequested> publisher,
     IOptions<ChedAttachmentOptions> options,
     TimeProvider timeProvider,
+    IAttachmentFailureRecorder failureRecorder,
     ILogger<ChedAttachmentService> logger
 ) : IChedAttachmentService
 {
@@ -123,7 +124,9 @@ public class ChedAttachmentService(
         {
             // Not recorded: the file is stored, the bucket just could not be read this time.
             logger.LogWarning(ex, "Could not read CHED attachment {Id} from {Bucket}", record.Id, record.S3Bucket);
-            return new ChedAttachmentLookup.Failed(record, AttachmentFailureCodes.FromException(ex, Now));
+            var error = AttachmentFailureCodes.FromException(ex, Now);
+            failureRecorder.Record(record, error, AttachmentFailureStage.Retrieval);
+            return new ChedAttachmentLookup.Failed(record, error);
         }
 
         if (file is not null)
