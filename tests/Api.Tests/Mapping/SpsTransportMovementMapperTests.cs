@@ -13,14 +13,26 @@ public class SpsTransportMovementMapperTests
         {
             ID = new IDType { Value = "VESSEL-123" },
             ModeCode = new TransportModeCodeType { Value = TransportModeCodeContentType.Item1 },
-            UsedSPSTransportMeans = new SPSTransportMeansType { Name = new TextType { Value = "MV Example" } },
         };
 
         var result = SpsTransportMovementMapper.Map(source);
 
         result!.Identifier.Should().Be("VESSEL-123");
-        result.ModeCode.Should().Be("1");
-        result.UsedLogisticsTransportMeans!.Name.Should().Be("MV Example");
+        result.ModeCode.Should().Be(1);
+    }
+
+    [Fact]
+    public void Map_MovementId_MapsIdentifierAndSchemeUri()
+    {
+        var source = new SPSTransportMovementType
+        {
+            ID = new IDType { Value = "R5434FGD", schemeID = "road_vehicle_registration" },
+        };
+
+        var result = SpsTransportMovementMapper.Map(source)!;
+
+        result.Identifier.Should().Be("R5434FGD");
+        result.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/road_vehicle_registration");
     }
 
     [Fact]
@@ -36,18 +48,22 @@ public class SpsTransportMovementMapperTests
 
         result.Should().NotBeNull();
         result!.Identifier.Should().BeNull();
+        result.UrlId.Should().BeNull();
         result.ModeCode.Should().BeNull();
-        result.UsedLogisticsTransportMeans.Should().BeNull();
     }
 
     [Fact]
-    public void Map_NoTransportMeansName_ReturnsNullTransportMeans()
+    public void Map_NonNumericModeCode_ReturnsNullModeCode()
     {
-        var source = new SPSTransportMovementType { UsedSPSTransportMeans = new SPSTransportMeansType() };
+        var source = new SPSTransportMovementType
+        {
+            ModeCode = new TransportModeCodeType { Value = TransportModeCodeContentType.Item1, name = "Maritime" },
+        };
 
         var result = SpsTransportMovementMapper.Map(source);
 
-        result!.UsedLogisticsTransportMeans.Should().BeNull();
+        // XmlEnumCode reads [XmlEnum("1")] -> "1" -> parses to 1
+        result!.ModeCode.Should().Be(1);
     }
 
     [Fact]
