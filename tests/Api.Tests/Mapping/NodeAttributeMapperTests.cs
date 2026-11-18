@@ -27,6 +27,63 @@ public class NodeAttributeMapperTests
     {
         var source = new DescriptorColumnNodeAttribute
         {
+            id = "AVAILABLE_CHED_DESCRIPTOR_COLUMNS",
+            Description = new TextType { Value = "Descriptor Columns" },
+            DescriptorColumnValue =
+            [
+                new DescriptorColumnNodeAttributeValue
+                {
+                    id = "INVASIVE_TAXON_ID",
+                    Cardinality = CardinalityType.MANDATORY,
+                    Description = new TextType
+                    {
+                        Value = "Species / EPPO code&lt;br/&gt;Invasive / Allowed"
+                    },
+                    columnType = DescriptorColumnType.TAXON_INVASIVE
+                },
+                new DescriptorColumnNodeAttributeValue
+                {
+                    id = "QUANTITY",
+                    Cardinality = CardinalityType.OPTIONAL,
+                    Description = new TextType
+                    {
+                        Value = "Quantity"
+                    },
+                    columnType = DescriptorColumnType.QUANTITY
+                }
+            ],
+        };
+
+        var result = DescriptorColumnNodeAttributeMapper.Map(source);
+
+        result.Description.Should().Be("Descriptor Columns");
+        result.Key.Should().Be("AVAILABLE_CHED_DESCRIPTOR_COLUMNS");
+        result.DescriptorColumns.Count.Should().Be(2);
+
+        result.DescriptorColumns[0].Key.Should().Be("INVASIVE_TAXON_ID");
+        result.DescriptorColumns[0].Label.Should().Be("Species / EPPO code&lt;br/&gt;Invasive / Allowed");
+        result.DescriptorColumns[0].ColumnType.Should().Be("TAXON_INVASIVE");
+        result.DescriptorColumns[0].Cardinality.Should().Be("MANDATORY");
+
+        result.DescriptorColumns[1].Key.Should().Be("QUANTITY");
+        result.DescriptorColumns[1].Label.Should().Be("Quantity");
+        result.DescriptorColumns[1].ColumnType.Should().Be("QUANTITY");
+        result.DescriptorColumns[1].Cardinality.Should().Be("OPTIONAL");
+    }
+
+    [Fact]
+    public void Map_UnknownAttribute_ReturnsNullValue()
+    {
+        var source = new UnknownNodeAttribute { Description = new TextType { Value = "Unknown" } };
+
+        NodeAttributeMapper.Map(source).Value.Should().BeNull();
+    }
+
+    [Fact]
+    public void Map_DescriptorColumnNodeAttribute_ThrowsNotSupported()
+    {
+        var source = new DescriptorColumnNodeAttribute
+        {
             id = "columns",
             Description = new TextType { Value = "Columns" },
             DescriptorColumnValue =
@@ -37,18 +94,8 @@ public class NodeAttributeMapperTests
             ],
         };
 
-        var result = NodeAttributeMapper.Map(source);
-
-        result.Value.Should().NotBeNull();
-        result.Value!.Value.EnumerateArray().Select(v => v.GetString()).Should().Equal("TAXON_ID", "QUANTITY");
-    }
-
-    [Fact]
-    public void Map_UnknownAttribute_ReturnsNullValue()
-    {
-        var source = new UnknownNodeAttribute { Description = new TextType { Value = "Unknown" } };
-
-        NodeAttributeMapper.Map(source).Value.Should().BeNull();
+        var ex = Assert.Throws<NotSupportedException>(() => NodeAttributeMapper.Map(source));
+        ex.Message.Should().Contain(nameof(DescriptorColumnNodeAttributeMapper));
     }
 
     [Fact]

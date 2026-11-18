@@ -1,4 +1,4 @@
-﻿{
+{
   Source: traces,
   TreeId: intra_trade,
   NodePath: R/N-10000/N-10065/L-10121/L-10301/C-11978,
@@ -16,13 +16,6 @@
     Label: 2022/497 (2021/403) Model animal health certificate for the movement between Member States of an individual equine animal not intended for slaughter (Model ‘EQUI-INTRA-IND’)
   },
   Attributes: [
-    {
-      Key: AVAILABLE_EU_INTRA_DESCRIPTOR_COLUMNS,
-      Description: Descriptor Columns,
-      Value: {
-        ValueKind: Array
-      }
-    },
     {
       Key: CASE_OF_MEAT_AND_BONE_MEAL_AND_RENDERED_FATS_ACCESS,
       Description: Access in case of Meat, Bone meal and rendered fats,
@@ -876,6 +869,56 @@
       Value: {
         ValueKind: Array
       }
+    }
+  ],
+  DescriptorColumns: [
+    {
+      Key: AVAILABLE_EU_INTRA_DESCRIPTOR_COLUMNS,
+      Description: Descriptor Columns,
+      DescriptorColumns: [
+        {
+          Key: TAXON_ID,
+          Label: Species,
+          ColumnType: TAXON,
+          Cardinality: MANDATORY
+        },
+        {
+          Key: ANIMAL_SUBCATEGORY,
+          Label: Subcategory,
+          ColumnType: ENUMERATION,
+          Cardinality: OPTIONAL
+        },
+        {
+          Key: GENDER,
+          Label: Sex,
+          ColumnType: ENUMERATION,
+          Cardinality: OPTIONAL
+        },
+        {
+          Key: IDENTIFICATION_SYSTEM,
+          Label: Identification system,
+          ColumnType: ENUMERATION,
+          Cardinality: MANDATORY
+        },
+        {
+          Key: IDENTIFICATION_NUMBER,
+          Label: Identification Number,
+          ColumnType: STRING,
+          Cardinality: MANDATORY
+        },
+        {
+          Key: AGE,
+          Label: Age,
+          ColumnType: QUANTITY,
+          Cardinality: OPTIONAL
+        },
+        {
+          Key: QUANTITY,
+          Label: Quantity,
+          ColumnType: QUANTITY,
+          Cardinality: MANDATORY
+        }
+      ]
     }
   ],
   DocumentTypes: [
