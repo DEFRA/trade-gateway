@@ -9,9 +9,9 @@ internal static class DescriptorColumnNodeAttributeMapper
         new()
         {
             Key = source.id,
-            
+
             Description = source.Description.Value,
-            DescriptorColumns = source.DescriptorColumnValue.Select(Map).ToList()
+            DescriptorColumns = source.DescriptorColumnValue.Select(Map).ToList(),
         };
 
     internal static DescriptorColumn Map(DescriptorColumnNodeAttributeValue source) =>
@@ -20,6 +20,6 @@ internal static class DescriptorColumnNodeAttributeMapper
             Label = source.Description.Value,
             Cardinality = source.Cardinality.XmlEnumCode(),
             ColumnType = source.columnType.XmlEnumCode(),
-            Key = source.id
+            Key = source.id,
         };
 }

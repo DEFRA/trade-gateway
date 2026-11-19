@@ -35,22 +35,16 @@ public class NodeAttributeMapperTests
                 {
                     id = "INVASIVE_TAXON_ID",
                     Cardinality = CardinalityType.MANDATORY,
-                    Description = new TextType
-                    {
-                        Value = "Species / EPPO code&lt;br/&gt;Invasive / Allowed"
-                    },
-                    columnType = DescriptorColumnType.TAXON_INVASIVE
+                    Description = new TextType { Value = "Species / EPPO code&lt;br/&gt;Invasive / Allowed" },
+                    columnType = DescriptorColumnType.TAXON_INVASIVE,
                 },
                 new DescriptorColumnNodeAttributeValue
                 {
                     id = "QUANTITY",
                     Cardinality = CardinalityType.OPTIONAL,
-                    Description = new TextType
-                    {
-                        Value = "Quantity"
-                    },
-                    columnType = DescriptorColumnType.QUANTITY
-                }
+                    Description = new TextType { Value = "Quantity" },
+                    columnType = DescriptorColumnType.QUANTITY,
+                },
             ],
         };
 
