@@ -19,9 +19,6 @@ public partial record ClassificationSection
     [JsonPropertyName("description")]
     public required string Description { get; init; }
 
-    [JsonPropertyName("active")]
-    public bool? Active { get; init; }
-
     [JsonPropertyName("scopes")]
     public required List<string> Scopes { get; init; }
 
