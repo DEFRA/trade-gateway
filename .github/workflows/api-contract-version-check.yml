@@ -1,0 +1,38 @@
+name: API Contract Version Check
+
+on:
+  pull_request:
+    paths:
+      - 'src/Api.Contract/**'
+      - '!src/Api.Contract/Api.Contract.csproj'
+
+jobs:
+  check-version-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Checkout base branch
+        run: git fetch origin ${{ github.base_ref }}
+
+      - name: Extract Version
+        id: version
+        run: |
+          PR_VERSION=$(grep -oP '(?<=<VersionPrefix>)[^<]+' src/Api.Contract/Api.Contract.csproj)
+          BASE_VERSION=$(git show origin/${{ github.base_ref }}:src/Api.Contract/Api.Contract.csproj | grep -oP '(?<=<VersionPrefix>)[^<]+')
+          echo "pr_version=$PR_VERSION" >> $GITHUB_OUTPUT
+          echo "base_version=$BASE_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Check Version Bump
+        if: steps.version.outputs.pr_version == steps.version.outputs.base_version
+        run: |
+          echo "❌ FAILED: Changes detected in Api.Contract but VersionPrefix was not bumped"
+          echo ""
+          echo "Current VersionPrefix: ${{ steps.version.outputs.pr_version }}"
+          echo ""
+          echo "You must update the <VersionPrefix> in src/Api.Contract/Api.Contract.csproj"
+          echo "to reflect the changes made to the API contract."
+          exit 1
