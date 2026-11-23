@@ -62,15 +62,15 @@ internal static class ChedQuantityMapper
     /// companion, and a value whose companion is left <c>false</c> is silently dropped from the
     /// request, so each companion is set from whether the field was supplied.
     /// </summary>
-    internal static ConsignmentItemR6ForReservationType[] MapReservationItems(ReservationCommodityItem[] items) =>
+    internal static ConsignmentItemR7ForReservationType[] MapReservationItems(ReservationCommodityItem[] items) =>
         [.. items.Select(MapReservationItem)];
 
-    private static ConsignmentItemR6ForReservationType MapReservationItem(ReservationCommodityItem source)
+    private static ConsignmentItemR7ForReservationType MapReservationItem(ReservationCommodityItem source)
     {
         var netWeightUnit = UnitOfMeasureCode.Parse(source.NetWeightUnitOfMeasure);
         var netVolumeUnit = UnitOfMeasureCode.Parse(source.NetVolumeUnitOfMeasure);
 
-        return new ConsignmentItemR6ForReservationType
+        return new ConsignmentItemR7ForReservationType
         {
             GoodsItemNumber = source.GoodsItemNumber?.ToString(CultureInfo.InvariantCulture),
             CertificateLineNumber = source.CertificateLineNumber?.ToString(CultureInfo.InvariantCulture),

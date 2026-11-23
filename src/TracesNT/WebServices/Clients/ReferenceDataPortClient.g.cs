@@ -222,7 +222,7 @@ namespace TracesNT.WebServices
         {
             if ((endpointConfiguration == EndpointConfiguration.ReferenceDataServiceV1Endpoint))
             {
-                return new System.ServiceModel.EndpointAddress("https://webgate.acceptance.ec.europa.eu/tracesnt/ws/ReferenceDataServiceV1");
+                return new System.ServiceModel.EndpointAddress("https://webgate.ec.europa.eu/tracesnt/ws/ReferenceDataServiceV1");
             }
 
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));

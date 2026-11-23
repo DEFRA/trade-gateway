@@ -44,7 +44,7 @@ namespace TracesNT.Services
         public Task<ProcessedChedInformationResponseType?> ReserveChedQuantities(
             string chedId,
             string mrn,
-            ConsignmentItemR6ForReservationType[] items,
+            ConsignmentItemR7ForReservationType[] items,
             string languageCode
         ) =>
             SendProcessedChedRequest(
@@ -116,7 +116,7 @@ namespace TracesNT.Services
         public async Task<ChedQuantityManagementOutcomeType?> ReservationIntervention(
             string chedId,
             string mrn,
-            ConsignmentItemR6ForInterventionType[] items,
+            ConsignmentItemR7ForInterventionType[] items,
             InterventionMessageInformationType interventionMessageInformationType,
             string languageCode,
             string taricDocument
@@ -199,7 +199,7 @@ namespace TracesNT.Services
             string languageCode,
             QuantityManagementMode mode,
             CustomsDeclarationReferenceNumber4CoiChedR51InputType declarationReference,
-            ConsignmentItemR6ForReservationType[]? items
+            ConsignmentItemR7ForReservationType[]? items
         )
         {
             // Correlates our logs with the MessageId the customs port echoes on responses and faults, which is

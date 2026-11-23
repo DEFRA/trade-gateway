@@ -12,7 +12,7 @@ namespace Api.Tests.Endpoints;
 public class CustomsChedReservationEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string ProcessedChedSoapAction =
-        "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"";
+        "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v07/CustomsCertexChedPort/ProcessedChedRequest\"";
 
     private const string Ched = "CHEDA.GB.2026.0000123";
     private const string Mrn = "26GB16RF3TDPZE7AR2";

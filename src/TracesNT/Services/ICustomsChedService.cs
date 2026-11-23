@@ -27,7 +27,7 @@ public interface ICustomsChedService
     Task<ProcessedChedInformationResponseType?> ReserveChedQuantities(
         string chedId,
         string mrn,
-        ConsignmentItemR6ForReservationType[] items,
+        ConsignmentItemR7ForReservationType[] items,
         string languageCode
     );
 
@@ -62,7 +62,7 @@ public interface ICustomsChedService
     Task<ChedQuantityManagementOutcomeType?> ReservationIntervention(
         string chedId,
         string mrn,
-        ConsignmentItemR6ForInterventionType[] items,
+        ConsignmentItemR7ForInterventionType[] items,
         InterventionMessageInformationType interventionMessageInformationType,
         string languageCode,
         string taricDocument

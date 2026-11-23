@@ -5,7 +5,7 @@ namespace Api.Mapping;
 
 public static class ChedReservationInterventionMapper
 {
-    internal static IEnumerable<ConsignmentItemR6ForInterventionType> ToCertexConsignmentItems(
+    internal static IEnumerable<ConsignmentItemR7ForInterventionType> ToCertexConsignmentItems(
         this CustomsConsignmentItem[] source
     )
     {
@@ -28,11 +28,11 @@ public static class ChedReservationInterventionMapper
         };
     }
 
-    private static TracesNT.WebServices.ConsignmentItemR6ForInterventionType ToCertexConsignmentItem(
+    private static TracesNT.WebServices.ConsignmentItemR7ForInterventionType ToCertexConsignmentItem(
         this CustomsConsignmentItem source
     )
     {
-        var result = new TracesNT.WebServices.ConsignmentItemR6ForInterventionType
+        var result = new TracesNT.WebServices.ConsignmentItemR7ForInterventionType
         {
             GoodsItemNumber = source.GoodsItemNumber.ToString(),
             CertificateLineNumber = source.CertificateLineNumber.ToString(),

@@ -10,7 +10,7 @@ namespace TracesNT.WebServices
 {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v07")]
     public partial class ProcessedChedRequestType
     {
         private System.DateTime sendingDateField;
@@ -18,7 +18,7 @@ namespace TracesNT.WebServices
         private string tARICDocumentField;
         private CustomsDeclarationReferenceNumber4CoiChedR51InputType customsDeclarationReferenceNumberField;
         private CompetentCustomsOfficeType competentCustomsOfficeField;
-        private ConsignmentItemR6ForReservationType[] commodityDescriptionForChedField;
+        private ConsignmentItemR7ForReservationType[] commodityDescriptionForChedField;
         private bool pdfGenerationIndicationField;
         private bool pdfGenerationIndicationFieldSpecified;
         private string languageField;
@@ -103,7 +103,7 @@ namespace TracesNT.WebServices
 
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute("CommodityDescriptionForChed", Order = 5)]
-        public ConsignmentItemR6ForReservationType[] CommodityDescriptionForChed
+        public ConsignmentItemR7ForReservationType[] CommodityDescriptionForChed
         {
             get
             {

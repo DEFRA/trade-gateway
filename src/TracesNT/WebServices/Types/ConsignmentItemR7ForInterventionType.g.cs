@@ -11,7 +11,7 @@ namespace TracesNT.WebServices
     [System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.Tools.ServiceModel.Svcutil", "8.0.0")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03")]
-    public partial class ConsignmentItemR6ForReservationType
+    public partial class ConsignmentItemR7ForInterventionType
     {
         private string goodsItemNumberField;
         private string certificateLineNumberField;
