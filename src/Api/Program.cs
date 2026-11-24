@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 using Api.Attachments;
 using Api.Config;
 using Api.Endpoints;
@@ -140,6 +141,11 @@ static void ConfigureBuilder(WebApplicationBuilder builder)
     // Add health check, this is required for the platform to know your service is alive.
     builder.Services.AddHealthChecks();
     builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+
+    builder.Services.ConfigureHttpJsonOptions(options =>
+    {
+        options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+    });
 
     builder.Services.AddValidation();
     builder.AddApiAuthentication();

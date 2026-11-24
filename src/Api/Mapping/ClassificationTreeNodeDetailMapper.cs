@@ -40,6 +40,7 @@ internal static class ClassificationTreeNodeDetailMapper
                 .Where(attribute => attribute is not TaxonNodeAttribute)
                 .Where(attribute => attribute is not ClassificationSectionNodeAttribute)
                 .Where(attribute => attribute is not SelectableDocumentLinkNodeAttribute)
+                .Where(attribute => attribute is not DescriptorColumnNodeAttribute)
                 .Select(NodeAttributeMapper.Map)
                 .ToList()
                 .NullIfEmpty(),
@@ -56,6 +57,11 @@ internal static class ClassificationTreeNodeDetailMapper
             LegislationAttributes = source
                 .Attribute?.OfType<LegislationNodeAttribute>()
                 .Select(LegislationAttributeMapper.Map)
+                .ToList()
+                .NullIfEmpty(),
+            DescriptorColumns = source
+                .Attribute?.OfType<DescriptorColumnNodeAttribute>()
+                .Select(DescriptorColumnNodeAttributeMapper.Map)
                 .ToList()
                 .NullIfEmpty(),
             Taxons = TaxonMapper.MapByNodeId(source.Attribute, AttributeNodeId.TaxonPossibleValues),

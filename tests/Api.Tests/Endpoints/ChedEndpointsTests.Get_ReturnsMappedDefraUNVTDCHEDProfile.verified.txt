@@ -228,12 +228,8 @@ DAERA Plant Health Inspection Branch
         CountrySubDivisionName: City Subdivison
       }
     },
-    ExportCountry: {
-      Code: {}
-    },
-    ImportCountry: {
-      Code: {}
-    },
+    ExportCountry: {},
+    ImportCountry: {},
     UnloadingBaseportLocation: {
       Identifier: GBBEL,
       UrlId: https://traces-codelists.ec.europa.eu/un_locode,
