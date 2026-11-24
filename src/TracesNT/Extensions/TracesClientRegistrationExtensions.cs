@@ -40,7 +40,7 @@ namespace TracesNT.Extensions
             );
 
             services.AddTracesNtClient<CustomsCertexChedPortClient, CustomsCertexChedPort>(
-                "CustomsCertexChedServiceV06",
+                "CustomsCertexChedServiceV07",
                 TracesNtCredentialKeys.Customs,
                 (binding, endpoint) => new CustomsCertexChedPortClient(binding, endpoint)
             );
