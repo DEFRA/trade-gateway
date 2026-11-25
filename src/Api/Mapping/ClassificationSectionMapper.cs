@@ -37,10 +37,7 @@ internal static class ClassificationSectionMapper
             Lms = source.lms,
             Description = source.Description.Value,
             Scopes =
-                source
-                    .Scope?.Select(scope => scope.id)
-                    .Where(scopeId => !string.IsNullOrWhiteSpace(scopeId))
-                    .ToList()
+                source.Scope?.Select(scope => scope.id).Where(scopeId => !string.IsNullOrWhiteSpace(scopeId)).ToList()
                 ?? [],
             OperatorActivities =
                 source

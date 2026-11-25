@@ -70,8 +70,8 @@ public class WsSecurityHeader(string username, string authenticationKey) : Messa
     {
         byte[] combined = [.. nonce, .. Encoding.UTF8.GetBytes(created), .. Encoding.UTF8.GetBytes(authKey)];
 
-        #pragma warning disable S4790 // use of SHA1 is required by WS-Security spec - header is always sent over HTTPS
-        return Convert.ToBase64String(SHA1.HashData(combined)); 
-        #pragma warning restore S4790
+#pragma warning disable S4790 // use of SHA1 is required by WS-Security spec - header is always sent over HTTPS
+        return Convert.ToBase64String(SHA1.HashData(combined));
+#pragma warning restore S4790
     }
 }
