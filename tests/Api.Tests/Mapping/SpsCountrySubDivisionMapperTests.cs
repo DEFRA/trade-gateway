@@ -57,11 +57,11 @@ public class SpsCountrySubDivisionMapperTests
 
         result.FunctionTypeCode.Content.Should().Be("44");
         result.ActivityAuthorizedParty.Should().HaveCount(2);
-        result.ActivityAuthorizedParty!.Select(p => p.PartyRoleCode!.Value).Should().Equal("RA", "VG");
-        result.ActivityAuthorizedParty![0].Identifier.Should().Be("NL0002");
-        result.ActivityAuthorizedParty![0].Name.Should().Be("NVWA");
+        result.ActivityAuthorizedParty.Select(p => p.PartyRoleCode!.Value).Should().Equal("RA", "VG");
+        result.ActivityAuthorizedParty[0].Identifier.Should().Be("NL0002");
+        result.ActivityAuthorizedParty[0].Name.Should().Be("NVWA");
         result
-            .ActivityAuthorizedParty![0]
+            .ActivityAuthorizedParty[0]
             .PostalAddress.Should()
             .BeEquivalentTo(
                 new Trade.Gateway.Api.Contract.Certificate.TradeAddress
@@ -93,7 +93,7 @@ public class SpsCountrySubDivisionMapperTests
         var result = SpsCountrySubDivisionMapper.Map(source, Context)!;
 
         result.ActivityAuthorizedParty.Should().ContainSingle();
-        result.ActivityAuthorizedParty![0].PartyRoleCode!.Value.Should().Be("CM");
+        result.ActivityAuthorizedParty[0].PartyRoleCode!.Value.Should().Be("CM");
     }
 
     [Fact]

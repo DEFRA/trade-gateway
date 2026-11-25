@@ -47,7 +47,7 @@ public class SpsTransportMovementMapperTests
         var result = SpsTransportMovementMapper.Map(new SPSTransportMovementType());
 
         result.Should().NotBeNull();
-        result!.Identifier.Should().BeNull();
+        result.Identifier.Should().BeNull();
         result.UrlId.Should().BeNull();
         result.ModeCode.Should().BeNull();
     }

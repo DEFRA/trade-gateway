@@ -189,6 +189,6 @@ public class CustomsChedServiceTests(TradeGatewayWebApplicationFactory factory)
 
         body.Should().NotBeNullOrEmpty("the service should have called {0}", CustomsPath);
 
-        return XDocument.Parse(body!);
+        return XDocument.Parse(body);
     }
 }

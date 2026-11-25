@@ -53,7 +53,7 @@ public class StsAuthDelegatingHandlerTests
 
         // Assert
         Assert.NotNull(capturedRequest);
-        Assert.Equal("Bearer", capturedRequest!.Headers.Authorization!.Scheme);
+        Assert.Equal("Bearer", capturedRequest.Headers.Authorization!.Scheme);
         Assert.Equal("token-123", capturedRequest.Headers.Authorization.Parameter);
     }
 
@@ -183,7 +183,7 @@ public class StsAuthDelegatingHandlerTests
         await sts.Received(1)
             .GetWebIdentityTokenAsync(
                 Arg.Is<GetWebIdentityTokenRequest>(r =>
-                    r!.Audience.Single() == "expected-audience"
+                    r.Audience.Single() == "expected-audience"
                     && r.DurationSeconds == 1234
                     && r.SigningAlgorithm == "RS256"
                 ),

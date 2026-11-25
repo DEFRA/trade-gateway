@@ -212,7 +212,7 @@ public class ClassificationTreeNodeDetailMapperTests
         result.Attributes.Should().BeNull();
         result.LegislationAttributes.Should().ContainSingle();
         result
-            .LegislationAttributes![0]
+            .LegislationAttributes[0]
             .Should()
             .BeEquivalentTo(
                 new

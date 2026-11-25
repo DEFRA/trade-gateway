@@ -22,4 +22,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Api.Contract\Api.Contract.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SonarAnalyzer.CSharp" Version="10.37.0.15768" />
+  </ItemGroup>
 </Project>

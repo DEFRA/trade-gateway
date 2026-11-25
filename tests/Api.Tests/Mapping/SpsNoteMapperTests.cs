@@ -66,7 +66,7 @@ public class SpsNoteMapperTests
         var result = SpsNoteMapper.Map(source).ContentCode;
 
         result.Should().HaveCount(2);
-        result![0].UrlId.Should().Be("refusal_reason");
+        result[0].UrlId.Should().Be("refusal_reason");
         result[0].Value.Should().Be("NON_APPROVED_ESTABLISHMENT");
         result[1].UrlId.Should().Be("refusal_reason_extent");
         result[1].Value.Should().Be("PACKAGES");
@@ -101,7 +101,7 @@ public class SpsNoteMapperTests
 
         result.Content.Should().Equal("test establishment");
         result.ContentCode.Should().HaveCount(1);
-        result.ContentCode![0].Value.Should().Be("NON_APPROVED_ESTABLISHMENT");
+        result.ContentCode[0].Value.Should().Be("NON_APPROVED_ESTABLISHMENT");
     }
 
     [Fact]

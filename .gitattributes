@@ -3,3 +3,4 @@
 # developer's core.autocrlf, which is what let generated files flip between
 # CRLF and LF depending on who committed them.
 * text=auto eol=lf
+*.verified.txt text eol=lf working-tree-encoding=UTF-8

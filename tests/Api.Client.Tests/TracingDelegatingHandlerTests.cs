@@ -28,7 +28,7 @@ public class TracingDelegatingHandlerTests
 
         // Assert
         Assert.NotNull(capturedRequest);
-        Assert.True(capturedRequest!.Headers.Contains("x-cdp-request-id"));
+        Assert.True(capturedRequest.Headers.Contains("x-cdp-request-id"));
         Assert.Equal(traceId, capturedRequest.Headers.GetValues("x-cdp-request-id").Single());
     }
 

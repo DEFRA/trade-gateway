@@ -28,7 +28,7 @@ public class ClassificationTreeNodeMapperTests
             ],
         };
 
-        var result = ClassificationTreeMapper.Map(source)!;
+        var result = ClassificationTreeMapper.Map(source);
 
         result.Path.Should().Be("root");
         result.Label.Should().Be("Root");
@@ -37,7 +37,7 @@ public class ClassificationTreeNodeMapperTests
         result.CnCode.Should().BeNull();
         result.Children.Should().ContainSingle();
         result
-            .Children![0]
+            .Children[0]
             .Should()
             .BeEquivalentTo(
                 new
