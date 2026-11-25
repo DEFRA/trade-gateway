@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Refit.HttpClientFactory" Version="11.0.1" />
-    <PackageReference Include="AWSSDK.SecurityToken" Version="4.0.101.7" />
+    <PackageReference Include="AWSSDK.SecurityToken" Version="4.0.7" />
   </ItemGroup>
 
   <ItemGroup>
