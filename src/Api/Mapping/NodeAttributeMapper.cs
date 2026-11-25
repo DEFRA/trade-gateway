@@ -38,9 +38,8 @@ internal static class NodeAttributeMapper
             ),
             CardinalityNodeAttribute cardinalityAttribute => SerializeEnumValue(cardinalityAttribute.CardinalityValue),
             AllowedNodeAttribute allowedAttribute => SerializeEnumValue(allowedAttribute.AllowedValue),
-            DescriptorColumnNodeAttribute descriptorColumnAttribute => SerializeStringArray(
-                descriptorColumnAttribute.DescriptorColumnValue,
-                value => value.id
+            DescriptorColumnNodeAttribute _ => throw new NotSupportedException(
+                $"Use {nameof(DescriptorColumnNodeAttributeMapper)}"
             ),
             SelectableDocumentLinkNodeAttribute _ => throw new NotSupportedException(
                 $"Use {nameof(DocumentNodeAttributeMapper)}"

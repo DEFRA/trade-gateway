@@ -3051,6 +3051,13 @@ A failed download has status Failed and a failure with its code, reason and whet
             },
             nullable: true
           },
+          descriptorColumns: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/DescriptorColumnAttribute
+            },
+            nullable: true
+          },
           documentTypes: {
             type: array,
             items: {
@@ -3169,6 +3176,57 @@ A failed download has status Failed and a failure with its code, reason and whet
             type: string,
             format: date-time,
             nullable: true
+          }
+        },
+        additionalProperties: false
+      },
+      DescriptorColumn: {
+        required: [
+          cardinality,
+          columnType,
+          key,
+          label
+        ],
+        type: object,
+        properties: {
+          key: {
+            type: string,
+            description: Identifier for this descriptor column
+          },
+          label: {
+            type: string,
+            description: Human readable description
+          },
+          columnType: {
+            type: string
+          },
+          cardinality: {
+            type: string,
+            description: Cardinality: OPTIONAL (0..1), MANDATORY (1..1), OPTIONAL_MULTIPLE (0..n), MANDATORY_MULTIPLE (1..n)
+          }
+        },
+        additionalProperties: false
+      },
+      DescriptorColumnAttribute: {
+        required: [
+          descriptorColumns,
+          key
+        ],
+        type: object,
+        properties: {
+          key: {
+            type: string,
+            description: Identifier for this descriptor column attribute
+          },
+          description: {
+            type: string,
+            nullable: true
+          },
+          descriptorColumns: {
+            type: array,
+            items: {
+              $ref: #/components/schemas/DescriptorColumn
+            }
           }
         },
         additionalProperties: false
