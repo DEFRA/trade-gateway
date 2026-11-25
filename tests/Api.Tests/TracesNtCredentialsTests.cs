@@ -22,7 +22,7 @@ namespace Api.Tests;
 [Collection(IntegrationTestCollection.Name)]
 public class TracesNtCredentialsTests(TradeGatewayWebApplicationFactory factory)
 {
-    private const string CustomsPath = "/CustomsCertexChedServiceV06";
+    private const string CustomsPath = "/CustomsCertexChedServiceV07";
     private const string ChedPath = "/ChedCertificateServiceV2";
     private const string AttachmentsPath = "/CertificateAttachmentsServiceV1";
 

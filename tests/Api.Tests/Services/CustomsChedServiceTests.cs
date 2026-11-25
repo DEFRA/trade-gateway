@@ -17,7 +17,7 @@ namespace Api.Tests.Services;
 [Collection(IntegrationTestCollection.Name)]
 public class CustomsChedServiceTests(TradeGatewayWebApplicationFactory factory)
 {
-    private const string CustomsPath = "/CustomsCertexChedServiceV06";
+    private const string CustomsPath = "/CustomsCertexChedServiceV07";
 
     /// <summary>
     /// Distinct from every CHED id the endpoint tests stub — the WireMock server is shared across
