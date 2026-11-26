@@ -75,7 +75,7 @@ public class SpsCountryMapperTests
         var result = SpsCountryMapper.Map(source, Context)!;
 
         result.SubordinateTradeCountrySubDivision.Should().NotBeNull();
-        result.SubordinateTradeCountrySubDivision!.Should().ContainSingle();
+        result.SubordinateTradeCountrySubDivision.Should().ContainSingle();
         result.SubordinateTradeCountrySubDivision[0].FunctionTypeCode.Content.Should().Be("44");
         result
             .SubordinateTradeCountrySubDivision[0]
@@ -126,7 +126,7 @@ public class SpsCountryMapperTests
         var result = SpsCountryMapper.Map(source, Context)!;
 
         result.SubordinateTradeCountrySubDivision.Should().ContainSingle();
-        result.SubordinateTradeCountrySubDivision![0].FunctionTypeCode.Content.Should().Be("44");
+        result.SubordinateTradeCountrySubDivision[0].FunctionTypeCode.Content.Should().Be("44");
     }
 
     [Fact]

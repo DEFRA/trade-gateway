@@ -25,12 +25,12 @@ public class WsSecurityHeaderTests
 
         var usernameToken = security.Element(WsseNamespace + "UsernameToken");
         usernameToken.Should().NotBeNull();
-        usernameToken!.Attribute(WsuNamespace + "Id")!.Value.Should().NotBeNullOrWhiteSpace();
+        usernameToken.Attribute(WsuNamespace + "Id")!.Value.Should().NotBeNullOrWhiteSpace();
         usernameToken.Element(WsseNamespace + "Username")!.Value.Should().Be("alice");
 
         var password = usernameToken.Element(WsseNamespace + "Password");
         password.Should().NotBeNull();
-        password!
+        password
             .Attribute("Type")!
             .Value.Should()
             .Be("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordDigest");
@@ -39,7 +39,7 @@ public class WsSecurityHeaderTests
 
         var nonce = usernameToken.Element(WsseNamespace + "Nonce");
         nonce.Should().NotBeNull();
-        nonce!
+        nonce
             .Attribute("EncodingType")!
             .Value.Should()
             .Be("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary");
@@ -53,7 +53,7 @@ public class WsSecurityHeaderTests
         );
         var timestamp = security.Element(WsuNamespace + "Timestamp");
         timestamp.Should().NotBeNull();
-        timestamp!.Attribute(WsuNamespace + "Id")!.Value.Should().StartWith("TS-");
+        timestamp.Attribute(WsuNamespace + "Id")!.Value.Should().StartWith("TS-");
 
         var timestampCreated = DateTimeOffset.ParseExact(
             timestamp.Element(WsuNamespace + "Created")!.Value,

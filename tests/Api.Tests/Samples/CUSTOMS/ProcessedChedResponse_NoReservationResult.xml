@@ -4,7 +4,7 @@
      "reserved" nor "refused" can be inferred: this must yield 502. -->
 <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
   <S:Body>
-    <ProcessedChedInformationResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+    <ProcessedChedInformationResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v07">
       <ChedCertificate>
         <SPSCertificate xmlns="urn:un:unece:uncefact:data:standard:SPSCertificate:17">
           <SPSExchangedDocument>

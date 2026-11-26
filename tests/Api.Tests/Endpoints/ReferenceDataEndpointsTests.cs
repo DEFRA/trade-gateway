@@ -153,7 +153,7 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         await Verify(response.Content);
 
         // ensure that the certificates are correctly mapping - find cert with model id 11978
-        IEnumerable<ClassificationTreeNode> Flatten(IEnumerable<ClassificationTreeNode>? nodes) =>
+        static IEnumerable<ClassificationTreeNode> Flatten(IEnumerable<ClassificationTreeNode>? nodes) =>
             (nodes ?? Enumerable.Empty<ClassificationTreeNode>()).SelectMany(n =>
                 new[] { n }.Concat(Flatten(n.Children))
             );
@@ -161,8 +161,8 @@ public class ReferenceDataEndpointsTests(TradeGatewayWebApplicationFactory facto
         var certNode = Flatten(response.Content!.Nodes).FirstOrDefault(n => n.Certificate?.ModelId == 11978);
 
         Assert.NotNull(certNode);
-        Assert.NotNull(certNode!.Certificate);
-        Assert.Equal(11978, certNode.Certificate!.ModelId);
+        Assert.NotNull(certNode.Certificate);
+        Assert.Equal(11978, certNode.Certificate.ModelId);
         Assert.Equal("11978", certNode.Certificate.ShortTitle);
         Assert.Contains("Model animal health certificate", certNode.Certificate.LongTitle ?? string.Empty);
         Assert.NotNull(certNode.Certificate.CreatedOn);

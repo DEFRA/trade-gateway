@@ -48,8 +48,8 @@ public class SpsConsignmentItemMapperTests
         var result = SpsConsignmentItemMapper.Map(source, Context);
 
         result.IncludedTradeLineItem.Should().HaveCount(2);
-        result.IncludedTradeLineItem![0].SequenceNumeric.Should().Be(1);
-        result.IncludedTradeLineItem![1].SequenceNumeric.Should().Be(2);
+        result.IncludedTradeLineItem[0].SequenceNumeric.Should().Be(1);
+        result.IncludedTradeLineItem[1].SequenceNumeric.Should().Be(2);
     }
 
     [Fact]

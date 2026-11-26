@@ -35,7 +35,7 @@ public class LoggingMessageInspectorTests
         var correlationState = sut.BeforeSendRequest(ref request, _channel);
         var reply = Message.CreateMessage(MessageVersion.Soap11, "urn:test-reply");
 
-        sut.AfterReceiveReply(ref reply, correlationState!);
+        sut.AfterReceiveReply(ref reply, correlationState);
 
         logger
             .Entries.Should()
@@ -56,7 +56,7 @@ public class LoggingMessageInspectorTests
 
         reply.IsFault.Should().BeTrue();
 
-        sut.AfterReceiveReply(ref reply, correlationState!);
+        sut.AfterReceiveReply(ref reply, correlationState);
 
         logger
             .Entries.Should()

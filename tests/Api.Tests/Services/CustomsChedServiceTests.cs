@@ -17,7 +17,7 @@ namespace Api.Tests.Services;
 [Collection(IntegrationTestCollection.Name)]
 public class CustomsChedServiceTests(TradeGatewayWebApplicationFactory factory)
 {
-    private const string CustomsPath = "/CustomsCertexChedServiceV06";
+    private const string CustomsPath = "/CustomsCertexChedServiceV07";
 
     /// <summary>
     /// Distinct from every CHED id the endpoint tests stub — the WireMock server is shared across
@@ -28,7 +28,7 @@ public class CustomsChedServiceTests(TradeGatewayWebApplicationFactory factory)
     /// <summary>Matches <c>TracesNt:CustomsOfficeReferenceNumber</c> in the test factory.</summary>
     private const string CustomsOffice = "GBTEST01";
 
-    private static readonly XNamespace s_customsChedNs = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06";
+    private static readonly XNamespace s_customsChedNs = "http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v07";
     private static readonly XNamespace s_customsBaseNs = "http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03";
     private static readonly XNamespace s_tracesBody = "http://ec.europa.eu/tracesnt/body/v1";
 
@@ -136,7 +136,7 @@ public class CustomsChedServiceTests(TradeGatewayWebApplicationFactory factory)
               <faultcode>soap:Server</faultcode>
               <faultstring>Quantity management failed</faultstring>
               <detail>
-                <ProcessedChedRequestFault xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+                <ProcessedChedRequestFault xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v07">
                   <MessageId xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">upstream-message-id</MessageId>
                   <UniqPrefix xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">{CustomsOffice}</UniqPrefix>
                   <errorMessage xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">{UpstreamErrorText}</errorMessage>
@@ -189,6 +189,6 @@ public class CustomsChedServiceTests(TradeGatewayWebApplicationFactory factory)
 
         body.Should().NotBeNullOrEmpty("the service should have called {0}", CustomsPath);
 
-        return XDocument.Parse(body!);
+        return XDocument.Parse(body);
     }
 }

@@ -129,7 +129,7 @@ namespace TracesNT.WebServices
         {
             if ((endpointConfiguration == EndpointConfiguration.DocomCertificateRetrievalServiceV1Endpoint))
             {
-                return new System.ServiceModel.EndpointAddress("https://webgate.acceptance.ec.europa.eu/tracesnt/ws/DocomCertificateRetrievalServ" + "iceV1");
+                return new System.ServiceModel.EndpointAddress("https://webgate.ec.europa.eu/tracesnt/ws/DocomCertificateRetrievalServiceV1");
             }
 
             throw new System.InvalidOperationException(string.Format("Could not find endpoint with name \'{0}\'.", endpointConfiguration));

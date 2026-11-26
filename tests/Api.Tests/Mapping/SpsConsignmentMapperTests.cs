@@ -102,7 +102,7 @@ public class SpsConsignmentMapperTests
         var result = SpsConsignmentMapper.Map(source, Context);
 
         result.ExaminationEvent.Should().ContainSingle();
-        result.ExaminationEvent![0].OccurrenceLogisticsLocation!.Identifier.Should().Be("GBDVR1");
+        result.ExaminationEvent[0].OccurrenceLogisticsLocation!.Identifier.Should().Be("GBDVR1");
     }
 
     [Fact]

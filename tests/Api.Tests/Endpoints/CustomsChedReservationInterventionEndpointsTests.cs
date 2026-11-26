@@ -9,7 +9,7 @@ namespace Api.Tests.Endpoints;
 public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApplicationFactory factory)
 {
     private const string ProcessedChedSoapAction =
-        "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ChedInterventionRequest\"";
+        "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v07/CustomsCertexChedPort/ChedInterventionRequest\"";
 
     private const string Ched = "CHEDA.GB.2026.0000123";
     private const string UnsuccessfulChed = "UNSUCCESSFUL";
@@ -250,7 +250,7 @@ public class CustomsChedReservationInterventionEndpointsTests(TradeGatewayWebApp
                                   <faultcode>soap:Server</faultcode>
                                   <faultstring>Quantity management failed</faultstring>
                                   <detail>
-                                    <ChedClearanceRequestFault xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+                                    <ChedClearanceRequestFault xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v07">
                                       <MessageId xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">upstream-message-id</MessageId>
                                       <UniqPrefix xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">GBTEST01</UniqPrefix>
                                       <errorMessage xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">{upstreamError}</errorMessage>

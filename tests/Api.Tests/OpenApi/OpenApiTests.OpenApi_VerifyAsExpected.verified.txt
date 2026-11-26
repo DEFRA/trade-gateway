@@ -3900,9 +3900,6 @@ A failed download has status Failed and a failure with its code, reason and whet
           description: {
             type: string,
             nullable: true
-          },
-          value: {
-            nullable: true
           }
         },
         additionalProperties: false

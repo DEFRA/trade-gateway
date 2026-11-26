@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -55,7 +55,7 @@ public abstract class MongoService<T>
         var timeToLives = indexes
             .Select(index => index.Options)
             .Where(options => options?.ExpireAfter is not null && options.Name is not null)
-            .Select(options => (Name: options!.Name, ExpireAfter: options.ExpireAfter!.Value));
+            .Select(options => (Name: options.Name, ExpireAfter: options.ExpireAfter!.Value));
 
         foreach (var (name, expireAfter) in timeToLives)
         {

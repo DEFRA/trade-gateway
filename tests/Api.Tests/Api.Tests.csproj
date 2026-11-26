@@ -12,20 +12,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AwesomeAssertions" Version="9.4.0" />
+    <PackageReference Include="AwesomeAssertions" Version="9.6.0" />
     <PackageReference Include="AWSSDK.SecurityToken" Version="4.0.101.7" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.8.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.9" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.0" />
+    <PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.3.14" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.Testing" Version="10.11.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.15" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.12.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.9" />
     <PackageReference Include="NSubstitute" Version="6.2.0" />
-    <PackageReference Include="Verify.XunitV3" Version="31.16.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="10.3.1" />
+    <PackageReference Include="Verify.XunitV3" Version="31.28.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="xunit.v3" Version="3.2.2" />
-    <PackageReference Include="WireMock.Net" Version="2.31.0" />
+    <PackageReference Include="WireMock.Net" Version="2.34.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -36,5 +38,9 @@
   <ItemGroup>
     <None Remove="Samples\**\*.xml" />
     <EmbeddedResource Include="Samples\**\*.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="SonarAnalyzer.CSharp" Version="10.37.0.15768" />
   </ItemGroup>
 </Project>

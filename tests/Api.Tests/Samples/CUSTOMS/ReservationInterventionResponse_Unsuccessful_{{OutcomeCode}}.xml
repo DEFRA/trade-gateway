@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/">
   <S:Body>
-    <ChedInterventionResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+    <ChedInterventionResponse xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v07">
       <QuantityManagementOutcome>{{OutcomeCode}}</QuantityManagementOutcome>
       <StatusCode>500</StatusCode>
       <SendingDate>2026-08-17T09:20:00.000Z</SendingDate>

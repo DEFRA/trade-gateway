@@ -32,7 +32,7 @@ internal static class WcfTestHelpers
         );
 
         ctor.Should().NotBeNull();
-        return (ClientRuntime)ctor!.Invoke(["test-endpoint", "test-contract"]);
+        return (ClientRuntime)ctor.Invoke(["test-endpoint", "test-contract"]);
     }
 
     internal static int CountHeaders(Message message, string name, string ns)

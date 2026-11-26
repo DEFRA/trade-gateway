@@ -15,7 +15,7 @@ public class CustomsChedQuantityEndpointsTests(TradeGatewayWebApplicationFactory
     /// form the CHED port uses.
     /// </summary>
     private const string ProcessedChedSoapAction =
-        "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"";
+        "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v07/CustomsCertexChedPort/ProcessedChedRequest\"";
 
     private const string Ched = "CHEDA.GB.2026.0000123";
     private const string Principal = "test-customs-quantity-reader";
@@ -125,7 +125,7 @@ public class CustomsChedQuantityEndpointsTests(TradeGatewayWebApplicationFactory
                                   <faultcode>soap:Server</faultcode>
                                   <faultstring>Quantity management failed</faultstring>
                                   <detail>
-                                    <ProcessedChedRequestFault xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v06">
+                                    <ProcessedChedRequestFault xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/ched/v07">
                                       <MessageId xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">upstream-message-id</MessageId>
                                       <UniqPrefix xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">GBTEST01</UniqPrefix>
                                       <errorMessage xmlns="http://ec.europa.eu/sanco/tracesnt/customs_certex/base/v03">{upstreamError}</errorMessage>

@@ -29,7 +29,7 @@ public class SpsTransportEquipmentMapperTests
         result.Identifier.Should().Be("MSKU1234567");
         result.UrlId.Should().Be("https://traces-codelists.ec.europa.eu/container_number");
         result.AffixedLogisticsSeal.Should().ContainSingle().Which.Identifier.Should().Be("SEAL001");
-        result.AffixedLogisticsSeal![0].UrlId.Should().Be("https://traces-codelists.ec.europa.eu/seal_number");
+        result.AffixedLogisticsSeal[0].UrlId.Should().Be("https://traces-codelists.ec.europa.eu/seal_number");
     }
 
     [Fact]

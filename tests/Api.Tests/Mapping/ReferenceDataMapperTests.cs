@@ -71,7 +71,7 @@ public class ReferenceDataMapperTests
         result.TreeId.Should().Be("intra_trade");
         result.RetrievedAt.Should().NotBeNull();
         result.Nodes.Should().ContainSingle();
-        result.Nodes![0].Path.Should().Be("intra_trade");
+        result.Nodes[0].Path.Should().Be("intra_trade");
         result.Nodes[0].Label.Should().Be("EU Intra-trade");
         result.Nodes[0].NodeType.Should().Be("group");
         result.Nodes[0].Selectable.Should().BeFalse();
@@ -224,7 +224,7 @@ public class ReferenceDataMapperTests
 
         result.DocumentTypes.Should().ContainSingle();
         result
-            .DocumentTypes![0]
+            .DocumentTypes[0]
             .Should()
             .BeEquivalentTo(
                 new
@@ -275,7 +275,7 @@ public class ReferenceDataMapperTests
         );
 
         result.Node.Should().NotBeNull();
-        result.Node!.CnCode.Should().BeNull();
+        result.Node.CnCode.Should().BeNull();
         result.Node.NodeType.Should().Be("certificate");
         result.Node.Label.Should().Be("Model Description");
     }

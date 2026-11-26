@@ -296,7 +296,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
-                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"",
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v07/CustomsCertexChedPort/ProcessedChedRequest\"",
                     "/*[local-name() = 'ProcessedChedRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
                 )
             )
@@ -315,7 +315,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
-                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ChedInterventionRequest\"",
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v07/CustomsCertexChedPort/ChedInterventionRequest\"",
                     "/*[local-name() = 'ChedInterventionRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
                 )
             )
@@ -334,7 +334,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
-                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ChedClearanceRequest\"",
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v07/CustomsCertexChedPort/ChedClearanceRequest\"",
                     "/*[local-name() = 'ChedClearanceRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
                 )
             )
@@ -353,7 +353,7 @@ public class FineGrainedAuthorizationTests(TradeGatewayWebApplicationFactory fac
         factory
             .WireMockServer.Given(
                 SoapUtilities.CreateSoapRequestInterceptor(
-                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v06/CustomsCertexChedPort/ProcessedChedRequest\"",
+                    "\"http://ec.europa.eu/tracesnt/ws/impl/customs_certex/ched/v07/CustomsCertexChedPort/ProcessedChedRequest\"",
                     "/*[local-name() = 'ProcessedChedRequest']/*[local-name() = 'ChedCertificateId' and text() = 'CHEDA.GB.2026.0000123']"
                 )
             )

@@ -28,7 +28,7 @@ namespace Api.Client.Tests
 
             // Assert
             Assert.NotNull(capturedRequest);
-            Assert.Single(capturedRequest!.Headers.AcceptLanguage);
+            Assert.Single(capturedRequest.Headers.AcceptLanguage);
             Assert.Equal("en", capturedRequest.Headers.AcceptLanguage.Single().Value);
         }
 

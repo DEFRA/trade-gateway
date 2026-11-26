@@ -109,6 +109,6 @@ public class SpsPartyMapperTests
         var result = SpsPartyMapper.Map(source)!;
 
         result.PostalAddress.Should().NotBeNull();
-        result.PostalAddress!.CountryId.Should().Be("GB");
+        result.PostalAddress.CountryId.Should().Be("GB");
     }
 }

@@ -37,7 +37,7 @@ public class ChedReservationProblemDetailsTests
         var problem = Deserialize("""{ "chedId": "CHEDA.GB.2026.0000001", "mrn": "26GB0000000000001" }""");
 
         problem.Extensions.Should().ContainKeys("chedId", "mrn");
-        ((JsonElement)problem.Extensions!["chedId"]).GetString().Should().Be("CHEDA.GB.2026.0000001");
+        ((JsonElement)problem.Extensions["chedId"]).GetString().Should().Be("CHEDA.GB.2026.0000001");
     }
 
     [Theory]

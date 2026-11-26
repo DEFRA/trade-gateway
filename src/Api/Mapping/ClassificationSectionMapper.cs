@@ -19,14 +19,12 @@ internal static class ClassificationSectionMapper
                 source
                     .MetaCountryGroupScope?.Select(scope => scope.Value)
                     .Where(value => !string.IsNullOrWhiteSpace(value))
-                    .Select(value => value!)
                     .ToList()
                 ?? [],
             OperatorActivities =
                 source
                     .OperatorActivityType?.Select(activity => activity.Value) // note - when within a ClassificationSectionType the value is used to hold the activity type
                     .Where(value => !string.IsNullOrWhiteSpace(value))
-                    .Select(value => value!)
                     .ToList()
                 ?? [],
         };
@@ -39,17 +37,12 @@ internal static class ClassificationSectionMapper
             Lms = source.lms,
             Description = source.Description.Value,
             Scopes =
-                source
-                    .Scope?.Select(scope => scope.id)
-                    .Where(scopeId => !string.IsNullOrWhiteSpace(scopeId))
-                    .Select(scopeId => scopeId!)
-                    .ToList()
+                source.Scope?.Select(scope => scope.id).Where(scopeId => !string.IsNullOrWhiteSpace(scopeId)).ToList()
                 ?? [],
             OperatorActivities =
                 source
                     .OperatorActivityType?.Select(activity => activity.type) // note - when within a ClassificationSectionReference the activity.type is used to hold the activity type
                     .Where(value => !string.IsNullOrWhiteSpace(value))
-                    .Select(value => value!)
                     .ToList()
                 ?? [],
         };
