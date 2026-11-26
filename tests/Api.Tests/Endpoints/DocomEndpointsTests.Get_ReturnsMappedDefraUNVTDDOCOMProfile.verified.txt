@@ -252,9 +252,7 @@
         CountrySubDivisionName: Paris
       }
     },
-    ExportCountry: {
-      Code: {}
-    },
+    ExportCountry: {},
     ImportCountry: {
       Code: {
         Value: XI,

@@ -25,6 +25,9 @@ public partial record DefraUNVTDProfileClassificationTreeNodeDetailResponse
     [JsonPropertyName("attributes")]
     public List<NodeAttribute>? Attributes { get; init; }
 
+    [JsonPropertyName("descriptorColumns")]
+    public List<DescriptorColumnAttribute>? DescriptorColumns { get; init; }
+
     [JsonPropertyName("documentTypes")]
     public List<DocumentNodeAttribute>? DocumentTypes { get; init; }
 
